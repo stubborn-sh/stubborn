@@ -40,7 +40,7 @@ jobs:
           echo "Publishing snapshot: $VERSION"
 
       - name: Deploy snapshots
-        run: ./mvnw deploy -Ppublish -DskipTests -Dskip.npm -pl !e2e-tests,!samples,!ui,!js,!broker-gradle-plugin
+        run: ./mvnw deploy -Ppublish -DskipTests -Dskip.npm -pl !e2e-tests,!ui,!js,!broker-gradle-plugin
         env:
           CENTRAL_USERNAME: ${{ secrets.CENTRAL_USERNAME }}
           CENTRAL_PASSWORD: ${{ secrets.CENTRAL_PASSWORD }}
