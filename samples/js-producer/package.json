@@ -1,0 +1,27 @@
+{
+  "name": "@samples/js-producer",
+  "version": "1.0.0",
+  "private": true,
+  "engines": {
+    "node": ">=21.2.0"
+  },
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node --import tsx src/server.ts",
+    "publish-contracts": "node --import tsx src/publish.ts",
+    "verify": "node --import tsx src/verify.ts",
+    "test": "vitest run",
+    "test:integration": "vitest run tests/integration"
+  },
+  "dependencies": {
+    "@spring-cloud-contract/broker-client": "file:../../js/packages/broker-client",
+    "@spring-cloud-contract/publisher": "file:../../js/packages/publisher",
+    "@spring-cloud-contract/verifier": "file:../../js/packages/verifier"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.0",
+    "typescript": "^5.8.0",
+    "vitest": "^3.1.0"
+  }
+}

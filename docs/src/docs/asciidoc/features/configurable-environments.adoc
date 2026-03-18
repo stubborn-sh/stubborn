@@ -1,0 +1,36 @@
+= Configurable Environments
+
+Environments are managed as a first-class resource with CRUD operations, replacing hardcoded
+environment lists.
+
+== Endpoints
+
+`GET /api/v1/environments`::
+List all environments, ordered by display order then name.
+
+`POST /api/v1/environments`::
+Create a new environment. Fields: `name` (required), `description`, `displayOrder`, `production` (boolean).
+
+`GET /api/v1/environments/{name}`::
+Get a specific environment by name.
+
+`PUT /api/v1/environments/{name}`::
+Update an environment's description, display order, or production flag.
+
+`DELETE /api/v1/environments/{name}`::
+Delete an environment.
+
+== Auto-Creation
+
+When a deployment is recorded to an environment that does not yet exist, the broker automatically
+creates it. This ensures backward compatibility with existing workflows.
+
+== Security
+
+Creating, updating, and deleting environments requires the ADMIN role.
+Listing and viewing environments requires the READER role.
+
+== UI
+
+The Environments and Can I Deploy pages dynamically load the environment list from the API
+instead of using a hardcoded dropdown.

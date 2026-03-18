@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+	<!-- Spring DI: storing injected services in constructors is by design -->
+	<Match>
+		<Bug pattern="EI_EXPOSE_REP2"/>
+		<Method name="&lt;init&gt;"/>
+	</Match>
+
+	<!-- Spring constructor validation throwing is acceptable -->
+	<Match>
+		<Bug pattern="CT_CONSTRUCTOR_THROW"/>
+	</Match>
+
+	<!-- Intentional use of \n in prompt strings -->
+	<Match>
+		<Bug pattern="VA_FORMAT_STRING_USES_NEWLINE"/>
+	</Match>
+
+	<!-- Locale-insensitive toLowerCase/toUpperCase is intentional for internal keys -->
+	<Match>
+		<Bug pattern="DM_CONVERT_CASE"/>
+	</Match>
+
+	<!-- Intentional RuntimeException throws for domain exceptions -->
+	<Match>
+		<Bug pattern="THROWS_METHOD_THROWS_RUNTIMEEXCEPTION"/>
+	</Match>
+
+	<!-- Broad exception in throws clause acceptable for Spring filter chains -->
+	<Match>
+		<Bug pattern="THROWS_METHOD_THROWS_CLAUSE_BASIC_EXCEPTION"/>
+	</Match>
+</FindBugsFilter>

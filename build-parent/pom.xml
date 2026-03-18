@@ -1,0 +1,494 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>4.0.3</version>
+		<relativePath/>
+	</parent>
+
+	<groupId>com.toomuchcoding</groupId>
+	<artifactId>spring-cloud-contract-broker-build-parent</artifactId>
+	<version>0.1.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<name>Spring Cloud Contract Broker Build Parent</name>
+	<description>Shared build configuration for all Spring Cloud Contract Broker modules</description>
+	<url>https://stubborn.sh</url>
+
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>https://www.apache.org/licenses/LICENSE-2.0</url>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<id>marcingrzejszczak</id>
+			<name>Marcin Grzejszczak</name>
+			<email>contact@toomuchcoding.com</email>
+		</developer>
+	</developers>
+
+	<scm>
+		<connection>scm:git:git://github.com/toomuchcoding-com/stubborn.git</connection>
+		<developerConnection>scm:git:ssh://github.com/toomuchcoding-com/stubborn.git</developerConnection>
+		<url>https://github.com/toomuchcoding-com/stubborn</url>
+	</scm>
+
+	<properties>
+		<java.version>25</java.version>
+
+		<!-- Spring ecosystem -->
+		<spring-cloud.version>2025.1.1</spring-cloud.version>
+		<spring-cloud-contract.version>5.0.2</spring-cloud-contract.version>
+		<spring-ai.version>2.0.0-M2</spring-ai.version>
+
+		<!-- Static analysis -->
+		<spring-javaformat.version>0.0.47</spring-javaformat.version>
+		<checkstyle.version>13.3.0</checkstyle.version>
+		<checkstyle-plugin.version>3.6.0</checkstyle-plugin.version>
+		<error-prone.version>2.48.0</error-prone.version>
+		<spotbugs-maven-plugin.version>4.9.8.2</spotbugs-maven-plugin.version>
+		<findsecbugs.version>1.14.0</findsecbugs.version>
+		<pmd-plugin.version>3.28.0</pmd-plugin.version>
+
+		<!-- Testing -->
+		<jqwik.version>1.9.3</jqwik.version>
+		<pitest-maven.version>1.22.1</pitest-maven.version>
+		<pitest-junit5-plugin.version>1.2.3</pitest-junit5-plugin.version>
+		<testcontainers.version>2.0.3</testcontainers.version>
+		<wiremock.version>3.13.2</wiremock.version>
+		<archunit.version>1.4.1</archunit.version>
+		<playwright.version>1.58.0</playwright.version>
+		<jacoco.version>0.8.14</jacoco.version>
+
+		<!-- Null safety -->
+		<nullaway.version>0.13.1</nullaway.version>
+		<jspecify.version>1.0.0</jspecify.version>
+
+		<!-- Observability -->
+		<loki-logback-appender.version>2.0.3</loki-logback-appender.version>
+		<datasource-micrometer.version>2.1.1</datasource-micrometer.version>
+
+		<!-- Documentation -->
+		<asciidoctor-maven-plugin.version>3.2.0</asciidoctor-maven-plugin.version>
+
+		<!-- Stubs assembly -->
+		<skipStubs>false</skipStubs>
+
+		<!-- SBOM -->
+		<cyclonedx-maven-plugin.version>2.9.1</cyclonedx-maven-plugin.version>
+
+		<!-- Performance testing -->
+		<gatling.version>3.15.0</gatling.version>
+		<gatling-maven-plugin.version>4.21.3</gatling-maven-plugin.version>
+
+		<!-- CLI -->
+		<picocli.version>4.7.7</picocli.version>
+
+		<!-- OpenAPI client generation -->
+		<openapi-generator-maven-plugin.version>7.20.0</openapi-generator-maven-plugin.version>
+		<jackson-databind-nullable.version>0.2.9</jackson-databind-nullable.version>
+
+		<!-- License -->
+		<license-maven-plugin.version>5.0.0</license-maven-plugin.version>
+
+		<!-- Publishing -->
+		<maven-source-plugin.version>3.4.0</maven-source-plugin.version>
+		<maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
+		<maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
+		<central-publishing-maven-plugin.version>0.10.0</central-publishing-maven-plugin.version>
+
+		<!-- Frontend -->
+		<frontend-maven-plugin.version>2.0.0</frontend-maven-plugin.version>
+		<node.version>v22.14.0</node.version>
+		<junit-platform-launcher.version>6.0.3</junit-platform-launcher.version>
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.ai</groupId>
+				<artifactId>spring-ai-bom</artifactId>
+				<version>${spring-ai.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.testcontainers</groupId>
+				<artifactId>testcontainers-bom</artifactId>
+				<version>${testcontainers.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.jspecify</groupId>
+				<artifactId>jspecify</artifactId>
+				<version>${jspecify.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.wiremock</groupId>
+				<artifactId>wiremock-standalone</artifactId>
+				<version>${wiremock.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>net.jqwik</groupId>
+				<artifactId>jqwik</artifactId>
+				<version>${jqwik.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.tngtech.archunit</groupId>
+				<artifactId>archunit-junit5</artifactId>
+				<version>${archunit.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>net.ttddyy.observation</groupId>
+				<artifactId>datasource-micrometer-spring-boot</artifactId>
+				<version>${datasource-micrometer.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.github.loki4j</groupId>
+				<artifactId>loki-logback-appender</artifactId>
+				<version>${loki-logback-appender.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.microsoft.playwright</groupId>
+				<artifactId>playwright</artifactId>
+				<version>${playwright.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+
+			<!-- Spring Java Format -->
+				<plugin>
+					<groupId>io.spring.javaformat</groupId>
+					<artifactId>spring-javaformat-maven-plugin</artifactId>
+					<version>${spring-javaformat.version}</version>
+				</plugin>
+
+				<!-- Error Prone (compile-time static analysis) -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<configuration>
+						<fork>true</fork>
+						<compilerArgs>
+							<arg>-XDcompilePolicy=simple</arg>
+							<arg>-XDshould-stop.ifError=FLOW</arg>
+							<arg>-Xplugin:ErrorProne -XepAllErrorsAsWarnings -Xep:MissingOverride:ERROR -Xep:BadImport:ERROR -Xep:EmptyCatch:ERROR -Xep:FallThrough:ERROR -Xep:MutableConstantField:ERROR -Xep:ModifiedButNotUsed:ERROR -Xep:EqualsGetClass:ERROR -Xep:StringSplitter:ERROR -Xep:UnnecessaryParentheses:WARN -Xep:NullAway:ERROR -XepOpt:NullAway:OnlyNullMarked=true -XepOpt:NullAway:JSpecifyMode=true -XepOpt:NullAway:ExcludedFieldAnnotations=org.springframework.beans.factory.annotation.Autowired,org.springframework.beans.factory.annotation.Value,jakarta.inject.Inject,jakarta.persistence.Id,jakarta.persistence.GeneratedValue,jakarta.persistence.Column,jakarta.persistence.ManyToOne,jakarta.persistence.OneToMany,jakarta.persistence.OneToOne,jakarta.persistence.ManyToMany,jakarta.persistence.JoinColumn -XepOpt:NullAway:ExcludedClassAnnotations=jakarta.persistence.Entity,jakarta.persistence.MappedSuperclass,jakarta.persistence.Embeddable -XepOpt:NullAway:TreatGeneratedAsUnannotated=true</arg>
+							<arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED</arg>
+							<arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED</arg>
+							<arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED</arg>
+							<arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED</arg>
+							<arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED</arg>
+							<arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED</arg>
+							<arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED</arg>
+							<arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED</arg>
+							<arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED</arg>
+							<arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED</arg>
+						</compilerArgs>
+						<annotationProcessorPaths>
+							<path>
+								<groupId>com.google.errorprone</groupId>
+								<artifactId>error_prone_core</artifactId>
+								<version>${error-prone.version}</version>
+							</path>
+							<path>
+								<groupId>com.uber.nullaway</groupId>
+								<artifactId>nullaway</artifactId>
+								<version>${nullaway.version}</version>
+							</path>
+						</annotationProcessorPaths>
+					</configuration>
+				</plugin>
+
+				<!-- Checkstyle -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-checkstyle-plugin</artifactId>
+					<version>${checkstyle-plugin.version}</version>
+					<dependencies>
+						<dependency>
+							<groupId>com.puppycrawl.tools</groupId>
+							<artifactId>checkstyle</artifactId>
+							<version>${checkstyle.version}</version>
+						</dependency>
+						<dependency>
+							<groupId>io.spring.javaformat</groupId>
+							<artifactId>spring-javaformat-checkstyle</artifactId>
+							<version>${spring-javaformat.version}</version>
+						</dependency>
+					</dependencies>
+				</plugin>
+
+				<!-- SpotBugs -->
+				<plugin>
+					<groupId>com.github.spotbugs</groupId>
+					<artifactId>spotbugs-maven-plugin</artifactId>
+					<version>${spotbugs-maven-plugin.version}</version>
+					<dependencies>
+						<dependency>
+							<groupId>com.h3xstream.findsecbugs</groupId>
+							<artifactId>findsecbugs-plugin</artifactId>
+							<version>${findsecbugs.version}</version>
+						</dependency>
+					</dependencies>
+				</plugin>
+
+				<!-- PMD -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-pmd-plugin</artifactId>
+					<version>${pmd-plugin.version}</version>
+				</plugin>
+
+				<!-- PITest (mutation testing) -->
+				<plugin>
+					<groupId>org.pitest</groupId>
+					<artifactId>pitest-maven</artifactId>
+					<version>${pitest-maven.version}</version>
+					<dependencies>
+						<dependency>
+							<groupId>org.pitest</groupId>
+							<artifactId>pitest-junit5-plugin</artifactId>
+							<version>${pitest-junit5-plugin.version}</version>
+						</dependency>
+						<!-- Force JUnit Platform 6.x launcher to match engine version -->
+						<dependency>
+							<groupId>org.junit.platform</groupId>
+							<artifactId>junit-platform-launcher</artifactId>
+							<version>${junit-platform-launcher.version}</version>
+						</dependency>
+					</dependencies>
+				</plugin>
+
+				<!-- JaCoCo -->
+				<plugin>
+					<groupId>org.jacoco</groupId>
+					<artifactId>jacoco-maven-plugin</artifactId>
+					<version>${jacoco.version}</version>
+				</plugin>
+
+				<!-- Surefire (fast tests) -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<configuration>
+						<includes>
+							<include>**/*Test.java</include>
+							<include>**/*Tests.java</include>
+							<include>**/*Properties.java</include>
+						</includes>
+						<excludes>
+							<exclude>**/*E2ETest.java</exclude>
+							<exclude>**/*RepositoryTest.java</exclude>
+						</excludes>
+					</configuration>
+				</plugin>
+
+				<!-- Failsafe (Docker tests) -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-failsafe-plugin</artifactId>
+					<configuration>
+						<includes>
+							<include>**/*E2ETest.java</include>
+							<include>**/*RepositoryTest.java</include>
+						</includes>
+					</configuration>
+				</plugin>
+
+
+				<!-- License Header -->
+				<plugin>
+					<groupId>com.mycila</groupId>
+					<artifactId>license-maven-plugin</artifactId>
+					<version>${license-maven-plugin.version}</version>
+					<configuration>
+						<licenseSets>
+							<licenseSet>
+								<header>${maven.multiModuleProjectDirectory}/src/license-header.txt</header>
+								<includes>
+									<include>**/*.java</include>
+								</includes>
+								<excludes>
+									<exclude>**/package-info.java</exclude>
+								</excludes>
+							</licenseSet>
+						</licenseSets>
+						<mapping>
+							<java>SLASHSTAR_STYLE</java>
+						</mapping>
+						<strictCheck>true</strictCheck>
+					</configuration>
+					<executions>
+						<execution>
+							<id>check-license</id>
+							<phase>validate</phase>
+							<goals>
+								<goal>check</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+
+				<!-- Spring Boot -->
+				<plugin>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-maven-plugin</artifactId>
+				</plugin>
+
+				<!-- Assembly (stubs JAR) -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-assembly-plugin</artifactId>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+
+		<plugins>
+			<!-- License Header — check all Java modules -->
+			<plugin>
+				<groupId>com.mycila</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>check-license</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- Spring Java Format — applied to all Java modules -->
+			<plugin>
+				<groupId>io.spring.javaformat</groupId>
+				<artifactId>spring-javaformat-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>apply-format</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>apply</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>validate-format</id>
+						<phase>process-sources</phase>
+						<goals>
+							<goal>validate</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<repositories>
+		<repository>
+			<id>central</id>
+			<url>https://repo.maven.apache.org/maven2</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>spring-milestones</id>
+			<name>Spring Milestones</name>
+			<url>https://repo.spring.io/milestone</url>
+		</repository>
+	</repositories>
+
+	<profiles>
+		<!-- Snapshot publishing: ./mvnw deploy -Ppublish -->
+		<!-- Release publishing: ./mvnw deploy -Ppublish,release -->
+		<profile>
+			<id>publish</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<version>${maven-source-plugin.version}</version>
+						<executions>
+							<execution>
+								<id>attach-sources</id>
+								<goals>
+									<goal>jar-no-fork</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<version>${maven-javadoc-plugin.version}</version>
+						<executions>
+							<execution>
+								<id>attach-javadocs</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.sonatype.central</groupId>
+						<artifactId>central-publishing-maven-plugin</artifactId>
+						<version>${central-publishing-maven-plugin.version}</version>
+						<extensions>true</extensions>
+						<configuration>
+							<publishingServerId>central</publishingServerId>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>release</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>${maven-gpg-plugin.version}</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+								<configuration>
+									<gpgArguments>
+										<arg>--pinentry-mode</arg>
+										<arg>loopback</arg>
+									</gpgArguments>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+</project>

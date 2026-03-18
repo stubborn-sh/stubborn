@@ -1,0 +1,26 @@
+{
+  "name": "@spring-cloud-contract/verifier",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@spring-cloud-contract/broker-client": "0.1.0",
+    "@spring-cloud-contract/stub-server": "0.1.0"
+  },
+  "devDependencies": {
+    "tsup": "^8.4.0"
+  }
+}

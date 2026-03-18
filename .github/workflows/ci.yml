@@ -1,0 +1,190 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+  checks: write
+
+env:
+  JAVA_VERSION: '25'
+  JAVA_DISTRIBUTION: 'liberica'
+  NODE_VERSION: '22'
+
+jobs:
+  build:
+    name: Build & Test
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: broker
+          POSTGRES_USER: broker
+          POSTGRES_PASSWORD: broker
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up JDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v5
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
+          cache: maven
+
+      - name: Set up Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: |
+            ui/package-lock.json
+            js/package-lock.json
+            samples/js-producer/package-lock.json
+            samples/js-consumer/package-lock.json
+
+      - name: Format check
+        run: ./mvnw io.spring.javaformat:spring-javaformat-maven-plugin:validate -q
+
+      - name: Build, test & install (core modules)
+        run: ./mvnw clean install
+
+      - name: Test JS SDK
+        run: cd js && npm run test:ci
+
+      - name: Build & test samples
+        run: ./mvnw verify -Psamples -pl samples -also-make-dependents
+
+      - name: Run E2E tests
+        uses: nick-fields/retry@v3
+        with:
+          max_attempts: 2
+          timeout_minutes: 20
+          command: ./mvnw failsafe:integration-test failsafe:verify -pl e2e-tests
+
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: test-reports
+          path: |
+            **/target/surefire-reports/
+            **/target/failsafe-reports/
+          retention-days: 7
+
+      - name: Upload E2E screenshots
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: e2e-screenshots
+          path: e2e-tests/target/screenshots/
+          retention-days: 7
+
+      - name: Publish unit test results
+        if: always()
+        uses: dorny/test-reporter@v1
+        with:
+          name: Unit Test Results
+          path: '**/target/surefire-reports/TEST-*.xml'
+          reporter: java-junit
+          fail-on-error: false
+
+      - name: Publish E2E test results
+        if: always()
+        uses: dorny/test-reporter@v1
+        with:
+          name: E2E Test Results
+          path: 'e2e-tests/target/failsafe-reports/TEST-*.xml'
+          reporter: java-junit
+          fail-on-error: false
+
+  helm-lint:
+    name: Helm Lint & Template Validation
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: v3.16.0
+
+      - name: Helm lint
+        run: helm lint charts/spring-cloud-contract-broker
+
+      - name: Helm lint with CI values
+        run: helm lint charts/spring-cloud-contract-broker -f charts/spring-cloud-contract-broker/ci/test-values.yaml
+
+      - name: Helm template (validate rendered output)
+        run: |
+          helm template broker charts/spring-cloud-contract-broker \
+            -f charts/spring-cloud-contract-broker/ci/test-values.yaml \
+            > /dev/null
+          echo "Template validation passed"
+
+      - name: Helm template — verify key resources present
+        run: |
+          OUTPUT=$(helm template broker charts/spring-cloud-contract-broker \
+            -f charts/spring-cloud-contract-broker/ci/test-values.yaml)
+          echo "$OUTPUT" | grep -q "kind: Deployment" || { echo "Missing Deployment"; exit 1; }
+          echo "$OUTPUT" | grep -q "kind: Service" || { echo "Missing Service"; exit 1; }
+          echo "$OUTPUT" | grep -q "kind: ConfigMap" || { echo "Missing ConfigMap"; exit 1; }
+          echo "$OUTPUT" | grep -q "kind: ServiceAccount" || { echo "Missing ServiceAccount"; exit 1; }
+          echo "All key resources present"
+
+      - name: Install helm-unittest plugin
+        run: helm plugin install https://github.com/helm-unittest/helm-unittest.git --version v0.7.2
+
+      - name: Run Helm unit tests
+        run: helm unittest charts/spring-cloud-contract-broker
+
+  sbom:
+    name: Generate SBOM
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    needs: build
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up JDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v5
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
+          cache: maven
+
+      - name: Set up Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: |
+            ui/package-lock.json
+            js/package-lock.json
+            samples/js-producer/package-lock.json
+            samples/js-consumer/package-lock.json
+
+      - name: Generate SBOM
+        run: ./mvnw package -Psbom -DskipTests -DskipStubs=true
+
+      - name: Upload SBOM artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: sbom
+          path: '**/target/classes/META-INF/sbom/application.cdx.json'
+          retention-days: 90

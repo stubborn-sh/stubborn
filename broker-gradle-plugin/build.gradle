@@ -1,0 +1,52 @@
+plugins {
+	alias(libs.plugins.plugin.publish)
+	id 'java-gradle-plugin'
+	id 'maven-publish'
+}
+
+group = 'com.toomuchcoding'
+version = '0.1.0-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(25)
+	}
+}
+
+repositories {
+	mavenLocal()
+	mavenCentral()
+	maven { url 'https://repo.spring.io/milestone' }
+}
+
+dependencies {
+	implementation libs.broker.contract.publisher
+	implementation libs.spring.boot.starter.web
+	implementation libs.jackson.databind
+	testImplementation libs.junit.jupiter
+	testRuntimeOnly libs.junit.platform.launcher
+}
+
+gradlePlugin {
+	website = 'https://github.com/marcingrzejszczak/spring-cloud-contract-broker'
+	vcsUrl = 'https://github.com/marcingrzejszczak/spring-cloud-contract-broker'
+	plugins {
+		broker {
+			id = 'com.toomuchcoding.broker'
+			implementationClass = 'com.toomuchcoding.broker.gradle.BrokerPlugin'
+			displayName = 'Spring Cloud Contract Broker Plugin'
+			description = 'Publishes contracts to Spring Cloud Contract Broker'
+			tags.set(['spring-cloud-contract', 'contract-testing', 'broker'])
+		}
+	}
+}
+
+publishing {
+	repositories {
+		mavenLocal()
+	}
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}

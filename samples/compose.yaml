@@ -1,0 +1,35 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: broker
+      POSTGRES_USER: broker
+      POSTGRES_PASSWORD: broker
+    ports:
+      - "15432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U broker"]
+      interval: 5s
+      retries: 5
+
+  broker:
+    image: spring-cloud-contract-broker:0.1.0-SNAPSHOT
+    pull_policy: never
+    depends_on:
+      postgres: { condition: service_healthy }
+    ports:
+      - "18080:8642"
+    environment:
+      DATABASE_URL: jdbc:postgresql://postgres:5432/broker
+      DATABASE_USERNAME: broker
+      DATABASE_PASSWORD: broker
+      OTEL_METRICS_ENABLED: "false"
+
+  proxy:
+    image: spring-cloud-contract-broker-proxy:0.1.0-SNAPSHOT
+    pull_policy: never
+    ports:
+      - "18081:8080"
+    environment:
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-sk-fake}
+    profiles: ["proxy"]

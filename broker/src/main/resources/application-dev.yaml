@@ -1,0 +1,22 @@
+spring:
+  docker:
+    compose:
+      enabled: true
+      file: src/main/resources/compose.yaml
+      lifecycle-management: start_and_stop
+      stop:
+        command: down
+
+management:
+  otlp:
+    metrics:
+      export:
+        enabled: true
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+
+logging:
+  level:
+    org.springframework.cloud.contract.broker: DEBUG

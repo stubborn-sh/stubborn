@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: spring-cloud-contract-broker
+  labels:
+    app.kubernetes.io/name: spring-cloud-contract-broker
+    app.kubernetes.io/part-of: spring-cloud-contract-broker
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: spring-cloud-contract-broker
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+      protocol: TCP

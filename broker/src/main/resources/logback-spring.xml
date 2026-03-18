@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+	<property name="APP_NAME" value="spring-cloud-contract-broker"/>
+
+	<!-- Console appender -->
+	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>${CONSOLE_LOG_PATTERN}</pattern>
+			<charset>${CONSOLE_LOG_CHARSET}</charset>
+		</encoder>
+	</appender>
+
+	<!-- Logger levels -->
+	<logger name="org.springframework.cloud.contract.broker" level="INFO"/>
+	<logger name="org.springframework" level="INFO"/>
+	<logger name="org.springframework.security" level="INFO"/>
+	<logger name="org.hibernate" level="WARN"/>
+	<logger name="org.hibernate.SQL" level="DEBUG"/>
+	<logger name="org.flywaydb" level="INFO"/>
+	<logger name="io.micrometer" level="INFO"/>
+
+	<!-- Root logger -->
+	<root level="INFO">
+		<appender-ref ref="CONSOLE"/>
+	</root>
+
+	<!-- Dev profile: Loki appender for local LGTM stack (non-blocking, tolerates missing Loki) -->
+	<springProfile name="dev">
+		<appender name="LOKI" class="com.github.loki4j.logback.Loki4jAppender">
+			<http>
+				<url>http://localhost:3100/loki/api/v1/push</url>
+				<connectionTimeoutMs>1000</connectionTimeoutMs>
+				<requestTimeoutMs>3000</requestTimeoutMs>
+			</http>
+			<format>
+				<label>
+					<pattern>app=${APP_NAME},env=dev,level=%level</pattern>
+				</label>
+				<message>
+					<pattern>{"timestamp":"%d{yyyy-MM-dd HH:mm:ss.SSS}","level":"%level","logger":"%logger{36}","thread":"%thread","traceId":"%X{traceId:-}","spanId":"%X{spanId:-}","message":"%message"}</pattern>
+				</message>
+				<sortByTime>true</sortByTime>
+			</format>
+			<verbose>false</verbose>
+		</appender>
+
+		<logger name="org.springframework.cloud.contract.broker" level="DEBUG"/>
+
+		<root level="INFO">
+			<appender-ref ref="CONSOLE"/>
+			<appender-ref ref="LOKI"/>
+		</root>
+	</springProfile>
+</configuration>

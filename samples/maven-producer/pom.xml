@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.toomuchcoding</groupId>
+		<artifactId>spring-cloud-contract-broker-samples</artifactId>
+		<version>0.1.0-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>sample-maven-producer</artifactId>
+
+	<properties>
+		<compose.skip>false</compose.skip>
+		<compose.down.skip>true</compose.down.skip>
+		<js.tests.skip>true</js.tests.skip>
+	</properties>
+	<name>Sample Maven Producer (Order Service)</name>
+	<description>Producer-driven contract testing via broker</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<!-- Test -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-contract-verifier</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.rest-assured</groupId>
+			<artifactId>spring-mock-mvc</artifactId>
+			<version>6.0.0</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<!-- Spring Cloud Contract Maven Plugin -->
+			<plugin>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-contract-maven-plugin</artifactId>
+				<version>${spring-cloud-contract.version}</version>
+				<extensions>true</extensions>
+				<configuration>
+					<baseClassForTests>org.example.order.OrderContractBase</baseClassForTests>
+					<testMode>MOCKMVC</testMode>
+				</configuration>
+			</plugin>
+
+			<!-- Broker Maven Plugin — publishes contracts to the broker -->
+			<plugin>
+				<groupId>com.toomuchcoding</groupId>
+				<artifactId>broker-maven-plugin</artifactId>
+				<version>${project.version}</version>
+				<executions>
+					<execution>
+						<id>publish-contracts</id>
+						<phase>pre-integration-test</phase>
+						<goals>
+							<goal>publish</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<brokerUrl>http://localhost:18080</brokerUrl>
+					<applicationName>order-service</applicationName>
+					<applicationVersion>1.0.0</applicationVersion>
+					<description>Sample Order Service</description>
+					<owner>sample-team</owner>
+					<skip>${compose.skip}</skip>
+				</configuration>
+			</plugin>
+
+			<!-- Surefire for contract-generated tests -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<includes>
+						<include>**/*Test.java</include>
+					</includes>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

@@ -1,0 +1,116 @@
+= Architecture
+
+== Multi-Module Structure
+
+The project is organized as a multi-module Maven reactor:
+
+[source]
+----
+spring-cloud-contract-broker/
+├── pom.xml                    (parent POM, packaging=pom)
+├── proxy/                     (AI traffic-to-contract proxy — independent Spring Boot app)
+├── ui/                        (React frontend — Vite + TailwindCSS + React Query)
+├── broker/                    (core REST API, DB, UI static resources, stubs JAR)
+├── broker-api-client/         (generated REST client JAR — OpenAPI Generator)
+├── broker-cli/                (Picocli CLI wrapping broker-api-client — 13 commands)
+├── broker-mcp-server/         (MCP server — AI agent tools/resources/prompts)
+├── broker-stub-downloader/    (StubDownloaderBuilder SPI — sccbroker:// protocol)
+├── broker-contract-publisher/ (core Java library — file scanning, REST calls to broker)
+├── broker-maven-plugin/       (Maven Mojo wrapping broker-contract-publisher)
+├── broker-gradle-plugin/      (Gradle plugin wrapping broker-contract-publisher)
+├── stub-runner/               (Stub Runner Boot — serves broker stubs for consumer testing)
+├── e2e-tests/                 (Playwright browser-based E2E tests)
+├── samples/                   (6 sample apps — behind -Psamples profile)
+├── docs/                      (AsciiDoc documentation sources)
+├── charts/                    (Helm chart)
+└── k8s/                       (Kustomize overlays)
+----
+
+All dependency versions are centralized in the root `pom.xml`.
+
+== Broker Module — Vertical Slice Architecture
+
+The broker module is organized by feature (vertical slices), not by technical layer:
+
+[source]
+----
+broker/src/main/java/.../broker/
+├── application/     # Application Registration
+├── contract/        # Contract/Stub Publishing
+├── verification/    # Verification Results
+├── environment/     # Environment Tracking
+├── safety/          # Can I Deploy
+├── graph/           # Dependency Graph
+├── webhook/         # Event Webhooks
+├── tag/             # Version Tagging
+├── selector/        # Consumer Version Selectors
+├── matrix/          # Compatibility Matrix
+├── maintenance/     # Data Cleanup / Retention
+├── security/        # Cross-cutting security
+└── observability/   # Metrics, health indicators, caching
+----
+
+Each feature slice contains its controller, request/response DTOs, entity, repository, and business logic.
+
+== Proxy Module
+
+Independent Spring Boot app (`proxy/`) with Spring AI ChatClient for AI traffic-to-contract generation.
+
+== UI Module — Feature-Sliced Architecture
+
+[source]
+----
+ui/src/
+├── api/             # Typed fetch client + TypeScript types
+├── features/        # Feature slices (applications, contracts, verifications, etc.)
+├── shared/          # Shared components (Layout, DataTable, ComboBox, SearchInput, etc.)
+├── App.tsx
+└── main.tsx
+----
+
+=== Shared Components
+
+* **DataTable** — Generic table with server-side pagination (page/size controls, page navigation).
+  Client-side column sorting is disabled when server-side pagination is active to avoid misleading partial-page sorts.
+* **ComboBox** — Searchable dropdown replacing plain `<select>` for application and version pickers.
+  Supports keyboard navigation (Arrow Up/Down, Enter, Escape) and ARIA attributes (`aria-expanded`, `aria-activedescendant`).
+* **SearchInput** — Debounced text input with `useDeferredValue` for server-side search filtering.
+
+=== Data Fetching
+
+All list pages use TanStack React Query with `keepPreviousData` to eliminate loading flash during pagination.
+Search resets to page 0. The API client passes `sort=createdAt,desc` by default so newest entries appear first.
+
+== Publishing Plugins
+
+The broker provides two plugins for publishing contracts from producer builds:
+
+- **broker-maven-plugin** -- Maven Mojo wrapping `broker-contract-publisher`
+- **broker-gradle-plugin** -- Gradle plugin wrapping `broker-contract-publisher`
+
+Both scan the build output for contract files and push them to the broker REST API.
+
+== Stub Downloader
+
+The `broker-stub-downloader` module implements the Spring Cloud Contract `StubDownloaderBuilder` SPI.
+Consumers add it as a test dependency and configure `@AutoConfigureStubRunner` with the `sccbroker://` protocol
+to fetch contracts and stubs from the broker API.
+
+== API Client
+
+The `broker-api-client` module is a generated REST client JAR produced from `spec/contracts/broker-api.yaml`
+using OpenAPI Generator with the `restclient` library. It is used by `broker-cli` and `broker-mcp-server`.
+
+== CLI
+
+The `broker-cli` module provides a Picocli-based command-line interface wrapping `broker-api-client`.
+It supports 13 top-level commands: `app`, `contract`, `verify`, `deploy`, `can-i-deploy`, `env`, `graph`,
+`matrix`, `tag`, `webhook`, `selector`, `cleanup`, and `version`.
+
+Global options: `--broker-url`, `--username`, `--password`, `--format` (table or json).
+Environment variable fallbacks: `SCC_BROKER_URL`, `SCC_BROKER_USERNAME`, `SCC_BROKER_PASSWORD`.
+
+== MCP Server
+
+The `broker-mcp-server` module exposes the broker API as an MCP (Model Context Protocol) server
+for AI agents. It provides 22 tools, 4 resources, and 4 prompts, running on port 8643.

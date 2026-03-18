@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: spring-cloud-contract-broker-stub-runner
+
+server:
+  port: 8083
+
+stubrunner:
+  ids:
+    - com.toomuchcoding:spring-cloud-contract-broker:+:stubs:8083
+  stubs-mode: LOCAL
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never

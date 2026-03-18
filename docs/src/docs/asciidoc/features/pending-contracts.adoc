@@ -1,0 +1,14 @@
+= Pending Contracts
+
+Pending contracts are newly published contracts that have not yet been verified by the provider.
+Verification failures against pending contracts do not block Can I Deploy checks.
+
+== How It Works
+
+A contract is considered "pending" for a provider if no successful verification exists from that
+provider. When Can I Deploy evaluates safety, pending verification failures are excluded from the
+blocking criteria. This allows consumers to publish new contracts without immediately breaking the
+provider's deployment pipeline.
+
+Once the provider successfully verifies against the contract, it is no longer pending and future
+failures will block deployments.

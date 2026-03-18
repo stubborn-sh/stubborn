@@ -1,0 +1,16 @@
+= Contract Publishing
+
+Publish contracts and stubs per application version.
+
+== Overview
+
+Producers publish contracts to the broker, associating them with a specific application and version.
+Consumers can then retrieve these contracts to generate stubs for testing.
+
+== API
+
+* `POST /api/v1/applications/{name}/versions/{version}/contracts` — Publish a contract
+* `GET /api/v1/applications/{name}/versions/{version}/contracts` — List contracts for a version
+* `GET /api/v1/applications/{name}/versions/{version}/contracts/{contractName}` — Get a specific contract
+
+See specification: `docs/specs/002-contract-publishing.md`

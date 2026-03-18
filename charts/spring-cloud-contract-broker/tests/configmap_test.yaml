@@ -1,0 +1,28 @@
+suite: ConfigMap tests
+templates:
+  - templates/configmap.yaml
+tests:
+  - it: should render a ConfigMap
+    asserts:
+      - isKind:
+          of: ConfigMap
+
+  - it: should contain application.yaml with health probe configuration
+    asserts:
+      - matchRegex:
+          path: data["application.yaml"]
+          pattern: "probes:"
+
+  - it: should set Spring profile from values
+    set:
+      spring.profiles: production
+    asserts:
+      - matchRegex:
+          path: data["application.yaml"]
+          pattern: "active: production"
+
+  - it: should configure health endpoint to hide details
+    asserts:
+      - matchRegex:
+          path: data["application.yaml"]
+          pattern: "show-details: never"

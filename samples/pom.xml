@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.toomuchcoding</groupId>
+		<artifactId>spring-cloud-contract-broker-build-parent</artifactId>
+		<version>0.1.0-SNAPSHOT</version>
+		<relativePath>../build-parent</relativePath>
+	</parent>
+
+	<artifactId>spring-cloud-contract-broker-samples</artifactId>
+	<packaging>pom</packaging>
+	<name>Spring Cloud Contract Broker Samples</name>
+	<description>Sample applications demonstrating producer-driven and consumer-driven contract testing via the broker</description>
+
+	<modules>
+		<module>maven-producer</module>
+		<module>maven-consumer</module>
+		<module>proxy-producer</module>
+		<module>proxy-consumer</module>
+	</modules>
+
+	<properties>
+		<compose.skip>true</compose.skip>
+		<compose.down.skip>true</compose.down.skip>
+		<!-- JS sample tests only run on the parent POM (paths are basedir-relative) -->
+		<js.tests.skip>${compose.skip}</js.tests.skip>
+	</properties>
+
+	<dependencies>
+		<!-- Reactor ordering: broker must build Docker image before samples run docker-compose.
+		     Exclude all transitive deps to avoid polluting sample classpath with JPA/Flyway/etc. -->
+		<dependency>
+			<groupId>com.toomuchcoding</groupId>
+			<artifactId>spring-cloud-contract-broker</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>*</groupId>
+					<artifactId>*</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<!-- Skip Spring Boot repackaging — this is a parent POM -->
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+
+			<!-- Skip static analysis for samples -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>com.github.spotbugs</groupId>
+				<artifactId>spotbugs-maven-plugin</artifactId>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-pmd-plugin</artifactId>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<fork>false</fork>
+					<compilerArgs combine.self="override"/>
+					<annotationProcessorPaths combine.self="override"/>
+				</configuration>
+			</plugin>
+
+			<!-- Docker Compose lifecycle for integration tests -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>3.6.3</version>
+				<executions>
+					<execution>
+						<id>docker-compose-up</id>
+						<phase>pre-integration-test</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<skip>${compose.skip}</skip>
+							<executable>bash</executable>
+							<arguments>
+								<argument>-c</argument>
+								<argument>docker compose -f ${project.basedir}/../compose.yaml up -d &amp;&amp; echo "Waiting for broker at http://localhost:18080/actuator/health ..." &amp;&amp; for i in $(seq 1 60); do if curl -sf http://localhost:18080/actuator/health > /dev/null 2>&amp;1; then echo "Broker is ready"; exit 0; fi; sleep 2; done; echo "Broker did not start in time"; docker compose -f ${project.basedir}/../compose.yaml logs broker; exit 1</argument>
+							</arguments>
+						</configuration>
+					</execution>
+					<execution>
+						<id>js-producer-test</id>
+						<phase>integration-test</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<skip>${js.tests.skip}</skip>
+							<executable>bash</executable>
+							<arguments>
+								<argument>-c</argument>
+								<argument>cd ${project.basedir}/js-producer &amp;&amp; npm ci &amp;&amp; BROKER_URL=http://localhost:18080 npm run test:integration</argument>
+							</arguments>
+						</configuration>
+					</execution>
+					<execution>
+						<id>js-consumer-test</id>
+						<phase>integration-test</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<skip>${js.tests.skip}</skip>
+							<executable>bash</executable>
+							<arguments>
+								<argument>-c</argument>
+								<argument>cd ${project.basedir}/js-consumer &amp;&amp; npm ci &amp;&amp; BROKER_URL=http://localhost:18080 npm run test:integration</argument>
+							</arguments>
+						</configuration>
+					</execution>
+					<execution>
+						<id>jar-consumer-test</id>
+						<phase>integration-test</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<skip>${js.tests.skip}</skip>
+							<executable>bash</executable>
+							<arguments>
+								<argument>-c</argument>
+								<argument>cd ${project.basedir}/maven-producer &amp;&amp; ../../mvnw install -DskipTests -q &amp;&amp; cd ${project.basedir}/jar-consumer &amp;&amp; npm ci &amp;&amp; npm test</argument>
+							</arguments>
+						</configuration>
+					</execution>
+					<execution>
+						<id>docker-compose-down</id>
+						<phase>post-integration-test</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<skip>${compose.down.skip}</skip>
+							<executable>bash</executable>
+							<arguments>
+								<argument>-c</argument>
+								<argument>docker compose -f ${project.basedir}/../compose.yaml down || true</argument>
+							</arguments>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- Failsafe for integration tests -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<includes>
+						<include>**/*IT.java</include>
+					</includes>
+					<systemPropertyVariables>
+						<broker.url>http://localhost:18080</broker.url>
+					</systemPropertyVariables>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

@@ -1,0 +1,24 @@
+{
+  "name": "@spring-cloud-contract/cli",
+  "version": "0.1.0",
+  "type": "module",
+  "bin": {
+    "scc-broker": "./dist/index.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@spring-cloud-contract/broker-client": "0.1.0",
+    "@spring-cloud-contract/publisher": "0.1.0",
+    "chalk": "^5.4.1",
+    "commander": "^13.1.0"
+  },
+  "devDependencies": {
+    "tsup": "^8.4.0"
+  }
+}

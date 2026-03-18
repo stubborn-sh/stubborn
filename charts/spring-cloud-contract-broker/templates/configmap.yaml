@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "spring-cloud-contract-broker.fullname" . }}
+  labels:
+    {{- include "spring-cloud-contract-broker.labels" . | nindent 4 }}
+data:
+  application.yaml: |
+    spring:
+      profiles:
+        active: {{ .Values.spring.profiles }}
+    management:
+      endpoints:
+        web:
+          exposure:
+            include: health,prometheus
+      endpoint:
+        health:
+          show-details: never
+          probes:
+            enabled: true
+      health:
+        livenessState:
+          enabled: true
+        readinessState:
+          enabled: true
+      otlp:
+        tracing:
+          endpoint: {{ .Values.observability.otlp.endpoint | default "http://localhost:4318/v1/traces" }}
+        metrics:
+          export:
+            enabled: {{ .Values.observability.otlp.metricsEnabled | default false }}

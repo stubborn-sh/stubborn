@@ -1,0 +1,44 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+
+patches:
+  - target:
+      kind: Deployment
+      name: spring-cloud-contract-broker
+    patch: |
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: spring-cloud-contract-broker
+      spec:
+        replicas: 1
+        template:
+          spec:
+            containers:
+              - name: spring-cloud-contract-broker
+                resources:
+                  requests:
+                    memory: "128Mi"
+                    cpu: "125m"
+                  limits:
+                    memory: "256Mi"
+                    cpu: "250m"
+  - target:
+      kind: ConfigMap
+      name: spring-cloud-contract-broker
+    patch: |
+      apiVersion: v1
+      kind: ConfigMap
+      metadata:
+        name: spring-cloud-contract-broker
+      data:
+        SPRING_PROFILES_ACTIVE: "dev"
+
+commonLabels:
+  app.kubernetes.io/name: spring-cloud-contract-broker
+  app.kubernetes.io/part-of: spring-cloud-contract-broker
+  app.kubernetes.io/managed-by: kustomize
+  environment: dev

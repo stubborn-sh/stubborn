@@ -1,0 +1,13 @@
+{{- if .Values.podDisruptionBudget.enabled }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "spring-cloud-contract-broker.fullname" . }}
+  labels:
+    {{- include "spring-cloud-contract-broker.labels" . | nindent 4 }}
+spec:
+  minAvailable: {{ .Values.podDisruptionBudget.minAvailable }}
+  selector:
+    matchLabels:
+      {{- include "spring-cloud-contract-broker.selectorLabels" . | nindent 6 }}
+{{- end }}

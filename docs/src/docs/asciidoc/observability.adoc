@@ -1,0 +1,35 @@
+= Observability
+
+The broker uses the LGTM stack (Loki, Grafana, Tempo, Mimir/Prometheus) for comprehensive observability.
+
+== Stack
+
+* **Traces** — OpenTelemetry via `spring-boot-starter-opentelemetry`, exported to Tempo
+* **Metrics** — Micrometer with Prometheus registry, exportable via OTLP
+* **Logs** — Structured JSON with traceId/spanId correlation via Loki4j logback appender
+
+== Dev Mode
+
+Run with the `dev` profile to auto-start the full observability stack via Docker Compose:
+
+[source,bash]
+----
+./mvnw spring-boot:run -pl broker -Dspring-boot.run.profiles=dev
+----
+
+This starts:
+* PostgreSQL on port 5432
+* Grafana LGTM (Loki + Grafana + Tempo + Prometheus) on ports 3000/4317/4318
+
+== Health Probes
+
+* Liveness: `GET /actuator/health/liveness`
+* Readiness: `GET /actuator/health/readiness`
+
+== Metrics
+
+Prometheus metrics exposed at `GET /actuator/prometheus` (when enabled).
+
+== Configuration
+
+See `broker/src/main/resources/application.yaml` for OTLP endpoint, sampling probability, and Prometheus export settings.

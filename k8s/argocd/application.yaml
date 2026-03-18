@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: spring-cloud-contract-broker
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: spring-cloud-contract-broker
+    app.kubernetes.io/part-of: spring-cloud-contract-broker
+    app.kubernetes.io/managed-by: argocd
+    app.kubernetes.io/component: application
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: git@github.com:marcingrzejszczak/spring-cloud-contract-broker.git
+    targetRevision: HEAD
+    path: k8s/overlays/prod
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: broker
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PruneLast=true

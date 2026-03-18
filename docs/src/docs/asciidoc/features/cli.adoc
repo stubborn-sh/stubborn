@@ -1,0 +1,53 @@
+= CLI
+
+The `broker-cli` module provides a command-line interface for interacting with the broker,
+replacing `curl` commands with a user-friendly tool.
+
+== Installation
+
+[source,bash]
+----
+java -jar broker-cli/target/broker-cli.jar --help
+----
+
+== Global Options
+
+* `--broker-url` -- broker base URL (default: `http://localhost:8642`, env: `SCC_BROKER_URL`)
+* `--username` -- HTTP Basic username (env: `SCC_BROKER_USERNAME`)
+* `--password` -- HTTP Basic password (env: `SCC_BROKER_PASSWORD`)
+* `--format` -- output format: `table` (default) or `json`
+
+== Commands
+
+[cols="1,3"]
+|===
+| Command | Description
+
+| `app list\|get\|register\|delete` | Manage applications
+| `contract list\|get\|publish` | Manage contracts
+| `verify record\|list` | Record and list verifications
+| `deploy record\|list` | Record and list deployments
+| `can-i-deploy --app --version [--env]` | Check deployment safety
+| `env list\|get\|create\|update\|delete` | Manage environments
+| `graph show\|app` | View dependency graph
+| `matrix query` | Query compatibility matrix
+| `tag add\|remove\|list\|latest` | Manage version tags
+| `webhook list\|get\|create\|update\|delete\|executions` | Manage webhooks
+| `selector resolve` | Resolve consumer version selectors
+| `cleanup run` | Run data cleanup
+| `version` | Show CLI version
+|===
+
+== Examples
+
+[source,bash]
+----
+# List applications
+scc-broker app list
+
+# Check deployment safety
+scc-broker can-i-deploy --app order-service --version 1.0.0 --env staging
+
+# List webhooks in JSON format
+scc-broker --format json webhook list
+----

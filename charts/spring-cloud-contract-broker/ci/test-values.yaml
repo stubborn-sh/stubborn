@@ -1,0 +1,44 @@
+# CI test values — minimal config for CI/CD pipeline testing
+replicaCount: 1
+
+image:
+  repository: spring-cloud-contract-broker
+  tag: "0.1.0-SNAPSHOT"
+  pullPolicy: Never
+
+service:
+  type: ClusterIP
+  port: 80
+
+resources:
+  requests:
+    memory: 128Mi
+    cpu: 100m
+  limits:
+    memory: 256Mi
+    cpu: 250m
+
+autoscaling:
+  enabled: false
+
+postgresql:
+  host: postgresql
+  port: 5432
+  database: broker
+  username: broker
+  password: testpass
+
+spring:
+  profiles: default
+
+serviceAccount:
+  create: true
+  name: ""
+
+podDisruptionBudget:
+  enabled: false
+
+observability:
+  otlp:
+    endpoint: http://localhost:4318/v1/traces
+    metricsEnabled: false

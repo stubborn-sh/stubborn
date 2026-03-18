@@ -1,0 +1,46 @@
+/*
+ * Copyright 2026-present the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.springframework.cloud.contract.broker.matrix;
+
+import java.util.List;
+
+import org.jspecify.annotations.Nullable;
+
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/v1/matrix")
+@ConditionalOnProperty(name = "broker.pro.enabled", havingValue = "true", matchIfMissing = true)
+class MatrixController {
+
+	private final MatrixService matrixService;
+
+	MatrixController(MatrixService matrixService) {
+		this.matrixService = matrixService;
+	}
+
+	@GetMapping
+	ResponseEntity<List<MatrixEntry>> query(@RequestParam(required = false) @Nullable String provider,
+			@RequestParam(required = false) @Nullable String consumer) {
+		return ResponseEntity.ok(this.matrixService.query(provider, consumer));
+	}
+
+}

@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: spring-cloud-contract-broker
+  labels:
+    app.kubernetes.io/name: spring-cloud-contract-broker
+    app.kubernetes.io/part-of: spring-cloud-contract-broker
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: spring-cloud-contract-broker
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - ports:
+        - port: 8642
+          protocol: TCP
+  egress:
+    # Allow DNS resolution
+    - ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+    # Allow PostgreSQL
+    - ports:
+        - port: 5432
+          protocol: TCP

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "spring-cloud-contract-broker.fullname" . }}-test-connection"
+  labels:
+    {{- include "spring-cloud-contract-broker.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: wget
+      image: busybox:1.36
+      command: ['wget']
+      args: ['{{ include "spring-cloud-contract-broker.fullname" . }}:{{ .Values.service.port }}/actuator/health']
+  restartPolicy: Never

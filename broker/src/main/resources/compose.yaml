@@ -1,0 +1,29 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: broker-postgres
+    environment:
+      POSTGRES_DB: broker
+      POSTGRES_USER: broker
+      POSTGRES_PASSWORD: broker
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U broker -d broker" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  lgtm:
+    image: grafana/otel-lgtm:latest
+    container_name: broker-lgtm
+    ports:
+      - "3000:3000"
+      - "3100:3100"
+      - "4317:4317"
+      - "4318:4318"
+
+volumes:
+  postgres_data:
