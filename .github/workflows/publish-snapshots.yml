@@ -40,7 +40,7 @@ jobs:
           echo "Publishing snapshot: $VERSION"
 
       - name: Build all modules locally
-        run: ./mvnw install -DskipTests -pl !e2e-tests
+        run: ./mvnw install -DskipTests -DskipStubs=true -pl !e2e-tests
 
       - name: Deploy Java modules to Maven Central
         run: ./mvnw deploy -Ppublish -DskipTests -pl build-parent,broker,broker-api-client,broker-stub-downloader,broker-contract-publisher,broker-maven-plugin,stub-runner
