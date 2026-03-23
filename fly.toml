@@ -1,8 +1,8 @@
 app = 'stubborn-demo'
-primary_region = 'waw'
+primary_region = 'arn'
 
 [build]
-  image = 'mgrzejszczak/stubborn:0.1.0-SNAPSHOT'
+  dockerfile = 'Dockerfile.demo'
 
 [env]
   SPRING_PROFILES_ACTIVE = 'demo'
