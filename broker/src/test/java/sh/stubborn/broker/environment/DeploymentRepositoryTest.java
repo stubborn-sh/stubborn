@@ -24,6 +24,8 @@ import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import sh.stubborn.broker.TestcontainersConfiguration;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
@@ -34,6 +36,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @Import(TestcontainersConfiguration.class)
+@Sql(scripts = "/sql/cleanup.sql", executionPhase = ExecutionPhase.BEFORE_TEST_CLASS)
 class DeploymentRepositoryTest {
 
 	@Autowired

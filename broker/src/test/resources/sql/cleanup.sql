@@ -1,0 +1,10 @@
+DELETE FROM webhook_executions;
+DELETE FROM webhooks;
+DELETE FROM version_tags;
+DELETE FROM deployments;
+DELETE FROM verifications;
+DELETE FROM contracts;
+DELETE FROM applications;
+DELETE FROM environments;
+DELETE FROM maven_import_sources;
+DELETE FROM audit_log;
