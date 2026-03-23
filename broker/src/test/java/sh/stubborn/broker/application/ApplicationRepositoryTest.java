@@ -17,6 +17,7 @@ package sh.stubborn.broker.application;
 
 import java.util.Optional;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,11 @@ class ApplicationRepositoryTest {
 
 	@Autowired
 	ApplicationRepository repository;
+
+	@BeforeEach
+	void cleanUp() {
+		this.repository.deleteAll();
+	}
 
 	@Test
 	void should_save_and_find_by_name() {

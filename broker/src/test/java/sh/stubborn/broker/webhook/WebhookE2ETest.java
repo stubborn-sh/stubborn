@@ -21,6 +21,7 @@ import java.util.Objects;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import sh.stubborn.broker.TestcontainersConfiguration;
@@ -29,6 +30,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.client.RestClient;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -40,10 +42,14 @@ class WebhookE2ETest {
 	@LocalServerPort
 	int port;
 
+	@Autowired
+	JdbcTemplate jdbcTemplate;
+
 	RestClient restClient;
 
 	@BeforeEach
 	void setUp() {
+		this.jdbcTemplate.update("DELETE FROM webhooks");
 		this.restClient = RestClient.builder()
 			.baseUrl("http://localhost:" + this.port)
 			.defaultHeaders(headers -> headers.setBasicAuth("admin", "admin"))

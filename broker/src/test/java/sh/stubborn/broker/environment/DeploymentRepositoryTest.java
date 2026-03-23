@@ -46,6 +46,8 @@ class DeploymentRepositoryTest {
 
 	@BeforeEach
 	void setUp() {
+		this.repository.deleteAll();
+		this.jdbcTemplate.update("DELETE FROM applications");
 		this.applicationId = UUID.randomUUID();
 		this.jdbcTemplate.update(
 				"INSERT INTO applications (id, name, description, owner, created_at, updated_at, version) VALUES (?, ?, ?, ?, NOW(), NOW(), 0)",

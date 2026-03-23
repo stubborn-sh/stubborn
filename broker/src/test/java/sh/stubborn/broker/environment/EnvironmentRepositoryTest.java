@@ -18,6 +18,7 @@ package sh.stubborn.broker.environment;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,11 @@ class EnvironmentRepositoryTest {
 
 	@Autowired
 	EnvironmentRepository repository;
+
+	@BeforeEach
+	void cleanUp() {
+		this.repository.deleteAll();
+	}
 
 	@Test
 	void should_save_and_find_by_name() {
