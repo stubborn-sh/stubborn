@@ -68,7 +68,7 @@ JS samples integrate with Maven via `exec-maven-plugin`:
 
 ### 6. Local JAR Support (discovered 2026-03-13)
 
-The `@spring-cloud-contract/jest` package supports 5 stubs sources:
+The `@stubborn-sh/jest` package supports 5 stubs sources:
 1. Broker REST API (`brokerUrl`)
 2. Local contracts directory (`contractsDir`)
 3. Local WireMock mappings (`mappingsDir`)
@@ -83,7 +83,7 @@ root-level and `META-INF/{groupId}/{artifactId}/{version}/` layouts.
 
 ### 7. Stubs Packager (discovered 2026-03-13)
 
-New `@spring-cloud-contract/stubs-packager` package enables JS producers to:
+New `@stubborn-sh/stubs-packager` package enables JS producers to:
 - Convert YAML contracts to WireMock JSON mappings (`contractToWireMock`)
 - Package into Maven stubs JARs with standard SCC layout (`packageStubsJar`)
 - Deploy to Nexus/Artifactory via HTTP PUT (`deployStubsJar`)

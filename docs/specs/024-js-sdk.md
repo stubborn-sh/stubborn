@@ -2,7 +2,7 @@
 
 ## What
 
-A TypeScript/Node.js SDK (`@spring-cloud-contract/*`) that enables JavaScript and TypeScript
+A TypeScript/Node.js SDK (`@stubborn-sh/*`) that enables JavaScript and TypeScript
 applications to participate in the Spring Cloud Contract ecosystem. The SDK provides packages
 for publishing contracts, verifying providers, serving stubs, and interacting with the broker
 API — all from Node.js without requiring Java tooling.
@@ -38,13 +38,13 @@ JS Verifier:  contracts (local or broker) → verifier → HTTP requests → val
 
 | Package | Purpose |
 |---------|---------|
-| `@spring-cloud-contract/broker-client` | HTTP REST client for all broker API endpoints |
-| `@spring-cloud-contract/publisher` | Scans directories and publishes contracts to broker |
-| `@spring-cloud-contract/verifier` | Verifies provider responses against contracts |
-| `@spring-cloud-contract/stub-server` | Native Node.js HTTP server serving contract responses |
-| `@spring-cloud-contract/jest` | Jest/Vitest integration (setupStubs, teardownStubs, withStubs, loadLocalJar) |
-| `@spring-cloud-contract/cli` | Commander.js CLI wrapping broker-client + publisher |
-| `@spring-cloud-contract/stubs-packager` | Package YAML contracts into Maven stubs JARs + deploy to Nexus |
+| `@stubborn-sh/broker-client` | HTTP REST client for all broker API endpoints |
+| `@stubborn-sh/publisher` | Scans directories and publishes contracts to broker |
+| `@stubborn-sh/verifier` | Verifies provider responses against contracts |
+| `@stubborn-sh/stub-server` | Native Node.js HTTP server serving contract responses |
+| `@stubborn-sh/jest` | Jest/Vitest integration (setupStubs, teardownStubs, withStubs, loadLocalJar) |
+| `@stubborn-sh/cli` | Commander.js CLI wrapping broker-client + publisher |
+| `@stubborn-sh/stubs-packager` | Package YAML contracts into Maven stubs JARs + deploy to Nexus |
 
 ## Contract Format
 

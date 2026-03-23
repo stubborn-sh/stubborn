@@ -2,7 +2,7 @@
 
 ## What
 
-The JS SDK's `@spring-cloud-contract/jest` package can now load contracts from local
+The JS SDK's `@stubborn-sh/jest` package can now load contracts from local
 stubs JAR files (Maven artifacts on disk), in addition to fetching from the broker API
 or reading from local directories. This enables JS consumers to test against stubs from
 Java producers without needing a running broker instance.
@@ -19,7 +19,7 @@ Local JAR support provides a zero-infrastructure path to JS consumer testing.
 
 ## How (High Level)
 
-Two changes to the `@spring-cloud-contract/jest` package:
+Two changes to the `@stubborn-sh/jest` package:
 
 1. **`loadLocalJar(jarPath)`**: Extracts a local JAR file to a temp directory,
    parses all contracts/mappings, and cleans up.

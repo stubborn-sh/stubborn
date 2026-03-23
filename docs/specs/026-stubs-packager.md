@@ -2,7 +2,7 @@
 
 ## What
 
-A new `@spring-cloud-contract/stubs-packager` npm package that lets TypeScript/Node.js
+A new `@stubborn-sh/stubs-packager` npm package that lets TypeScript/Node.js
 producers package their YAML contracts into Maven stubs JARs (ZIP format) and deploy
 them to Nexus/Artifactory repositories. This enables Java consumers to use
 `@AutoConfigureStubRunner` against JS-produced stubs without needing the broker.

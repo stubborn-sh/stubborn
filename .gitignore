@@ -62,3 +62,4 @@ broker/src/main/resources/static/
 
 # Astro
 .astro/
+js/.npmrc

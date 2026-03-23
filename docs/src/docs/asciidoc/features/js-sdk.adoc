@@ -1,6 +1,6 @@
 == TypeScript/Node.js SDK
 
-The TypeScript/Node.js SDK (`@spring-cloud-contract/*`) enables JavaScript and TypeScript
+The TypeScript/Node.js SDK (`@stubborn-sh/*`) enables JavaScript and TypeScript
 applications to participate in the Spring Cloud Contract ecosystem without requiring Java tooling.
 
 === Packages
@@ -9,25 +9,25 @@ applications to participate in the Spring Cloud Contract ecosystem without requi
 |===
 | Package | Purpose
 
-| `@spring-cloud-contract/broker-client`
+| `@stubborn-sh/broker-client`
 | HTTP REST client for all broker API endpoints
 
-| `@spring-cloud-contract/publisher`
+| `@stubborn-sh/publisher`
 | Scans directories and publishes contracts to the broker
 
-| `@spring-cloud-contract/verifier`
+| `@stubborn-sh/verifier`
 | Verifies provider HTTP responses against contracts
 
-| `@spring-cloud-contract/stub-server`
+| `@stubborn-sh/stub-server`
 | Native Node.js HTTP server that serves contract responses
 
-| `@spring-cloud-contract/jest`
+| `@stubborn-sh/jest`
 | Jest/Vitest integration helpers (`setupStubs`, `teardownStubs`, `loadLocalJar`)
 
-| `@spring-cloud-contract/stubs-packager`
+| `@stubborn-sh/stubs-packager`
 | Package YAML contracts into Maven stubs JARs and deploy to Nexus/Artifactory
 
-| `@spring-cloud-contract/cli`
+| `@stubborn-sh/cli`
 | Terminal CLI wrapping broker-client and publisher
 |===
 
@@ -37,8 +37,8 @@ A JS/TS producer defines contracts as YAML files and publishes them to the broke
 
 [source,typescript]
 ----
-import { BrokerClient } from "@spring-cloud-contract/broker-client";
-import { ContractPublisher } from "@spring-cloud-contract/publisher";
+import { BrokerClient } from "@stubborn-sh/broker-client";
+import { ContractPublisher } from "@stubborn-sh/publisher";
 
 const client = new BrokerClient({
   baseUrl: "http://localhost:8642",
@@ -62,7 +62,7 @@ A JS/TS consumer fetches stubs from the broker and starts a local stub server:
 
 [source,typescript]
 ----
-import { setupStubs, teardownStubs } from "@spring-cloud-contract/jest";
+import { setupStubs, teardownStubs } from "@stubborn-sh/jest";
 
 // In beforeAll
 const port = await setupStubs({
@@ -87,8 +87,8 @@ A JS/TS producer verifies its implementation against contracts:
 
 [source,typescript]
 ----
-import { BrokerClient } from "@spring-cloud-contract/broker-client";
-import { ContractVerifier } from "@spring-cloud-contract/verifier";
+import { BrokerClient } from "@stubborn-sh/broker-client";
+import { ContractVerifier } from "@stubborn-sh/verifier";
 
 const client = new BrokerClient({ baseUrl: "http://localhost:8642" });
 
@@ -127,7 +127,7 @@ A JS/TS producer can package contracts into a Maven stubs JAR and deploy to Nexu
 
 [source,typescript]
 ----
-import { packageStubsJar, deployStubsJar } from "@spring-cloud-contract/stubs-packager";
+import { packageStubsJar, deployStubsJar } from "@stubborn-sh/stubs-packager";
 
 const result = await packageStubsJar({
   contractsDir: "./contracts",
@@ -207,15 +207,15 @@ response:
 [source,bash]
 ----
 # Broker client only
-npm install @spring-cloud-contract/broker-client
+npm install @stubborn-sh/broker-client
 
 # Full producer setup
-npm install @spring-cloud-contract/broker-client \
-            @spring-cloud-contract/publisher \
-            @spring-cloud-contract/verifier
+npm install @stubborn-sh/broker-client \
+            @stubborn-sh/publisher \
+            @stubborn-sh/verifier
 
 # Full consumer setup
-npm install @spring-cloud-contract/broker-client \
-            @spring-cloud-contract/jest \
-            @spring-cloud-contract/stub-server
+npm install @stubborn-sh/broker-client \
+            @stubborn-sh/jest \
+            @stubborn-sh/stub-server
 ----
