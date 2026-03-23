@@ -1,3 +1,6 @@
 spring:
   flyway:
     locations: classpath:db/migration,classpath:db/migration/demo
+  docker:
+    compose:
+      enabled: false

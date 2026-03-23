@@ -281,5 +281,5 @@ VALUES
     ((SELECT id FROM applications WHERE name = 'notification-service'),
      'contract_published',
      'https://hooks.example.com/stubborn/notifications',
-     '{"X-Webhook-Secret": "demo-secret-token"}'::jsonb,
+     '{"X-Webhook-Secret": "demo-secret-token"}',
      TRUE);

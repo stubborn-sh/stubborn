@@ -42,7 +42,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Integration test verifying that the demo profile activates read-only mode and loads
- * seed data.
+ * seed data. Uses its own PostgreSQL container to avoid polluting the shared test DB.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Testcontainers
