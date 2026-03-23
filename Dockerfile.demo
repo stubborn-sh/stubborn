@@ -1,0 +1,5 @@
+FROM eclipse-temurin:25-jre-alpine
+WORKDIR /app
+COPY broker/target/spring-cloud-contract-broker-0.1.0-SNAPSHOT-exec.jar app.jar
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "app.jar"]

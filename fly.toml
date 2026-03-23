@@ -7,6 +7,7 @@ primary_region = 'arn'
 [env]
   SPRING_PROFILES_ACTIVE = 'demo'
   SERVER_PORT = '8080'
+  JAVA_TOOL_OPTIONS = '-Dserver.port=8080'
 
 [http_service]
   internal_port = 8080
@@ -19,6 +20,13 @@ primary_region = 'arn'
     type = 'connections'
     hard_limit = 100
     soft_limit = 80
+
+[[http_service.checks]]
+  grace_period = "30s"
+  interval = "15s"
+  method = "GET"
+  path = "/actuator/health"
+  timeout = "5s"
 
 [[vm]]
   memory = '512mb'
