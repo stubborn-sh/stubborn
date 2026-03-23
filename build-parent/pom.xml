@@ -35,9 +35,9 @@
 	</developers>
 
 	<scm>
-		<connection>scm:git:git://github.com/toomuchcoding-com/stubborn.git</connection>
-		<developerConnection>scm:git:ssh://github.com/toomuchcoding-com/stubborn.git</developerConnection>
-		<url>https://github.com/toomuchcoding-com/stubborn</url>
+		<connection>scm:git:git://github.com/stubborn-sh/stubborn.git</connection>
+		<developerConnection>scm:git:ssh://github.com/stubborn-sh/stubborn.git</developerConnection>
+		<url>https://github.com/stubborn-sh/stubborn</url>
 	</scm>
 
 	<properties>
