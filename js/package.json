@@ -16,7 +16,7 @@
     "lint": "eslint packages/*/src/**/*.ts && prettier --check \"packages/*/src/**/*.ts\" \"packages/*/tests/**/*.ts\"",
     "lint:fix": "eslint --fix packages/*/src/**/*.ts && prettier --write \"packages/*/src/**/*.ts\" \"packages/*/tests/**/*.ts\"",
     "typecheck": "tsc -b",
-    "build": "npm run --workspaces build && tsc -b",
+    "build": "npm run --workspaces build",
     "test": "vitest run",
     "test:unit": "vitest run --include 'packages/*/tests/unit/**/*.test.ts'",
     "test:property": "vitest run --include 'packages/*/tests/property/**/*.test.ts'",
