@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from "vitest";
 
 const mockVerify = vi.fn();
 
-vi.mock("@stubborn/verifier", () => ({
+vi.mock("@stubborn-sh/verifier", () => ({
   ContractVerifier: class {
     verify = mockVerify;
   },

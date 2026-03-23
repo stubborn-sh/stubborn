@@ -7,7 +7,7 @@ export default defineConfig({
   clean: true,
   sourcemap: true,
   external: [
-    "@stubborn/broker-client",
-    "@stubborn/stub-server",
+    "@stubborn-sh/broker-client",
+    "@stubborn-sh/stub-server",
   ],
 });

@@ -7,5 +7,5 @@ export default defineConfig({
   clean: true,
   sourcemap: true,
   banner: { js: "#!/usr/bin/env node" },
-  external: ["@stubborn/broker-client"],
+  external: ["@stubborn-sh/broker-client"],
 });

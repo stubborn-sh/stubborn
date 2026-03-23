@@ -1,5 +1,5 @@
 {
-  "name": "@stubborn/publisher",
+  "name": "@stubborn-sh/publisher",
   "version": "0.1.0",
   "type": "module",
   "main": "./dist/index.js",
@@ -20,7 +20,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@stubborn/broker-client": "0.1.0"
+    "@stubborn-sh/broker-client": "0.1.0"
   },
   "devDependencies": {
     "tsup": "^8.4.0"

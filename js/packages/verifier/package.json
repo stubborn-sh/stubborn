@@ -1,5 +1,5 @@
 {
-  "name": "@stubborn/verifier",
+  "name": "@stubborn-sh/verifier",
   "version": "0.1.0",
   "type": "module",
   "main": "./dist/index.js",
@@ -20,8 +20,8 @@
     "access": "public"
   },
   "dependencies": {
-    "@stubborn/broker-client": "0.1.0",
-    "@stubborn/stub-server": "0.1.0"
+    "@stubborn-sh/broker-client": "0.1.0",
+    "@stubborn-sh/stub-server": "0.1.0"
   },
   "devDependencies": {
     "tsup": "^8.4.0"

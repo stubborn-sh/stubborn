@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { validateResponse } from "../../src/response-validator.js";
-import type { ParsedContract } from "@stubborn/stub-server";
+import type { ParsedContract } from "@stubborn-sh/stub-server";
 import type { ExecutionResult } from "../../src/request-executor.js";
 
 function makeContract(overrides: Partial<ParsedContract["response"]> = {}): ParsedContract {

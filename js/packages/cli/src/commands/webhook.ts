@@ -1,5 +1,5 @@
 import { Command } from "commander";
-import type { BrokerClient, EventType } from "@stubborn/broker-client";
+import type { BrokerClient, EventType } from "@stubborn-sh/broker-client";
 import { formatOutput, formatSingle, formatSuccess } from "../formatter.js";
 
 export function createWebhookCommand(

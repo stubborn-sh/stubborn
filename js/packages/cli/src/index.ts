@@ -1,5 +1,5 @@
 import { Command } from "commander";
-import { BrokerClient } from "@stubborn/broker-client";
+import { BrokerClient } from "@stubborn-sh/broker-client";
 import { resolveCliConfig, type CliConfig } from "./config.js";
 import { formatError } from "./formatter.js";
 import { createAppCommand } from "./commands/app.js";

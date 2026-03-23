@@ -1,4 +1,4 @@
-import type { BrokerClientConfig } from "@stubborn/broker-client";
+import type { BrokerClientConfig } from "@stubborn-sh/broker-client";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 

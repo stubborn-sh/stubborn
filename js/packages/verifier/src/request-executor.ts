@@ -1,4 +1,4 @@
-import type { ParsedContract } from "@stubborn/stub-server";
+import type { ParsedContract } from "@stubborn-sh/stub-server";
 
 /** Response from executing a contract request against a provider. */
 export interface ExecutionResult {

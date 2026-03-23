@@ -4,7 +4,7 @@ const mockSetContracts = vi.fn();
 const mockStart = vi.fn().mockResolvedValue(54321);
 const mockStop = vi.fn().mockResolvedValue(undefined);
 
-vi.mock("@stubborn/broker-client", () => ({
+vi.mock("@stubborn-sh/broker-client", () => ({
   BrokerClient: class {
     listContracts = vi.fn().mockResolvedValue({
       content: [
@@ -29,7 +29,7 @@ vi.mock("@stubborn/broker-client", () => ({
   ]),
 }));
 
-vi.mock("@stubborn/stub-server", () => ({
+vi.mock("@stubborn-sh/stub-server", () => ({
   StubServer: class {
     setContracts = mockSetContracts;
     start = mockStart;

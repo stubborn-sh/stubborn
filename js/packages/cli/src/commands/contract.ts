@@ -1,6 +1,6 @@
 import { Command } from "commander";
-import type { BrokerClient } from "@stubborn/broker-client";
-import { ContractPublisher } from "@stubborn/publisher";
+import type { BrokerClient } from "@stubborn-sh/broker-client";
+import { ContractPublisher } from "@stubborn-sh/publisher";
 import { formatOutput, formatSingle, formatSuccess, formatError } from "../formatter.js";
 
 export function createContractCommand(

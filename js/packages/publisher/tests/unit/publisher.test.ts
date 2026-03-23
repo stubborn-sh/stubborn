@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { ContractPublisher } from "../../src/publisher.js";
-import type { BrokerClient, ContractResponse } from "@stubborn/broker-client";
+import type { BrokerClient, ContractResponse } from "@stubborn-sh/broker-client";
 
 function mockClient(
   publishFn?: (appName: string, version: string, req: unknown) => Promise<ContractResponse>,

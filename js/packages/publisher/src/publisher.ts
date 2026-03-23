@@ -1,4 +1,4 @@
-import type { BrokerClient, ContractResponse } from "@stubborn/broker-client";
+import type { BrokerClient, ContractResponse } from "@stubborn-sh/broker-client";
 import type { ScannedContract } from "./scanner.js";
 import { scanContracts } from "./scanner.js";
 

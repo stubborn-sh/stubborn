@@ -9,7 +9,7 @@ import {
   parseWireMockMapping,
   parseContract,
   type ParsedContract,
-} from "@stubborn/stub-server";
+} from "@stubborn-sh/stub-server";
 
 const execFileAsync = promisify(execFile);
 

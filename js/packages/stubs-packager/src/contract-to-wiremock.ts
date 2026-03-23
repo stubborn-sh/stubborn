@@ -1,4 +1,4 @@
-import type { ScannedContract } from "@stubborn/publisher";
+import type { ScannedContract } from "@stubborn-sh/publisher";
 import yaml from "js-yaml";
 
 /** Raw WireMock mapping JSON structure for serialization. */

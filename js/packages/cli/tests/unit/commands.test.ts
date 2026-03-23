@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import type { BrokerClient } from "@stubborn/broker-client";
+import type { BrokerClient } from "@stubborn-sh/broker-client";
 import { createAppCommand } from "../../src/commands/app.js";
 import { createContractCommand } from "../../src/commands/contract.js";
 import { createCanIDeployCommand } from "../../src/commands/can-i-deploy.js";

@@ -1,8 +1,8 @@
 import { readdir, readFile } from "node:fs/promises";
 import { join } from "node:path";
-import type { BrokerClient } from "@stubborn/broker-client";
-import { parseContract, type ParsedContract } from "@stubborn/stub-server";
-import { fetchAllPages } from "@stubborn/broker-client";
+import type { BrokerClient } from "@stubborn-sh/broker-client";
+import { parseContract, type ParsedContract } from "@stubborn-sh/stub-server";
+import { fetchAllPages } from "@stubborn-sh/broker-client";
 
 /** Load contracts from a local directory. */
 export async function loadFromDirectory(directory: string): Promise<readonly ParsedContract[]> {

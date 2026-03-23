@@ -3,8 +3,8 @@ import {
   parseContract,
   loadFromDirectory,
   type ParsedContract,
-} from "@stubborn/stub-server";
-import { BrokerClient, fetchAllPages } from "@stubborn/broker-client";
+} from "@stubborn-sh/stub-server";
+import { BrokerClient, fetchAllPages } from "@stubborn-sh/broker-client";
 import { fetchStubsJar, loadLocalJar, type MavenStubsJar } from "./jar-fetcher.js";
 
 /** Configuration for setting up stubs from the broker. */

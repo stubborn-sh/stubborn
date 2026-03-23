@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { executeRequest } from "../../src/request-executor.js";
-import type { ParsedContract } from "@stubborn/stub-server";
+import type { ParsedContract } from "@stubborn-sh/stub-server";
 
 function makeContract(overrides?: Partial<ParsedContract["request"]>): ParsedContract {
   return {

@@ -64,7 +64,7 @@ describe("ContractVerifier", () => {
   });
 
   it("should_load_contracts_from_broker", async () => {
-    const mockClient = {} as import("@stubborn/broker-client").BrokerClient;
+    const mockClient = {} as import("@stubborn-sh/broker-client").BrokerClient;
     mockLoadFromBroker.mockResolvedValue([contract]);
 
     const verifier = new ContractVerifier({
@@ -140,7 +140,7 @@ describe("ContractVerifier", () => {
   });
 
   it("should_report_to_broker_when_configured", async () => {
-    const reportClient = {} as import("@stubborn/broker-client").BrokerClient;
+    const reportClient = {} as import("@stubborn-sh/broker-client").BrokerClient;
 
     const verifier = new ContractVerifier({
       providerBaseUrl: "http://localhost:8080",

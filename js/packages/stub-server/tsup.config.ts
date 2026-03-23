@@ -6,5 +6,5 @@ export default defineConfig({
   dts: false,
   clean: true,
   sourcemap: true,
-  external: ["@stubborn/broker-client"],
+  external: ["@stubborn-sh/broker-client"],
 });

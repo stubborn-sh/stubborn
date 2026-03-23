@@ -1,4 +1,4 @@
-import type { BrokerClient, VerificationStatus } from "@stubborn/broker-client";
+import type { BrokerClient, VerificationStatus } from "@stubborn-sh/broker-client";
 import type { ValidationResult } from "./response-validator.js";
 
 /** Report verification results to the broker. */

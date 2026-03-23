@@ -2,7 +2,7 @@ import {
   ContractVerifier,
   type VerifierConfig,
   type VerificationResult,
-} from "@stubborn/verifier";
+} from "@stubborn-sh/verifier";
 
 /**
  * Verify contracts against a provider.

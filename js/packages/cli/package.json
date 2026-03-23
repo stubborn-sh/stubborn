@@ -1,5 +1,5 @@
 {
-  "name": "@stubborn/cli",
+  "name": "@stubborn-sh/cli",
   "version": "0.1.0",
   "type": "module",
   "bin": {
@@ -16,8 +16,8 @@
     "access": "public"
   },
   "dependencies": {
-    "@stubborn/broker-client": "0.1.0",
-    "@stubborn/publisher": "0.1.0",
+    "@stubborn-sh/broker-client": "0.1.0",
+    "@stubborn-sh/publisher": "0.1.0",
     "chalk": "^5.4.1",
     "commander": "^13.1.0"
   },

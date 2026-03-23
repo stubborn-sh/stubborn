@@ -1,5 +1,5 @@
 import { Command } from "commander";
-import type { BrokerClient } from "@stubborn/broker-client";
+import type { BrokerClient } from "@stubborn-sh/broker-client";
 import { formatSingle, formatSuccess, formatError } from "../formatter.js";
 
 export function createCanIDeployCommand(

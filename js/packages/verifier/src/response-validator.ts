@@ -1,4 +1,4 @@
-import type { ParsedContract } from "@stubborn/stub-server";
+import type { ParsedContract } from "@stubborn-sh/stub-server";
 import type { ExecutionResult } from "./request-executor.js";
 import { byRegex, byType, byEquality } from "./matchers.js";
 

@@ -1,5 +1,5 @@
 {
-  "name": "@stubborn/stubs-packager",
+  "name": "@stubborn-sh/stubs-packager",
   "version": "0.1.0",
   "type": "module",
   "main": "./dist/index.js",
@@ -20,7 +20,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@stubborn/publisher": "0.1.0",
+    "@stubborn-sh/publisher": "0.1.0",
     "archiver": "^7.0.0",
     "js-yaml": "^4.1.0"
   },

@@ -5,7 +5,7 @@ import type { ValidationResult } from "../../src/response-validator.js";
 function mockClient() {
   return {
     recordVerification: vi.fn().mockResolvedValue(undefined),
-  } as unknown as import("@stubborn/broker-client").BrokerClient;
+  } as unknown as import("@stubborn-sh/broker-client").BrokerClient;
 }
 
 describe("reportResults", () => {
