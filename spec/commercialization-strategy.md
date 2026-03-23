@@ -471,7 +471,7 @@ Database migrations stay in OSS (tables exist but are unused without Pro).
 
 ```java
 @AutoConfiguration
-@ConditionalOnClass(name = "org.springframework.cloud.contract.broker.BrokerApplication")
+@ConditionalOnClass(name = "sh.stubborn.broker.BrokerApplication")
 @ConditionalOnProperty(name = "broker.pro.license-key")
 public class BrokerProAutoConfiguration {
     // @Primary @Bean for each strategy interface override

@@ -407,17 +407,17 @@
 				<artifactId>pitest-maven</artifactId>
 				<configuration>
 					<targetClasses>
-						<param>org.springframework.cloud.contract.broker.**</param>
+						<param>sh.stubborn.broker.**</param>
 					</targetClasses>
 					<excludedClasses>
-						<param>org.springframework.cloud.contract.broker.application.Application</param>
-						<param>org.springframework.cloud.contract.broker.contract.Contract</param>
-						<param>org.springframework.cloud.contract.broker.environment.Deployment</param>
-						<param>org.springframework.cloud.contract.broker.verification.Verification</param>
-						<param>org.springframework.cloud.contract.broker.security.SecurityConfig</param>
-						<param>org.springframework.cloud.contract.broker.security.UserConfig</param>
-						<param>org.springframework.cloud.contract.broker.environment.DeploymentInfo</param>
-						<param>org.springframework.cloud.contract.broker.**.*Exception</param>
+						<param>sh.stubborn.broker.application.Application</param>
+						<param>sh.stubborn.broker.contract.Contract</param>
+						<param>sh.stubborn.broker.environment.Deployment</param>
+						<param>sh.stubborn.broker.verification.Verification</param>
+						<param>sh.stubborn.broker.security.SecurityConfig</param>
+						<param>sh.stubborn.broker.security.UserConfig</param>
+						<param>sh.stubborn.broker.environment.DeploymentInfo</param>
+						<param>sh.stubborn.broker.**.*Exception</param>
 					</excludedClasses>
 					<jvmArgs>
 						<jvmArg>--add-opens=java.base/java.lang=ALL-UNNAMED</jvmArg>
@@ -428,8 +428,8 @@
 						<jvmArg>--add-opens=java.base/sun.nio.cs=ALL-UNNAMED</jvmArg>
 					</jvmArgs>
 					<targetTests>
-						<param>org.springframework.cloud.contract.broker.**.*Test</param>
-						<param>org.springframework.cloud.contract.broker.**.*Properties</param>
+						<param>sh.stubborn.broker.**.*Test</param>
+						<param>sh.stubborn.broker.**.*Properties</param>
 					</targetTests>
 					<excludedTestClasses>
 						<param>**.*E2ETest</param>

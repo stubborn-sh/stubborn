@@ -13,7 +13,7 @@
 	</appender>
 
 	<!-- Logger levels -->
-	<logger name="org.springframework.cloud.contract.broker" level="INFO"/>
+	<logger name="sh.stubborn.broker" level="INFO"/>
 	<logger name="org.springframework" level="INFO"/>
 	<logger name="org.springframework.security" level="INFO"/>
 	<logger name="org.hibernate" level="WARN"/>
@@ -46,7 +46,7 @@
 			<verbose>false</verbose>
 		</appender>
 
-		<logger name="org.springframework.cloud.contract.broker" level="DEBUG"/>
+		<logger name="sh.stubborn.broker" level="DEBUG"/>
 
 		<root level="INFO">
 			<appender-ref ref="CONSOLE"/>

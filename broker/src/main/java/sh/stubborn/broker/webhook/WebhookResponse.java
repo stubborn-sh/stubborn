@@ -1,0 +1,33 @@
+/*
+ * Copyright 2026-present the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package sh.stubborn.broker.webhook;
+
+import java.time.Instant;
+import java.util.UUID;
+
+import org.jspecify.annotations.Nullable;
+
+record WebhookResponse(UUID id, @Nullable UUID applicationId, @Nullable String applicationName, EventType eventType,
+		String url, @Nullable String headers, @Nullable String bodyTemplate, boolean enabled, Instant createdAt,
+		Instant updatedAt) {
+
+	static WebhookResponse from(Webhook webhook, @Nullable String applicationName) {
+		return new WebhookResponse(webhook.getId(), webhook.getApplicationId(), applicationName, webhook.getEventType(),
+				webhook.getUrl(), webhook.getHeaders(), webhook.getBodyTemplate(), webhook.isEnabled(),
+				webhook.getCreatedAt(), webhook.getUpdatedAt());
+	}
+
+}

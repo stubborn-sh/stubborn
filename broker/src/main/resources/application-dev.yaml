@@ -19,4 +19,4 @@ management:
 
 logging:
   level:
-    org.springframework.cloud.contract.broker: DEBUG
+    sh.stubborn.broker: DEBUG
