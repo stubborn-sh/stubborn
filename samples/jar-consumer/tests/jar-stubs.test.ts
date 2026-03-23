@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
-import { setupStubs, teardownStubs } from "@spring-cloud-contract/jest";
+import { setupStubs, teardownStubs } from "@stubborn-sh/jest";
 import { OrderServiceClient } from "../src/client.js";
 import { join } from "node:path";
 import { homedir } from "node:os";

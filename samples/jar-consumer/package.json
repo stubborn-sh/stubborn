@@ -11,8 +11,8 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@spring-cloud-contract/jest": "file:../../js/packages/jest",
-    "@spring-cloud-contract/stub-server": "file:../../js/packages/stub-server"
+    "@stubborn-sh/jest": "file:../../js/packages/jest",
+    "@stubborn-sh/stub-server": "file:../../js/packages/stub-server"
   },
   "devDependencies": {
     "typescript": "^5.8.0",

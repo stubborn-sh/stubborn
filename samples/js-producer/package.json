@@ -15,9 +15,9 @@
     "test:integration": "vitest run tests/integration"
   },
   "dependencies": {
-    "@spring-cloud-contract/broker-client": "file:../../js/packages/broker-client",
-    "@spring-cloud-contract/publisher": "file:../../js/packages/publisher",
-    "@spring-cloud-contract/verifier": "file:../../js/packages/verifier"
+    "@stubborn-sh/broker-client": "file:../../js/packages/broker-client",
+    "@stubborn-sh/publisher": "file:../../js/packages/publisher",
+    "@stubborn-sh/verifier": "file:../../js/packages/verifier"
   },
   "devDependencies": {
     "tsx": "^4.19.0",

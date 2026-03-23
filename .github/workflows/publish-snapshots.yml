@@ -49,9 +49,11 @@ jobs:
           CENTRAL_PASSWORD: ${{ secrets.CENTRAL_PASSWORD }}
 
       - name: Build Docker image
+        continue-on-error: true
         run: ./mvnw spring-boot:build-image -pl broker -DskipTests -DskipStubs=true
 
       - name: Push Docker image
+        continue-on-error: true
         run: |
           echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
           VERSION=$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout -pl build-parent)

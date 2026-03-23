@@ -1,4 +1,4 @@
 // Type declarations for SDK packages (tsup does not emit .d.ts yet)
-declare module "@spring-cloud-contract/broker-client";
-declare module "@spring-cloud-contract/publisher";
-declare module "@spring-cloud-contract/verifier";
+declare module "@stubborn-sh/broker-client";
+declare module "@stubborn-sh/publisher";
+declare module "@stubborn-sh/verifier";

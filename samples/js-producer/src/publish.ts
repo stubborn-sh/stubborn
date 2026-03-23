@@ -1,5 +1,5 @@
-import { BrokerClient } from "@spring-cloud-contract/broker-client";
-import { ContractPublisher } from "@spring-cloud-contract/publisher";
+import { BrokerClient } from "@stubborn-sh/broker-client";
+import { ContractPublisher } from "@stubborn-sh/publisher";
 import { resolve } from "node:path";
 
 const brokerUrl = process.env["BROKER_URL"] ?? "http://localhost:18080";

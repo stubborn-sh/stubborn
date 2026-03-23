@@ -1,4 +1,4 @@
-# Spring Cloud Contract Broker Samples
+# Stubborn Broker Samples
 
 Sample pairs demonstrating different contract testing workflows through the broker,
 including cross-language testing between Java and JavaScript/TypeScript.
@@ -92,8 +92,8 @@ cd ..
 
 **Flow:**
 1. `js-producer` defines YAML contracts for a Product API
-2. Contracts are published to broker via `@spring-cloud-contract/publisher`
-3. The JS server is started and contracts are verified via `@spring-cloud-contract/verifier`
+2. Contracts are published to broker via `@stubborn-sh/publisher`
+3. The JS server is started and contracts are verified via `@stubborn-sh/verifier`
 4. Verification results are reported to the broker
 5. `maven-consumer` can consume the JS-published stubs via `@AutoConfigureStubRunner`
 
@@ -111,10 +111,10 @@ npm install && npm run test:integration
 
 **Flow:**
 1. `maven-producer` publishes Order Service contracts to broker (same as Pair 1)
-2. `js-consumer` fetches stubs from broker via `@spring-cloud-contract/jest` `setupStubs()`
+2. `js-consumer` fetches stubs from broker via `@stubborn-sh/jest` `setupStubs()`
 3. A Node.js stub server starts, serving contract responses
 4. JS client tests validate against the stub server
-5. Verification results reported to broker via `@spring-cloud-contract/broker-client`
+5. Verification results reported to broker via `@stubborn-sh/broker-client`
 
 ```bash
 cd samples/js-consumer

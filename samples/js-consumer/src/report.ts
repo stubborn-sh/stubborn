@@ -1,4 +1,4 @@
-import { BrokerClient } from "@spring-cloud-contract/broker-client";
+import { BrokerClient } from "@stubborn-sh/broker-client";
 
 const brokerUrl = process.env["BROKER_URL"] ?? "http://localhost:18080";
 const username = process.env["BROKER_USERNAME"] ?? "admin";

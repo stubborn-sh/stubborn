@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
-import { setupStubs, teardownStubs } from "@spring-cloud-contract/jest";
-import { BrokerClient } from "@spring-cloud-contract/broker-client";
+import { setupStubs, teardownStubs } from "@stubborn-sh/jest";
+import { BrokerClient } from "@stubborn-sh/broker-client";
 import { OrderServiceClient } from "../../src/client.js";
 
 const BROKER_URL = process.env["BROKER_URL"] ?? "http://localhost:18080";

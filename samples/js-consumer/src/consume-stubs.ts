@@ -1,4 +1,4 @@
-import { setupStubs, teardownStubs } from "@spring-cloud-contract/jest";
+import { setupStubs, teardownStubs } from "@stubborn-sh/jest";
 import { OrderServiceClient } from "./client.js";
 
 const brokerUrl = process.env["BROKER_URL"] ?? "http://localhost:18080";

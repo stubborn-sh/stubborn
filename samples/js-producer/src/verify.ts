@@ -1,5 +1,5 @@
-import { BrokerClient } from "@spring-cloud-contract/broker-client";
-import { ContractVerifier } from "@spring-cloud-contract/verifier";
+import { BrokerClient } from "@stubborn-sh/broker-client";
+import { ContractVerifier } from "@stubborn-sh/verifier";
 import { resolve } from "node:path";
 
 const brokerUrl = process.env["BROKER_URL"] ?? "http://localhost:18080";

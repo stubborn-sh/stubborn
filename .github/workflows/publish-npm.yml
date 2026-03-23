@@ -23,6 +23,24 @@ jobs:
         run: |
           npm version ${{ inputs.version }} --workspaces --no-git-tag-version
           npm version ${{ inputs.version }} --no-git-tag-version
+      - name: Update inter-package dependencies
+        working-directory: js
+        run: |
+          VERSION=${{ inputs.version }}
+          for pkg in packages/*/package.json; do
+            node -e "
+              const fs = require('fs');
+              const p = JSON.parse(fs.readFileSync('$pkg', 'utf8'));
+              for (const depType of ['dependencies', 'devDependencies', 'peerDependencies']) {
+                if (p[depType]) {
+                  for (const [name, ver] of Object.entries(p[depType])) {
+                    if (name.startsWith('@stubborn-sh/')) p[depType][name] = '$VERSION';
+                  }
+                }
+              }
+              fs.writeFileSync('$pkg', JSON.stringify(p, null, 2) + '\n');
+            "
+          done
       - name: Install dependencies
         working-directory: js
         run: npm ci

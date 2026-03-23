@@ -14,9 +14,9 @@
     "test:integration": "vitest run tests/integration"
   },
   "dependencies": {
-    "@spring-cloud-contract/broker-client": "file:../../js/packages/broker-client",
-    "@spring-cloud-contract/jest": "file:../../js/packages/jest",
-    "@spring-cloud-contract/stub-server": "file:../../js/packages/stub-server"
+    "@stubborn-sh/broker-client": "file:../../js/packages/broker-client",
+    "@stubborn-sh/jest": "file:../../js/packages/jest",
+    "@stubborn-sh/stub-server": "file:../../js/packages/stub-server"
   },
   "devDependencies": {
     "tsx": "^4.19.0",
