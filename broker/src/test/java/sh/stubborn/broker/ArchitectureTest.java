@@ -23,8 +23,7 @@ import com.tngtech.archunit.lang.ArchRule;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 
-@AnalyzeClasses(packages = "sh.stubborn.broker",
-		importOptions = ImportOption.DoNotIncludeTests.class)
+@AnalyzeClasses(packages = "sh.stubborn.broker", importOptions = ImportOption.DoNotIncludeTests.class)
 class ArchitectureTest {
 
 	@ArchTest
