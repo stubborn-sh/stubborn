@@ -48,10 +48,7 @@ export default function EnvironmentsPage() {
   const createDeployment = useCreateDeployment(selectedEnv);
   const createEnvironment = useCreateEnvironment();
   const deleteEnvironment = useDeleteEnvironment();
-  const {
-    matrix,
-    isLoading: matrixLoading,
-  } = useDeploymentMatrix(environments);
+  const { matrix, isLoading: matrixLoading } = useDeploymentMatrix(environments);
 
   const handleDeploy = (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -258,18 +255,19 @@ export default function EnvironmentsPage() {
                         deployedVersions.length > 0 &&
                         deployedVersions.every((v) => v === deployedVersions[0]);
                       return (
-                        <tr key={row.applicationName} className="border-b border-border last:border-0">
-                          <td className="py-2 text-foreground font-medium">{row.applicationName}</td>
+                        <tr
+                          key={row.applicationName}
+                          className="border-b border-border last:border-0"
+                        >
+                          <td className="py-2 text-foreground font-medium">
+                            {row.applicationName}
+                          </td>
                           {sortedEnvs.map((env) => {
                             const version = row.versions[env.name];
                             return (
                               <td key={env.name} className="py-2">
                                 {version ? (
-                                  <Badge
-                                    variant={allSame ? "success" : "default"}
-                                  >
-                                    {version}
-                                  </Badge>
+                                  <Badge variant={allSame ? "success" : "default"}>{version}</Badge>
                                 ) : (
                                   <span className="text-muted-foreground">-</span>
                                 )}

@@ -1,4 +1,10 @@
-import { useQuery, useQueries, useMutation, useQueryClient, keepPreviousData } from "@tanstack/react-query";
+import {
+  useQuery,
+  useQueries,
+  useMutation,
+  useQueryClient,
+  keepPreviousData,
+} from "@tanstack/react-query";
 import { api } from "@/api/client";
 import type { EnvironmentResponse } from "@/api/types";
 

@@ -149,12 +149,16 @@ export default function DashboardPage() {
                       <tr key={i} className="border-b border-border last:border-0">
                         <td className="py-2 text-foreground">
                           {edge.providerName}{" "}
-                          <span className="text-muted-foreground text-xs">{edge.providerVersion}</span>
+                          <span className="text-muted-foreground text-xs">
+                            {edge.providerVersion}
+                          </span>
                         </td>
                         <td className="py-2 text-muted-foreground">{"<-"}</td>
                         <td className="py-2 text-foreground">
                           {edge.consumerName}{" "}
-                          <span className="text-muted-foreground text-xs">{edge.consumerVersion}</span>
+                          <span className="text-muted-foreground text-xs">
+                            {edge.consumerVersion}
+                          </span>
                         </td>
                         <td className="py-2">
                           <Badge variant={edge.status === "SUCCESS" ? "success" : "failed"}>

@@ -121,7 +121,9 @@ export default function TagsPage() {
               <span className="text-sm text-muted-foreground">Filter by tag:</span>
               <button
                 className={`px-2 py-1 rounded text-xs ${!tagFilter ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-accent"}`}
-                onClick={() => setTagFilter("")}
+                onClick={() => {
+                  setTagFilter("");
+                }}
               >
                 All
               </button>
@@ -129,7 +131,9 @@ export default function TagsPage() {
                 <button
                   key={t}
                   className={`px-2 py-1 rounded text-xs ${tagFilter === t ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:bg-accent"}`}
-                  onClick={() => setTagFilter(tagFilter === t ? "" : t)}
+                  onClick={() => {
+                    setTagFilter(tagFilter === t ? "" : t);
+                  }}
                 >
                   {t}
                 </button>
