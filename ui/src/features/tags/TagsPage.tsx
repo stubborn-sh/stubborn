@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { useTags } from "./useTags";
 import { useSearchApplications, useVersions } from "@/features/applications";
-import { DataTable, AsyncComboBox, ComboBox, SearchInput } from "@/shared/components";
+import { DataTable, AsyncComboBox, ComboBox } from "@/shared/components";
 import { Button, Card, CardContent, CardHeader, CardTitle, Label } from "@/shared/components/ui";
 import type { TagResponse } from "@/api/types";
 
