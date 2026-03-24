@@ -136,7 +136,7 @@ export default function CanIDeployPage() {
               {result.application} v{result.version} to {result.environment}
             </p>
             <p className="text-sm text-muted-foreground mb-4">{result.summary}</p>
-            {result.consumerResults && result.consumerResults.length > 0 && (
+            {result.consumerResults.length > 0 && (
               <div className="space-y-2">
                 <p className="text-sm font-medium text-foreground">Consumer Results:</p>
                 {result.consumerResults.map((c) => (
