@@ -71,11 +71,11 @@ export default function Layout() {
       <header className="bg-card border-b border-border sticky top-0 z-50">
         <div className="px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="bg-emerald-500 p-2 rounded-lg">
-              <FileCode2 className="h-6 w-6 text-white" />
+            <div className="bg-emerald-500 p-2 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-lg leading-none">S</span>
             </div>
             <div>
-              <h1 className="font-semibold text-foreground">SCC Broker</h1>
+              <h1 className="font-semibold text-foreground">Stubborn</h1>
               <p className="text-xs text-muted-foreground">Contract Governance</p>
             </div>
           </div>

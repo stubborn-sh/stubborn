@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FileCode2, LogIn, AlertCircle } from "lucide-react";
+import { LogIn, AlertCircle } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -36,11 +36,11 @@ export default function LoginPage() {
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <div className="w-full max-w-sm space-y-6">
         <div className="flex flex-col items-center gap-3">
-          <div className="bg-emerald-500 p-3 rounded-xl">
-            <FileCode2 className="h-8 w-8 text-white" />
+          <div className="bg-emerald-500 p-3 rounded-xl flex items-center justify-center">
+            <span className="text-white font-bold text-2xl leading-none">S</span>
           </div>
           <div className="text-center">
-            <h1 className="text-2xl font-semibold text-foreground">SCC Broker</h1>
+            <h1 className="text-2xl font-semibold text-foreground">Stubborn</h1>
             <p className="text-sm text-muted-foreground">Contract Governance Platform</p>
           </div>
         </div>
