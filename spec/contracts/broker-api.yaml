@@ -993,6 +993,10 @@ components:
           type: string
           maxLength: 128
           description: Main branch name (default "main")
+        repositoryUrl:
+          type: string
+          maxLength: 2048
+          description: Source code repository URL
 
     UpdateApplicationRequest:
       type: object
@@ -1002,6 +1006,10 @@ components:
           type: string
           minLength: 1
           maxLength: 128
+        repositoryUrl:
+          type: string
+          maxLength: 2048
+          description: Source code repository URL
 
     ApplicationResponse:
       type: object
@@ -1017,6 +1025,9 @@ components:
           type: string
         mainBranch:
           type: string
+        repositoryUrl:
+          type: string
+          description: Source code repository URL
         createdAt:
           type: string
           format: date-time

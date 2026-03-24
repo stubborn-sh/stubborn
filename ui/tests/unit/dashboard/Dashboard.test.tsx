@@ -72,6 +72,19 @@ describe("Dashboard", () => {
     expect(mockNavigate).toHaveBeenCalledWith("/verifications?search=order-service");
   });
 
+  it("should show Dependency Graph heading", async () => {
+    renderWithProviders(<DashboardPage />);
+    expect(await screen.findByText("Dependency Graph")).toBeInTheDocument();
+  });
+
+  it("should show graph edges in the dependency graph widget", async () => {
+    renderWithProviders(<DashboardPage />);
+    // Graph mock data has edges with order-service as provider
+    const providerCells = await screen.findAllByText("order-service");
+    expect(providerCells.length).toBeGreaterThanOrEqual(1);
+    expect(await screen.findByText("View full graph")).toBeInTheDocument();
+  });
+
   it("should show error message when API fails", async () => {
     server.use(
       http.get("/api/v1/applications", () =>

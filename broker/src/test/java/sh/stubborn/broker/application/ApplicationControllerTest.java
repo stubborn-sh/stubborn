@@ -64,7 +64,7 @@ class ApplicationControllerTest {
 	void should_register_application_and_return_201() throws Exception {
 		// given
 		Application app = Application.create("order-service", "Manages orders", "team-commerce");
-		given(this.applicationService.register("order-service", "Manages orders", "team-commerce", null))
+		given(this.applicationService.register("order-service", "Manages orders", "team-commerce", null, null))
 			.willReturn(app);
 
 		// when/then
@@ -80,9 +80,29 @@ class ApplicationControllerTest {
 	}
 
 	@Test
+	void should_register_application_with_repository_url() throws Exception {
+		// given
+		Application app = Application.create("order-service", "Manages orders", "team-commerce", "main",
+				"https://github.com/acme/order-service");
+		given(this.applicationService.register("order-service", "Manages orders", "team-commerce", "main",
+				"https://github.com/acme/order-service"))
+			.willReturn(app);
+
+		// when/then
+		this.mockMvc
+			.perform(post("/api/v1/applications").contentType(MediaType.APPLICATION_JSON)
+				.content(
+						"""
+								{"name": "order-service", "description": "Manages orders", "owner": "team-commerce", "mainBranch": "main", "repositoryUrl": "https://github.com/acme/order-service"}
+								"""))
+			.andExpect(status().isCreated())
+			.andExpect(jsonPath("$.repositoryUrl").value("https://github.com/acme/order-service"));
+	}
+
+	@Test
 	void should_return_409_when_name_already_exists() throws Exception {
 		// given
-		given(this.applicationService.register("order-service", "desc", "owner", null))
+		given(this.applicationService.register("order-service", "desc", "owner", null, null))
 			.willThrow(new ApplicationAlreadyExistsException("order-service"));
 
 		// when/then
@@ -166,7 +186,7 @@ class ApplicationControllerTest {
 	void should_register_application_with_custom_main_branch() throws Exception {
 		// given
 		Application app = Application.create("order-service", "Manages orders", "team-commerce", "develop");
-		given(this.applicationService.register("order-service", "Manages orders", "team-commerce", "develop"))
+		given(this.applicationService.register("order-service", "Manages orders", "team-commerce", "develop", null))
 			.willReturn(app);
 
 		// when/then
@@ -184,7 +204,7 @@ class ApplicationControllerTest {
 	void should_update_main_branch() throws Exception {
 		// given
 		Application app = Application.create("order-service", "desc", "owner", "develop");
-		given(this.applicationService.updateMainBranch("order-service", "develop")).willReturn(app);
+		given(this.applicationService.update("order-service", "develop", null)).willReturn(app);
 
 		// when/then
 		this.mockMvc
@@ -193,6 +213,23 @@ class ApplicationControllerTest {
 					"""))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.mainBranch").value("develop"));
+	}
+
+	@Test
+	void should_update_application_with_repository_url() throws Exception {
+		// given
+		Application app = Application.create("order-service", "desc", "owner", "develop",
+				"https://github.com/acme/order-service");
+		given(this.applicationService.update("order-service", "develop", "https://github.com/acme/order-service"))
+			.willReturn(app);
+
+		// when/then
+		this.mockMvc
+			.perform(put("/api/v1/applications/order-service").contentType(MediaType.APPLICATION_JSON).content("""
+					{"mainBranch": "develop", "repositoryUrl": "https://github.com/acme/order-service"}
+					"""))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.repositoryUrl").value("https://github.com/acme/order-service"));
 	}
 
 	@Test

@@ -137,6 +137,14 @@ describe("EnvironmentsPage", () => {
     expect(elements.length).toBeGreaterThanOrEqual(1);
   });
 
+  it("should render Deployment Overview section", async () => {
+    // arrange & act
+    renderWithProviders(<EnvironmentsPage />);
+
+    // assert - the overview matrix heading should appear
+    expect(await screen.findByText("Deployment Overview")).toBeInTheDocument();
+  });
+
   it("should handle empty environment with no deployments", async () => {
     // arrange
     server.use(

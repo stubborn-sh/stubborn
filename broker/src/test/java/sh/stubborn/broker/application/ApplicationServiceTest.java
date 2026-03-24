@@ -302,6 +302,36 @@ class ApplicationServiceTest {
 	}
 
 	@Test
+	void should_register_application_with_repository_url() {
+		// given
+		given(this.repository.existsByName("order-service")).willReturn(false);
+		given(this.repository.save(any(Application.class))).willAnswer(invocation -> invocation.getArgument(0));
+
+		// when
+		Application result = this.service.register("order-service", "Manages orders", "team-commerce", "main",
+				"https://github.com/acme/order-service");
+
+		// then
+		assertThat(result.getRepositoryUrl()).isEqualTo("https://github.com/acme/order-service");
+		verify(this.repository).save(any(Application.class));
+	}
+
+	@Test
+	void should_update_application_with_repository_url() {
+		// given
+		Application app = Application.create("order-service", "desc", "owner");
+		given(this.repository.findByName("order-service")).willReturn(Optional.of(app));
+		given(this.repository.save(any(Application.class))).willAnswer(invocation -> invocation.getArgument(0));
+
+		// when
+		Application result = this.service.update("order-service", "develop", "https://github.com/acme/order-service");
+
+		// then
+		assertThat(result.getMainBranch()).isEqualTo("develop");
+		assertThat(result.getRepositoryUrl()).isEqualTo("https://github.com/acme/order-service");
+	}
+
+	@Test
 	void should_find_main_branch_by_name() {
 		// given
 		Application app = Application.create("order-service", "desc", "owner", "develop");
