@@ -28,7 +28,7 @@ describe("Layout", () => {
     renderLayoutWithRoute("/dashboard");
 
     // assert
-    expect(screen.getByText("SCC Broker")).toBeInTheDocument();
+    expect(screen.getByText("Stubborn")).toBeInTheDocument();
   });
 
   it("should render the subtitle", () => {
