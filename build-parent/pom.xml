@@ -46,7 +46,7 @@
 		<!-- Spring ecosystem -->
 		<spring-cloud.version>2025.1.1</spring-cloud.version>
 		<spring-cloud-contract.version>5.0.2</spring-cloud-contract.version>
-		<spring-ai.version>2.0.0-M3</spring-ai.version>
+		<spring-ai.version>2.0.0-M2</spring-ai.version>
 
 		<!-- Static analysis -->
 		<spring-javaformat.version>0.0.47</spring-javaformat.version>
