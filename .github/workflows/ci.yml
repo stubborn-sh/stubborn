@@ -87,7 +87,6 @@ jobs:
 
       - name: Mutation tests
         run: ./mvnw pitest:mutationTest -pl broker -DtimeoutConstant=10000
-        continue-on-error: true
 
       - name: Upload E2E screenshots
         if: always()

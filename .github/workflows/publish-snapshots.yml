@@ -39,6 +39,9 @@ jobs:
           fi
           echo "Publishing snapshot: $VERSION"
 
+      - name: Verify compilation
+        run: ./mvnw compile -q
+
       - name: Build all modules locally
         run: ./mvnw install -DskipTests -DskipStubs=true -pl !e2e-tests
 

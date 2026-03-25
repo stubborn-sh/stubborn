@@ -460,7 +460,7 @@
 					<mutators>
 						<mutator>STRONGER</mutator>
 					</mutators>
-					<mutationThreshold>80</mutationThreshold>
+					<mutationThreshold>90</mutationThreshold>
 					<timestampedReports>false</timestampedReports>
 				</configuration>
 			</plugin>

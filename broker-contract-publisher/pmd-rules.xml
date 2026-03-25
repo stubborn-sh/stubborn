@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
-<ruleset name="Spring Cloud Contract Broker Code Quality"
+<ruleset name="Stubborn Code Quality"
 	xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
 
 	<description>
-		Code quality rules for Spring Cloud Contract Broker.
+		Code quality rules for Stubborn.
 		Excluded intentionally:
 		- LooseCoupling: false positives on external SDK types
 		- AvoidFieldNameMatchingMethodName: false positives on records
