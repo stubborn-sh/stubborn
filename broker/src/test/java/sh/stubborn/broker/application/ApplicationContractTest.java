@@ -68,7 +68,7 @@ class ApplicationContractTest {
 	void should_register_application() throws Exception {
 		// given
 		Application app = Application.create("order-service", "Manages orders", "team-commerce");
-		given(this.applicationService.register("order-service", "Manages orders", "team-commerce", null))
+		given(this.applicationService.register("order-service", "Manages orders", "team-commerce", null, null))
 			.willReturn(app);
 
 		// when/then
@@ -114,7 +114,7 @@ class ApplicationContractTest {
 	@Test
 	void should_return_409_when_application_already_exists() throws Exception {
 		// given
-		given(this.applicationService.register("existing-service", "Manages orders", "team-commerce", null))
+		given(this.applicationService.register("existing-service", "Manages orders", "team-commerce", null, null))
 			.willThrow(new ApplicationAlreadyExistsException("existing-service"));
 
 		// when/then
