@@ -88,7 +88,7 @@
 							<goal>npm</goal>
 						</goals>
 						<configuration>
-							<arguments>ci --include=optional</arguments>
+							<arguments>install</arguments>
 						</configuration>
 					</execution>
 					<execution>
