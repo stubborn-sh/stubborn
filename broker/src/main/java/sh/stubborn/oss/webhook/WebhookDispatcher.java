@@ -18,6 +18,8 @@ package sh.stubborn.oss.webhook;
 import java.util.List;
 import java.util.Map;
 
+import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import tools.jackson.databind.json.JsonMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,6 +70,7 @@ class WebhookDispatcher {
 		}
 	}
 
+	@CircuitBreaker(name = "webhookDispatch", fallbackMethod = "deliverFallback")
 	void deliverWithRetry(Webhook webhook, BrokerEvent event) {
 		String body = buildBody(webhook, event);
 		for (int attempt = 0; attempt <= MAX_RETRIES; attempt++) {
@@ -96,6 +99,13 @@ class WebhookDispatcher {
 				}
 			}
 		}
+	}
+
+	@SuppressWarnings("unused")
+	void deliverFallback(Webhook webhook, BrokerEvent event, CallNotPermittedException ex) {
+		log.warn("Circuit breaker open for webhook dispatch. webhookId={}, url={}", webhook.getId(), webhook.getUrl());
+		this.executionRepository.save(WebhookExecution.failure(webhook.getId(), event.eventType(), webhook.getUrl(),
+				"(circuit breaker open)", null, null, "Circuit breaker open: " + ex.getMessage()));
 	}
 
 	private String buildBody(Webhook webhook, BrokerEvent event) {

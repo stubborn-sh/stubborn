@@ -17,10 +17,13 @@ package sh.stubborn.oss.webhook;
 
 import java.util.UUID;
 
+import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
+import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import tools.jackson.databind.json.JsonMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -28,6 +31,7 @@ import org.springframework.web.client.RestClient;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class WebhookDispatcherTest {
@@ -92,6 +96,28 @@ class WebhookDispatcherTest {
 
 		// then
 		assertThat(resolved).isEqualTo("Verification of order-service v1.0.0 by payment-service");
+	}
+
+	@Test
+	void should_record_failure_when_circuit_breaker_open() {
+		// given
+		UUID webhookId = UUID.randomUUID();
+		Webhook webhook = Webhook.create(null, EventType.CONTRACT_PUBLISHED, "https://example.com/hook", null, null);
+		BrokerEvent event = BrokerEvent.contractPublished(UUID.randomUUID(), "order-service", "1.0.0", "create-order");
+		CircuitBreaker circuitBreaker = CircuitBreaker.ofDefaults("webhookDispatch");
+		CallNotPermittedException cbException = CallNotPermittedException
+			.createCallNotPermittedException(circuitBreaker);
+
+		// when
+		this.dispatcher.deliverFallback(webhook, event, cbException);
+
+		// then
+		ArgumentCaptor<WebhookExecution> captor = ArgumentCaptor.forClass(WebhookExecution.class);
+		verify(this.executionRepository).save(captor.capture());
+		WebhookExecution execution = captor.getValue();
+		assertThat(execution.isSuccess()).isFalse();
+		assertThat(execution.getErrorMessage()).contains("Circuit breaker");
+		assertThat(execution.getRequestUrl()).isEqualTo("https://example.com/hook");
 	}
 
 }

@@ -18,6 +18,7 @@ package sh.stubborn.oss.verification;
 import java.util.List;
 import java.util.UUID;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.micrometer.observation.annotation.Observed;
 import org.jspecify.annotations.Nullable;
 
@@ -52,6 +53,7 @@ public class VerificationService {
 		this.verificationMatcher = verificationMatcher;
 	}
 
+	@CircuitBreaker(name = "database")
 	@Observed(name = "broker.verification.record")
 	@Transactional
 	@Caching(evict = { @CacheEvict(cacheNames = "verifications", allEntries = true),
@@ -89,6 +91,7 @@ public class VerificationService {
 		return record(providerName, providerVersion, consumerName, consumerVersion, status, details, null);
 	}
 
+	@CircuitBreaker(name = "database")
 	public List<Verification> findByProviderAndVersion(String providerName, String providerVersion) {
 		UUID providerId = this.applicationService.findIdByName(providerName);
 		return this.verificationRepository.findByProviderIdAndProviderVersion(providerId, providerVersion);

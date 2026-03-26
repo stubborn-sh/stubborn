@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +48,7 @@ class MavenJarDownloader {
 		this.restClient = restClientBuilder.build();
 	}
 
+	@CircuitBreaker(name = "mavenImport")
 	List<ExtractedContract> downloadAndExtract(String repositoryUrl, String groupId, String artifactId, String version,
 			@Nullable String username, @Nullable String password) {
 		String jarUrl = buildJarUrl(repositoryUrl, groupId, artifactId, version);

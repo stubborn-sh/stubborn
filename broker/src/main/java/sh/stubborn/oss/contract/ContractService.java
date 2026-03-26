@@ -22,6 +22,7 @@ import java.util.HexFormat;
 import java.util.List;
 import java.util.UUID;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.micrometer.observation.annotation.Observed;
 import org.jspecify.annotations.Nullable;
 
@@ -51,6 +52,7 @@ public class ContractService {
 		this.eventPublisher = eventPublisher;
 	}
 
+	@CircuitBreaker(name = "database")
 	@Observed(name = "broker.contract.publish")
 	@Transactional
 	@CacheEvict(cacheNames = "contracts", allEntries = true)
@@ -79,6 +81,7 @@ public class ContractService {
 		return publish(applicationName, version, contractName, content, contentType, null);
 	}
 
+	@CircuitBreaker(name = "database")
 	public List<Contract> findByApplicationAndVersion(String applicationName, String version) {
 		UUID applicationId = this.applicationService.findIdByName(applicationName);
 		return this.contractRepository.findByApplicationIdAndVersion(applicationId, version);

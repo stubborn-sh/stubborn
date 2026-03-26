@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
 import io.micrometer.tracing.Tracer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -133,6 +134,14 @@ public class GlobalExceptionHandler {
 	ResponseEntity<ErrorResponse> handleMavenImportException(MavenImportException ex) {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 			.body(ErrorResponse.of("MAVEN_IMPORT_ERROR", Objects.requireNonNull(ex.getMessage()), getTraceId()));
+	}
+
+	@ExceptionHandler(CallNotPermittedException.class)
+	ResponseEntity<ErrorResponse> handleCircuitBreakerOpen(CallNotPermittedException ex) {
+		log.warn("Circuit breaker open: {}", ex.getMessage());
+		return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
+			.body(ErrorResponse.of("SERVICE_UNAVAILABLE", "Service temporarily unavailable, please retry later",
+					getTraceId()));
 	}
 
 	@ExceptionHandler(IllegalArgumentException.class)

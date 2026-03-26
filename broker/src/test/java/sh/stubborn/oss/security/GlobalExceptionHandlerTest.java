@@ -17,6 +17,8 @@ package sh.stubborn.oss.security;
 
 import java.util.Objects;
 
+import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
+import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import io.micrometer.tracing.Span;
 import io.micrometer.tracing.TraceContext;
 import io.micrometer.tracing.Tracer;
@@ -199,6 +201,24 @@ class GlobalExceptionHandlerTest {
 		ErrorResponse body = Objects.requireNonNull(response.getBody());
 		assertThat(body.code()).isEqualTo("VALIDATION_ERROR");
 		assertThat(body.message()).isEqualTo("bad input");
+	}
+
+	@Test
+	void should_handle_circuit_breaker_open_with_503() {
+		// given
+		given(this.tracer.currentSpan()).willReturn(null);
+		GlobalExceptionHandler handler = new GlobalExceptionHandler(this.tracer);
+		CircuitBreaker circuitBreaker = CircuitBreaker.ofDefaults("database");
+		CallNotPermittedException ex = CallNotPermittedException.createCallNotPermittedException(circuitBreaker);
+
+		// when
+		ResponseEntity<ErrorResponse> response = handler.handleCircuitBreakerOpen(ex);
+
+		// then
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.SERVICE_UNAVAILABLE);
+		ErrorResponse body = Objects.requireNonNull(response.getBody());
+		assertThat(body.code()).isEqualTo("SERVICE_UNAVAILABLE");
+		assertThat(body.message()).isEqualTo("Service temporarily unavailable, please retry later");
 	}
 
 }

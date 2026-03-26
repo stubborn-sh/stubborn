@@ -59,6 +59,31 @@ server:
   port: ${SERVER_PORT:8642}
   shutdown: graceful
 
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        sliding-window-size: 10
+        minimum-number-of-calls: 5
+        failure-rate-threshold: 50
+        wait-duration-in-open-state:
+          seconds: 30
+        permitted-number-of-calls-in-half-open-state: 3
+        automatic-transition-from-open-to-half-open-enabled: true
+    instances:
+      database:
+        base-config: default
+      webhookDispatch:
+        base-config: default
+        slow-call-duration-threshold:
+          seconds: 10
+        slow-call-rate-threshold: 80
+      mavenImport:
+        base-config: default
+        slow-call-duration-threshold:
+          seconds: 30
+        slow-call-rate-threshold: 80
+
 logging:
   pattern:
     correlation: "[${spring.application.name:},%X{traceId:-},%X{spanId:-}] "
