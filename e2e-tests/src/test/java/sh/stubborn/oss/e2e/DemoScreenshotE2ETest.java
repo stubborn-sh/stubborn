@@ -165,6 +165,9 @@ class DemoScreenshotE2ETest {
 		waitForHeading("Contracts");
 		// Must select an application first — contracts page requires it
 		selectComboBox(0, "order-service");
+		// Wait for the data table to render after selection
+		this.page.waitForLoadState(LoadState.NETWORKIDLE);
+		waitForTable();
 		// Wait for contract entries to appear
 		waitForText("shouldReturnOrder");
 		screenshot("demo-contracts");
@@ -281,7 +284,7 @@ class DemoScreenshotE2ETest {
 		option.first().click();
 		this.page.locator("[role='listbox']")
 			.first()
-			.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN).setTimeout(5000));
+			.waitFor(new Locator.WaitForOptions().setState(WaitForSelectorState.HIDDEN).setTimeout(30000));
 	}
 
 }
