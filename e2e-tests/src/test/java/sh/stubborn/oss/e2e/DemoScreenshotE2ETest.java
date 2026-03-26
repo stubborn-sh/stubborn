@@ -163,6 +163,8 @@ class DemoScreenshotE2ETest {
 	void should_screenshot_contracts() {
 		navigateTo("/contracts");
 		waitForHeading("Contracts");
+		// Must select an application first — contracts page requires it
+		selectComboBox(0, "order-service");
 		// Wait for contract entries to appear
 		waitForText("shouldReturnOrder");
 		screenshot("demo-contracts");
