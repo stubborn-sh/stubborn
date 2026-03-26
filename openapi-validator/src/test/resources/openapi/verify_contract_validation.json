@@ -1,0 +1,27 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Contract Validation API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/foo": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/bar/{id}": {
+      "post": {
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,205 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "1.0.0",
+    "description": "Example how to define x-contract inside OpenAPI 3.0",
+    "title": "Spring Cloud Contract OpenAPI 3.0 Basic Example"
+  },
+  "paths": {
+    "/v1/events": {
+      "get": {
+        "operationId": "conference-events",
+        "summary": "Retrieve all events for given day",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "date",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "pattern": "\\d{4}-\\d{2}-\\d{2}",
+              "example": "2022-04-13"
+            },
+            "required": true,
+            "x-contracts": [
+              {
+                "contractId": 200,
+                "value": "2022-04-13"
+              },
+              {
+                "contractId": 400,
+                "value": "invalid-date"
+              },
+              {
+                "contractId": 500,
+                "value": "2030-04-13"
+              }
+            ]
+          }
+        ],
+        "x-contracts": [
+          {
+            "contractId": 200,
+            "name": "Should return events for given day with HTTP status code 200"
+          },
+          {
+            "contractId": 400,
+            "name": "Should return HTTP status code 400 when date has invalid value"
+          },
+          {
+            "contractId": 500,
+            "name": "Should return HTTP status code 500 when server has unexpected problems"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "return conference events for given day",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/event-response"
+                }
+              }
+            },
+            "x-contracts": [
+              {
+                "contractId": 200,
+                "body": {
+                  "date": "2022-04-13",
+                  "events": [
+                    {
+                      "name": "Consumer-Driven Contract Workshops",
+                      "startTime": "2022-04-13T11:00:00",
+                      "durationInMinutes": "60",
+                      "author": "Maciej Zielinski"
+                    }
+                  ]
+                },
+                "headers": {
+                  "Content-Type": "application/json"
+                }
+              }
+            ]
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-message"
+                }
+              }
+            },
+            "x-contracts": [
+              {
+                "contractId": 400,
+                "body": {
+                  "message": "Invalid Request"
+                },
+                "headers": {
+                  "Content-Type": "application/json"
+                }
+              }
+            ]
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/error-message"
+                }
+              }
+            },
+            "x-contracts": [
+              {
+                "contractId": 500,
+                "body": {
+                  "message": "Unexpected Error"
+                },
+                "headers": {
+                  "Content-Type": "application/json"
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "error-message": {
+        "required": [
+          "message"
+        ],
+        "type": "object",
+        "properties": {
+          "message": {
+            "description": "error message",
+            "type": "string",
+            "example": "Unexpected Error"
+          }
+        }
+      },
+      "event-response": {
+        "required": [
+          "date",
+          "events"
+        ],
+        "type": "object",
+        "properties": {
+          "date": {
+            "description": "date of events",
+            "type": "string",
+            "pattern": "\\d{4}-\\d{2}-\\d{2}",
+            "example": "2022-04-13"
+          },
+          "events": {
+            "description": "list of events",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/event"
+            }
+          }
+        }
+      },
+      "event": {
+        "required": [
+          "name",
+          "startTime",
+          "durationInMinutes"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Consumer-Driven Contract Workshops"
+          },
+          "startTime": {
+            "description": "The time when event starts. String format as specified by ISO 8601:\nYYYY-MM-DDThh:mm:ssZ or YYYY-MM-DDThh:mm:ss\n",
+            "format": "date-time",
+            "pattern": "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$",
+            "example": "2022-04-13T11:00:00"
+          },
+          "endTime": {
+            "description": "The time when event ends. String format as specified by ISO 8601:\nYYYY-MM-DDThh:mm:ssZ or YYYY-MM-DDThh:mm:ss\n",
+            "format": "date-time",
+            "pattern": "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$",
+            "example": "2022-04-13T12:00:00"
+          },
+          "durationInMinutes": {
+            "type": "integer",
+            "description": "event duration in minutes",
+            "example": "60"
+          },
+          "author": {
+            "type": "string",
+            "description": "author of the event",
+            "example": "Maciej Zielinski"
+          }
+        }
+      }
+    }
+  }
+}

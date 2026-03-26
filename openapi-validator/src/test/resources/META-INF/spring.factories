@@ -1,0 +1,4 @@
+org.springframework.cloud.contract.spec.ContractConverter=\
+org.springframework.cloud.contract.verifier.converter.OpenApiContractConverter,\
+org.springframework.cloud.contract.verifier.util.ContractVerifierDslConverter,\
+org.springframework.cloud.contract.verifier.converter.YamlContractConverter

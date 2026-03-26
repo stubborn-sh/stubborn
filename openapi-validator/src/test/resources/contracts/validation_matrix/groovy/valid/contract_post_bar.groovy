@@ -1,0 +1,12 @@
+import org.springframework.cloud.contract.spec.Contract
+
+Contract.make {
+    name 'should_accept_post_bar_when_path_parameter_matches'
+    request {
+        method 'POST'
+        urlPath '/bar/123'
+    }
+    response {
+        status 201
+    }
+}

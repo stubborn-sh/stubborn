@@ -1,0 +1,35 @@
+openapi: "3.0.0"
+info:
+  description: Validate contracts
+  title: Sample API with different use cases
+  version: "1.0.0"
+paths:
+  /check-matchers/1:
+    get:
+      summary: Checking basic fields and matchers
+      operationId: matchers
+
+      x-contracts:
+        - contractId: matchers
+          name: Should verify basic file ids and matchers
+          headers:
+            Content-Type: application/json
+            'X-SSL-Client-DN': admin@idemia.com
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+        x-contracts:
+          - contractId: matchers
+            matchers:
+              url:
+                regex: /check-matchers/[0-9]
+
+      responses:
+        '200':
+          description: Successful response
+
+          x-contracts:
+            - contractId: matchers

@@ -1,0 +1,6 @@
+name: should_reject_get_foo_when_status_missing_in_openapi
+request:
+  method: GET
+  urlPath: /foo
+response:
+  status: 201

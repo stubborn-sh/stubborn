@@ -1,0 +1,70 @@
+openapi: "3.0.3"
+info:
+  title: Doughnuts
+  version: 0.0.1
+  description: |-
+    API to make doughnuts
+servers:
+  - url: 'http://localhost:8080/'
+    description: Local
+paths:
+  '/company/{companyId}/doughnuts/{doughnutId}':
+    parameters:
+      - schema:
+          type: string
+          example: MACIEJOS
+        name: companyId
+        in: path
+        required: true
+        description: Use company name to fetch details
+        x-contracts:
+          - contractId: 1
+            value: MACIEJOS
+      - schema:
+          type: string
+          example: PEANUT_BUTTER
+        name: doughnutId
+        in: path
+        required: true
+        description: Use doughnut to fetch details
+        x-contracts:
+          - contractId: 1
+            value: PEANUT_BUTTER
+    get:
+      summary: Get doughnut by doughnut Id
+      x-contracts:
+        - contractId: 1
+          name: Should return doughnut by id
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DoughnutDto'
+          x-contracts:
+            - contractId: 1
+              body:
+                doughnutId: "PEANUT_BUTTER"
+                cost: 1.99
+              headers:
+                Content-Type: application/json
+
+components:
+  schemas:
+    DoughnutDto:
+      title: DoughnutDto
+      type: object
+      description: Doughnut data
+      properties:
+        doughnutId:
+          type: string
+          example: PEANUT_BUTTER
+          description: Doughnutu Identifier
+        cost:
+          type: number
+          description: doughnut cost
+          example: 1.99
+      required:
+        - doughnutId
+        - cost

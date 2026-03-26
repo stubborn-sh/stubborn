@@ -1,0 +1,474 @@
+openapi: "3.0.0"
+info:
+  description: Validate contracts
+  title: Sample API with different use cases
+  version: "1.0.0"
+paths:
+  /check-matchers/1:
+    post:
+      summary: Checking basic fields and matchers
+      operationId: matchers
+      x-contracts:
+        - contractId: matchers
+          name: Should verify basic fileds and matchers
+          headers:
+            headerFoo: 'should be overridden by definition in parameters'
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+          x-contracts:
+            - contractId: matchers
+              value: 10
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int32
+          x-contracts:
+            - contractId: matchers
+              value: [ 20 ]
+        - name: filter
+          in: query
+          required: false
+          schema:
+            type: string
+          x-contracts:
+            - contractId: matchers
+              value: email
+        - name: sort
+          in: query
+          required: false
+          schema:
+            type: string
+          x-contracts:
+            - contractId: matchers
+              value: name
+        - name: search
+          in: query
+          required: false
+          schema:
+            type: string
+            pattern: '^[0-9]{2}$'
+          x-contracts:
+            - contractId: matchers
+              value: 55
+        - name: age
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+          x-contracts:
+            - contractId: matchers
+              value: 99
+        - name: name
+          in: query
+          required: false
+          schema:
+            type: string
+          x-contracts:
+            - contractId: matchers
+              value: 'John.Doe'
+        - name: email
+          in: query
+          required: false
+          schema:
+            type: string
+          x-contracts:
+            - contractId: matchers
+              value: 'bob@email.com'
+        - name: cookieFoo
+          in: cookie
+          required: false
+          schema:
+            type: string
+          x-contracts:
+            - contractId: matchers
+              value: 1
+        - name: cookieBar
+          in: cookie
+          required: false
+          schema:
+            type: string
+          x-contracts:
+            - contractId: matchers
+              value: 'cookie-bar-value'
+        - name: headerFoo
+          in: header
+          required: false
+          schema:
+            type: string
+          x-contracts:
+            - contractId: matchers
+              value: "barTest"
+              matchers:
+                - regex: "bar.*"
+                  predefined: only_alpha_unicode
+                  command: "thing($it)"
+                  regexType: "as_string"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+        x-contracts:
+          - contractId: matchers
+            body:
+              duck: 123
+              alpha: "abc"
+              number: 123
+              aBoolean: true
+              date: "2017-01-01"
+              dateTime: "2017-01-01T01:23:45"
+              time: "01:02:34"
+              valueWithoutAMatcher: "foo"
+              valueWithTypeMatch: "string"
+              key:
+                "complex.key": 'foo'
+              nullValue: null
+              valueWithMin:
+                - 1
+                - 2
+                - 3
+              valueWithMax:
+                - 1
+                - 2
+                - 3
+              valueWithMinMax:
+                - 1
+                - 2
+                - 3
+              valueWithMinEmpty: [ ]
+              valueWithMaxEmpty: [ ]
+            matchers:
+              url:
+                regex: /check-matchers/[0-9]
+              queryParameters:
+                - key: limit
+                  type: equal_to
+                  value: 20
+                - key: offset
+                  type: containing
+                  value: 20
+                - key: sort
+                  type: equal_to
+                  value: name
+                - key: search
+                  type: not_matching
+                  value: '^[0-9]{2}$'
+                - key: age
+                  type: not_matching
+                  value: '^\\w*$'
+                - key: name
+                  type: matching
+                  value: 'John.*'
+                - key: hello
+                  type: absent
+              cookies:
+                - key: cookieFoo
+                  regex: '[0-9]'
+                - key: cookieBar
+                  command: 'equals($it)'
+              headers:
+                - key: Content-Type
+                  regex: "application/json.*"
+              body:
+                - path: $.duck
+                  type: by_regex
+                  value: "[0-9]{3}"
+                - path: $.duck
+                  type: by_equality
+                - path: $.alpha
+                  type: by_regex
+                  predefined: only_alpha_unicode
+                - path: $.alpha
+                  type: by_equality
+                - path: $.number
+                  type: by_regex
+                  predefined: number
+                - path: $.aBoolean
+                  type: by_regex
+                  predefined: any_boolean
+                - path: $.date
+                  type: by_date
+                - path: $.dateTime
+                  type: by_timestamp
+                - path: $.time
+                  type: by_time
+                - path: "$.['key'].['complex.key']"
+                  type: by_equality
+                - path: $.nullvalue
+                  type: by_null
+                - path: $.valueWithMin
+                  type: by_type
+                  minOccurrence: 1
+                - path: $.valueWithMax
+                  type: by_type
+                  maxOccurrence: 3
+                - path: $.valueWithMinMax
+                  type: by_type
+                  minOccurrence: 1
+                  maxOccurrence: 3
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: string
+          x-contracts:
+            - contractId: matchers
+              body:
+                duck: 123
+                alpha: "abc"
+                number: 123
+                aBoolean: true
+                date: "2017-01-01"
+                dateTime: "2017-01-01T01:23:45"
+                time: "01:02:34"
+                valueWithoutAMatcher: "foo"
+                valueWithTypeMatch: "string"
+                valueWithMin:
+                  - 1
+                  - 2
+                  - 3
+                valueWithMax:
+                  - 1
+                  - 2
+                  - 3
+                valueWithMinMax:
+                  - 1
+                  - 2
+                  - 3
+                valueWithMinEmpty: [ ]
+                valueWithMaxEmpty: [ ]
+                key:
+                  'complex.key': 'foo'
+                nulValue: null
+              matchers:
+                headers:
+                  - key: Content-Type
+                    regex: "application/json.*"
+                body:
+                  - path: $.duck
+                    type: by_regex
+                    value: "[0-9]{3}"
+                  - path: $.duck
+                    type: by_equality
+                  - path: $.alpha
+                    type: by_regex
+                    predefined: only_alpha_unicode
+                  - path: $.alpha
+                    type: by_equality
+                  - path: $.number
+                    type: by_regex
+                    predefined: number
+                  - path: $.aBoolean
+                    type: by_regex
+                    predefined: any_boolean
+                  - path: $.date
+                    type: by_date
+                  - path: $.dateTime
+                    type: by_timestamp
+                  - path: $.time
+                    type: by_time
+                  - path: $.valueWithTypeMatch
+                    type: by_type
+                  - path: $.valueWithMin
+                    type: by_type
+                    minOccurrence: 1
+                  - path: $.valueWithMax
+                    type: by_type
+                    maxOccurrence: 3
+                  - path: $.valueWithMinMax
+                    type: by_type
+                    minOccurrence: 1
+                    maxOccurrence: 3
+                  - path: $.valueWithMinEmpty
+                    type: by_type
+                    minOccurrence: 0
+                  - path: $.valueWithMaxEmpty
+                    type: by_type
+                    maxOccurrence: 0
+                  - path: $.duck
+                    type: by_command
+                    value: assertThatValueIsANumber($it)
+                  - path: $.nullValue
+                    type: by_null
+                    value: null
+  /check-multipart:
+    post:
+      summary: Checking multipart
+      operationId: multipart
+      x-contracts:
+        - contractId: multipart
+          name: Should verify multipart
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  format: uuid
+                number:
+                  type: integer
+                file:
+                  type: string
+                  format: binary
+        x-contracts:
+          - contractId: multipart
+            headers:
+              Content-Type: 'multipart/form-data;boundary=AaB03x'
+            multipart:
+              params:
+                id: '777b09ac-cd64-11ec-9d64-0242ac120002'
+                number: '10'
+              named:
+                - paramName: file
+                  fileName: 'filename.csv'
+                  fileContent: 'file content'
+                  contentType: 'multipart/form-data;boundary=AaB03x'
+            matchers:
+              multipart:
+                params:
+                  - key: id
+                    regex: '.+'
+                  - key: number
+                    predefined: number
+                named:
+                  - paramName: file
+                    fileName:
+                      regex: '[\S\s]+'
+                    fileContent:
+                      predefined: non_empty
+      responses:
+        '201':
+          description: Accepted
+          x-contracts:
+            - contractId: multipart
+  /check-body-from-file:
+    post:
+      summary: Checking body from file or bytes
+      operationId: body-from-file
+      x-contracts:
+        - contractId: body-from-file
+          name: Should verify body from file
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+        x-contracts:
+          - contractId: body-from-file
+            bodyFromFile: request.json
+      responses:
+        '200':
+          description: OK
+          x-contracts:
+            - contractId: body-from-file
+              bodyFromFile: response.json
+          content:
+            application/json:
+              schema:
+                type: string
+  /check-references-from-request:
+    post:
+      summary: Checking reference taken from request
+      operationId: references-from-request
+      x-contracts:
+        - contractId: references-from-request
+          name: Should verify reference taken from request
+      security:
+        - BasicAuth: ['Basic dGVzdDp0ZXN0']
+      parameters:
+        - name: mask
+          in: query
+          required: false
+          example: true
+          schema:
+            type: boolean
+          x-contracts:
+            - contractId: references-from-request
+              value: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                path:
+                  type: string
+                  example: '/etc/passwd'
+        x-contracts:
+          - contractId: references-from-request
+            queryParameters:
+              - key: mask
+                type: boolean
+                value: true
+            headers:
+              Authorization: 'Basic dGVzdDp0ZXN0'
+            body:
+              path: '/etc/passwd'
+            matchers:
+              queryParameters:
+                - key: mask
+                  type: matching
+                  value: '(true|false)'
+              headers:
+                - key: Authorization
+                  regex: 'Basic .*'
+              body:
+                - path: $.path
+                  type: by_regex
+                  value: ".+"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  url:
+                    type: string
+                    example: '/check-references-from-request?mask=true'
+                  path:
+                    type: string
+                    example: '/check-references-from-request'
+                  param:
+                    type: boolean
+                    example: true
+                  authorization:
+                    type: string
+                    example: 'Basic dGVzdDp0ZXN0'
+                  message:
+                    type: string
+                    example: 'Provided path in request is: /etc/passwd'
+                  request:
+                    type: string
+                    example: '{"path":"/etc/passwd"}'
+          x-contracts:
+            - contractId: references-from-request
+              headers:
+                Authorization: '{{{ request.headers.Authorization }}}'
+              body:
+                url: '{{{ request.url }}}'
+                path: '{{{ request.path }}}'
+                param: '{{{ request.query.mask }}}'
+                authorization: '{{{ request.headers.Authorization }}}'
+                message: 'Provided path in request is: {{{ jsonpath this "$.path" }}}.'
+                request: '{{{ request.body }}}'
+components:
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic

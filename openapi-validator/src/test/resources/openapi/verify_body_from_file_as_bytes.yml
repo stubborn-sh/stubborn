@@ -1,0 +1,31 @@
+openapi: "3.0.0"
+info:
+  description: Validate contracts
+  title: Sample API with different use cases
+  version: "1.0.0"
+paths:
+  /check-body-from-file-as-bytes:
+    post:
+      summary: Checking body from file or bytes
+      operationId: body-from-file
+      x-contracts:
+        - contractId: body-from-file-as-bytes
+          name: Should verify body from file as bytes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+        x-contracts:
+          - contractId: body-from-file-as-bytes
+            bodyFromFileAsBytes: request.json
+      responses:
+        '200':
+          description: OK
+          x-contracts:
+            - contractId: body-from-file-as-bytes
+              bodyFromFileAsBytes: response.json
+          content:
+            application/json:
+              schema:
+                type: string

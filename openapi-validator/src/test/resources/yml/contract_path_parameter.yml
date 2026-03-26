@@ -1,0 +1,51 @@
+---
+request:
+  method: "GET"
+  url: null
+  urlPath: "/company/MACIEJOS/doughnuts/PEANUT_BUTTER"
+  queryParameters:
+    companyId: "MACIEJOS"
+    doughnutId: "PEANUT_BUTTER"
+  headers: {}
+  cookies: {}
+  body: null
+  bodyFromFile: null
+  bodyFromFileAsBytes: null
+  matchers:
+    url:
+      key: null
+      regex: null
+      predefined: null
+      command: null
+      regexType: null
+    body: []
+    headers: []
+    queryParameters: []
+    cookies: []
+    multipart: null
+  multipart: null
+response:
+  status: 200
+  headers:
+    Content-Type: "application/json"
+  cookies: {}
+  body:
+    doughnutId: "PEANUT_BUTTER"
+    cost: 1.99
+  bodyFromFile: null
+  bodyFromFileAsBytes: null
+  matchers:
+    body: []
+    headers: []
+    cookies: []
+  async: null
+  fixedDelayMilliseconds: null
+input: null
+outputMessage: null
+description: null
+label: null
+name: "Should return doughnut by id"
+priority: null
+ignored: false
+inProgress: false
+metadata: {}

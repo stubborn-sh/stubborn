@@ -1,0 +1,181 @@
+openapi: 3.0.0
+servers: [ ]
+info:
+  description: Example fraud detection service using consumer driven contracts
+  version: "1.0.0"
+  title: Fraud Detection Service
+  contact:
+    email: you@your-company.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+tags:
+  - name: Fraud Service
+    description: Fraud Service
+paths:
+  /fraudcheck:
+    put:
+      tags:
+        - Fraud Service
+      summary: Checks client id for suspected Fraud
+      operationId: fraudCheck
+      description: For given client id and loan amount, service will examine client profile and determine request is too high
+      x-contracts:
+        - contractId: 200-ok
+          name: Should accept loan amount
+        - contractId: 200-fraud-client
+          name: Should mark client as fraud
+        - contractId: 400-missing-loan
+          name: Should reject request because loan amount is missing
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FraudCheckRequest'
+            example: "{ 'clientId': '1000000000', 'loanAmount': 999999 }"
+        description: Client and Loan Amount to check
+        x-contracts:
+          - contractId: 200-ok
+            body:
+              clientId: 1000000000
+              loanAmount: 500
+            matchers:
+              body:
+                - path: $.['clientId']
+                  type: by_regex
+                  value: '1[0-9]{9}'
+          - contractId: 200-fraud-client
+            body:
+              clientId: 2000000000
+              loanAmount: 99999
+            matchers:
+              body:
+                - path: $.['clientId']
+                  type: by_regex
+                  value: '2[0-9]{9}'
+          - contractId: 400-missing-loan
+            body:
+              clientId: 4000000000
+      responses:
+        '200':
+          description: okay
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FraudCheckResponse'
+              example: "{ 'fraudCheckStatus': 'FRAUD', 'rejectionReason': 'Amount too high' }"
+          x-contracts:
+            - contractId: 200-ok
+              body:
+                fraudCheckStatus: 'OK'
+            - contractId: 200-fraud-client
+              body:
+                fraudCheckStatus: 'FRAUD'
+                rejectionReason: 'Amount too high'
+        '400':
+          description: 'invalid input, object invalid'
+          x-contracts:
+            - contractId: 400-missing-loan
+  /frauds:
+    get:
+      tags:
+        - Fraud Service
+      x-contracts:
+        - contractId: 200-ok
+          name: Should return all frauds - should count all frauds
+      responses:
+        '200':
+          description: okay
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                    example: 3
+          x-contracts:
+            - contractId: 200-ok
+              body:
+                count: 3
+  /frauds/{name}:
+    get:
+      tags:
+        - Fraud Service
+      parameters:
+        - name: name
+          in: path
+          required: true
+          description: Client ID
+          schema:
+            type: string
+          x-contracts:
+            - contractId: 200-not-fraud
+              value: good-guy
+            - contractId: 403-fraud
+              value: bad-guy
+      x-contracts:
+        - contractId: 200-not-fraud
+          name: Should return OKEY status for good-guy client ID
+          contractPath: /frauds/good-guy
+          priority: 1
+        - contractId: 403-fraud
+          name: Should return FRAUD status for bad-guy client ID
+          contractPath: /frauds/bad-guy
+      responses:
+        '200':
+          description: Client is not a fraud
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "Don't worry, you're not a fraud"
+          x-contracts:
+            - contractId: 200-not-fraud
+              body:
+                value: "Don't worry, you're not a fraud"
+              headers:
+                Content-Type: "{{{ request.headers.Content-Type.0 }}};charset=UTF-8"
+        '403':
+          description: Client is a fraud
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "Sorry but you're a fraud"
+          x-contracts:
+            - contractId: 403-fraud
+              body:
+                value: "Sorry but you're a fraud"
+              headers:
+                Content-Type: "{{{ request.headers.Content-Type.0 }}}"
+components:
+  schemas:
+    FraudCheckRequest:
+      type: object
+      required:
+        - clientId
+        - loanAmount
+      properties:
+        clientId:
+          type: string
+          pattern: '[0-9]{10}'
+          description: Client Id
+        loanAmount:
+          type: number
+    FraudCheckResponse:
+      type: object
+      required:
+        - fraudCheckStatus
+      properties:
+        fraudCheckStatus:
+          type: string
+          enum: [ FRAUD, OKAY ]
+        rejectionReason:
+          type: string
+          description: Reason Message
+  x-matchers:
+    clientMatcher:
+      path: $.['clientId']
+      type: by_regex
+      value: "[0-9]{10}"

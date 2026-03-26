@@ -1,0 +1,12 @@
+name: Should verify basic file ids and matchers
+request:
+  method: GET
+  urlPath: /check-matchers/1
+  headers:
+    Content-Type: application/json
+    'X-SSL-Client-DN': admin@idemia.com
+  matchers:
+    url:
+      regex: /check-matchers/[0-9]
+response:
+  status: 200
