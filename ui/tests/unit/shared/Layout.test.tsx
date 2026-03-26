@@ -1,24 +1,31 @@
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Layout } from "@/shared/components";
+
+const queryClient = new QueryClient({
+  defaultOptions: { queries: { retry: false } },
+});
 
 function renderLayoutWithRoute(initialRoute: string, _children?: React.ReactNode) {
   return render(
-    <MemoryRouter initialEntries={[initialRoute]}>
-      <Routes>
-        <Route element={<Layout />}>
-          <Route path="dashboard" element={<div>Dashboard Content</div>} />
-          <Route path="applications" element={<div>Applications Content</div>} />
-          <Route path="contracts" element={<div>Contracts Content</div>} />
-          <Route path="verifications" element={<div>Verifications Content</div>} />
-          <Route path="environments" element={<div>Environments Content</div>} />
-          <Route path="can-i-deploy" element={<div>Can I Deploy Content</div>} />
-          <Route path="graph" element={<div>Dependencies Content</div>} />
-          <Route path="settings" element={<div>Settings Content</div>} />
-        </Route>
-      </Routes>
-    </MemoryRouter>,
+    <QueryClientProvider client={queryClient}>
+      <MemoryRouter initialEntries={[initialRoute]}>
+        <Routes>
+          <Route element={<Layout />}>
+            <Route path="dashboard" element={<div>Dashboard Content</div>} />
+            <Route path="applications" element={<div>Applications Content</div>} />
+            <Route path="contracts" element={<div>Contracts Content</div>} />
+            <Route path="verifications" element={<div>Verifications Content</div>} />
+            <Route path="environments" element={<div>Environments Content</div>} />
+            <Route path="can-i-deploy" element={<div>Can I Deploy Content</div>} />
+            <Route path="graph" element={<div>Dependencies Content</div>} />
+            <Route path="settings" element={<div>Settings Content</div>} />
+          </Route>
+        </Routes>
+      </MemoryRouter>
+    </QueryClientProvider>,
   );
 }
 
