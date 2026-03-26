@@ -35,11 +35,7 @@ final class SharedContainers {
 
 	static final GenericContainer<?> WIREMOCK;
 
-	static final GenericContainer<?> PROXY;
-
 	static final String BROKER_URL;
-
-	static final String PROXY_URL;
 
 	static final String WIREMOCK_URL;
 
@@ -75,30 +71,7 @@ final class SharedContainers {
 				.withStartupTimeout(java.time.Duration.ofSeconds(120)));
 		BROKER.start();
 
-		// Proxy is optional -- it's from the Pro repo and may not be available in OSS CI
-		GenericContainer<?> proxyContainer = null;
-		String proxyUrl = null;
-		try {
-			proxyContainer = new GenericContainer<>("mgrzejszczak/stubborn-proxy:0.1.0-SNAPSHOT").withNetwork(NETWORK)
-				.withNetworkAliases("proxy")
-				.withExposedPorts(8080)
-				.withEnv("SPRING_AI_OPENAI_BASE_URL", "http://wiremock:8080")
-				.withEnv("SPRING_AI_OPENAI_API_KEY", "test-key")
-				.withEnv("OTEL_METRICS_ENABLED", "false")
-				.waitingFor(new HttpWaitStrategy().forPath("/actuator/health")
-					.forPort(8080)
-					.forStatusCode(200)
-					.withStartupTimeout(java.time.Duration.ofSeconds(120)));
-			proxyContainer.start();
-			proxyUrl = "http://localhost:" + proxyContainer.getMappedPort(8080);
-		}
-		catch (Exception ex) {
-			System.out.println("[SharedContainers] Proxy image not available, skipping: " + ex.getMessage());
-		}
-		PROXY = proxyContainer;
-
 		BROKER_URL = "http://localhost:" + BROKER.getMappedPort(8642);
-		PROXY_URL = proxyUrl;
 		WIREMOCK_URL = "http://localhost:" + WIREMOCK.getMappedPort(8080);
 		WIREMOCK_INTERNAL_URL = "http://wiremock:8080";
 	}

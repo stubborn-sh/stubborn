@@ -74,13 +74,7 @@
 			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>
-		<!-- Reactor ordering: proxy must build Docker image before e2e-tests run -->
-		<dependency>
-			<groupId>sh.stubborn</groupId>
-			<artifactId>stubborn-proxy</artifactId>
-			<version>${project.version}</version>
-			<scope>test</scope>
-		</dependency>
+		<!-- Note: Proxy E2E tests are in the stubborn-pro repo (e2e-tests module) -->
 	</dependencies>
 
 	<build>

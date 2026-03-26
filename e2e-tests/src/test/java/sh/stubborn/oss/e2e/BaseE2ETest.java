@@ -91,11 +91,7 @@ abstract class BaseE2ETest {
 
 	APIRequestContext apiContext;
 
-	APIRequestContext proxyApiContext;
-
 	String baseUrl;
-
-	String proxyUrl;
 
 	String wiremockUrl;
 
@@ -106,7 +102,6 @@ abstract class BaseE2ETest {
 		Files.createDirectories(SCREENSHOTS_DIR);
 
 		this.baseUrl = SharedContainers.BROKER_URL;
-		this.proxyUrl = SharedContainers.PROXY_URL;
 		this.wiremockUrl = SharedContainers.WIREMOCK_URL;
 		this.wiremockInternalUrl = SharedContainers.WIREMOCK_INTERNAL_URL;
 
@@ -121,16 +116,10 @@ abstract class BaseE2ETest {
 			.newContext(new APIRequest.NewContextOptions().setBaseURL(this.baseUrl)
 				.setExtraHTTPHeaders(Map.of("Authorization", AUTH_HEADER)));
 
-		this.proxyApiContext = this.playwright.request()
-			.newContext(new APIRequest.NewContextOptions().setBaseURL(this.proxyUrl)
-				.setExtraHTTPHeaders(Map.of("Authorization", AUTH_HEADER)));
 	}
 
 	@AfterAll
 	void tearDownPlaywright() {
-		if (this.proxyApiContext != null) {
-			this.proxyApiContext.dispose();
-		}
 		if (this.apiContext != null) {
 			this.apiContext.dispose();
 		}
