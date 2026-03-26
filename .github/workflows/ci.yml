@@ -65,6 +65,9 @@ jobs:
       - name: Test JS SDK
         run: cd js && npm run test:ci
 
+      - name: Build Docker image for samples
+        run: ./mvnw spring-boot:build-image -pl broker -DskipTests
+
       - name: Build & test samples
         run: ./mvnw verify -Psamples -pl samples -also-make-dependents
 
