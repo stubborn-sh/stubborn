@@ -281,7 +281,7 @@
 					</execution>
 					<execution>
 						<id>build-docker-image</id>
-						<phase>package</phase>
+						<phase>pre-integration-test</phase>
 						<goals>
 							<goal>build-image-no-fork</goal>
 						</goals>
@@ -472,7 +472,7 @@
 				<executions>
 					<execution>
 						<id>stubs-jar</id>
-						<phase>package</phase>
+						<phase>pre-integration-test</phase>
 						<goals>
 							<goal>single</goal>
 						</goals>

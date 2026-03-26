@@ -60,7 +60,7 @@ jobs:
         run: ./mvnw io.spring.javaformat:spring-javaformat-maven-plugin:validate -q
 
       - name: Build, test & install (core modules)
-        run: ./mvnw clean verify -pl !e2e-tests
+        run: ./mvnw clean install -pl !e2e-tests
 
       - name: Test JS SDK
         run: cd js && npm run test:ci
