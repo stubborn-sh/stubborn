@@ -1,65 +1,7 @@
 target/
-pom.xml.tag
-pom.xml.releaseBackup
-pom.xml.versionsBackup
-pom.xml.next
-release.properties
-dependency-reduced-pom.xml
-buildNumber.properties
-.mvn/timing.properties
-# https://maven.apache.org/wrapper/#usage-without-binary-jar
-.mvn/wrapper/maven-wrapper.jar
-
-# Eclipse m2e generated files
-# Eclipse Core
-.project
-# JDT-specific (Eclipse Java Development Tools)
-.classpath
-
-# IntelliJ IDEA
-.idea/
 *.iml
-*.iws
-*.ipr
-
-# VS Code
-.vscode/
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Env files
+.idea/
+*.class
+*.log
 .env
-.env.local
-
-.jqwik-database
-
-# Gradle
-.gradle/
-build/
-!**/gradle/wrapper/
-
-# Stubs JAR extraction artifact
-/META-INF/
-
-# Node.js
 node_modules/
-
-# TypeScript build output
-*.tsbuildinfo
-dist/
-
-# npm debug logs
-npm-debug.log*
-npm-error.log*
-
-# Test coverage
-coverage/
-
-# UI dist copied into broker for dev
-broker/src/main/resources/static/
-
-# Astro
-.astro/
-js/.npmrc
