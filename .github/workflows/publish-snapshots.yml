@@ -39,21 +39,18 @@ jobs:
           fi
           echo "Publishing snapshot: $VERSION"
 
-      - name: Verify compilation
-        run: ./mvnw compile -q
-
-      - name: Build all modules locally
-        run: ./mvnw install -DskipTests -DskipStubs=true -pl !e2e-tests
+      - name: Build and test broker (generates RestDocs stubs)
+        run: ./mvnw install -pl !e2e-tests
 
       - name: Deploy Java modules to Maven Central
-        run: ./mvnw deploy -Ppublish -DskipTests -DskipStubs=true -pl build-parent,ui,broker,broker-api-client,broker-stub-downloader,broker-contract-publisher,broker-maven-plugin,stub-runner,openapi-validator
+        run: ./mvnw deploy -Ppublish -DskipTests -pl build-parent,ui,broker,broker-api-client,broker-stub-downloader,broker-contract-publisher,broker-maven-plugin,stub-runner,openapi-validator
         env:
           CENTRAL_USERNAME: ${{ secrets.CENTRAL_USERNAME }}
           CENTRAL_PASSWORD: ${{ secrets.CENTRAL_PASSWORD }}
 
       - name: Build Docker image
         continue-on-error: true
-        run: ./mvnw spring-boot:build-image -pl broker -DskipTests -DskipStubs=true
+        run: ./mvnw spring-boot:build-image -pl broker -DskipTests
 
       - name: Push Docker image
         continue-on-error: true
