@@ -149,6 +149,12 @@ export interface ResolvedContract {
   contentHash: string | null;
 }
 
+export interface BrokerInfoResponse {
+  edition: string;
+  proEnabled: boolean;
+  activeFeatures: string[];
+}
+
 export interface PageResponse<T> {
   content: T[];
   number: number;

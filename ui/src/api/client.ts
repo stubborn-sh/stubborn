@@ -1,5 +1,6 @@
 import type {
   ApplicationResponse,
+  BrokerInfoResponse,
   ContractResponse,
   VerificationResponse,
   DeploymentResponse,
@@ -287,5 +288,8 @@ export const api = {
         method: "POST",
         body: JSON.stringify(data),
       }),
+  },
+  broker: {
+    info: () => fetchJson<BrokerInfoResponse>("/api/v1/broker/info"),
   },
 };

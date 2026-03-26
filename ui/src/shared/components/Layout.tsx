@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import {
   LayoutDashboard,
@@ -17,11 +17,21 @@ import {
   LogOut,
   Sun,
   Moon,
+  Bot,
+  Server,
 } from "lucide-react";
 import { cn } from "@/shared/lib/utils";
 import { useAuth } from "@/shared/auth/useAuth";
+import { useBrokerInfo } from "@/shared/useBrokerInfo";
 
-const navItems = [
+interface NavItem {
+  to: string;
+  label: string;
+  icon: typeof LayoutDashboard;
+  proOnly?: boolean;
+}
+
+const navItems: NavItem[] = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { to: "/applications", label: "Applications", icon: Building2 },
   { to: "/contracts", label: "Contracts", icon: FileCode2 },
@@ -34,6 +44,8 @@ const navItems = [
   { to: "/tags", label: "Tags", icon: Tag },
   { to: "/cleanup", label: "Cleanup", icon: Trash2 },
   { to: "/selectors", label: "Selectors", icon: Filter },
+  { to: "/ai-proxy", label: "AI Proxy", icon: Bot, proOnly: true },
+  { to: "/mcp-server", label: "MCP Server", icon: Server, proOnly: true },
   { to: "/settings", label: "Settings", icon: Settings },
 ];
 
@@ -66,6 +78,12 @@ function useTheme() {
 export default function Layout() {
   const { username, logout } = useAuth();
   const { dark, toggle } = useTheme();
+  const { data: brokerInfo } = useBrokerInfo();
+  const proEnabled = brokerInfo?.proEnabled ?? false;
+  const visibleNavItems = useMemo(
+    () => navItems.filter((item) => !item.proOnly || proEnabled),
+    [proEnabled],
+  );
   return (
     <div className="min-h-screen bg-background">
       <header className="bg-card border-b border-border sticky top-0 z-50">
@@ -102,7 +120,7 @@ export default function Layout() {
       <div className="flex">
         <aside className="w-64 bg-sidebar border-r border-sidebar-border min-h-[calc(100vh-73px)] sticky top-[73px]">
           <nav className="p-4 space-y-1">
-            {navItems.map((item) => (
+            {visibleNavItems.map((item) => (
               <NavLink
                 key={item.to}
                 to={item.to}
