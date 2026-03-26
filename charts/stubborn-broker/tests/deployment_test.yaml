@@ -1,0 +1,108 @@
+suite: Deployment tests
+templates:
+  - templates/deployment.yaml
+tests:
+  - it: should render a Deployment
+    asserts:
+      - isKind:
+          of: Deployment
+
+  - it: should set replica count from values
+    set:
+      replicaCount: 3
+    asserts:
+      - equal:
+          path: spec.replicas
+          value: 3
+
+  - it: should not set replicas when autoscaling is enabled
+    set:
+      autoscaling.enabled: true
+    asserts:
+      - isNull:
+          path: spec.replicas
+
+  - it: should use chart appVersion as default image tag
+    asserts:
+      - matchRegex:
+          path: spec.template.spec.containers[0].image
+          pattern: "stubborn-broker:.*"
+
+  - it: should use custom image tag when specified
+    set:
+      image.tag: "1.2.3"
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: "stubborn-broker:1.2.3"
+
+  - it: should configure liveness probe on actuator endpoint
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].livenessProbe.httpGet.path
+          value: /actuator/health/liveness
+
+  - it: should configure readiness probe on actuator endpoint
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].readinessProbe.httpGet.path
+          value: /actuator/health/readiness
+
+  - it: should configure startup probe with high failure threshold
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].startupProbe.failureThreshold
+          value: 30
+
+  - it: should set Spring profiles from values
+    set:
+      spring.profiles: staging
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SPRING_PROFILES_ACTIVE
+            value: "staging"
+
+  - it: should configure PostgreSQL datasource URL
+    set:
+      postgresql.host: my-db
+      postgresql.port: 5433
+      postgresql.database: mydb
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SPRING_DATASOURCE_URL
+            value: "jdbc:postgresql://my-db:5433/mydb"
+
+  - it: should reference secret for database credentials
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SPRING_DATASOURCE_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: RELEASE-NAME-stubborn-broker
+                key: db-username
+
+  - it: should set resource limits
+    set:
+      resources.limits.memory: 1Gi
+      resources.limits.cpu: "1"
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].resources.limits.memory
+          value: 1Gi
+      - equal:
+          path: spec.template.spec.containers[0].resources.limits.cpu
+          value: "1"
+
+  - it: should set JVM options
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: JAVA_TOOL_OPTIONS
+            value: "-XX:MaxRAMPercentage=75.0 -XX:+UseG1GC"

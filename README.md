@@ -1,40 +1,57 @@
-# Stubborn OpenAPI Validator
+# Stubborn
 
-Validates [Spring Cloud Contract](https://spring.io/projects/spring-cloud-contract) DSL files against OpenAPI specifications.
+Branch-aware contract governance for Spring Cloud Contract.
 
-**No Stubborn dependency required** -- use this standalone with any Spring Cloud Contract project.
+**Your contracts should be stubborn — they don't break just because someone pushed on a Friday.**
 
-## Features
+Heavily inspired by [Pact Broker](https://github.com/pact-foundation/pact_broker) — the gold standard for contract broker tooling. Stubborn brings the same governance model natively to the Spring Cloud Contract ecosystem.
 
-- Validate SCC contracts (YAML, Groovy, Java) against an OpenAPI spec
-- Convert OpenAPI 3.x specs to SCC contract DSL
-- JUnit 5 extension for automated validation in tests
-- Detect missing endpoints, invalid status codes, schema mismatches
+## Screenshots
 
-## Usage
+| Dashboard | Dependency Graph |
+|-----------|-----------------|
+| ![Dashboard](docs/screenshots/demo-dashboard.png) | ![Graph](docs/screenshots/demo-graph.png) |
 
-Add the dependency:
+| Applications | Environments |
+|-------------|-------------|
+| ![Applications](docs/screenshots/demo-applications.png) | ![Environments](docs/screenshots/demo-environments.png) |
 
-```xml
-<dependency>
-    <groupId>sh.stubborn</groupId>
-    <artifactId>spring-cloud-contract-openapi-validator</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
-    <scope>test</scope>
-</dependency>
-```
+| Can I Deploy | Verifications |
+|-------------|--------------|
+| ![Can I Deploy](docs/screenshots/demo-can-i-deploy.png) | ![Verifications](docs/screenshots/demo-verifications.png) |
 
-Use the JUnit 5 extension:
+| Contracts | Webhooks |
+|----------|---------|
+| ![Contracts](docs/screenshots/demo-contracts.png) | ![Webhooks](docs/screenshots/demo-webhooks.png) |
 
-```java
-@ExtendWith(OpenApiContractsVerifierExtension.class)
-@VerifyContractsAgainstOpenApi(openApiSpec = "openapi/my-service.yml")
-class ContractValidationTest {
-    // Contracts in src/test/resources/contracts/ are validated automatically
-}
-```
+| Tags |
+|------|
+| ![Tags](docs/screenshots/demo-tags.png) |
 
-## Links
+Try the live demo at [demo.stubborn.sh](https://demo.stubborn.sh).
 
-- [Stubborn](https://stubborn.sh) -- contract governance platform
-- [Spring Cloud Contract](https://spring.io/projects/spring-cloud-contract)
+## License
+
+Apache License 2.0
+
+## Group ID
+
+`sh.stubborn`
+
+## Modules
+
+- `broker/` — Core broker app (REST API, DB, UI static resources, stubs JAR)
+- `ui/` — React 19 frontend (Vite + TailwindCSS + React Query)
+- `broker-api-client/` — Generated REST client JAR (OpenAPI Generator)
+- `broker-stub-downloader/` — StubDownloaderBuilder SPI (sccbroker:// protocol)
+- `broker-contract-publisher/` — Core Java library (file scanning, REST calls)
+- `broker-maven-plugin/` — Maven Mojo wrapping broker-contract-publisher
+- `broker-gradle-plugin/` — Gradle plugin wrapping broker-contract-publisher
+- `stub-runner/` — Stub Runner Boot (serves broker stubs for consumer testing)
+- `js/` — TypeScript/Node.js SDK (npm packages for cross-language contract testing)
+- `build-parent/` — Shared parent POM (dependency mgmt, plugin config)
+- `samples/` — Sample apps demonstrating contract testing
+- `e2e-tests/` — Playwright browser-based E2E tests
+- `docs/` — AsciiDoc documentation
+- `charts/` — Helm chart + Kustomize overlays
+

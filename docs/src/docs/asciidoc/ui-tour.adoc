@@ -1,0 +1,59 @@
+= UI Tour
+
+Stubborn ships with a built-in web dashboard. All features are also available via the REST API and CLI.
+
+TIP: Try the live demo at https://demo.stubborn.sh (credentials: `reader` / `reader`).
+
+== Dashboard
+
+The dashboard shows application counts, verification trends over the last 7 days, recent verifications, and a dependency graph overview.
+
+image::demo-dashboard.png[Dashboard,width=100%]
+
+== Applications
+
+Register and manage your services. Each application shows its published versions, owner, main branch, and repository link.
+
+image::demo-applications.png[Applications,width=100%]
+
+== Contracts
+
+Browse published contracts per application and version. View contract content inline.
+
+image::demo-contracts.png[Contracts,width=100%]
+
+== Verifications
+
+Track all verification results -- which consumer verified against which provider, with status and timestamps.
+
+image::demo-verifications.png[Verifications,width=100%]
+
+== Environments
+
+The deployment overview matrix shows at a glance which version of each service is deployed to which environment.
+
+image::demo-environments.png[Environments,width=100%]
+
+== Can I Deploy?
+
+The safety check tells you whether it's safe to deploy a specific version to a specific environment. It checks all consumer contracts.
+
+image::demo-can-i-deploy.png[Can I Deploy,width=100%]
+
+== Dependency Graph
+
+Visualize service dependencies and their verification status. Click any node to see its providers and consumers.
+
+image::demo-graph.png[Dependency Graph,width=100%]
+
+== Webhooks
+
+Configure webhook subscriptions to get notified when contracts are published, verifications succeed or fail, or deployments are recorded.
+
+image::demo-webhooks.png[Webhooks,width=100%]
+
+== Tags
+
+Tag specific application versions (e.g. `latest`, `stable`) and filter by tag.
+
+image::demo-tags.png[Tags,width=100%]

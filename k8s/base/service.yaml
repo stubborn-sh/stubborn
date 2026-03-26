@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: stubborn-broker
+  labels:
+    app.kubernetes.io/name: stubborn-broker
+    app.kubernetes.io/part-of: stubborn-broker
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: stubborn-broker
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+      protocol: TCP

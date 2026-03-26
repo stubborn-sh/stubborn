@@ -1,0 +1,74 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+
+images:
+  - name: stubborn-broker
+    newTag: 0.1.0-SNAPSHOT
+
+patches:
+  - target:
+      kind: Deployment
+      name: stubborn-broker
+    patch: |
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: stubborn-broker
+      spec:
+        replicas: 1
+        template:
+          spec:
+            containers:
+              - name: stubborn-broker
+                imagePullPolicy: Never
+                resources:
+                  requests:
+                    memory: "512Mi"
+                    cpu: "500m"
+                  limits:
+                    memory: "1Gi"
+                    cpu: "1000m"
+  - target:
+      kind: Secret
+      name: stubborn-broker
+    patch: |
+      apiVersion: v1
+      kind: Secret
+      metadata:
+        name: stubborn-broker
+      stringData:
+        SPRING_DATASOURCE_URL: "jdbc:postgresql://postgresql:5432/broker"
+        SPRING_DATASOURCE_USERNAME: "broker"
+        SPRING_DATASOURCE_PASSWORD: "broker"
+  # Delete HPA in CI — no metrics-server in KinD, HPA blocks ArgoCD health
+  - target:
+      kind: HorizontalPodAutoscaler
+      name: stubborn-broker
+    patch: |
+      $patch: delete
+      apiVersion: autoscaling/v2
+      kind: HorizontalPodAutoscaler
+      metadata:
+        name: stubborn-broker
+  # Delete Ingress in CI — no nginx Ingress controller in KinD, Ingress blocks ArgoCD health
+  - target:
+      kind: Ingress
+      name: stubborn-broker
+    patch: |
+      $patch: delete
+      apiVersion: networking.k8s.io/v1
+      kind: Ingress
+      metadata:
+        name: stubborn-broker
+
+labels:
+  - pairs:
+      app.kubernetes.io/name: stubborn-broker
+      app.kubernetes.io/part-of: stubborn-broker
+      app.kubernetes.io/managed-by: kustomize
+      environment: ci
+    includeSelectors: true
+    includeTemplates: true

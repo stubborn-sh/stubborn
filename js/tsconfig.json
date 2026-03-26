@@ -1,0 +1,12 @@
+{
+  "files": [],
+  "references": [
+    { "path": "packages/broker-client" },
+    { "path": "packages/publisher" },
+    { "path": "packages/stub-server" },
+    { "path": "packages/verifier" },
+    { "path": "packages/cli" },
+    { "path": "packages/jest" },
+    { "path": "packages/stubs-packager" }
+  ]
+}

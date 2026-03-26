@@ -1,0 +1,124 @@
+= Getting Started
+
+== Introduction
+
+Stubborn is a governance server for the Spring Cloud Contract ecosystem.
+It provides a central REST API and dashboard for managing contracts, stubs, verification results,
+environment deployments, and deployment safety checks.
+
+Without a broker, contract testing artifacts are scattered across Maven repositories.
+Teams cannot easily answer: "Is it safe to deploy version X?" or "Who depends on my API?"
+The broker centralizes this information and adds a safety gate (Can I Deploy) to your CI/CD pipeline.
+
+== Quick Start
+
+The fastest way to get the broker running is with Docker:
+
+[source,bash]
+----
+docker run -p 8080:8080 mgrzejszczak/stubborn
+----
+
+The broker is now available at http://localhost:8080.
+
+== Development Setup
+
+=== Prerequisites
+
+- Java 25+
+- Docker (for dev mode and integration tests)
+
+=== Running from Source
+
+[source,bash]
+----
+./mvnw spring-boot:run -pl broker -Dspring-boot.run.profiles=dev
+----
+
+This starts the broker with Docker Compose automatically provisioning PostgreSQL and the
+Grafana LGTM observability stack (Loki, Grafana, Tempo, Prometheus).
+
+For the UI (in a separate terminal):
+
+[source,bash]
+----
+cd ui && npm run dev
+----
+
+- Broker API: http://localhost:8080
+- UI: http://localhost:5173
+- Grafana dashboards: http://localhost:3000
+
+== Dashboard
+
+Once running, the dashboard gives you an overview of all applications, verification trends, and the dependency graph.
+
+image::demo-dashboard.png[Dashboard,width=100%]
+
+== 5-Minute Walkthrough
+
+Once the broker is running, you can interact with the REST API using `curl` or the `stubborn` CLI.
+The default users are `admin:admin` (full access), `publisher:publisher` (read + write), and `reader:reader` (read only).
+
+To use the CLI instead of curl:
+
+[source,bash]
+----
+java -jar broker-cli/target/broker-cli.jar --username admin --password admin app list
+----
+
+=== Register an application
+
+[source,bash]
+----
+curl -u admin:admin -X POST http://localhost:8080/api/v1/applications \
+  -H 'Content-Type: application/json' \
+  -d '{"name":"order-service","owner":"team-orders"}'
+----
+
+This registers `order-service` so you can publish contracts and track deployments for it.
+
+=== Publish a contract
+
+[source,bash]
+----
+curl -u publisher:publisher -X POST \
+  http://localhost:8080/api/v1/applications/order-service/versions/1.0.0/contracts \
+  -H 'Content-Type: application/json' \
+  -d '{"contractName":"get-order","content":"request:\n  method: GET\n  url: /orders/1\nresponse:\n  status: 200","contentType":"application/x-spring-cloud-contract+yaml"}'
+----
+
+In practice, the Maven or Gradle plugin publishes contracts automatically from your project.
+
+=== Record a verification
+
+[source,bash]
+----
+curl -u publisher:publisher -X POST http://localhost:8080/api/v1/verifications \
+  -H 'Content-Type: application/json' \
+  -d '{"providerName":"order-service","providerVersion":"1.0.0","consumerName":"payment-service","consumerVersion":"2.0.0","status":"SUCCESS"}'
+----
+
+This records that `payment-service` 2.0.0 successfully verified against `order-service` 1.0.0 contracts.
+
+=== Record a deployment
+
+[source,bash]
+----
+curl -u publisher:publisher -X POST \
+  http://localhost:8080/api/v1/environments/staging/deployments \
+  -H 'Content-Type: application/json' \
+  -d '{"applicationName":"order-service","version":"1.0.0"}'
+----
+
+=== Check deployment safety
+
+[source,bash]
+----
+curl -u reader:reader \
+  'http://localhost:8080/api/v1/can-i-deploy?application=order-service&version=1.0.0&environment=staging'
+----
+
+Returns `{"safe":true, ...}` when all consumers deployed to `staging` have verified against this version.
+
+image::demo-can-i-deploy.png[Can I Deploy,width=100%]

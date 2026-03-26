@@ -1,0 +1,221 @@
+== TypeScript/Node.js SDK
+
+The TypeScript/Node.js SDK (`@stubborn-sh/*`) enables JavaScript and TypeScript
+applications to participate in the Spring Cloud Contract ecosystem without requiring Java tooling.
+
+=== Packages
+
+[cols="2,3"]
+|===
+| Package | Purpose
+
+| `@stubborn-sh/broker-client`
+| HTTP REST client for all broker API endpoints
+
+| `@stubborn-sh/publisher`
+| Scans directories and publishes contracts to the broker
+
+| `@stubborn-sh/verifier`
+| Verifies provider HTTP responses against contracts
+
+| `@stubborn-sh/stub-server`
+| Native Node.js HTTP server that serves contract responses
+
+| `@stubborn-sh/jest`
+| Jest/Vitest integration helpers (`setupStubs`, `teardownStubs`, `loadLocalJar`)
+
+| `@stubborn-sh/stubs-packager`
+| Package YAML contracts into Maven stubs JARs and deploy to Nexus/Artifactory
+
+| `@stubborn-sh/cli`
+| Terminal CLI wrapping broker-client and publisher
+|===
+
+=== Publishing Contracts (Producer)
+
+A JS/TS producer defines contracts as YAML files and publishes them to the broker:
+
+[source,typescript]
+----
+import { BrokerClient } from "@stubborn-sh/broker-client";
+import { ContractPublisher } from "@stubborn-sh/publisher";
+
+const client = new BrokerClient({
+  baseUrl: "http://localhost:8642",
+  username: "admin",
+  password: "admin",
+});
+
+const publisher = new ContractPublisher(client);
+const result = await publisher.publish({
+  applicationName: "product-service",
+  version: "1.0.0",
+  contractsDir: "./contracts",
+});
+
+console.log(`Published ${result.published.length} contracts`);
+----
+
+=== Consuming Stubs (Consumer)
+
+A JS/TS consumer fetches stubs from the broker and starts a local stub server:
+
+[source,typescript]
+----
+import { setupStubs, teardownStubs } from "@stubborn-sh/jest";
+
+// In beforeAll
+const port = await setupStubs({
+  brokerUrl: "http://localhost:8642",
+  applicationName: "order-service",
+  version: "1.0.0",
+  username: "reader",
+  password: "reader",
+});
+
+// Test against http://localhost:{port}
+const response = await fetch(`http://localhost:${port}/api/orders/1`);
+const order = await response.json();
+
+// In afterAll
+await teardownStubs();
+----
+
+=== Verifying Contracts
+
+A JS/TS producer verifies its implementation against contracts:
+
+[source,typescript]
+----
+import { BrokerClient } from "@stubborn-sh/broker-client";
+import { ContractVerifier } from "@stubborn-sh/verifier";
+
+const client = new BrokerClient({ baseUrl: "http://localhost:8642" });
+
+const verifier = new ContractVerifier({
+  providerBaseUrl: "http://localhost:3000",
+  providerName: "product-service",
+  providerVersion: "1.0.0",
+  consumerName: "web-app",
+  consumerVersion: "2.0.0",
+  contractsDir: "./contracts",
+  reportToBroker: client,
+});
+
+const result = await verifier.verify();
+console.log(`Passed: ${result.passedContracts}/${result.totalContracts}`);
+----
+
+=== Loading Stubs from a Local JAR
+
+JS consumers can load stubs from a local Maven stubs JAR (e.g., from `~/.m2/repository/`),
+without needing a running broker:
+
+[source,typescript]
+----
+const port = await setupStubs({
+  jarPath: "~/.m2/repository/com/example/order-service/1.0.0/order-service-1.0.0-stubs.jar",
+});
+----
+
+The `loadLocalJar()` function extracts the JAR and searches for `mappings/` and `contracts/`
+directories at any nesting depth (including `META-INF/{groupId}/{artifactId}/{version}/`).
+
+=== Packaging Stubs for Maven (Producer)
+
+A JS/TS producer can package contracts into a Maven stubs JAR and deploy to Nexus/Artifactory:
+
+[source,typescript]
+----
+import { packageStubsJar, deployStubsJar } from "@stubborn-sh/stubs-packager";
+
+const result = await packageStubsJar({
+  contractsDir: "./contracts",
+  coordinates: { groupId: "com.example", artifactId: "product-service", version: "1.0.0" },
+  outputPath: "./target/product-service-1.0.0-stubs.jar",
+});
+
+await deployStubsJar({
+  jarPath: result.outputPath,
+  repositoryUrl: "https://nexus.example.com/repository/releases",
+  groupId: "com.example",
+  artifactId: "product-service",
+  version: "1.0.0",
+  username: "deploy-user",
+  password: "deploy-pass",
+});
+----
+
+The packaged JAR is compatible with Java `@AutoConfigureStubRunner`.
+
+=== Cross-Language Testing
+
+The SDK enables cross-language contract testing between Java and JavaScript services:
+
+[cols="1,1,1,2"]
+|===
+| Scenario | Producer | Consumer | What's Proven
+
+| JS -> Java (broker)
+| JS publishes contracts via `publisher`
+| Java consumes via `@AutoConfigureStubRunner`
+| Java can use JS-published stubs through WireMock
+
+| Java -> JS (broker)
+| Java publishes contracts via SCC plugin
+| JS consumes via `setupStubs()` + `stub-server`
+| JS can use Java-published stubs through Node.js stub server
+
+| Java -> JS (local JAR)
+| Java installs stubs JAR to `~/.m2`
+| JS loads via `setupStubs({ jarPath })`
+| JS can test against local Maven stubs without broker
+
+| JS -> Java (Nexus)
+| JS packages + deploys stubs JAR via `stubs-packager`
+| Java consumes via `@AutoConfigureStubRunner` + Nexus
+| Java can use JS stubs from Maven repositories
+|===
+
+=== Contract Format
+
+The SDK supports YAML (primary), JSON, Groovy, Kotlin, and Java contract files.
+YAML is recommended for cross-language use:
+
+[source,yaml]
+----
+request:
+  method: GET
+  urlPath: /api/products/1
+response:
+  status: 200
+  headers:
+    Content-Type: application/json
+  body:
+    id: "1"
+    name: "MacBook Pro"
+    price: 2499.99
+  matchers:
+    body:
+      - path: $.id
+        type: by_regex
+        value: "[0-9]+"
+----
+
+=== Installation
+
+[source,bash]
+----
+# Broker client only
+npm install @stubborn-sh/broker-client
+
+# Full producer setup
+npm install @stubborn-sh/broker-client \
+            @stubborn-sh/publisher \
+            @stubborn-sh/verifier
+
+# Full consumer setup
+npm install @stubborn-sh/broker-client \
+            @stubborn-sh/jest \
+            @stubborn-sh/stub-server
+----

@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: stubborn-broker
+  labels:
+    app.kubernetes.io/name: stubborn-broker
+    app.kubernetes.io/part-of: stubborn-broker
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: stubborn-broker
+                port:
+                  number: 80

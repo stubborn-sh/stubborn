@@ -1,0 +1,27 @@
+{
+  "name": "stubborn",
+  "version": "1.0.0",
+  "description": "Branch-aware contract governance for Spring Cloud Contract.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stubborn-sh/stubborn.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/stubborn-sh/stubborn/issues"
+  },
+  "homepage": "https://github.com/stubborn-sh/stubborn#readme",
+  "dependencies": {
+    "playwright": "^1.58.2"
+  }
+}

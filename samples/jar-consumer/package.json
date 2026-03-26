@@ -1,0 +1,21 @@
+{
+  "name": "@samples/jar-consumer",
+  "version": "1.0.0",
+  "private": true,
+  "engines": {
+    "node": ">=21.2.0"
+  },
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@stubborn-sh/jest": "file:../../js/packages/jest",
+    "@stubborn-sh/stub-server": "file:../../js/packages/stub-server"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.0",
+    "vitest": "^3.1.0"
+  }
+}

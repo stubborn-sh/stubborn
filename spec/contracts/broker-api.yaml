@@ -1,0 +1,1651 @@
+openapi: "3.0.3"
+info:
+  title: Stubborn API
+  description: Governance server for the Spring Cloud Contract ecosystem
+  version: 0.1.0
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+
+servers:
+  - url: /api/v1
+    description: API v1
+
+tags:
+  - name: Applications
+    description: Application registration and management
+  - name: Contracts
+    description: Contract/stub publishing
+  - name: Verifications
+    description: Verification result tracking
+  - name: Environments
+    description: Environment configuration and management
+  - name: Deployments
+    description: Environment deployment tracking
+  - name: Safety
+    description: Can-I-Deploy safety checks
+  - name: Graph
+    description: Dependency graph visualization
+  - name: Proxy
+    description: AI traffic-to-contract proxy
+  - name: Matrix
+    description: Compatibility matrix of provider-consumer verifications
+  - name: Selectors
+    description: Consumer version selectors for contract resolution
+  - name: Tags
+    description: Version tagging for applications
+  - name: Webhooks
+    description: Event webhook management
+  - name: Maintenance
+    description: Data cleanup and retention
+
+paths:
+  /applications:
+    post:
+      tags: [Applications]
+      summary: Register a new application
+      operationId: registerApplication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterApplicationRequest'
+      responses:
+        '201':
+          description: Application registered
+          headers:
+            Location:
+              schema:
+                type: string
+              description: URI of the created application
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '409':
+          $ref: '#/components/responses/Conflict'
+    get:
+      tags: [Applications]
+      summary: List all applications
+      operationId: listApplications
+      parameters:
+        - $ref: '#/components/parameters/search'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/size'
+        - $ref: '#/components/parameters/sort'
+      responses:
+        '200':
+          description: Page of applications
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationPage'
+
+  /applications/{name}:
+    get:
+      tags: [Applications]
+      summary: Get application by name
+      operationId: getApplication
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: '^[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]$'
+      responses:
+        '200':
+          description: Application found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      tags: [Applications]
+      summary: Update application settings
+      description: Update application settings such as the main branch name.
+      operationId: updateApplication
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateApplicationRequest'
+      responses:
+        '200':
+          description: Application updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      tags: [Applications]
+      summary: Delete application
+      operationId: deleteApplication
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Application deleted
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /applications/{name}/versions:
+    get:
+      tags: [Applications]
+      summary: List versions for an application
+      description: Returns distinct contract versions published for the given application, sorted alphabetically.
+      operationId: listApplicationVersions
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of version strings
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                example: ["1.0.0", "1.1.0", "2.0.0"]
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /applications/{name}/versions/{version}/contracts:
+    post:
+      tags: [Contracts]
+      summary: Publish a contract
+      operationId: publishContract
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: version
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: '^\d+\.\d+\.\d+(-[\w.]+)?$'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublishContractRequest'
+      responses:
+        '201':
+          description: Contract published
+          headers:
+            Location:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContractResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '409':
+          $ref: '#/components/responses/Conflict'
+    get:
+      tags: [Contracts]
+      summary: List contracts for application version
+      operationId: listContracts
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: version
+          in: path
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/size'
+        - $ref: '#/components/parameters/sort'
+      responses:
+        '200':
+          description: Page of contracts
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContractPage'
+
+  /applications/{name}/versions/{version}/contracts/{contractName}:
+    get:
+      tags: [Contracts]
+      summary: Get a specific contract
+      operationId: getContract
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: version
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: contractName
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Contract found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContractResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      tags: [Contracts]
+      summary: Delete a specific contract
+      operationId: deleteContract
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: version
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: contractName
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Contract deleted
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /verifications:
+    post:
+      tags: [Verifications]
+      summary: Record a verification result
+      operationId: recordVerification
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RecordVerificationRequest'
+      responses:
+        '201':
+          description: Verification recorded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerificationResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '409':
+          $ref: '#/components/responses/Conflict'
+    get:
+      tags: [Verifications]
+      summary: List verification results
+      operationId: listVerifications
+      parameters:
+        - name: provider
+          in: query
+          schema:
+            type: string
+        - name: providerVersion
+          in: query
+          schema:
+            type: string
+        - $ref: '#/components/parameters/search'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/size'
+        - $ref: '#/components/parameters/sort'
+      responses:
+        '200':
+          description: Page of verifications
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerificationPage'
+
+  /environments:
+    get:
+      tags: [Environments]
+      summary: List all environments
+      operationId: listEnvironments
+      responses:
+        '200':
+          description: List of environments ordered by displayOrder
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EnvironmentResponse'
+    post:
+      tags: [Environments]
+      summary: Create a new environment
+      operationId: createEnvironment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateEnvironmentRequest'
+      responses:
+        '201':
+          description: Environment created
+          headers:
+            Location:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnvironmentResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '409':
+          description: Environment already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /environments/{name}:
+    get:
+      tags: [Environments]
+      summary: Get environment by name
+      operationId: getEnvironment
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Environment found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnvironmentResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      tags: [Environments]
+      summary: Update an environment
+      operationId: updateEnvironment
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateEnvironmentRequest'
+      responses:
+        '200':
+          description: Environment updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnvironmentResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      tags: [Environments]
+      summary: Delete an environment
+      operationId: deleteEnvironment
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Environment deleted
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /environments/{env}/deployments:
+    post:
+      tags: [Deployments]
+      summary: Record a deployment
+      operationId: recordDeployment
+      parameters:
+        - name: env
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: '^[a-z][a-z0-9-]*$'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RecordDeploymentRequest'
+      responses:
+        '201':
+          description: Deployment recorded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeploymentResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+    get:
+      tags: [Deployments]
+      summary: List deployments in environment
+      operationId: listDeployments
+      parameters:
+        - name: env
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: '^[a-z][a-z0-9-]*$'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/size'
+        - $ref: '#/components/parameters/sort'
+      responses:
+        '200':
+          description: Page of deployments
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeploymentPage'
+
+  /environments/{env}/deployments/{applicationName}:
+    get:
+      tags: [Deployments]
+      summary: Get deployment for application in environment
+      operationId: getDeployment
+      parameters:
+        - name: env
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: applicationName
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Deployment found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeploymentResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /can-i-deploy:
+    get:
+      tags: [Safety]
+      summary: Check if application version can be deployed
+      operationId: canIDeploy
+      parameters:
+        - name: application
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: version
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: environment
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Deployment safety check result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CanIDeployResponse'
+
+  /graph:
+    get:
+      tags: [Graph]
+      summary: Get full dependency graph
+      operationId: getDependencyGraph
+      parameters:
+        - name: environment
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Dependency graph
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DependencyGraphResponse'
+
+  /graph/applications/{name}:
+    get:
+      tags: [Graph]
+      summary: Get dependencies for a specific application
+      operationId: getApplicationDependencies
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Application dependencies
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationDependenciesResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /proxy/{path}:
+    get:
+      tags: [Proxy]
+      summary: Proxy GET request to target and generate contract
+      operationId: proxyGet
+      parameters:
+        - name: path
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: X-Target-Url
+          in: header
+          required: true
+          schema:
+            type: string
+            format: uri
+      responses:
+        '200':
+          description: Proxy response with captured traffic
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProxyResponse'
+    post:
+      tags: [Proxy]
+      summary: Proxy POST request to target and generate contract
+      operationId: proxyPost
+      parameters:
+        - name: path
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: X-Target-Url
+          in: header
+          required: true
+          schema:
+            type: string
+            format: uri
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Proxy response with captured traffic
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProxyResponse'
+
+  /webhooks:
+    post:
+      tags: [Webhooks]
+      summary: Register a webhook
+      description: >
+        Register a webhook to receive notifications for broker events.
+        Optionally scope to a specific application.
+      operationId: createWebhook
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateWebhookRequest'
+      responses:
+        '201':
+          description: Webhook created
+          headers:
+            Location:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+    get:
+      tags: [Webhooks]
+      summary: List webhooks
+      operationId: listWebhooks
+      parameters:
+        - $ref: '#/components/parameters/search'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/size'
+        - $ref: '#/components/parameters/sort'
+      responses:
+        '200':
+          description: Page of webhooks
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookPage'
+
+  /webhooks/{id}:
+    get:
+      tags: [Webhooks]
+      summary: Get webhook by ID
+      operationId: getWebhook
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Webhook found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      tags: [Webhooks]
+      summary: Update a webhook
+      operationId: updateWebhook
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateWebhookRequest'
+      responses:
+        '200':
+          description: Webhook updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      tags: [Webhooks]
+      summary: Delete a webhook
+      operationId: deleteWebhook
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Webhook deleted
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /webhooks/{id}/executions:
+    get:
+      tags: [Webhooks]
+      summary: List webhook executions
+      description: Get the execution history for a specific webhook.
+      operationId: listWebhookExecutions
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/size'
+        - $ref: '#/components/parameters/sort'
+      responses:
+        '200':
+          description: Page of webhook executions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookExecutionPage'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /matrix:
+    get:
+      tags: [Matrix]
+      summary: Query compatibility matrix
+      description: >
+        Returns verification status between provider and consumer versions.
+        Each entry shows provider, consumer, their versions, verification status,
+        branch, and timestamp. Optionally filter by provider or consumer name.
+      operationId: queryMatrix
+      parameters:
+        - name: provider
+          in: query
+          description: Filter by provider application name
+          schema:
+            type: string
+        - name: consumer
+          in: query
+          description: Filter by consumer application name
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Matrix entries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MatrixEntry'
+
+  /selectors/resolve:
+    post:
+      tags: [Selectors]
+      summary: Resolve consumer version selectors
+      description: >
+        Resolve a list of consumer version selectors to find which contract
+        versions to verify against. Selectors can match by main branch, specific
+        branch, deployed environment, or consumer name. Results are deduplicated
+        by consumer:version:contractName.
+      operationId: resolveSelectors
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SelectorRequest'
+      responses:
+        '200':
+          description: Resolved contracts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResolvedContract'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /applications/{name}/versions/{version}/tags:
+    get:
+      tags: [Tags]
+      summary: List tags for a version
+      operationId: listTagsForVersion
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: version
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Tags for the version
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TagResponse'
+
+  /applications/{name}/versions/{version}/tags/{tag}:
+    put:
+      tags: [Tags]
+      summary: Add a tag to a version
+      description: >
+        Add a tag to an application version. Idempotent — adding an existing
+        tag returns the existing tag.
+      operationId: addTag
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: version
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: tag
+          in: path
+          required: true
+          schema:
+            type: string
+            maxLength: 128
+      responses:
+        '200':
+          description: Tag added (or already existed)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TagResponse'
+    delete:
+      tags: [Tags]
+      summary: Remove a tag from a version
+      operationId: removeTag
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: version
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: tag
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Tag removed
+
+  /applications/{name}/versions/latest:
+    get:
+      tags: [Tags]
+      summary: Get latest version by tag
+      description: Find the latest version of an application that has a specific tag.
+      operationId: getLatestVersionByTag
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: tag
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Latest version with the tag
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  version:
+                    type: string
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /maintenance/cleanup:
+    post:
+      tags: [Maintenance]
+      summary: Run data cleanup
+      description: >
+        Remove old contract versions. Keeps the latest N versions per application
+        and protects versions deployed to specified environments. Requires ADMIN role.
+      operationId: runCleanup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CleanupRequest'
+      responses:
+        '200':
+          description: Cleanup result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CleanupResult'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+components:
+  schemas:
+    RegisterApplicationRequest:
+      type: object
+      required: [name, owner]
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 128
+          pattern: '^[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]$'
+        description:
+          type: string
+          maxLength: 1000
+        owner:
+          type: string
+          maxLength: 100
+        mainBranch:
+          type: string
+          maxLength: 128
+          description: Main branch name (default "main")
+        repositoryUrl:
+          type: string
+          maxLength: 2048
+          description: Source code repository URL
+
+    UpdateApplicationRequest:
+      type: object
+      required: [mainBranch]
+      properties:
+        mainBranch:
+          type: string
+          minLength: 1
+          maxLength: 128
+        repositoryUrl:
+          type: string
+          maxLength: 2048
+          description: Source code repository URL
+
+    ApplicationResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        owner:
+          type: string
+        mainBranch:
+          type: string
+        repositoryUrl:
+          type: string
+          description: Source code repository URL
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    ApplicationPage:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApplicationResponse'
+        page:
+          type: integer
+        size:
+          type: integer
+        totalElements:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+
+    ContractPage:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/ContractResponse'
+        page:
+          type: integer
+        size:
+          type: integer
+        totalElements:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+
+    PublishContractRequest:
+      type: object
+      required: [contractName, content, contentType]
+      properties:
+        contractName:
+          type: string
+        content:
+          type: string
+        contentType:
+          type: string
+
+    ContractResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        version:
+          type: string
+        contractName:
+          type: string
+        content:
+          type: string
+        contentType:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+
+    RecordVerificationRequest:
+      type: object
+      required: [providerName, providerVersion, consumerName, consumerVersion, status]
+      properties:
+        providerName:
+          type: string
+        providerVersion:
+          type: string
+        consumerName:
+          type: string
+        consumerVersion:
+          type: string
+        status:
+          type: string
+          enum: [SUCCESS, FAILED]
+        details:
+          type: string
+
+    VerificationResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        providerName:
+          type: string
+        providerVersion:
+          type: string
+        consumerName:
+          type: string
+        consumerVersion:
+          type: string
+        status:
+          type: string
+          enum: [SUCCESS, FAILED]
+        details:
+          type: string
+        verifiedAt:
+          type: string
+          format: date-time
+
+    VerificationPage:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/VerificationResponse'
+        page:
+          type: integer
+        size:
+          type: integer
+        totalElements:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+
+    EnvironmentResponse:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        displayOrder:
+          type: integer
+        production:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    CreateEnvironmentRequest:
+      type: object
+      required: [name, displayOrder, production]
+      properties:
+        name:
+          type: string
+          maxLength: 64
+        description:
+          type: string
+          nullable: true
+        displayOrder:
+          type: integer
+        production:
+          type: boolean
+
+    UpdateEnvironmentRequest:
+      type: object
+      required: [displayOrder, production]
+      properties:
+        description:
+          type: string
+          nullable: true
+        displayOrder:
+          type: integer
+        production:
+          type: boolean
+
+    RecordDeploymentRequest:
+      type: object
+      required: [applicationName, version]
+      properties:
+        applicationName:
+          type: string
+        version:
+          type: string
+
+    DeploymentResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        applicationName:
+          type: string
+        environment:
+          type: string
+        version:
+          type: string
+        deployedAt:
+          type: string
+          format: date-time
+
+    DeploymentPage:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/DeploymentResponse'
+        page:
+          type: integer
+        size:
+          type: integer
+        totalElements:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+
+    CanIDeployResponse:
+      type: object
+      properties:
+        application:
+          type: string
+        version:
+          type: string
+        environment:
+          type: string
+        safe:
+          type: boolean
+        summary:
+          type: string
+        consumerResults:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConsumerResult'
+
+    ConsumerResult:
+      type: object
+      properties:
+        consumer:
+          type: string
+        consumerVersion:
+          type: string
+        verified:
+          type: boolean
+
+    DependencyGraphResponse:
+      type: object
+      properties:
+        nodes:
+          type: array
+          items:
+            $ref: '#/components/schemas/DependencyNode'
+        edges:
+          type: array
+          items:
+            $ref: '#/components/schemas/DependencyEdge'
+
+    DependencyNode:
+      type: object
+      properties:
+        applicationId:
+          type: string
+          format: uuid
+        applicationName:
+          type: string
+        owner:
+          type: string
+
+    DependencyEdge:
+      type: object
+      properties:
+        providerName:
+          type: string
+        providerVersion:
+          type: string
+        consumerName:
+          type: string
+        consumerVersion:
+          type: string
+        status:
+          type: string
+          enum: [SUCCESS, FAILED]
+        verifiedAt:
+          type: string
+          format: date-time
+
+    ApplicationDependenciesResponse:
+      type: object
+      properties:
+        applicationName:
+          type: string
+        providers:
+          type: array
+          items:
+            $ref: '#/components/schemas/DependencyEdge'
+        consumers:
+          type: array
+          items:
+            $ref: '#/components/schemas/DependencyEdge'
+
+    ProxyResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+        headers:
+          type: object
+          additionalProperties:
+            type: string
+        body:
+          type: string
+        contractGenerated:
+          type: boolean
+
+    MatrixEntry:
+      type: object
+      properties:
+        providerName:
+          type: string
+        providerVersion:
+          type: string
+        consumerName:
+          type: string
+        consumerVersion:
+          type: string
+        status:
+          type: string
+          enum: [SUCCESS, FAILED]
+        branch:
+          type: string
+        verifiedAt:
+          type: string
+          format: date-time
+
+    SelectorRequest:
+      type: object
+      required: [selectors]
+      properties:
+        selectors:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/ConsumerVersionSelector'
+
+    ConsumerVersionSelector:
+      type: object
+      properties:
+        mainBranch:
+          type: boolean
+          default: false
+        branch:
+          type: string
+        consumer:
+          type: string
+        deployed:
+          type: boolean
+          default: false
+        environment:
+          type: string
+
+    ResolvedContract:
+      type: object
+      properties:
+        consumerName:
+          type: string
+        version:
+          type: string
+        branch:
+          type: string
+        contractName:
+          type: string
+        contentHash:
+          type: string
+
+    TagResponse:
+      type: object
+      properties:
+        tag:
+          type: string
+        version:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+
+    CleanupRequest:
+      type: object
+      required: [keepLatestVersions]
+      properties:
+        applicationName:
+          type: string
+          description: Application to clean up (null for all)
+        keepLatestVersions:
+          type: integer
+          minimum: 1
+          description: Number of latest versions to keep
+        protectedEnvironments:
+          type: array
+          items:
+            type: string
+          description: Environments whose deployed versions should be protected
+
+    CleanupResult:
+      type: object
+      properties:
+        deletedCount:
+          type: integer
+        deletedContracts:
+          type: array
+          items:
+            type: string
+
+    CreateWebhookRequest:
+      type: object
+      required: [eventType, url]
+      properties:
+        applicationName:
+          type: string
+          maxLength: 128
+          description: Scope webhook to a specific application (null for all)
+        eventType:
+          $ref: '#/components/schemas/EventType'
+        url:
+          type: string
+          maxLength: 2048
+        headers:
+          type: string
+          description: JSON string of headers to include in webhook delivery
+        bodyTemplate:
+          type: string
+          description: Body template with ${variable} placeholders
+
+    UpdateWebhookRequest:
+      type: object
+      required: [eventType, url]
+      properties:
+        eventType:
+          $ref: '#/components/schemas/EventType'
+        url:
+          type: string
+          maxLength: 2048
+        headers:
+          type: string
+        bodyTemplate:
+          type: string
+        enabled:
+          type: boolean
+          default: true
+
+    WebhookResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        applicationId:
+          type: string
+          format: uuid
+        applicationName:
+          type: string
+        eventType:
+          $ref: '#/components/schemas/EventType'
+        url:
+          type: string
+        headers:
+          type: string
+        bodyTemplate:
+          type: string
+        enabled:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    WebhookPage:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/WebhookResponse'
+        page:
+          type: integer
+        size:
+          type: integer
+        totalElements:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+
+    WebhookExecutionResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        webhookId:
+          type: string
+          format: uuid
+        eventType:
+          $ref: '#/components/schemas/EventType'
+        requestUrl:
+          type: string
+        requestBody:
+          type: string
+        responseStatus:
+          type: integer
+        responseBody:
+          type: string
+        success:
+          type: boolean
+        errorMessage:
+          type: string
+        executedAt:
+          type: string
+          format: date-time
+
+    WebhookExecutionPage:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/WebhookExecutionResponse'
+        page:
+          type: integer
+        size:
+          type: integer
+        totalElements:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+
+    EventType:
+      type: string
+      enum:
+        - CONTRACT_PUBLISHED
+        - VERIFICATION_PUBLISHED
+        - VERIFICATION_SUCCEEDED
+        - VERIFICATION_FAILED
+        - DEPLOYMENT_RECORDED
+
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        traceId:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        details:
+          type: object
+          additionalProperties:
+            type: string
+
+  responses:
+    BadRequest:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Conflict:
+      description: Resource already exists
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+  parameters:
+    page:
+      name: page
+      in: query
+      schema:
+        type: integer
+        default: 0
+    size:
+      name: size
+      in: query
+      schema:
+        type: integer
+        default: 20
+    sort:
+      name: sort
+      in: query
+      description: Sort field and direction (e.g. createdAt,desc)
+      schema:
+        type: string
+    search:
+      name: search
+      in: query
+      description: Case-insensitive search filter (matches name, description, or URL depending on resource)
+      schema:
+        type: string
+
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - basicAuth: []
+  - bearerAuth: []

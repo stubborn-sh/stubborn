@@ -1,0 +1,12 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: stubborn-broker
+  labels:
+    app.kubernetes.io/name: stubborn-broker
+    app.kubernetes.io/part-of: stubborn-broker
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: stubborn-broker

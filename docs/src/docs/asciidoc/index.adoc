@@ -1,0 +1,70 @@
+= Stubborn
+:toc: left
+:toclevels: 3
+:source-highlighter: highlight.js
+:test-src: {docdir}/../../../../broker/src/test/java/org/springframework/cloud/contract/broker
+:snippets: {docdir}/../../../../broker/target/generated-snippets
+
+== Introduction
+
+Stubborn is a governance server for the Spring Cloud Contract ecosystem.
+It provides centralized management of contracts, stubs, verification results, environment
+tracking, and deployment safety checks.
+
+include::getting-started.adoc[leveloffset=+1]
+
+include::ui-tour.adoc[leveloffset=+1]
+
+include::architecture.adoc[leveloffset=+1]
+
+include::features/application-registration.adoc[leveloffset=+1]
+
+include::features/contract-publishing.adoc[leveloffset=+1]
+
+include::features/verification-results.adoc[leveloffset=+1]
+
+include::features/environment-tracking.adoc[leveloffset=+1]
+
+include::features/can-i-deploy.adoc[leveloffset=+1]
+
+include::features/security.adoc[leveloffset=+1]
+
+include::features/ai-traffic-proxy.adoc[leveloffset=+1]
+
+include::features/dependency-graph.adoc[leveloffset=+1]
+
+include::features/webhooks.adoc[leveloffset=+1]
+
+include::features/branches.adoc[leveloffset=+1]
+
+include::features/content-hash.adoc[leveloffset=+1]
+
+include::features/pending-contracts.adoc[leveloffset=+1]
+
+include::features/selectors.adoc[leveloffset=+1]
+
+include::features/matrix.adoc[leveloffset=+1]
+
+include::features/tags.adoc[leveloffset=+1]
+
+include::features/cleanup.adoc[leveloffset=+1]
+
+include::features/configurable-environments.adoc[leveloffset=+1]
+
+include::features/mcp-server.adoc[leveloffset=+1]
+
+include::features/cli.adoc[leveloffset=+1]
+
+include::features/contract-publishing-plugins.adoc[leveloffset=+1]
+
+include::features/js-sdk.adoc[leveloffset=+1]
+
+include::features/maven-import.adoc[leveloffset=+1]
+
+include::api-reference.adoc[leveloffset=+1]
+
+include::observability.adoc[leveloffset=+1]
+
+include::contract-stubs.adoc[leveloffset=+1]
+
+include::development-guide.adoc[leveloffset=+1]

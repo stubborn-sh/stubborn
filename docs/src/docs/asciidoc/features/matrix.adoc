@@ -1,0 +1,21 @@
+= Compatibility Matrix
+
+The compatibility matrix shows provider-consumer verification status in a grid format.
+
+== Endpoints
+
+`GET /api/v1/matrix`::
+Query the full matrix. Filter by `provider`, `consumer`, and/or `environment`.
+
+`GET /api/v1/matrix/providers/{name}`::
+Query matrix rows for a specific provider, showing all consumers that have verified against it.
+
+== Response
+
+Returns a list of matrix entries, each containing provider name/version, consumer name/version,
+verification status (SUCCESS/FAILED), verification timestamp, and environment (if filtered).
+
+== Use Case
+
+The matrix provides a quick overview of which service versions are compatible, helping teams
+identify broken integrations and track verification coverage across their service mesh.

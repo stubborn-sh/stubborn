@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>sh.stubborn</groupId>
+		<artifactId>stubborn-samples</artifactId>
+		<version>0.1.0-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>sample-maven-consumer</artifactId>
+
+	<properties>
+		<!-- Gradle sample executions and Docker Compose only when compose.skip=false (e.g. CI with Docker) -->
+	</properties>
+	<name>Sample Maven Consumer (Payment Service)</name>
+	<description>Consumer using @AutoConfigureStubRunner with sccbroker:// protocol</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<!-- Test -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!-- Reactor ordering: run after maven-producer publishes contracts -->
+		<dependency>
+			<groupId>sh.stubborn</groupId>
+			<artifactId>sample-maven-producer</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-contract-stub-runner</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>sh.stubborn</groupId>
+			<artifactId>stubborn-stub-downloader</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+
+			<!-- Run Gradle samples during integration test phase -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>3.6.3</version>
+				<executions>
+					<execution>
+						<id>gradle-consumer-publish</id>
+						<phase>pre-integration-test</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<skip>${compose.skip}</skip>
+							<executable>${project.basedir}/../gradle-consumer/gradlew</executable>
+							<workingDirectory>${project.basedir}/../gradle-consumer</workingDirectory>
+							<arguments>
+								<argument>publishContracts</argument>
+								<argument>-Dbroker.url=http://localhost:18080</argument>
+							</arguments>
+						</configuration>
+					</execution>
+					<execution>
+						<id>gradle-producer-test</id>
+						<phase>pre-integration-test</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<skip>${compose.skip}</skip>
+							<executable>${project.basedir}/../gradle-producer/gradlew</executable>
+							<workingDirectory>${project.basedir}/../gradle-producer</workingDirectory>
+							<arguments>
+								<argument>test</argument>
+								<argument>-Dbroker.url=http://localhost:18080</argument>
+							</arguments>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

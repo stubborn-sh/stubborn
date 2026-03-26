@@ -1,0 +1,195 @@
+= Contract Publishing Plugins
+
+Automate contract publishing with Maven and Gradle build tool plugins.
+
+== Overview
+
+The contract publishing plugins integrate with your build lifecycle to automatically
+publish Spring Cloud Contract definitions to the broker. A shared core library
+(`BrokerPublisher`) handles the REST API communication, while thin Maven and Gradle
+wrappers expose it as build goals and tasks.
+
+== Core Library: BrokerPublisher
+
+The `BrokerPublisher` facade is a standalone Java library with no Spring dependency.
+Both plugins delegate to it for all broker communication:
+
+1. Check if the application exists (`GET /api/v1/applications/{name}`)
+2. Auto-register the application if missing (`POST /api/v1/applications`)
+3. Publish each contract file (`POST /api/v1/applications/{name}/versions/{version}/contracts`)
+
+Content type is inferred from the file extension:
+
+[cols="1,2"]
+|===
+| Extension | Content Type
+
+| `.yml`, `.yaml`
+| `application/x-spring-cloud-contract+yaml`
+
+| `.groovy`
+| `application/x-spring-cloud-contract+groovy`
+
+| `.java`
+| `application/x-spring-cloud-contract+java`
+|===
+
+== Maven Plugin
+
+Plugin coordinates: `org.springframework.cloud:broker-maven-plugin`
+
+Goal: `publish` (default phase: `install`)
+
+[source,xml]
+----
+<plugin>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>broker-maven-plugin</artifactId>
+    <version>${broker.version}</version>
+    <configuration>
+        <brokerUrl>http://localhost:8080</brokerUrl>
+        <username>publisher</username>
+        <password>publisher</password>
+        <applicationName>${project.artifactId}</applicationName>
+        <applicationVersion>${project.version}</applicationVersion>
+        <contractsDirectory>${project.basedir}/src/test/resources/contracts</contractsDirectory>
+        <autoCreateApplication>true</autoCreateApplication>
+    </configuration>
+    <executions>
+        <execution>
+            <goals>
+                <goal>publish</goal>
+            </goals>
+        </execution>
+    </executions>
+</plugin>
+----
+
+Run manually:
+
+[source,bash]
+----
+mvn broker:publish
+----
+
+Or as part of the build lifecycle (bound to `install` phase by default):
+
+[source,bash]
+----
+mvn install
+----
+
+== Gradle Plugin
+
+Plugin ID: `sh.stubborn.broker`
+
+Task: `publishContracts` (depends on `test`)
+
+[source,groovy]
+----
+plugins {
+    id 'sh.stubborn.broker' version "${brokerVersion}"
+}
+
+broker {
+    brokerUrl = 'http://localhost:8080'
+    username = 'publisher'
+    password = 'publisher'
+    applicationName = project.name
+    applicationVersion = project.version
+    contractsDirectory = file("src/test/resources/contracts")
+    autoCreateApplication = true
+}
+----
+
+Run:
+
+[source,bash]
+----
+gradle publishContracts
+----
+
+== Configuration Reference
+
+[cols="2,1,2,3"]
+|===
+| Parameter | Required | Default | Description
+
+| `brokerUrl`
+| Yes
+| --
+| Base URL of the broker
+
+| `username`
+| Yes
+| --
+| HTTP Basic auth username
+
+| `password`
+| Yes
+| --
+| HTTP Basic auth password
+
+| `applicationName`
+| Yes
+| Project artifact ID / name
+| Application name in the broker
+
+| `applicationVersion`
+| Yes
+| Project version
+| Version to publish contracts under
+
+| `contractsDirectory`
+| No
+| `src/test/resources/contracts`
+| Directory containing contract files
+
+| `autoCreateApplication`
+| No
+| `true`
+| Register application if it does not exist
+
+| `failOnError`
+| No
+| `true`
+| Fail the build if any contract fails to publish
+
+| `skipPublish`
+| No
+| `false`
+| Skip contract publishing entirely
+|===
+
+== Error Handling
+
+The plugin handles broker errors as follows:
+
+* **Authentication failure (401/403)** -- build fails with "Authentication failed"
+* **Broker unreachable** -- build fails with "Cannot connect to broker"
+* **Server error (5xx)** -- build fails with HTTP status and response body
+* **Contract already exists (409)** -- warning logged, continues to next contract (idempotent)
+* **No contracts found** -- warning logged, build succeeds
+
+Credentials are never written to build output.
+
+== Example: CI/CD Pipeline
+
+A typical CI pipeline publishes contracts after tests pass:
+
+[source,bash]
+----
+# Maven
+mvn clean verify broker:publish \
+    -Dbroker.url=https://broker.example.com \
+    -Dbroker.username=${BROKER_USER} \
+    -Dbroker.password=${BROKER_PASS}
+
+# Gradle
+gradle build publishContracts \
+    -Pbroker.url=https://broker.example.com \
+    -Pbroker.username=${BROKER_USER} \
+    -Pbroker.password=${BROKER_PASS}
+----
+
+See specification: `docs/specs/008-contract-publishing-plugins.md`

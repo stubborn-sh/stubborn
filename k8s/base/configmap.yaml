@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: stubborn-broker
+  labels:
+    app.kubernetes.io/name: stubborn-broker
+    app.kubernetes.io/part-of: stubborn-broker
+data:
+  SPRING_PROFILES_ACTIVE: "prod"
+  MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: "health,prometheus"
+  MANAGEMENT_ENDPOINT_HEALTH_PROBES_ENABLED: "true"

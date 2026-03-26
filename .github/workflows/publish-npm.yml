@@ -1,0 +1,57 @@
+name: Publish NPM Packages
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to publish (e.g., 0.1.0)'
+        required: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+      - name: Set versions
+        working-directory: js
+        run: |
+          npm version ${{ inputs.version }} --workspaces --no-git-tag-version
+          npm version ${{ inputs.version }} --no-git-tag-version
+      - name: Update inter-package dependencies
+        working-directory: js
+        run: |
+          VERSION=${{ inputs.version }}
+          for pkg in packages/*/package.json; do
+            node -e "
+              const fs = require('fs');
+              const p = JSON.parse(fs.readFileSync('$pkg', 'utf8'));
+              for (const depType of ['dependencies', 'devDependencies', 'peerDependencies']) {
+                if (p[depType]) {
+                  for (const [name, ver] of Object.entries(p[depType])) {
+                    if (name.startsWith('@stubborn-sh/')) p[depType][name] = '$VERSION';
+                  }
+                }
+              }
+              fs.writeFileSync('$pkg', JSON.stringify(p, null, 2) + '\n');
+            "
+          done
+      - name: Install dependencies
+        working-directory: js
+        run: npm ci
+      - name: Build
+        working-directory: js
+        run: npm run build
+      - name: Test
+        working-directory: js
+        run: npm run test:ci
+      - name: Publish
+        working-directory: js
+        run: npm publish --workspaces --access public --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

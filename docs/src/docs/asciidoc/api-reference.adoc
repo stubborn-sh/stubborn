@@ -1,0 +1,3 @@
+= API Reference
+
+API documentation is generated from RestDocs snippets produced by contract tests.

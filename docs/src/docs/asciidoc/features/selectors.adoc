@@ -1,0 +1,24 @@
+= Consumer Version Selectors
+
+Consumer version selectors provide a flexible query mechanism for determining which consumer
+contract versions a provider should verify against.
+
+== Endpoint
+
+`POST /api/v1/selectors/resolve`::
+Resolves selectors to a list of contracts. Accepts a list of selectors with criteria:
+`consumer`, `mainBranch`, `deployed`, `branch`.
+
+== Selector Criteria
+
+* `consumer` -- filter by consumer application name
+* `mainBranch` (boolean) -- select contracts from the main branch
+* `deployed` (boolean) -- select contracts from versions currently deployed
+* `branch` -- select contracts from a specific branch
+
+Multiple selectors are combined with OR logic (union of results).
+
+== Use Case
+
+Providers run this before verification to discover which contracts they need to test against,
+replacing hardcoded version lists with dynamic queries based on deployment state and branch.
