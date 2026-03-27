@@ -56,10 +56,14 @@ class WebhookDispatcher {
 
 	private final WebhookEventFilter webhookEventFilter;
 
+	private final sh.stubborn.oss.security.CredentialEncryptionService encryptionService;
+
 	WebhookDispatcher(WebhookRepository webhookRepository, WebhookExecutionRepository executionRepository,
-			RestClient.Builder restClientBuilder, JsonMapper jsonMapper, WebhookEventFilter webhookEventFilter) {
+			RestClient.Builder restClientBuilder, JsonMapper jsonMapper, WebhookEventFilter webhookEventFilter,
+			sh.stubborn.oss.security.CredentialEncryptionService encryptionService) {
 		this.webhookRepository = webhookRepository;
 		this.executionRepository = executionRepository;
+		this.encryptionService = encryptionService;
 		HttpClient httpClient = HttpClient.newBuilder().connectTimeout(CONNECT_TIMEOUT).build();
 		JdkClientHttpRequestFactory requestFactory = new JdkClientHttpRequestFactory(httpClient);
 		requestFactory.setReadTimeout(READ_TIMEOUT);
@@ -91,7 +95,7 @@ class WebhookDispatcher {
 				RestClient.RequestBodySpec request = this.restClient.post()
 					.uri(webhook.getUrl())
 					.contentType(MediaType.APPLICATION_JSON);
-				for (Map.Entry<String, Object> entry : webhook.getHeadersAsMap().entrySet()) {
+				for (Map.Entry<String, Object> entry : decryptHeaders(webhook).entrySet()) {
 					request.header(entry.getKey(), String.valueOf(entry.getValue()));
 				}
 				String responseBody = request.body(body).retrieve().body(String.class);
@@ -137,6 +141,15 @@ class WebhookDispatcher {
 
 	private String toJson(BrokerEvent event) {
 		return this.jsonMapper.writeValueAsString(event);
+	}
+
+	private Map<String, Object> decryptHeaders(Webhook webhook) {
+		String encrypted = webhook.getHeaders();
+		if (encrypted == null) {
+			return Map.of();
+		}
+		String decrypted = this.encryptionService.decrypt(encrypted);
+		return new org.springframework.boot.json.JacksonJsonParser().parseMap(decrypted);
 	}
 
 	private void sleepQuietly(long millis) {

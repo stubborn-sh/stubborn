@@ -63,6 +63,9 @@ class WebhookDispatcherTest {
 	@Mock
 	RestClient restClient;
 
+	@Mock
+	sh.stubborn.oss.security.CredentialEncryptionService encryptionService;
+
 	WebhookDispatcher dispatcher;
 
 	@BeforeEach
@@ -70,9 +73,12 @@ class WebhookDispatcherTest {
 		given(this.restClientBuilder.requestFactory(any(ClientHttpRequestFactory.class)))
 			.willReturn(this.restClientBuilder);
 		given(this.restClientBuilder.build()).willReturn(this.restClient);
+		// Passthrough encryption for tests
+		given(this.encryptionService.decrypt(any())).willAnswer(inv -> inv.getArgument(0));
+		given(this.encryptionService.encrypt(any())).willAnswer(inv -> inv.getArgument(0));
 		WebhookEventFilter eventFilter = new OssWebhookEventFilter();
 		this.dispatcher = new WebhookDispatcher(this.webhookRepository, this.executionRepository,
-				this.restClientBuilder, JsonMapper.builder().build(), eventFilter);
+				this.restClientBuilder, JsonMapper.builder().build(), eventFilter, this.encryptionService);
 	}
 
 	@Test
@@ -171,7 +177,8 @@ class WebhookDispatcherTest {
 			BrokerEvent event = BrokerEvent.contractPublished(UUID.randomUUID(), "order-service", "1.0.0",
 					"create-order");
 			WebhookDispatcher realDispatcher = new WebhookDispatcher(this.webhookRepo, this.executionRepo,
-					RestClient.builder(), JsonMapper.builder().build(), new OssWebhookEventFilter());
+					RestClient.builder(), JsonMapper.builder().build(), new OssWebhookEventFilter(),
+					new sh.stubborn.oss.security.CredentialEncryptionService(""));
 
 			// when
 			long start = System.nanoTime();
@@ -204,7 +211,8 @@ class WebhookDispatcherTest {
 			BrokerEvent event = BrokerEvent.contractPublished(UUID.randomUUID(), "order-service", "1.0.0",
 					"create-order");
 			WebhookDispatcher realDispatcher = new WebhookDispatcher(this.webhookRepo, this.executionRepo,
-					RestClient.builder(), JsonMapper.builder().build(), new OssWebhookEventFilter());
+					RestClient.builder(), JsonMapper.builder().build(), new OssWebhookEventFilter(),
+					new sh.stubborn.oss.security.CredentialEncryptionService(""));
 
 			// when
 			realDispatcher.deliverWithRetry(webhook, event);

@@ -2,7 +2,7 @@
 
 ## Problem
 
-Maven and Git import sources store credentials (`encrypted_password`, `encrypted_token`) as plaintext in PostgreSQL despite the column names suggesting encryption.
+Maven import sources, Git import sources, and webhook headers store credentials as plaintext in PostgreSQL. Webhook headers often contain `Authorization: Bearer <token>` or `X-API-Key: <key>`.
 
 ## Solution
 
@@ -24,6 +24,9 @@ Introduce `CredentialEncryptionService` using AES-256-GCM to encrypt credentials
 |---------|--------|--------|
 | `MavenImportService` | `registerSource()` | Encrypt password before storing |
 | `GitImportService` | `registerSource()` | Encrypt token before storing |
+| `WebhookService` | `create()` / `update()` | Encrypt headers JSON before storing |
+| `WebhookDispatcher` | `deliverWithRetry()` | Decrypt headers before HTTP dispatch |
+| `WebhookResponse` | `from()` (3-arg) | Decrypt headers before returning to API |
 
 When a future sync scheduler reads credentials from stored sources, it must call `decrypt()` before using them for authentication.
 
@@ -46,3 +49,7 @@ Generate a key: `openssl rand -base64 32`
 - [ ] Tampered ciphertext causes decryption failure
 - [ ] `MavenImportService.registerSource()` encrypts password
 - [ ] `GitImportService.registerSource()` encrypts token
+- [ ] `WebhookService.create()` encrypts headers
+- [ ] `WebhookService.update()` encrypts headers
+- [ ] `WebhookDispatcher` decrypts headers before HTTP dispatch
+- [ ] `WebhookResponse` decrypts headers in API response

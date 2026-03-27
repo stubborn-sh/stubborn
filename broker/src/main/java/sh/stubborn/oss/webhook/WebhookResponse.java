@@ -30,4 +30,13 @@ record WebhookResponse(UUID id, @Nullable UUID applicationId, @Nullable String a
 				webhook.getCreatedAt(), webhook.getUpdatedAt());
 	}
 
+	static WebhookResponse from(Webhook webhook, @Nullable String applicationName,
+			sh.stubborn.oss.security.CredentialEncryptionService encryptionService) {
+		String decryptedHeaders = (webhook.getHeaders() != null) ? encryptionService.decrypt(webhook.getHeaders())
+				: null;
+		return new WebhookResponse(webhook.getId(), webhook.getApplicationId(), applicationName, webhook.getEventType(),
+				webhook.getUrl(), decryptedHeaders, webhook.getBodyTemplate(), webhook.isEnabled(),
+				webhook.getCreatedAt(), webhook.getUpdatedAt());
+	}
+
 }

@@ -37,11 +37,15 @@ public class WebhookService {
 
 	private final ApplicationService applicationService;
 
+	private final sh.stubborn.oss.security.CredentialEncryptionService encryptionService;
+
 	WebhookService(WebhookRepository webhookRepository, WebhookExecutionRepository executionRepository,
-			ApplicationService applicationService) {
+			ApplicationService applicationService,
+			sh.stubborn.oss.security.CredentialEncryptionService encryptionService) {
 		this.webhookRepository = webhookRepository;
 		this.executionRepository = executionRepository;
 		this.applicationService = applicationService;
+		this.encryptionService = encryptionService;
 	}
 
 	@Observed(name = "broker.webhook.create")
@@ -53,7 +57,8 @@ public class WebhookService {
 		if (applicationName != null) {
 			applicationId = this.applicationService.findIdByName(applicationName);
 		}
-		Webhook webhook = Webhook.create(applicationId, eventType, url, headers, bodyTemplate);
+		String encryptedHeaders = (headers != null) ? this.encryptionService.encrypt(headers) : null;
+		Webhook webhook = Webhook.create(applicationId, eventType, url, encryptedHeaders, bodyTemplate);
 		return this.webhookRepository.save(webhook);
 	}
 
@@ -73,7 +78,8 @@ public class WebhookService {
 	}
 
 	public Page<WebhookResponse> findAllResponses(@Nullable String search, Pageable pageable) {
-		return findAll(search, pageable).map(w -> WebhookResponse.from(w, resolveApplicationName(w)));
+		return findAll(search, pageable)
+			.map(w -> WebhookResponse.from(w, resolveApplicationName(w), this.encryptionService));
 	}
 
 	public Page<WebhookResponse> findAllResponses(Pageable pageable) {
@@ -85,7 +91,8 @@ public class WebhookService {
 	public Webhook update(UUID id, EventType eventType, String url, @Nullable String headers,
 			@Nullable String bodyTemplate, boolean enabled) {
 		Webhook webhook = findById(id);
-		webhook.update(eventType, url, headers, bodyTemplate, enabled);
+		String encryptedHeaders = (headers != null) ? this.encryptionService.encrypt(headers) : null;
+		webhook.update(eventType, url, encryptedHeaders, bodyTemplate, enabled);
 		return this.webhookRepository.save(webhook);
 	}
 
@@ -103,7 +110,7 @@ public class WebhookService {
 	}
 
 	public WebhookResponse toResponse(Webhook webhook) {
-		return WebhookResponse.from(webhook, resolveApplicationName(webhook));
+		return WebhookResponse.from(webhook, resolveApplicationName(webhook), this.encryptionService);
 	}
 
 	@Cacheable(cacheNames = "webhooks", key = "'count'")

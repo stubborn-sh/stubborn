@@ -36,6 +36,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.lenient;
 
 @ExtendWith(MockitoExtension.class)
 class WebhookServiceTest {
@@ -49,12 +50,18 @@ class WebhookServiceTest {
 	@Mock
 	ApplicationService applicationService;
 
+	@Mock
+	sh.stubborn.oss.security.CredentialEncryptionService encryptionService;
+
 	WebhookService webhookService;
 
 	@BeforeEach
 	void setUp() {
+		// Passthrough encryption for tests (lenient — not all tests trigger encryption)
+		lenient().when(this.encryptionService.encrypt(any())).thenAnswer(inv -> inv.getArgument(0));
+		lenient().when(this.encryptionService.decrypt(any())).thenAnswer(inv -> inv.getArgument(0));
 		this.webhookService = new WebhookService(this.webhookRepository, this.executionRepository,
-				this.applicationService);
+				this.applicationService, this.encryptionService);
 	}
 
 	@Test
