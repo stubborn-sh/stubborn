@@ -15,6 +15,12 @@ import type {
   CleanupResult,
   ResolvedContract,
   PageResponse,
+  GitImportSourceResponse,
+  GitImportResultResponse,
+  ImportGitRequest,
+  RegisterGitSourceRequest,
+  MavenImportSourceResponse,
+  MavenImportResultResponse,
 } from "./types";
 import { getAuthHeader, clearCredentials } from "@/shared/auth/auth-store";
 
@@ -291,5 +297,76 @@ export const api = {
   },
   broker: {
     info: () => fetchJson<BrokerInfoResponse>("/api/v1/broker/info"),
+  },
+  gitImport: {
+    listSources: (params?: PageParams) => {
+      const urlParams = new URLSearchParams();
+      urlParams.set("size", String(params?.size ?? 20));
+      urlParams.set("page", String(params?.page ?? 0));
+      urlParams.set("sort", "createdAt,desc");
+      return fetchJson<PageResponse<GitImportSourceResponse>>(
+        `/api/v1/import/git-sources?${urlParams.toString()}`,
+      );
+    },
+    registerSource: (data: RegisterGitSourceRequest) =>
+      fetchJson<GitImportSourceResponse>("/api/v1/import/git-sources", {
+        method: "POST",
+        body: JSON.stringify(data),
+      }),
+    deleteSource: (id: string) => {
+      const authH = getAuthHeader();
+      return fetch(`${BASE_URL}/api/v1/import/git-sources/${id}`, {
+        method: "DELETE",
+        headers: authH ? { Authorization: authH } : {},
+      });
+    },
+    importFromGit: (data: ImportGitRequest) =>
+      fetchJson<GitImportResultResponse>("/api/v1/import/git", {
+        method: "POST",
+        body: JSON.stringify(data),
+      }),
+  },
+  mavenImport: {
+    listSources: (params?: PageParams) => {
+      const urlParams = new URLSearchParams();
+      urlParams.set("size", String(params?.size ?? 20));
+      urlParams.set("page", String(params?.page ?? 0));
+      urlParams.set("sort", "createdAt,desc");
+      return fetchJson<PageResponse<MavenImportSourceResponse>>(
+        `/api/v1/import/sources?${urlParams.toString()}`,
+      );
+    },
+    registerSource: (data: {
+      repositoryUrl: string;
+      groupId: string;
+      artifactId: string;
+      username?: string;
+      encryptedPassword?: string;
+      syncEnabled: boolean;
+    }) =>
+      fetchJson<MavenImportSourceResponse>("/api/v1/import/sources", {
+        method: "POST",
+        body: JSON.stringify(data),
+      }),
+    deleteSource: (id: string) => {
+      const authH = getAuthHeader();
+      return fetch(`${BASE_URL}/api/v1/import/sources/${id}`, {
+        method: "DELETE",
+        headers: authH ? { Authorization: authH } : {},
+      });
+    },
+    importJar: (data: {
+      applicationName: string;
+      repositoryUrl: string;
+      groupId: string;
+      artifactId: string;
+      version: string;
+      username?: string;
+      password?: string;
+    }) =>
+      fetchJson<MavenImportResultResponse>("/api/v1/import/maven-jar", {
+        method: "POST",
+        body: JSON.stringify(data),
+      }),
   },
 };

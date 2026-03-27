@@ -16,6 +16,7 @@
 package sh.stubborn.oss.mavenimport;
 
 import java.net.URI;
+import java.util.List;
 import java.util.UUID;
 
 import jakarta.validation.Valid;
@@ -37,8 +38,18 @@ class MavenImportController {
 
 	private final MavenImportService importService;
 
-	MavenImportController(MavenImportService importService) {
+	private final MavenStubsDiscoveryService discoveryService;
+
+	MavenImportController(MavenImportService importService, MavenStubsDiscoveryService discoveryService) {
 		this.importService = importService;
+		this.discoveryService = discoveryService;
+	}
+
+	@PostMapping("/maven-discover")
+	ResponseEntity<DiscoverStubsResponse> discoverStubs(@Valid @RequestBody DiscoverStubsRequest request) {
+		List<DiscoveredStub> stubs = this.discoveryService.discover(request.repositoryUrl(), request.repositoryType(),
+				request.username(), request.password());
+		return ResponseEntity.ok(new DiscoverStubsResponse(stubs));
 	}
 
 	@PostMapping("/maven-jar")

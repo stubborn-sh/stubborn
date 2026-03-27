@@ -15,6 +15,8 @@ import { MatrixPage } from "@/features/matrix";
 import { TagsPage } from "@/features/tags";
 import { CleanupPage } from "@/features/cleanup";
 import { SelectorsPage } from "@/features/selectors";
+import { GitImportPage } from "@/features/git-import";
+import { MavenImportPage } from "@/features/maven-import";
 
 export default function App() {
   const { isAuthenticated } = useAuth();
@@ -39,6 +41,8 @@ export default function App() {
         <Route path="tags" element={<TagsPage />} />
         <Route path="cleanup" element={<CleanupPage />} />
         <Route path="selectors" element={<SelectorsPage />} />
+        <Route path="git-import" element={<GitImportPage />} />
+        <Route path="maven-import" element={<MavenImportPage />} />
         <Route path="settings" element={<SettingsPage />} />
       </Route>
     </Routes>

@@ -170,6 +170,31 @@ export const mockMatrixEntries = [
   },
 ];
 
+export const mockMavenImportSources = [
+  {
+    id: "ms-1",
+    repositoryUrl: "https://repo.maven.apache.org/maven2",
+    groupId: "com.example",
+    artifactId: "order-contracts",
+    syncEnabled: true,
+    lastSyncAt: "2026-03-01T10:00:00Z",
+    lastSyncedVersion: "1.2.0",
+    createdAt: "2026-02-20T10:00:00Z",
+    updatedAt: "2026-03-01T10:00:00Z",
+  },
+  {
+    id: "ms-2",
+    repositoryUrl: "https://nexus.internal.com/repository/releases",
+    groupId: "com.acme",
+    artifactId: "payment-stubs",
+    syncEnabled: false,
+    lastSyncAt: null,
+    lastSyncedVersion: null,
+    createdAt: "2026-02-25T10:00:00Z",
+    updatedAt: "2026-02-25T10:00:00Z",
+  },
+];
+
 export const mockTags = [
   { tag: "RELEASE", version: "1.0.0", createdAt: "2026-02-15T10:00:00Z" },
   { tag: "STABLE", version: "1.0.0", createdAt: "2026-02-16T10:00:00Z" },
@@ -199,6 +224,35 @@ export const mockEnvironments = [
     production: true,
     createdAt: "2026-01-01T10:00:00Z",
     updatedAt: "2026-01-01T10:00:00Z",
+  },
+];
+
+export const mockGitImportSources = [
+  {
+    id: "gs-1",
+    applicationName: "order-service",
+    repositoryUrl: "https://github.com/acme/order-service.git",
+    branch: "main",
+    contractsDirectory: "src/test/resources/contracts",
+    authType: "TOKEN",
+    syncEnabled: true,
+    lastSyncAt: "2026-03-01T10:00:00Z",
+    lastSyncedCommit: "abc123def",
+    createdAt: "2026-02-20T10:00:00Z",
+    updatedAt: "2026-03-01T10:00:00Z",
+  },
+  {
+    id: "gs-2",
+    applicationName: "payment-service",
+    repositoryUrl: "https://github.com/acme/payment-service.git",
+    branch: null,
+    contractsDirectory: null,
+    authType: null,
+    syncEnabled: false,
+    lastSyncAt: null,
+    lastSyncedCommit: null,
+    createdAt: "2026-02-21T10:00:00Z",
+    updatedAt: "2026-02-21T10:00:00Z",
   },
 ];
 
@@ -500,5 +554,86 @@ export const handlers = [
         contentHash: "abc123",
       },
     ]),
+  ),
+
+  // Git Import
+  http.get("/api/v1/import/git-sources", () =>
+    HttpResponse.json({
+      content: mockGitImportSources,
+      number: 0,
+      size: 20,
+      totalElements: mockGitImportSources.length,
+      totalPages: 1,
+      first: true,
+      last: true,
+      empty: false,
+    }),
+  ),
+  http.post("/api/v1/import/git-sources", async ({ request }) => {
+    const body = (await request.json()) as Record<string, unknown>;
+    return HttpResponse.json(
+      {
+        id: "gs-3",
+        applicationName: body.applicationName,
+        repositoryUrl: body.repositoryUrl,
+        branch: body.branch ?? null,
+        contractsDirectory: body.contractsDirectory ?? null,
+        authType: body.authType ?? null,
+        syncEnabled: body.syncEnabled ?? false,
+        lastSyncAt: null,
+        lastSyncedCommit: null,
+        createdAt: "2026-03-27T10:00:00Z",
+        updatedAt: "2026-03-27T10:00:00Z",
+      },
+      { status: 201 },
+    );
+  }),
+  http.delete("/api/v1/import/git-sources/:id", () => new HttpResponse(null, { status: 204 })),
+  http.post("/api/v1/import/git", () =>
+    HttpResponse.json({
+      published: 3,
+      skipped: 1,
+      total: 4,
+      resolvedVersion: "1.2.0",
+    }),
+  ),
+
+  // Maven Import
+  http.get("/api/v1/import/sources", () =>
+    HttpResponse.json({
+      content: mockMavenImportSources,
+      number: 0,
+      size: 20,
+      totalElements: mockMavenImportSources.length,
+      totalPages: 1,
+      first: true,
+      last: true,
+      empty: false,
+    }),
+  ),
+  http.post("/api/v1/import/sources", async ({ request }) => {
+    const body = (await request.json()) as Record<string, unknown>;
+    return HttpResponse.json(
+      {
+        id: "ms-3",
+        repositoryUrl: body.repositoryUrl,
+        groupId: body.groupId,
+        artifactId: body.artifactId,
+        syncEnabled: body.syncEnabled ?? false,
+        lastSyncAt: null,
+        lastSyncedVersion: null,
+        createdAt: "2026-03-27T10:00:00Z",
+        updatedAt: "2026-03-27T10:00:00Z",
+      },
+      { status: 201 },
+    );
+  }),
+  http.delete("/api/v1/import/sources/:id", () => new HttpResponse(null, { status: 204 })),
+  http.post("/api/v1/import/maven-jar", () =>
+    HttpResponse.json({
+      published: 5,
+      skipped: 2,
+      total: 7,
+    }),
   ),
 ];

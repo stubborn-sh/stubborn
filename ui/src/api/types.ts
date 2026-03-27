@@ -165,3 +165,66 @@ export interface PageResponse<T> {
   last: boolean;
   empty: boolean;
 }
+
+// Git Import types
+export interface GitImportSourceResponse {
+  id: string;
+  applicationName: string;
+  repositoryUrl: string;
+  branch: string | null;
+  contractsDirectory: string | null;
+  authType: string | null;
+  syncEnabled: boolean;
+  lastSyncAt: string | null;
+  lastSyncedCommit: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface GitImportResultResponse {
+  published: number;
+  skipped: number;
+  total: number;
+  resolvedVersion: string;
+}
+
+export interface ImportGitRequest {
+  applicationName: string;
+  repositoryUrl: string;
+  branch?: string;
+  contractsDirectory?: string;
+  version?: string;
+  authType?: string;
+  username?: string;
+  token?: string;
+}
+
+export interface RegisterGitSourceRequest {
+  applicationName: string;
+  repositoryUrl: string;
+  branch?: string;
+  contractsDirectory?: string;
+  authType?: string;
+  username?: string;
+  encryptedToken?: string;
+  syncEnabled: boolean;
+}
+
+// Maven Import types
+export interface MavenImportSourceResponse {
+  id: string;
+  repositoryUrl: string;
+  groupId: string;
+  artifactId: string;
+  syncEnabled: boolean;
+  lastSyncAt: string | null;
+  lastSyncedVersion: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface MavenImportResultResponse {
+  published: number;
+  skipped: number;
+  total: number;
+}

@@ -56,6 +56,9 @@ class MavenImportControllerTest {
 	@MockitoBean
 	MavenImportService importService;
 
+	@MockitoBean
+	MavenStubsDiscoveryService discoveryService;
+
 	@Test
 	void should_import_jar_and_return_result() throws Exception {
 		// given

@@ -19,6 +19,8 @@ import {
   Moon,
   Bot,
   Server,
+  FolderGit2,
+  Package,
 } from "lucide-react";
 import { cn } from "@/shared/lib/utils";
 import { useAuth } from "@/shared/auth/useAuth";
@@ -44,6 +46,8 @@ const navItems: NavItem[] = [
   { to: "/tags", label: "Tags", icon: Tag },
   { to: "/cleanup", label: "Cleanup", icon: Trash2 },
   { to: "/selectors", label: "Selectors", icon: Filter },
+  { to: "/git-import", label: "Git Import", icon: FolderGit2 },
+  { to: "/maven-import", label: "Maven Import", icon: Package },
   { to: "/ai-proxy", label: "AI Proxy", icon: Bot, proOnly: true },
   { to: "/mcp-server", label: "MCP Server", icon: Server, proOnly: true },
   { to: "/settings", label: "Settings", icon: Settings },

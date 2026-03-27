@@ -72,7 +72,7 @@ describe("Layout", () => {
 
     // assert
     const links = screen.getAllByRole("link");
-    expect(links.length).toBe(13);
+    expect(links.length).toBe(15);
   });
 
   it("should render correct href for each nav link", () => {
@@ -104,6 +104,14 @@ describe("Layout", () => {
     expect(screen.getByRole("link", { name: "Tags" })).toHaveAttribute("href", "/tags");
     expect(screen.getByRole("link", { name: "Cleanup" })).toHaveAttribute("href", "/cleanup");
     expect(screen.getByRole("link", { name: "Selectors" })).toHaveAttribute("href", "/selectors");
+    expect(screen.getByRole("link", { name: "Git Import" })).toHaveAttribute(
+      "href",
+      "/git-import",
+    );
+    expect(screen.getByRole("link", { name: "Maven Import" })).toHaveAttribute(
+      "href",
+      "/maven-import",
+    );
     expect(screen.getByRole("link", { name: "Settings" })).toHaveAttribute("href", "/settings");
   });
 
