@@ -27,6 +27,7 @@ import sh.stubborn.oss.environment.DeploymentService;
 import sh.stubborn.oss.environment.EnvironmentService;
 import sh.stubborn.oss.graph.DependencyGraphService;
 import sh.stubborn.oss.maintenance.CleanupService;
+import sh.stubborn.oss.gitimport.GitImportService;
 import sh.stubborn.oss.mavenimport.MavenImportService;
 import sh.stubborn.oss.matrix.MatrixService;
 import sh.stubborn.oss.safety.CanIDeployService;
@@ -113,6 +114,10 @@ class SecurityRbacTest {
 	@SuppressWarnings("unused")
 	@MockitoBean
 	MavenImportService mavenImportService;
+
+	@SuppressWarnings("unused")
+	@MockitoBean
+	GitImportService gitImportService;
 
 	@SuppressWarnings("unused")
 	@MockitoBean

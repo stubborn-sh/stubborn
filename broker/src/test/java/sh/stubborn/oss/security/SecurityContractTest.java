@@ -35,6 +35,7 @@ import sh.stubborn.oss.graph.DependencyGraphService;
 import sh.stubborn.oss.safety.CanIDeployService;
 import sh.stubborn.oss.verification.VerificationService;
 import sh.stubborn.oss.maintenance.CleanupService;
+import sh.stubborn.oss.gitimport.GitImportService;
 import sh.stubborn.oss.mavenimport.MavenImportService;
 import sh.stubborn.oss.matrix.MatrixService;
 import sh.stubborn.oss.selector.SelectorService;
@@ -117,6 +118,10 @@ class SecurityContractTest {
 	@SuppressWarnings("unused")
 	@org.springframework.test.context.bean.override.mockito.MockitoBean
 	MavenImportService mavenImportService;
+
+	@SuppressWarnings("unused")
+	@org.springframework.test.context.bean.override.mockito.MockitoBean
+	GitImportService gitImportService;
 
 	@SuppressWarnings("unused")
 	@org.springframework.test.context.bean.override.mockito.MockitoBean

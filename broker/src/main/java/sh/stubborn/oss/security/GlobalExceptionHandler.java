@@ -34,6 +34,8 @@ import sh.stubborn.oss.environment.EnvironmentNotFoundException;
 import sh.stubborn.oss.verification.VerificationAlreadyExistsException;
 import sh.stubborn.oss.verification.VerificationNotFoundException;
 import sh.stubborn.oss.tag.TagNotFoundException;
+import sh.stubborn.oss.gitimport.GitImportException;
+import sh.stubborn.oss.gitimport.GitImportSourceNotFoundException;
 import sh.stubborn.oss.mavenimport.MavenImportException;
 import sh.stubborn.oss.mavenimport.MavenImportSourceNotFoundException;
 import sh.stubborn.oss.webhook.WebhookNotFoundException;
@@ -122,6 +124,19 @@ public class GlobalExceptionHandler {
 	ResponseEntity<ErrorResponse> handleTagNotFound(TagNotFoundException ex) {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND)
 			.body(ErrorResponse.of("TAG_NOT_FOUND", Objects.requireNonNull(ex.getMessage()), getTraceId()));
+	}
+
+	@ExceptionHandler(GitImportSourceNotFoundException.class)
+	ResponseEntity<ErrorResponse> handleGitImportSourceNotFound(GitImportSourceNotFoundException ex) {
+		return ResponseEntity.status(HttpStatus.NOT_FOUND)
+			.body(ErrorResponse.of("GIT_IMPORT_SOURCE_NOT_FOUND", Objects.requireNonNull(ex.getMessage()),
+					getTraceId()));
+	}
+
+	@ExceptionHandler(GitImportException.class)
+	ResponseEntity<ErrorResponse> handleGitImportException(GitImportException ex) {
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+			.body(ErrorResponse.of("GIT_IMPORT_ERROR", Objects.requireNonNull(ex.getMessage()), getTraceId()));
 	}
 
 	@ExceptionHandler(MavenImportSourceNotFoundException.class)

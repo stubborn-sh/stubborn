@@ -83,6 +83,11 @@ resilience4j:
         slow-call-duration-threshold:
           seconds: 30
         slow-call-rate-threshold: 80
+      gitImport:
+        base-config: default
+        slow-call-duration-threshold:
+          seconds: 60
+        slow-call-rate-threshold: 80
 
 logging:
   pattern:
