@@ -69,10 +69,10 @@ class FlywayMigrationE2ETest {
 
 	private static final String ENV_NAME = "mig-staging";
 
-	/** All tables that should exist after migrations V1-V12 complete. */
+	/** All tables that should exist after migrations V1-V13 complete. */
 	private static final List<String> EXPECTED_TABLES = List.of("applications", "contracts", "verifications",
 			"deployments", "audit_log", "webhooks", "webhook_executions", "version_tags", "environments",
-			"maven_import_sources", "flyway_schema_history");
+			"maven_import_sources", "git_import_sources", "flyway_schema_history");
 
 	private Network network;
 

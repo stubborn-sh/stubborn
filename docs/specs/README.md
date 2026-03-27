@@ -28,6 +28,9 @@
 | 25 | Local JAR Support | [025-local-jar-support.md](025-local-jar-support.md) | Done |
 | 26 | Stubs Packager | [026-stubs-packager.md](026-stubs-packager.md) | Done |
 | 27 | Maven Import | [027-maven-import.md](027-maven-import.md) | Done |
+| 29 | Git Repository Import | [029-git-import.md](029-git-import.md) | Done |
+| 30 | Webhook Timeout | [030-webhook-timeout.md](030-webhook-timeout.md) | Done |
+| 32 | Maven Stubs Discovery | [032-maven-stubs-discovery.md](032-maven-stubs-discovery.md) | Done |
 
 ## Cross-Cutting Concerns
 
@@ -37,6 +40,8 @@
 | 20 | Web UI | [020-ui.md](020-ui.md) | Done |
 | 21 | Observability | [021-observability.md](021-observability.md) | Done |
 | 28 | High Availability | [028-high-availability.md](028-high-availability.md) | Done |
+| 31 | Migration Integrity | [031-migration-integrity.md](031-migration-integrity.md) | Done |
+| 33 | Chaos Testing | [033-chaos-testing.md](033-chaos-testing.md) | Done |
 
 ## Spec Template
 
