@@ -1,0 +1,31 @@
+name: OWASP ZAP Security Scan
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 2 * * 0'  # Sunday 2am UTC
+
+permissions:
+  contents: read
+
+jobs:
+  zap-scan:
+    name: ZAP Full Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: ZAP Full Scan
+        uses: zaproxy/action-full-scan@v0.12.0
+        continue-on-error: true
+        with:
+          target: 'https://demo.stubborn.sh'
+          rules_file_name: 'tests/zap/zap-rules.tsv'
+          cmd_options: '-a'
+
+      - name: Upload ZAP Report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: zap-report
+          path: report_html.html

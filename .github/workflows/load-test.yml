@@ -1,0 +1,112 @@
+name: Load Tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      duration_multiplier:
+        description: "Duration multiplier (1 = default durations, 2 = double, etc.)"
+        required: false
+        default: "1"
+        type: string
+      max_vus:
+        description: "Override max VUs (0 = use script defaults)"
+        required: false
+        default: "0"
+        type: string
+
+jobs:
+  load-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: broker
+          POSTGRES_USER: broker
+          POSTGRES_PASSWORD: broker
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U broker -d broker"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: maven
+
+      - name: Build broker
+        run: ./mvnw -pl broker -am package -DskipTests -q
+
+      - name: Start broker
+        run: |
+          java -jar broker/target/stubborn-broker-*-exec.jar \
+            --spring.datasource.url=jdbc:postgresql://localhost:5432/broker \
+            --spring.datasource.username=broker \
+            --spring.datasource.password=broker \
+            --spring.docker.compose.enabled=false \
+            --server.port=8642 &
+          echo "Waiting for broker to start..."
+          for i in $(seq 1 60); do
+            if curl -sf http://localhost:8642/actuator/health > /dev/null 2>&1; then
+              echo "Broker is ready"
+              break
+            fi
+            if [ "$i" -eq 60 ]; then
+              echo "Broker failed to start within 60 seconds"
+              exit 1
+            fi
+            sleep 1
+          done
+
+      - name: Install k6
+        run: |
+          sudo gpg -k
+          sudo gpg --no-default-keyring --keyring /usr/share/keyrings/k6-archive-keyring.gpg \
+            --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C5AD17C747E3415A3642D57D77C6C491D6AC1D68
+          echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" \
+            | sudo tee /etc/apt/sources.list.d/k6.list
+          sudo apt-get update
+          sudo apt-get install -y k6
+
+      - name: Run contract-publish load test
+        run: |
+          k6 run \
+            -e BROKER_URL=http://localhost:8642 \
+            --summary-export=results/contract-publish-summary.json \
+            tests/load/contract-publish-load.js
+        continue-on-error: true
+
+      - name: Run can-i-deploy load test
+        run: |
+          k6 run \
+            -e BROKER_URL=http://localhost:8642 \
+            --summary-export=results/can-i-deploy-summary.json \
+            tests/load/can-i-deploy-load.js
+        continue-on-error: true
+
+      - name: Run webhook-dispatch load test
+        run: |
+          k6 run \
+            -e BROKER_URL=http://localhost:8642 \
+            --summary-export=results/webhook-dispatch-summary.json \
+            tests/load/webhook-dispatch-load.js
+        continue-on-error: true
+
+      - name: Upload load test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: k6-load-test-results
+          path: results/
+          retention-days: 30

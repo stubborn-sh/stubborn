@@ -1,0 +1,7 @@
+10038	IGNORE	(Content Security Policy (CSP) Header Not Set)	REST API does not serve HTML — CSP is not applicable
+10021	IGNORE	(X-Content-Type-Options Header Missing)	Header is already set by the broker
+10036	IGNORE	(Server Leaks Version Information via "Server" HTTP Response Header Field)	Acceptable for demo environment
+10037	IGNORE	(Server Leaks Information via "X-Powered-By" HTTP Response Header Field(s))	Acceptable for demo environment
+10098	IGNORE	(Cross-Domain Misconfiguration)	CORS is intentionally configured for broker API consumers
+10049	IGNORE	(Storable and Cacheable Content)	API responses are intended to be cacheable where appropriate
+90033	IGNORE	(Loosely Scoped Cookie)	Broker cookies are scoped correctly for the deployment domain
