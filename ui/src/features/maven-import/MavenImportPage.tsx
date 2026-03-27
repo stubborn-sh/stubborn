@@ -21,11 +21,7 @@ import type { MavenImportSourceResponse } from "@/api/types";
 export default function MavenImportPage() {
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(20);
-  const {
-    data: pageData,
-    isLoading,
-    error,
-  } = useMavenImportSources(page, pageSize);
+  const { data: pageData, isLoading, error } = useMavenImportSources(page, pageSize);
   const [showRegisterForm, setShowRegisterForm] = useState(false);
   const [showImportForm, setShowImportForm] = useState(false);
 
@@ -57,18 +53,14 @@ export default function MavenImportPage() {
       key: "syncEnabled",
       header: "Sync Enabled",
       render: (s: MavenImportSourceResponse) => (
-        <Badge variant={s.syncEnabled ? "success" : "failed"}>
-          {s.syncEnabled ? "YES" : "NO"}
-        </Badge>
+        <Badge variant={s.syncEnabled ? "success" : "failed"}>{s.syncEnabled ? "YES" : "NO"}</Badge>
       ),
     },
     {
       key: "lastSyncedVersion",
       header: "Last Synced Version",
       render: (s: MavenImportSourceResponse) => (
-        <span className="text-muted-foreground text-xs">
-          {s.lastSyncedVersion ?? "Never"}
-        </span>
+        <span className="text-muted-foreground text-xs">{s.lastSyncedVersion ?? "Never"}</span>
       ),
     },
     {
@@ -85,9 +77,7 @@ export default function MavenImportPage() {
           <h2 data-testid="page-heading" className="text-2xl font-bold text-foreground">
             Maven Import
           </h2>
-          <p className="text-muted-foreground mt-1">
-            Import contracts from Maven repositories
-          </p>
+          <p className="text-muted-foreground mt-1">Import contracts from Maven repositories</p>
         </div>
         <div className="flex gap-2">
           <Button
@@ -119,9 +109,7 @@ export default function MavenImportPage() {
         />
       )}
 
-      {showImportForm && (
-        <ImportJarForm />
-      )}
+      {showImportForm && <ImportJarForm />}
 
       {isLoading ? (
         <p className="text-muted-foreground">Loading...</p>
@@ -260,7 +248,10 @@ function RegisterSourceForm({ onSuccess }: { onSuccess: () => void }) {
               </div>
             </div>
           </div>
-          <Button type="submit" disabled={!repositoryUrl || !groupId || !artifactId || registerSource.isPending}>
+          <Button
+            type="submit"
+            disabled={!repositoryUrl || !groupId || !artifactId || registerSource.isPending}
+          >
             {registerSource.isPending ? "Registering..." : "Register"}
           </Button>
           {registerSource.isError && (
@@ -392,7 +383,14 @@ function ImportJarForm() {
           </div>
           <Button
             type="submit"
-            disabled={!applicationName || !repositoryUrl || !groupId || !artifactId || !version || importJar.isPending}
+            disabled={
+              !applicationName ||
+              !repositoryUrl ||
+              !groupId ||
+              !artifactId ||
+              !version ||
+              importJar.isPending
+            }
           >
             {importJar.isPending ? "Importing..." : "Import"}
           </Button>
@@ -403,9 +401,7 @@ function ImportJarForm() {
             <div className="flex gap-2 items-center">
               <Badge variant="success">{importJar.data.published} published</Badge>
               <Badge variant="pending">{importJar.data.skipped} skipped</Badge>
-              <span className="text-sm text-muted-foreground">
-                ({importJar.data.total} total)
-              </span>
+              <span className="text-sm text-muted-foreground">({importJar.data.total} total)</span>
             </div>
           )}
         </form>

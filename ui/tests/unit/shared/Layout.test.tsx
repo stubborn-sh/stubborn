@@ -104,10 +104,7 @@ describe("Layout", () => {
     expect(screen.getByRole("link", { name: "Tags" })).toHaveAttribute("href", "/tags");
     expect(screen.getByRole("link", { name: "Cleanup" })).toHaveAttribute("href", "/cleanup");
     expect(screen.getByRole("link", { name: "Selectors" })).toHaveAttribute("href", "/selectors");
-    expect(screen.getByRole("link", { name: "Git Import" })).toHaveAttribute(
-      "href",
-      "/git-import",
-    );
+    expect(screen.getByRole("link", { name: "Git Import" })).toHaveAttribute("href", "/git-import");
     expect(screen.getByRole("link", { name: "Maven Import" })).toHaveAttribute(
       "href",
       "/maven-import",

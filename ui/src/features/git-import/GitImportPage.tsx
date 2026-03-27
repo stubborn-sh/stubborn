@@ -23,11 +23,7 @@ const AUTH_TYPES = ["NONE", "TOKEN", "BASIC"];
 export default function GitImportPage() {
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(20);
-  const {
-    data: pageData,
-    isLoading,
-    error,
-  } = useGitImportSources(page, pageSize);
+  const { data: pageData, isLoading, error } = useGitImportSources(page, pageSize);
   const [showRegisterForm, setShowRegisterForm] = useState(false);
   const [showImportForm, setShowImportForm] = useState(false);
 
@@ -66,9 +62,7 @@ export default function GitImportPage() {
       key: "syncEnabled",
       header: "Sync",
       render: (s: GitImportSourceResponse) => (
-        <Badge variant={s.syncEnabled ? "success" : "failed"}>
-          {s.syncEnabled ? "ON" : "OFF"}
-        </Badge>
+        <Badge variant={s.syncEnabled ? "success" : "failed"}>{s.syncEnabled ? "ON" : "OFF"}</Badge>
       ),
     },
     {
@@ -85,9 +79,7 @@ export default function GitImportPage() {
           <h2 data-testid="page-heading" className="text-2xl font-bold text-foreground">
             Git Import
           </h2>
-          <p className="text-muted-foreground mt-1">
-            Import contracts from Git repositories
-          </p>
+          <p className="text-muted-foreground mt-1">Import contracts from Git repositories</p>
         </div>
         <div className="flex gap-2">
           <Button
@@ -293,7 +285,10 @@ function RegisterSourceForm({ onSuccess }: { onSuccess: () => void }) {
             />
             <Label htmlFor="syncEnabled">Enable automatic sync</Label>
           </div>
-          <Button type="submit" disabled={!applicationName || !repositoryUrl || registerSource.isPending}>
+          <Button
+            type="submit"
+            disabled={!applicationName || !repositoryUrl || registerSource.isPending}
+          >
             {registerSource.isPending ? "Registering..." : "Register"}
           </Button>
           {registerSource.isError && (
@@ -448,7 +443,10 @@ function ImportFromGitForm({ onSuccess }: { onSuccess: () => void }) {
               </>
             )}
           </div>
-          <Button type="submit" disabled={!applicationName || !repositoryUrl || importFromGit.isPending}>
+          <Button
+            type="submit"
+            disabled={!applicationName || !repositoryUrl || importFromGit.isPending}
+          >
             {importFromGit.isPending ? "Importing..." : "Import"}
           </Button>
           {importFromGit.isError && (
@@ -458,8 +456,8 @@ function ImportFromGitForm({ onSuccess }: { onSuccess: () => void }) {
         {result && (
           <div className="mt-4 p-4 rounded-lg bg-emerald-50 dark:bg-emerald-950 border border-emerald-200 dark:border-emerald-800">
             <p className="text-sm font-medium text-emerald-800 dark:text-emerald-200">
-              Import complete: {result.published} published, {result.skipped} skipped, {result.total} total
-              (version: {result.resolvedVersion})
+              Import complete: {result.published} published, {result.skipped} skipped,{" "}
+              {result.total} total (version: {result.resolvedVersion})
             </p>
           </div>
         )}

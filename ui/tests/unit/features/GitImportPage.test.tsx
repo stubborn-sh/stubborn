@@ -104,7 +104,9 @@ describe("GitImportPage", () => {
     const user = userEvent.setup();
     renderWithProviders(<GitImportPage />);
     await user.click(screen.getByText("Import from Git"));
-    expect(screen.getByText("Import from Git", { selector: ".text-foreground" })).toBeInTheDocument();
+    expect(
+      screen.getByText("Import from Git", { selector: ".text-foreground" }),
+    ).toBeInTheDocument();
   });
 
   it("should show error message when API fails", async () => {
