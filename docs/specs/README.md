@@ -31,6 +31,8 @@
 | 29 | Git Repository Import | [029-git-import.md](029-git-import.md) | Done |
 | 30 | Webhook Timeout | [030-webhook-timeout.md](030-webhook-timeout.md) | Done |
 | 32 | Maven Stubs Discovery | [032-maven-stubs-discovery.md](032-maven-stubs-discovery.md) | Done |
+| 34 | Maven Import UI | [034-maven-import-ui.md](034-maven-import-ui.md) | Done |
+| 35 | Git Import UI | [035-git-import-ui.md](035-git-import-ui.md) | Done |
 
 ## Cross-Cutting Concerns
 

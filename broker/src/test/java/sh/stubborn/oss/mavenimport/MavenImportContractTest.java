@@ -54,6 +54,9 @@ class MavenImportContractTest {
 	@MockitoBean
 	MavenImportService importService;
 
+	@MockitoBean
+	MavenStubsDiscoveryService discoveryService;
+
 	@Test
 	void should_import_jar() throws Exception {
 		// given

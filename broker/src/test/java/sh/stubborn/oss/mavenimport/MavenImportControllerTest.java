@@ -45,6 +45,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+/**
+ * @see <a href="../../../docs/specs/032-maven-stubs-discovery.md">Spec 032 — Maven Stubs
+ * Discovery</a>
+ */
 @WebMvcTest(MavenImportController.class)
 @AutoConfigureTracing
 @WithMockUser(roles = "ADMIN")
@@ -58,6 +62,28 @@ class MavenImportControllerTest {
 
 	@MockitoBean
 	MavenStubsDiscoveryService discoveryService;
+
+	@Test
+	void should_discover_stubs_and_return_200() throws Exception {
+		// given
+		given(this.discoveryService.discover("https://repo.example.com", RepositoryType.NEXUS, null, null))
+			.willReturn(List.of(new DiscoveredStub("com.example", "order-stubs", "1.0.0"),
+					new DiscoveredStub("com.example", "payment-stubs", "2.0.0")));
+
+		// when/then
+		this.mockMvc.perform(post("/api/v1/import/maven-discover").contentType(MediaType.APPLICATION_JSON).content("""
+				{
+				  "repositoryUrl": "https://repo.example.com",
+				  "repositoryType": "NEXUS"
+				}
+				"""))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.stubs", hasSize(2)))
+			.andExpect(jsonPath("$.stubs[0].groupId").value("com.example"))
+			.andExpect(jsonPath("$.stubs[0].artifactId").value("order-stubs"))
+			.andExpect(jsonPath("$.stubs[0].latestVersion").value("1.0.0"))
+			.andExpect(jsonPath("$.stubs[1].artifactId").value("payment-stubs"));
+	}
 
 	@Test
 	void should_import_jar_and_return_result() throws Exception {

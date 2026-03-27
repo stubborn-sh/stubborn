@@ -41,6 +41,9 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+/**
+ * @see <a href="../../../docs/specs/029-git-import.md">Spec 029 — Git Import</a>
+ */
 @ExtendWith(MockitoExtension.class)
 class GitImportServiceTest {
 

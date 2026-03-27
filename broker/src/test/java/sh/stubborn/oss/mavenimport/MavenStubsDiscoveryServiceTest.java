@@ -33,6 +33,10 @@ import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMoc
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+/**
+ * @see <a href="../../../docs/specs/032-maven-stubs-discovery.md">Spec 032 — Maven Stubs
+ * Discovery</a>
+ */
 class MavenStubsDiscoveryServiceTest {
 
 	@RegisterExtension

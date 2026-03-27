@@ -16,7 +16,9 @@
 package sh.stubborn.oss.mavenimport;
 
 import java.net.URI;
+import java.net.http.HttpClient;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +29,7 @@ import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.http.client.JdkClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
@@ -39,6 +42,10 @@ class MavenStubsDiscoveryService {
 
 	private static final List<String> ALLOWED_SCHEMES = List.of("http", "https");
 
+	static final Duration CONNECT_TIMEOUT = Duration.ofSeconds(5);
+
+	static final Duration READ_TIMEOUT = Duration.ofSeconds(15);
+
 	private final RestClient restClient;
 
 	private final String centralBaseUrl;
@@ -48,7 +55,10 @@ class MavenStubsDiscoveryService {
 	}
 
 	MavenStubsDiscoveryService(RestClient.Builder restClientBuilder, String centralBaseUrl) {
-		this.restClient = restClientBuilder.build();
+		HttpClient httpClient = HttpClient.newBuilder().connectTimeout(CONNECT_TIMEOUT).build();
+		JdkClientHttpRequestFactory requestFactory = new JdkClientHttpRequestFactory(httpClient);
+		requestFactory.setReadTimeout(READ_TIMEOUT);
+		this.restClient = restClientBuilder.requestFactory(requestFactory).build();
 		this.centralBaseUrl = centralBaseUrl;
 	}
 

@@ -20,6 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.eclipse.jgit.api.Git;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -27,6 +28,9 @@ import org.junit.jupiter.api.io.TempDir;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+/**
+ * @see <a href="../../../docs/specs/029-git-import.md">Spec 029 — Git Import</a>
+ */
 class GitRepoClonerTest {
 
 	// Allow file:// scheme for local integration tests
@@ -222,6 +226,44 @@ class GitRepoClonerTest {
 		// then
 		assertThat(result.contracts()).hasSize(1);
 		assertThat(result.contracts().get(0).contractName()).isEqualTo("test.yaml");
+	}
+
+	@Test
+	void should_skip_files_exceeding_max_file_size(@TempDir Path tempDir) throws Exception {
+		// given — create a repo with one normal contract and one oversized (>1 MB) file
+		Path repoDir = tempDir.resolve("oversized-repo");
+		try (Git git = Git.init().setDirectory(repoDir.toFile()).setInitialBranch("main").call()) {
+			Path contractsDir = repoDir.resolve("contracts");
+			Files.createDirectories(contractsDir);
+			Files.writeString(contractsDir.resolve("small.json"), "{\"ok\":true}", StandardCharsets.UTF_8);
+			// Create a file larger than 1 MB (MAX_FILE_SIZE)
+			byte[] oversizedContent = new byte[1024 * 1024 + 1];
+			java.util.Arrays.fill(oversizedContent, (byte) 'x');
+			Files.write(contractsDir.resolve("huge.json"), oversizedContent);
+
+			git.add().addFilepattern(".").call();
+			git.commit().setMessage("Initial commit with oversized file").call();
+		}
+
+		// when
+		GitRepoCloner.CloneResult result = this.cloner.cloneAndExtract(repoDir.toUri().toString(), "main", "contracts/",
+				"NONE", null, null);
+
+		// then — only the small file should be extracted; the oversized one is skipped
+		assertThat(result.contracts()).hasSize(1);
+		assertThat(result.contracts().get(0).contractName()).isEqualTo("small.json");
+	}
+
+	@Test
+	void should_have_circuit_breaker_annotation_on_clone_method() throws Exception {
+		// The @CircuitBreaker annotation is AOP-based and only activates in a
+		// Spring context. This test verifies the annotation is present on the
+		// cloneAndExtract method so that it takes effect when wired by Spring.
+		java.lang.reflect.Method method = GitRepoCloner.class.getDeclaredMethod("cloneAndExtract", String.class,
+				String.class, String.class, String.class, String.class, String.class);
+		CircuitBreaker annotation = method.getAnnotation(CircuitBreaker.class);
+		assertThat(annotation).as("@CircuitBreaker should be present on cloneAndExtract").isNotNull();
+		assertThat(annotation.name()).isEqualTo("gitImport");
 	}
 
 }

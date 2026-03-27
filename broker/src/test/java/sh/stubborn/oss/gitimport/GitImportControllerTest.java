@@ -45,6 +45,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+/**
+ * @see <a href="../../../docs/specs/029-git-import.md">Spec 029 — Git Import</a>
+ */
 @WebMvcTest(GitImportController.class)
 @AutoConfigureTracing
 @WithMockUser(roles = "ADMIN")
@@ -99,6 +102,23 @@ class GitImportControllerTest {
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.published").value(2))
 			.andExpect(jsonPath("$.resolvedVersion").value("2.0.0"));
+	}
+
+	@Test
+	void should_return_400_when_repository_url_uses_file_scheme() throws Exception {
+		// given — file:// URLs should be rejected to prevent local file access
+		given(this.importService.importFromGit(eq("order-service"), eq("file:///etc/passwd"), any(), any(), any(),
+				any(), any(), any()))
+			.willThrow(new GitImportException("Invalid repository URL scheme: file (only http/https allowed)"));
+
+		// when/then
+		this.mockMvc.perform(post("/api/v1/import/git").contentType(MediaType.APPLICATION_JSON).content("""
+				{
+				  "applicationName": "order-service",
+				  "repositoryUrl": "file:///etc/passwd",
+				  "branch": "main"
+				}
+				""")).andExpect(status().isBadRequest());
 	}
 
 	@Test
