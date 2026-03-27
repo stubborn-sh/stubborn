@@ -57,5 +57,5 @@ jobs:
         run: |
           echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
           VERSION=$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout -pl build-parent)
-          docker push mgrzejszczak/stubborn:${VERSION}
+          docker push "mgrzejszczak/stubborn:${VERSION}"
 
