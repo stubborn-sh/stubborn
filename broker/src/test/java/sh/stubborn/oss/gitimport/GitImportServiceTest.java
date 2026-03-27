@@ -26,6 +26,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import sh.stubborn.oss.contract.ContractService;
+import sh.stubborn.oss.security.CredentialEncryptionService;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -56,11 +57,15 @@ class GitImportServiceTest {
 	@Mock
 	ContractService contractService;
 
+	@Mock
+	CredentialEncryptionService credentialEncryptionService;
+
 	GitImportService service;
 
 	@BeforeEach
 	void setUp() {
-		this.service = new GitImportService(this.sourceRepository, this.repoCloner, this.contractService);
+		this.service = new GitImportService(this.sourceRepository, this.repoCloner, this.contractService,
+				this.credentialEncryptionService);
 	}
 
 	@Test
@@ -197,6 +202,25 @@ class GitImportServiceTest {
 		assertThat(result.getBranch()).isEqualTo("main");
 		assertThat(result.isSyncEnabled()).isTrue();
 		verify(this.sourceRepository).save(any(GitImportSource.class));
+	}
+
+	@Test
+	void should_encrypt_token_when_registering_source() {
+		// given
+		given(this.sourceRepository.existsByRepositoryUrlAndApplicationName("https://github.com/example/repo.git",
+				"order-service"))
+			.willReturn(false);
+		given(this.credentialEncryptionService.encrypt("my-token")).willReturn("encrypted-token");
+		given(this.sourceRepository.save(any(GitImportSource.class)))
+			.willAnswer(invocation -> invocation.getArgument(0));
+
+		// when
+		GitImportSource result = this.service.registerSource("order-service", "https://github.com/example/repo.git",
+				"main", "src/test/resources/contracts/", "HTTPS_TOKEN", null, "my-token", true);
+
+		// then
+		verify(this.credentialEncryptionService).encrypt("my-token");
+		assertThat(result.getEncryptedToken()).isEqualTo("encrypted-token");
 	}
 
 	@Test

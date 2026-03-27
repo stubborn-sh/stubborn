@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sh.stubborn.oss.contract.ContractService;
+import sh.stubborn.oss.security.CredentialEncryptionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -46,11 +47,14 @@ public class GitImportService {
 
 	private final ContractService contractService;
 
+	private final CredentialEncryptionService credentialEncryptionService;
+
 	GitImportService(GitImportSourceRepository sourceRepository, GitRepoCloner repoCloner,
-			ContractService contractService) {
+			ContractService contractService, CredentialEncryptionService credentialEncryptionService) {
 		this.sourceRepository = sourceRepository;
 		this.repoCloner = repoCloner;
 		this.contractService = contractService;
+		this.credentialEncryptionService = credentialEncryptionService;
 	}
 
 	@Observed(name = "broker.gitimport.import-repo")
@@ -109,8 +113,9 @@ public class GitImportService {
 		String effectiveDir = contractsDirectory != null ? contractsDirectory : DEFAULT_CONTRACTS_DIR;
 		String effectiveAuthType = authType != null ? authType : DEFAULT_AUTH_TYPE;
 
+		String encrypted = this.credentialEncryptionService.encrypt(encryptedToken);
 		GitImportSource source = GitImportSource.create(applicationName, repositoryUrl, effectiveBranch, effectiveDir,
-				effectiveAuthType, username, encryptedToken, syncEnabled);
+				effectiveAuthType, username, encrypted, syncEnabled);
 		return this.sourceRepository.save(source);
 	}
 

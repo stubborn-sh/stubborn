@@ -26,6 +26,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import sh.stubborn.oss.contract.ContractService;
+import sh.stubborn.oss.security.CredentialEncryptionService;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -54,11 +55,15 @@ class MavenImportServiceTest {
 	@Mock
 	ContractService contractService;
 
+	@Mock
+	CredentialEncryptionService credentialEncryptionService;
+
 	MavenImportService service;
 
 	@BeforeEach
 	void setUp() {
-		this.service = new MavenImportService(this.sourceRepository, this.jarDownloader, this.contractService);
+		this.service = new MavenImportService(this.sourceRepository, this.jarDownloader, this.contractService,
+				this.credentialEncryptionService);
 	}
 
 	@Test
@@ -154,6 +159,25 @@ class MavenImportServiceTest {
 		assertThat(result.getArtifactId()).isEqualTo("svc");
 		assertThat(result.isSyncEnabled()).isTrue();
 		verify(this.sourceRepository).save(any(MavenImportSource.class));
+	}
+
+	@Test
+	void should_encrypt_password_when_registering_source() {
+		// given
+		given(this.sourceRepository.existsByRepositoryUrlAndGroupIdAndArtifactId("https://repo.example.com",
+				"com.example", "svc"))
+			.willReturn(false);
+		given(this.credentialEncryptionService.encrypt("my-secret")).willReturn("encrypted-secret");
+		given(this.sourceRepository.save(any(MavenImportSource.class)))
+			.willAnswer(invocation -> invocation.getArgument(0));
+
+		// when
+		MavenImportSource result = this.service.registerSource("https://repo.example.com", "com.example", "svc", "user",
+				"my-secret", true);
+
+		// then
+		verify(this.credentialEncryptionService).encrypt("my-secret");
+		assertThat(result.getEncryptedPassword()).isEqualTo("encrypted-secret");
 	}
 
 	@Test

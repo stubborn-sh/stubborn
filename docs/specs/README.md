@@ -33,6 +33,7 @@
 | 32 | Maven Stubs Discovery | [032-maven-stubs-discovery.md](032-maven-stubs-discovery.md) | Done |
 | 34 | Maven Import UI | [034-maven-import-ui.md](034-maven-import-ui.md) | Done |
 | 35 | Git Import UI | [035-git-import-ui.md](035-git-import-ui.md) | Done |
+| 36 | Credential Encryption | [036-credential-encryption.md](036-credential-encryption.md) | Done |
 
 ## Cross-Cutting Concerns
 

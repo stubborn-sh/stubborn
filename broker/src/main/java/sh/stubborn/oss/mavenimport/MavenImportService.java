@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sh.stubborn.oss.contract.ContractService;
+import sh.stubborn.oss.security.CredentialEncryptionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -40,11 +41,14 @@ public class MavenImportService {
 
 	private final ContractService contractService;
 
+	private final CredentialEncryptionService credentialEncryptionService;
+
 	MavenImportService(MavenImportSourceRepository sourceRepository, MavenJarDownloader jarDownloader,
-			ContractService contractService) {
+			ContractService contractService, CredentialEncryptionService credentialEncryptionService) {
 		this.sourceRepository = sourceRepository;
 		this.jarDownloader = jarDownloader;
 		this.contractService = contractService;
+		this.credentialEncryptionService = credentialEncryptionService;
 	}
 
 	@Observed(name = "broker.mavenimport.import-jar")
@@ -90,8 +94,9 @@ public class MavenImportService {
 			throw new MavenImportException(
 					"Import source already exists for %s:%s at %s".formatted(groupId, artifactId, repositoryUrl));
 		}
-		MavenImportSource source = MavenImportSource.create(repositoryUrl, groupId, artifactId, username,
-				encryptedPassword, syncEnabled);
+		String encrypted = this.credentialEncryptionService.encrypt(encryptedPassword);
+		MavenImportSource source = MavenImportSource.create(repositoryUrl, groupId, artifactId, username, encrypted,
+				syncEnabled);
 		return this.sourceRepository.save(source);
 	}
 

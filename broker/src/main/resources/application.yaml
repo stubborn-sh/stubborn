@@ -89,6 +89,10 @@ resilience4j:
           seconds: 60
         slow-call-rate-threshold: 80
 
+broker:
+  credentials:
+    encryption-key: '' # Base64-encoded AES-256 key. Empty = no encryption (dev mode)
+
 logging:
   pattern:
     correlation: "[${spring.application.name:},%X{traceId:-},%X{spanId:-}] "
