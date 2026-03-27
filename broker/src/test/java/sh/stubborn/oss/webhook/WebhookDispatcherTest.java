@@ -15,21 +15,32 @@
  */
 package sh.stubborn.oss.webhook;
 
+import java.time.Duration;
 import java.util.UUID;
 
+import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import tools.jackson.databind.json.JsonMapper;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClient;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.post;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
@@ -52,6 +63,8 @@ class WebhookDispatcherTest {
 
 	@BeforeEach
 	void setUp() {
+		given(this.restClientBuilder.requestFactory(any(ClientHttpRequestFactory.class)))
+			.willReturn(this.restClientBuilder);
 		given(this.restClientBuilder.build()).willReturn(this.restClient);
 		WebhookEventFilter eventFilter = new OssWebhookEventFilter();
 		this.dispatcher = new WebhookDispatcher(this.webhookRepository, this.executionRepository,
@@ -118,6 +131,87 @@ class WebhookDispatcherTest {
 		assertThat(execution.isSuccess()).isFalse();
 		assertThat(execution.getErrorMessage()).contains("Circuit breaker");
 		assertThat(execution.getRequestUrl()).isEqualTo("https://example.com/hook");
+	}
+
+	@Nested
+	class TimeoutTests {
+
+		@RegisterExtension
+		static WireMockExtension wireMock = WireMockExtension.newInstance()
+			.options(wireMockConfig().dynamicPort())
+			.build();
+
+		@Mock
+		WebhookRepository webhookRepo;
+
+		@Mock
+		WebhookExecutionRepository executionRepo;
+
+		@Test
+		void should_have_connect_timeout_of_five_seconds() {
+			assertThat(WebhookDispatcher.CONNECT_TIMEOUT).isEqualTo(Duration.ofSeconds(5));
+		}
+
+		@Test
+		void should_have_read_timeout_of_fifteen_seconds() {
+			assertThat(WebhookDispatcher.READ_TIMEOUT).isEqualTo(Duration.ofSeconds(15));
+		}
+
+		@Test
+		void should_timeout_when_server_response_exceeds_read_timeout() {
+			// given — WireMock delays 16 seconds, exceeding the 15s read timeout
+			wireMock
+				.stubFor(post(urlEqualTo("/slow-hook")).willReturn(aResponse().withFixedDelay(16_000).withStatus(200)));
+			String url = wireMock.baseUrl() + "/slow-hook";
+			Webhook webhook = Webhook.create(null, EventType.CONTRACT_PUBLISHED, url, null, null);
+			BrokerEvent event = BrokerEvent.contractPublished(UUID.randomUUID(), "order-service", "1.0.0",
+					"create-order");
+			WebhookDispatcher realDispatcher = new WebhookDispatcher(this.webhookRepo, this.executionRepo,
+					RestClient.builder(), JsonMapper.builder().build(), new OssWebhookEventFilter());
+
+			// when
+			long start = System.nanoTime();
+			realDispatcher.deliverWithRetry(webhook, event);
+			Duration elapsed = Duration.ofNanos(System.nanoTime() - start);
+
+			// then — delivery must fail with a timeout error recorded
+			ArgumentCaptor<WebhookExecution> captor = ArgumentCaptor.forClass(WebhookExecution.class);
+			verify(this.executionRepo).save(captor.capture());
+			WebhookExecution execution = captor.getValue();
+			assertThat(execution.isSuccess()).isFalse();
+			assertThat(execution.getErrorMessage()).satisfiesAnyOf(
+					msg -> assertThat(msg).containsIgnoringCase("timed out"),
+					msg -> assertThat(msg).containsIgnoringCase("timeout"),
+					msg -> assertThat(msg).contains("HttpTimeoutException"),
+					msg -> assertThat(msg).containsIgnoringCase("request cancelled"));
+			// Each attempt should be cut short at ~15s (not waiting the full 16s
+			// delay). With 4 attempts plus retry backoff delays (1+5+25=31s) the
+			// total should stay well under 2 minutes.
+			assertThat(elapsed).isLessThan(Duration.ofMinutes(2));
+		}
+
+		@Test
+		void should_succeed_when_server_responds_within_timeout() {
+			// given — WireMock responds in 100ms, well within the 15s read timeout
+			wireMock.stubFor(post(urlEqualTo("/fast-hook"))
+				.willReturn(aResponse().withFixedDelay(100).withStatus(200).withBody("{\"ok\":true}")));
+			String url = wireMock.baseUrl() + "/fast-hook";
+			Webhook webhook = Webhook.create(null, EventType.CONTRACT_PUBLISHED, url, null, null);
+			BrokerEvent event = BrokerEvent.contractPublished(UUID.randomUUID(), "order-service", "1.0.0",
+					"create-order");
+			WebhookDispatcher realDispatcher = new WebhookDispatcher(this.webhookRepo, this.executionRepo,
+					RestClient.builder(), JsonMapper.builder().build(), new OssWebhookEventFilter());
+
+			// when
+			realDispatcher.deliverWithRetry(webhook, event);
+
+			// then
+			ArgumentCaptor<WebhookExecution> captor = ArgumentCaptor.forClass(WebhookExecution.class);
+			verify(this.executionRepo).save(captor.capture());
+			WebhookExecution execution = captor.getValue();
+			assertThat(execution.isSuccess()).isTrue();
+		}
+
 	}
 
 }

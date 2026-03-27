@@ -15,6 +15,8 @@
  */
 package sh.stubborn.oss.webhook;
 
+import java.net.http.HttpClient;
+import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.context.event.EventListener;
 import org.springframework.http.MediaType;
+import org.springframework.http.client.JdkClientHttpRequestFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
@@ -38,6 +41,10 @@ class WebhookDispatcher {
 	private static final int MAX_RETRIES = 3;
 
 	private static final long[] RETRY_DELAYS_MS = { 1000, 5000, 25000 };
+
+	static final Duration CONNECT_TIMEOUT = Duration.ofSeconds(5);
+
+	static final Duration READ_TIMEOUT = Duration.ofSeconds(15);
 
 	private final WebhookRepository webhookRepository;
 
@@ -53,7 +60,10 @@ class WebhookDispatcher {
 			RestClient.Builder restClientBuilder, JsonMapper jsonMapper, WebhookEventFilter webhookEventFilter) {
 		this.webhookRepository = webhookRepository;
 		this.executionRepository = executionRepository;
-		this.restClient = restClientBuilder.build();
+		HttpClient httpClient = HttpClient.newBuilder().connectTimeout(CONNECT_TIMEOUT).build();
+		JdkClientHttpRequestFactory requestFactory = new JdkClientHttpRequestFactory(httpClient);
+		requestFactory.setReadTimeout(READ_TIMEOUT);
+		this.restClient = restClientBuilder.requestFactory(requestFactory).build();
 		this.jsonMapper = jsonMapper;
 		this.webhookEventFilter = webhookEventFilter;
 	}
