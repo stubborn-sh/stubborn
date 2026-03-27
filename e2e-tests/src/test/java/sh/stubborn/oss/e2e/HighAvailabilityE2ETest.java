@@ -43,6 +43,9 @@ import static org.assertj.core.api.Assertions.assertThat;
  * sharing the same PostgreSQL database. Spins up two broker containers against a single
  * PostgreSQL and verifies data replication, concurrent writes, instance failure recovery,
  * and cross-instance deployment safety checks.
+ *
+ * @see <a href="../../../docs/specs/028-high-availability.md">Spec 028 — High
+ * Availability</a>
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)

@@ -1,47 +1,83 @@
-# 028 — High Availability
+# Feature 28: High Availability
 
-## Status: Accepted
+## What
 
-## Context
+The broker supports running multiple instances concurrently behind a load balancer,
+all sharing the same PostgreSQL database. Any instance can serve any request — there
+are no sticky sessions, no in-memory state coordination, and no cluster membership
+protocol.
 
-Production deployments of the Stubborn broker need to support high availability (HA) —
-multiple broker instances sharing the same PostgreSQL database. This ensures zero-downtime
-deployments, horizontal scalability, and resilience to individual instance failures.
+## Why
 
-## Decision
+Production deployments need:
+- Zero-downtime rolling deployments
+- Horizontal scalability under load
+- Resilience to individual instance failures
+- No single point of failure at the application layer
 
-The broker is stateless by design: all persistent state lives in PostgreSQL. Any number of
-broker instances can connect to the same database and serve traffic concurrently. There is
-no in-memory cache that would require invalidation or coordination between instances.
+## How (High Level)
 
-### Key properties
+The broker is stateless by design. All persistent state (applications, contracts,
+verifications, deployments, webhooks) is stored in PostgreSQL. Concurrent write
+safety is enforced by database uniqueness constraints — duplicate contract publishes
+from different instances result in either idempotent success or 409 Conflict.
 
-1. **Data replication** — An application registered on instance A is immediately visible
-   from instance B (they share the same database).
-2. **Contract consistency** — Contracts published on one instance are readable from any
-   other instance.
-3. **Concurrent write safety** — Duplicate contract publishes from different instances are
-   handled via database uniqueness constraints (idempotent success or 409 Conflict).
-4. **Instance failure resilience** — If one instance goes down, all remaining instances
-   continue to serve reads and writes. When the failed instance restarts, it sees all data
-   written while it was down.
-5. **Cross-instance deployment safety** — `can-i-deploy` checks on one instance see
-   deployments recorded on any other instance.
+No additional configuration is needed for HA. Just run N instances pointed at the
+same database behind any load balancer (nginx, Kubernetes Service, AWS ALB, etc.).
+
+## Business Rules
+
+1. Data written to any instance is immediately visible from all other instances
+2. Duplicate contract publishes from concurrent instances must not create duplicates
+   (enforced by unique constraint on application_id + version + contract_name)
+3. Instance failure must not affect other instances' ability to serve reads and writes
+4. Deployment safety checks (`can-i-deploy`) must see deployments recorded on any instance
+5. The database is the single point of failure — use PostgreSQL HA for full resilience
+
+## Acceptance Criteria
+
+### Data Replication
+
+**Given** two broker instances (A and B) sharing the same PostgreSQL
+**When** I register application "ha-test-producer" on instance A
+**Then** GET `/api/v1/applications` on instance B returns "ha-test-producer"
+
+### Contract Consistency
+
+**Given** application "ha-test-producer" exists
+**When** I publish contract "get-order" to instance A
+**Then** GET contracts from instance B returns "get-order"
+
+### Concurrent Write Safety
+
+**Given** both instances receive the same contract POST simultaneously
+**Then** exactly one copy of the contract exists in the database
+**And** both responses are either 200/201 (idempotent) or 409 (conflict)
+
+### Instance Failure Resilience
+
+**Given** instance A is stopped
+**When** I POST a verification to instance B
+**And** instance A is restarted
+**Then** GET verifications from instance A returns the verification written by B
+
+### Cross-Instance Deployment Safety
+
+**Given** a deployment is recorded on instance A
+**When** I check `can-i-deploy` on instance B
+**Then** the safety check sees the deployment from instance A
+
+## Error Cases
+
+| Scenario | Expected |
+|----------|----------|
+| All instances down, DB up | No requests served; DB retains all data |
+| DB down, instances up | Circuit breaker opens, instances return 503 |
+| Network partition (instance can't reach DB) | Circuit breaker opens for that instance |
 
 ## E2E Test
 
-`HighAvailabilityE2ETest` spins up two broker containers against a single PostgreSQL using
-Testcontainers and exercises all five properties above:
+`HighAvailabilityE2ETest` — Testcontainers-based test spinning up 2 broker instances
+against 1 PostgreSQL. Exercises all 5 acceptance criteria above.
 
-1. `should_replicate_data_across_instances` — POST app to A, GET from B
-2. `should_publish_contracts_on_one_and_read_on_other` — POST contract to A, GET from B
-3. `should_handle_concurrent_duplicate_publish` — simultaneous POST to A and B
-4. `should_survive_instance_failure` — stop A, write to B, restart A, read from A
-5. `should_deployment_safety_work_across_instances` — deploy on A, can-i-deploy on B
-
-## Consequences
-
-- Operators can run N broker instances behind a load balancer for HA.
-- No sticky sessions or session affinity required.
-- Database becomes the single point of failure — use PostgreSQL HA (e.g., Patroni, RDS
-  Multi-AZ) for full production resilience.
+See: `e2e-tests/src/test/java/sh/stubborn/oss/e2e/HighAvailabilityE2ETest.java`

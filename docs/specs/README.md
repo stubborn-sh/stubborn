@@ -25,6 +25,9 @@
 | 22 | Configurable Environments | [022-configurable-environments.md](022-configurable-environments.md) | Done |
 | 23 | CLI | [023-cli.md](023-cli.md) | Done |
 | 24 | JS/TS SDK | [024-js-sdk.md](024-js-sdk.md) | Done |
+| 25 | Local JAR Support | [025-local-jar-support.md](025-local-jar-support.md) | Done |
+| 26 | Stubs Packager | [026-stubs-packager.md](026-stubs-packager.md) | Done |
+| 27 | Maven Import | [027-maven-import.md](027-maven-import.md) | Done |
 
 ## Cross-Cutting Concerns
 
@@ -33,6 +36,7 @@
 | 19 | API Conventions | [019-api-conventions.md](019-api-conventions.md) | Done |
 | 20 | Web UI | [020-ui.md](020-ui.md) | Done |
 | 21 | Observability | [021-observability.md](021-observability.md) | Done |
+| 28 | High Availability | [028-high-availability.md](028-high-availability.md) | Done |
 
 ## Spec Template
 
