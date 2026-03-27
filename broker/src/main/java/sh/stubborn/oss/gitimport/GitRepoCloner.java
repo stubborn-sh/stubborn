@@ -89,7 +89,10 @@ class GitRepoCloner {
 				String resolvedVersion = resolveVersion(repository);
 				logger.info("Resolved version: {}", resolvedVersion);
 
-				Path contractsPath = tempDir.resolve(normalizeDirectory(contractsDirectory));
+				Path contractsPath = tempDir.resolve(normalizeDirectory(contractsDirectory)).normalize();
+				if (!contractsPath.startsWith(tempDir)) {
+					throw new GitImportException("Contracts directory escapes clone root: " + contractsDirectory);
+				}
 				List<ExtractedContract> contracts = extractContracts(contractsPath);
 
 				logger.info("Extracted {} contract files from {}", contracts.size(), contractsPath);
@@ -184,6 +187,10 @@ class GitRepoCloner {
 	}
 
 	private String normalizeDirectory(String directory) {
+		// Reject path traversal attempts
+		if (directory.contains("..")) {
+			throw new GitImportException("Directory must not contain '..': " + directory);
+		}
 		// Remove leading slash if present
 		String normalized = directory;
 		if (normalized.startsWith("/")) {

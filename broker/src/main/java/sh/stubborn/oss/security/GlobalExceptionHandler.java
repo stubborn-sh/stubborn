@@ -61,95 +61,106 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(ApplicationNotFoundException.class)
 	ResponseEntity<ErrorResponse> handleNotFound(ApplicationNotFoundException ex) {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND)
-			.body(ErrorResponse.of("APPLICATION_NOT_FOUND", Objects.requireNonNull(ex.getMessage()), getTraceId()));
+			.body(ErrorResponse.of("APPLICATION_NOT_FOUND",
+					ex.getMessage() != null ? ex.getMessage() : ex.getClass().getSimpleName(), getTraceId()));
 	}
 
 	@ExceptionHandler(ApplicationAlreadyExistsException.class)
 	ResponseEntity<ErrorResponse> handleConflict(ApplicationAlreadyExistsException ex) {
 		return ResponseEntity.status(HttpStatus.CONFLICT)
-			.body(ErrorResponse.of("APPLICATION_ALREADY_EXISTS", Objects.requireNonNull(ex.getMessage()),
-					getTraceId()));
+			.body(ErrorResponse.of("APPLICATION_ALREADY_EXISTS",
+					ex.getMessage() != null ? ex.getMessage() : ex.getClass().getSimpleName(), getTraceId()));
 	}
 
 	@ExceptionHandler(ContractNotFoundException.class)
 	ResponseEntity<ErrorResponse> handleContractNotFound(ContractNotFoundException ex) {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND)
-			.body(ErrorResponse.of("CONTRACT_NOT_FOUND", Objects.requireNonNull(ex.getMessage()), getTraceId()));
+			.body(ErrorResponse.of("CONTRACT_NOT_FOUND",
+					ex.getMessage() != null ? ex.getMessage() : ex.getClass().getSimpleName(), getTraceId()));
 	}
 
 	@ExceptionHandler(ContractAlreadyExistsException.class)
 	ResponseEntity<ErrorResponse> handleContractConflict(ContractAlreadyExistsException ex) {
 		return ResponseEntity.status(HttpStatus.CONFLICT)
-			.body(ErrorResponse.of("CONTRACT_ALREADY_EXISTS", Objects.requireNonNull(ex.getMessage()), getTraceId()));
+			.body(ErrorResponse.of("CONTRACT_ALREADY_EXISTS",
+					ex.getMessage() != null ? ex.getMessage() : ex.getClass().getSimpleName(), getTraceId()));
 	}
 
 	@ExceptionHandler(VerificationNotFoundException.class)
 	ResponseEntity<ErrorResponse> handleVerificationNotFound(VerificationNotFoundException ex) {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND)
-			.body(ErrorResponse.of("VERIFICATION_NOT_FOUND", Objects.requireNonNull(ex.getMessage()), getTraceId()));
+			.body(ErrorResponse.of("VERIFICATION_NOT_FOUND",
+					ex.getMessage() != null ? ex.getMessage() : ex.getClass().getSimpleName(), getTraceId()));
 	}
 
 	@ExceptionHandler(VerificationAlreadyExistsException.class)
 	ResponseEntity<ErrorResponse> handleVerificationConflict(VerificationAlreadyExistsException ex) {
 		return ResponseEntity.status(HttpStatus.CONFLICT)
-			.body(ErrorResponse.of("VERIFICATION_ALREADY_EXISTS", Objects.requireNonNull(ex.getMessage()),
-					getTraceId()));
+			.body(ErrorResponse.of("VERIFICATION_ALREADY_EXISTS",
+					ex.getMessage() != null ? ex.getMessage() : ex.getClass().getSimpleName(), getTraceId()));
 	}
 
 	@ExceptionHandler(DeploymentNotFoundException.class)
 	ResponseEntity<ErrorResponse> handleDeploymentNotFound(DeploymentNotFoundException ex) {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND)
-			.body(ErrorResponse.of("DEPLOYMENT_NOT_FOUND", Objects.requireNonNull(ex.getMessage()), getTraceId()));
+			.body(ErrorResponse.of("DEPLOYMENT_NOT_FOUND",
+					ex.getMessage() != null ? ex.getMessage() : ex.getClass().getSimpleName(), getTraceId()));
 	}
 
 	@ExceptionHandler(EnvironmentNotFoundException.class)
 	ResponseEntity<ErrorResponse> handleEnvironmentNotFound(EnvironmentNotFoundException ex) {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND)
-			.body(ErrorResponse.of("ENVIRONMENT_NOT_FOUND", Objects.requireNonNull(ex.getMessage()), getTraceId()));
+			.body(ErrorResponse.of("ENVIRONMENT_NOT_FOUND",
+					ex.getMessage() != null ? ex.getMessage() : ex.getClass().getSimpleName(), getTraceId()));
 	}
 
 	@ExceptionHandler(EnvironmentAlreadyExistsException.class)
 	ResponseEntity<ErrorResponse> handleEnvironmentConflict(EnvironmentAlreadyExistsException ex) {
 		return ResponseEntity.status(HttpStatus.CONFLICT)
-			.body(ErrorResponse.of("ENVIRONMENT_ALREADY_EXISTS", Objects.requireNonNull(ex.getMessage()),
-					getTraceId()));
+			.body(ErrorResponse.of("ENVIRONMENT_ALREADY_EXISTS",
+					ex.getMessage() != null ? ex.getMessage() : ex.getClass().getSimpleName(), getTraceId()));
 	}
 
 	@ExceptionHandler(WebhookNotFoundException.class)
 	ResponseEntity<ErrorResponse> handleWebhookNotFound(WebhookNotFoundException ex) {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND)
-			.body(ErrorResponse.of("WEBHOOK_NOT_FOUND", Objects.requireNonNull(ex.getMessage()), getTraceId()));
+			.body(ErrorResponse.of("WEBHOOK_NOT_FOUND",
+					ex.getMessage() != null ? ex.getMessage() : ex.getClass().getSimpleName(), getTraceId()));
 	}
 
 	@ExceptionHandler(TagNotFoundException.class)
 	ResponseEntity<ErrorResponse> handleTagNotFound(TagNotFoundException ex) {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND)
-			.body(ErrorResponse.of("TAG_NOT_FOUND", Objects.requireNonNull(ex.getMessage()), getTraceId()));
+			.body(ErrorResponse.of("TAG_NOT_FOUND",
+					ex.getMessage() != null ? ex.getMessage() : ex.getClass().getSimpleName(), getTraceId()));
 	}
 
 	@ExceptionHandler(GitImportSourceNotFoundException.class)
 	ResponseEntity<ErrorResponse> handleGitImportSourceNotFound(GitImportSourceNotFoundException ex) {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND)
-			.body(ErrorResponse.of("GIT_IMPORT_SOURCE_NOT_FOUND", Objects.requireNonNull(ex.getMessage()),
-					getTraceId()));
+			.body(ErrorResponse.of("GIT_IMPORT_SOURCE_NOT_FOUND",
+					ex.getMessage() != null ? ex.getMessage() : ex.getClass().getSimpleName(), getTraceId()));
 	}
 
 	@ExceptionHandler(GitImportException.class)
 	ResponseEntity<ErrorResponse> handleGitImportException(GitImportException ex) {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-			.body(ErrorResponse.of("GIT_IMPORT_ERROR", Objects.requireNonNull(ex.getMessage()), getTraceId()));
+			.body(ErrorResponse.of("GIT_IMPORT_ERROR",
+					ex.getMessage() != null ? ex.getMessage() : ex.getClass().getSimpleName(), getTraceId()));
 	}
 
 	@ExceptionHandler(MavenImportSourceNotFoundException.class)
 	ResponseEntity<ErrorResponse> handleMavenImportSourceNotFound(MavenImportSourceNotFoundException ex) {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND)
-			.body(ErrorResponse.of("IMPORT_SOURCE_NOT_FOUND", Objects.requireNonNull(ex.getMessage()), getTraceId()));
+			.body(ErrorResponse.of("IMPORT_SOURCE_NOT_FOUND",
+					ex.getMessage() != null ? ex.getMessage() : ex.getClass().getSimpleName(), getTraceId()));
 	}
 
 	@ExceptionHandler(MavenImportException.class)
 	ResponseEntity<ErrorResponse> handleMavenImportException(MavenImportException ex) {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-			.body(ErrorResponse.of("MAVEN_IMPORT_ERROR", Objects.requireNonNull(ex.getMessage()), getTraceId()));
+			.body(ErrorResponse.of("MAVEN_IMPORT_ERROR",
+					ex.getMessage() != null ? ex.getMessage() : ex.getClass().getSimpleName(), getTraceId()));
 	}
 
 	@ExceptionHandler(CallNotPermittedException.class)
@@ -163,13 +174,15 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(IllegalArgumentException.class)
 	ResponseEntity<ErrorResponse> handleIllegalArgument(IllegalArgumentException ex) {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-			.body(ErrorResponse.of("VALIDATION_ERROR", Objects.requireNonNull(ex.getMessage()), getTraceId()));
+			.body(ErrorResponse.of("VALIDATION_ERROR",
+					ex.getMessage() != null ? ex.getMessage() : ex.getClass().getSimpleName(), getTraceId()));
 	}
 
 	@ExceptionHandler(MissingServletRequestParameterException.class)
 	ResponseEntity<ErrorResponse> handleMissingParam(MissingServletRequestParameterException ex) {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-			.body(ErrorResponse.of("VALIDATION_ERROR", Objects.requireNonNull(ex.getMessage()), getTraceId()));
+			.body(ErrorResponse.of("VALIDATION_ERROR",
+					ex.getMessage() != null ? ex.getMessage() : ex.getClass().getSimpleName(), getTraceId()));
 	}
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)

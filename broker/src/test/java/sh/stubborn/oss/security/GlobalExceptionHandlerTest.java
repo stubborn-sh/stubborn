@@ -18,6 +18,7 @@ package sh.stubborn.oss.security;
 import java.util.Objects;
 
 import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
+import sh.stubborn.oss.gitimport.GitImportException;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import io.micrometer.tracing.Span;
 import io.micrometer.tracing.TraceContext;
@@ -201,6 +202,24 @@ class GlobalExceptionHandlerTest {
 		ErrorResponse body = Objects.requireNonNull(response.getBody());
 		assertThat(body.code()).isEqualTo("VALIDATION_ERROR");
 		assertThat(body.message()).isEqualTo("bad input");
+	}
+
+	@Test
+	void should_handle_exception_with_null_message() {
+		// given — exception whose getMessage() returns null should not cause NPE
+		given(this.tracer.currentSpan()).willReturn(null);
+		GlobalExceptionHandler handler = new GlobalExceptionHandler(this.tracer);
+		// RuntimeException with no message — getMessage() returns null
+		IllegalArgumentException ex = new IllegalArgumentException();
+
+		// when
+		ResponseEntity<ErrorResponse> response = handler.handleIllegalArgument(ex);
+
+		// then — should use class name as fallback, not NPE
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+		ErrorResponse body = Objects.requireNonNull(response.getBody());
+		assertThat(body.code()).isEqualTo("VALIDATION_ERROR");
+		assertThat(body.message()).isEqualTo("IllegalArgumentException");
 	}
 
 	@Test

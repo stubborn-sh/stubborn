@@ -165,6 +165,44 @@ class GitRepoClonerTest {
 	}
 
 	@Test
+	void should_reject_path_traversal_in_contracts_directory(@TempDir Path tempDir) throws Exception {
+		// given
+		Path repoDir = tempDir.resolve("traversal-repo");
+		try (Git git = Git.init().setDirectory(repoDir.toFile()).setInitialBranch("main").call()) {
+			Path contractsDir = repoDir.resolve("contracts");
+			Files.createDirectories(contractsDir);
+			Files.writeString(contractsDir.resolve("test.yaml"), "test: true", StandardCharsets.UTF_8);
+			git.add().addFilepattern(".").call();
+			git.commit().setMessage("Initial commit").call();
+		}
+
+		// when/then — directory with .. should be rejected
+		assertThatThrownBy(() -> this.cloner.cloneAndExtract(repoDir.toUri().toString(), "main", "../../../etc/",
+				"NONE", null, null))
+			.isInstanceOf(GitImportException.class)
+			.hasMessageContaining("..");
+	}
+
+	@Test
+	void should_reject_absolute_path_in_contracts_directory(@TempDir Path tempDir) throws Exception {
+		// given
+		Path repoDir = tempDir.resolve("abs-path-repo");
+		try (Git git = Git.init().setDirectory(repoDir.toFile()).setInitialBranch("main").call()) {
+			Path contractsDir = repoDir.resolve("contracts");
+			Files.createDirectories(contractsDir);
+			Files.writeString(contractsDir.resolve("test.yaml"), "test: true", StandardCharsets.UTF_8);
+			git.add().addFilepattern(".").call();
+			git.commit().setMessage("Initial commit").call();
+		}
+
+		// when/then — contracts directory with embedded .. should be rejected
+		assertThatThrownBy(() -> this.cloner.cloneAndExtract(repoDir.toUri().toString(), "main",
+				"contracts/../../sensitive/", "NONE", null, null))
+			.isInstanceOf(GitImportException.class)
+			.hasMessageContaining("..");
+	}
+
+	@Test
 	void should_use_custom_contracts_directory(@TempDir Path tempDir) throws Exception {
 		// given
 		Path repoDir = tempDir.resolve("custom-dir-repo");
