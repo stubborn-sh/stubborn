@@ -39,6 +39,7 @@ import sh.stubborn.oss.gitimport.GitImportService;
 import sh.stubborn.oss.mavenimport.MavenImportService;
 import sh.stubborn.oss.matrix.MatrixService;
 import sh.stubborn.oss.selector.SelectorService;
+import sh.stubborn.oss.mavenimport.MavenStubsDiscoveryService;
 import sh.stubborn.oss.spi.BrokerLicenseChecker;
 import sh.stubborn.oss.tag.TagService;
 import sh.stubborn.oss.webhook.WebhookService;
@@ -129,11 +130,11 @@ class SecurityContractTest {
 
 	@SuppressWarnings("unused")
 	@org.springframework.test.context.bean.override.mockito.MockitoBean
-	sh.stubborn.oss.mavenimport.MavenStubsDiscoveryService mavenStubsDiscoveryService;
+	MavenStubsDiscoveryService mavenStubsDiscoveryService;
 
 	@SuppressWarnings("unused")
 	@org.springframework.test.context.bean.override.mockito.MockitoBean
-	sh.stubborn.oss.security.CredentialEncryptionService credentialEncryptionService;
+	CredentialEncryptionService credentialEncryptionService;
 
 	@Test
 	void should_return_401_when_not_authenticated() throws Exception {

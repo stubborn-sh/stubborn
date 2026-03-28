@@ -284,6 +284,11 @@ class ImportUiE2ETest {
 		}
 		// Navigate to root to trigger the login page
 		this.page.navigate(this.baseUrl + "/");
+		this.page.waitForLoadState(LoadState.DOMCONTENTLOADED);
+		// Wait for React to mount anything inside #root
+		this.page.waitForFunction("document.getElementById('root')?.children.length > 0", null,
+				new Page.WaitForFunctionOptions().setTimeout(TIMEOUT_MS));
+		screenshot("debug-after-react-mount");
 		// Wait for the Sign in button to appear (React must mount and render LoginPage)
 		Locator signInButton = this.page.locator("button:has-text('Sign in')");
 		signInButton.first().waitFor(new Locator.WaitForOptions().setTimeout(TIMEOUT_MS));

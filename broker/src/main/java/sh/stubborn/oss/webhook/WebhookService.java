@@ -23,6 +23,7 @@ import org.jspecify.annotations.Nullable;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import sh.stubborn.oss.application.ApplicationService;
+import sh.stubborn.oss.security.CredentialEncryptionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -37,11 +38,10 @@ public class WebhookService {
 
 	private final ApplicationService applicationService;
 
-	private final sh.stubborn.oss.security.CredentialEncryptionService encryptionService;
+	private final CredentialEncryptionService encryptionService;
 
 	WebhookService(WebhookRepository webhookRepository, WebhookExecutionRepository executionRepository,
-			ApplicationService applicationService,
-			sh.stubborn.oss.security.CredentialEncryptionService encryptionService) {
+			ApplicationService applicationService, CredentialEncryptionService encryptionService) {
 		this.webhookRepository = webhookRepository;
 		this.executionRepository = executionRepository;
 		this.applicationService = applicationService;

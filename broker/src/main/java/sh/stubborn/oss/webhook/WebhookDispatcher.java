@@ -33,6 +33,8 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
+import sh.stubborn.oss.security.CredentialEncryptionService;
+
 @Component
 class WebhookDispatcher {
 
@@ -56,11 +58,11 @@ class WebhookDispatcher {
 
 	private final WebhookEventFilter webhookEventFilter;
 
-	private final sh.stubborn.oss.security.CredentialEncryptionService encryptionService;
+	private final CredentialEncryptionService encryptionService;
 
 	WebhookDispatcher(WebhookRepository webhookRepository, WebhookExecutionRepository executionRepository,
 			RestClient.Builder restClientBuilder, JsonMapper jsonMapper, WebhookEventFilter webhookEventFilter,
-			sh.stubborn.oss.security.CredentialEncryptionService encryptionService) {
+			CredentialEncryptionService encryptionService) {
 		this.webhookRepository = webhookRepository;
 		this.executionRepository = executionRepository;
 		this.encryptionService = encryptionService;

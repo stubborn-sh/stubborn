@@ -20,6 +20,8 @@ import java.util.UUID;
 
 import org.jspecify.annotations.Nullable;
 
+import sh.stubborn.oss.security.CredentialEncryptionService;
+
 record WebhookResponse(UUID id, @Nullable UUID applicationId, @Nullable String applicationName, EventType eventType,
 		String url, @Nullable String headers, @Nullable String bodyTemplate, boolean enabled, Instant createdAt,
 		Instant updatedAt) {
@@ -31,7 +33,7 @@ record WebhookResponse(UUID id, @Nullable UUID applicationId, @Nullable String a
 	}
 
 	static WebhookResponse from(Webhook webhook, @Nullable String applicationName,
-			sh.stubborn.oss.security.CredentialEncryptionService encryptionService) {
+			CredentialEncryptionService encryptionService) {
 		String decryptedHeaders = (webhook.getHeaders() != null) ? encryptionService.decrypt(webhook.getHeaders())
 				: null;
 		return new WebhookResponse(webhook.getId(), webhook.getApplicationId(), applicationName, webhook.getEventType(),

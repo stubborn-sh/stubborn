@@ -30,6 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.http.client.JdkClientHttpRequestFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
@@ -50,7 +51,7 @@ public class MavenStubsDiscoveryService {
 
 	private final String centralBaseUrl;
 
-	@org.springframework.beans.factory.annotation.Autowired
+	@Autowired
 	public MavenStubsDiscoveryService(RestClient.Builder restClientBuilder) {
 		this(restClientBuilder, DEFAULT_CENTRAL_BASE_URL);
 	}

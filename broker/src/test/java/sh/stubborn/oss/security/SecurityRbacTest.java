@@ -32,6 +32,7 @@ import sh.stubborn.oss.mavenimport.MavenImportService;
 import sh.stubborn.oss.matrix.MatrixService;
 import sh.stubborn.oss.safety.CanIDeployService;
 import sh.stubborn.oss.selector.SelectorService;
+import sh.stubborn.oss.mavenimport.MavenStubsDiscoveryService;
 import sh.stubborn.oss.spi.BrokerLicenseChecker;
 import sh.stubborn.oss.tag.TagService;
 import sh.stubborn.oss.verification.VerificationService;
@@ -125,11 +126,11 @@ class SecurityRbacTest {
 
 	@SuppressWarnings("unused")
 	@MockitoBean
-	sh.stubborn.oss.mavenimport.MavenStubsDiscoveryService mavenStubsDiscoveryService;
+	MavenStubsDiscoveryService mavenStubsDiscoveryService;
 
 	@SuppressWarnings("unused")
 	@MockitoBean
-	sh.stubborn.oss.security.CredentialEncryptionService credentialEncryptionService;
+	CredentialEncryptionService credentialEncryptionService;
 
 	// --- READER role ---
 
