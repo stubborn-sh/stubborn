@@ -27,8 +27,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
 
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.AuditTable;
+
 @Entity
 @Table(name = "contracts")
+@Audited
+@AuditTable("contracts_aud")
 class Contract {
 
 	@Id

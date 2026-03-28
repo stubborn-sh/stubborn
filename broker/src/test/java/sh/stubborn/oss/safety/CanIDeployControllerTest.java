@@ -24,6 +24,7 @@ import org.springframework.boot.micrometer.tracing.test.autoconfigure.AutoConfig
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import sh.stubborn.oss.application.ApplicationNotFoundException;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import sh.stubborn.oss.audit.AuditService;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -42,6 +43,10 @@ class CanIDeployControllerTest {
 
 	@MockitoBean
 	CanIDeployService canIDeployService;
+
+	@SuppressWarnings("unused")
+	@MockitoBean
+	AuditService auditService;
 
 	@Test
 	void should_return_safe_result() throws Exception {

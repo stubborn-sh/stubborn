@@ -16,7 +16,7 @@
 	<description>Playwright Docker E2E tests for the broker</description>
 
 	<properties>
-		<e2e.excludedGroups>quarantine,chaos</e2e.excludedGroups>
+		<e2e.excludedGroups>quarantine,chaos,ui-e2e</e2e.excludedGroups>
 	</properties>
 
 	<dependencies>

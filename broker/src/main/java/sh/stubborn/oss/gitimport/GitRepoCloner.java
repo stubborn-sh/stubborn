@@ -35,6 +35,7 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.jspecify.annotations.Nullable;
+import sh.stubborn.oss.security.UrlValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -164,6 +165,10 @@ class GitRepoCloner {
 		Files.walkFileTree(contractsPath, new SimpleFileVisitor<>() {
 			@Override
 			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+				if (Files.isSymbolicLink(file)) {
+					logger.warn("Skipping symbolic link: {}", file);
+					return FileVisitResult.CONTINUE;
+				}
 				String fileName = file.getFileName().toString();
 				if (isContractFile(fileName) && attrs.size() <= MAX_FILE_SIZE) {
 					String content = Files.readString(file, StandardCharsets.UTF_8);
@@ -209,6 +214,10 @@ class GitRepoCloner {
 		if (scheme == null || !this.allowedSchemes.contains(scheme.toLowerCase())) {
 			throw new GitImportException(
 					"Invalid repository URL scheme: %s (only http/https allowed)".formatted(scheme));
+		}
+		// Only apply SSRF check for http/https schemes (skip for file:// in tests)
+		if ("http".equals(scheme) || "https".equals(scheme)) {
+			UrlValidator.validateExternalUrl(url);
 		}
 	}
 

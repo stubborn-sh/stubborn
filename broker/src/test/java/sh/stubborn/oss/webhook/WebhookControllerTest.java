@@ -27,6 +27,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import sh.stubborn.oss.audit.AuditService;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -51,6 +52,10 @@ class WebhookControllerTest {
 
 	@MockitoBean
 	WebhookService webhookService;
+
+	@SuppressWarnings("unused")
+	@MockitoBean
+	AuditService auditService;
 
 	@Test
 	@WithMockUser(roles = "ADMIN")

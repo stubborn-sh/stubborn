@@ -20,6 +20,7 @@ import jakarta.validation.constraints.Size;
 
 import org.jspecify.annotations.Nullable;
 
-record CreateContractRequest(@NotBlank @Size(max = 256) String contractName, @NotBlank String content,
-		@NotBlank @Size(max = 100) String contentType, @Nullable @Size(max = 128) String branch) {
+record CreateContractRequest(@NotBlank @Size(max = 256) String contractName,
+		@NotBlank @Size(max = 1048576) String content, @NotBlank @Size(max = 100) String contentType,
+		@Nullable @Size(max = 128) String branch) {
 }

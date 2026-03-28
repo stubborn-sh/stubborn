@@ -29,6 +29,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import sh.stubborn.oss.audit.AuditService;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -58,6 +59,10 @@ class GitImportControllerTest {
 
 	@MockitoBean
 	GitImportService importService;
+
+	@SuppressWarnings("unused")
+	@MockitoBean
+	AuditService auditService;
 
 	@Test
 	void should_import_from_git_and_return_result() throws Exception {

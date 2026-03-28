@@ -25,10 +25,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.AuditTable;
 import org.jspecify.annotations.Nullable;
 
 @Entity
 @Table(name = "environments")
+@Audited
+@AuditTable("environments_aud")
 class Environment {
 
 	@Id

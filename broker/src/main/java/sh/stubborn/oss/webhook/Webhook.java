@@ -29,6 +29,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
 import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.AuditTable;
 import org.hibernate.type.SqlTypes;
 import org.jspecify.annotations.Nullable;
 
@@ -36,6 +38,8 @@ import org.springframework.boot.json.JacksonJsonParser;
 
 @Entity
 @Table(name = "webhooks")
+@Audited
+@AuditTable("webhooks_aud")
 class Webhook {
 
 	@Id

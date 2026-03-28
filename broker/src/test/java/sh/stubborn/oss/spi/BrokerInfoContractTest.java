@@ -25,6 +25,7 @@ import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import sh.stubborn.oss.audit.AuditService;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.hasItem;
@@ -47,6 +48,10 @@ class BrokerInfoContractTest {
 
 	@MockitoBean
 	BrokerLicenseChecker licenseChecker;
+
+	@SuppressWarnings("unused")
+	@MockitoBean
+	AuditService auditService;
 
 	@Test
 	void should_get_broker_info() throws Exception {

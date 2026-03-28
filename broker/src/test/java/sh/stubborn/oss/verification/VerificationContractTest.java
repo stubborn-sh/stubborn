@@ -31,6 +31,7 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import sh.stubborn.oss.audit.AuditService;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -57,6 +58,10 @@ class VerificationContractTest {
 
 	@MockitoBean
 	VerificationService verificationService;
+
+	@SuppressWarnings("unused")
+	@MockitoBean
+	AuditService auditService;
 
 	@Test
 	void should_record_verification() throws Exception {

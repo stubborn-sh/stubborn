@@ -25,8 +25,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.AuditTable;
+
 @Entity
 @Table(name = "version_tags")
+@Audited
+@AuditTable("version_tags_aud")
 class VersionTag {
 
 	@Id

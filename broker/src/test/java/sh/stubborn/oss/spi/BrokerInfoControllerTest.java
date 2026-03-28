@@ -22,6 +22,7 @@ import org.springframework.boot.micrometer.tracing.test.autoconfigure.AutoConfig
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import sh.stubborn.oss.audit.AuditService;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.hasItem;
@@ -42,6 +43,10 @@ class BrokerInfoControllerTest {
 
 	@MockitoBean
 	private BrokerLicenseChecker licenseChecker;
+
+	@SuppressWarnings("unused")
+	@MockitoBean
+	AuditService auditService;
 
 	@Test
 	void infoReturnsCommunityEditionWhenProDisabled() throws Exception {

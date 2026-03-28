@@ -29,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 /**
@@ -53,8 +54,16 @@ public class CredentialEncryptionService {
 
 	private final SecureRandom secureRandom = new SecureRandom();
 
-	public CredentialEncryptionService(@Value("${broker.credentials.encryption-key:}") @Nullable String base64Key) {
+	public CredentialEncryptionService(@Value("${broker.credentials.encryption-key:}") @Nullable String base64Key,
+			Environment environment) {
 		if (base64Key == null || base64Key.isBlank()) {
+			for (String profile : environment.getActiveProfiles()) {
+				if ("production".equals(profile)) {
+					throw new IllegalStateException(
+							"broker.credentials.encryption-key must be set in the 'production' profile. "
+									+ "Generate one with: openssl rand -base64 32");
+				}
+			}
 			this.secretKey = null;
 			this.encryptionEnabled = false;
 			logger.warn("Credential encryption is DISABLED — credentials will be stored as plaintext. "

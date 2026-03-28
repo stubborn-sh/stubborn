@@ -28,6 +28,7 @@ import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sh.stubborn.oss.security.UrlValidator;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
@@ -39,6 +40,9 @@ class MavenJarDownloader {
 	private static final int MAX_JAR_SIZE = 50 * 1024 * 1024; // 50 MB
 
 	private static final int MAX_ENTRY_SIZE = 1024 * 1024; // 1 MB per entry
+
+	private static final long MAX_EXTRACTED_SIZE = 500L * 1024 * 1024; // 500 MB total
+																		// extracted
 
 	private static final List<String> ALLOWED_SCHEMES = List.of("http", "https");
 
@@ -78,6 +82,7 @@ class MavenJarDownloader {
 
 	private List<ExtractedContract> extractContracts(byte[] jarBytes) {
 		List<ExtractedContract> contracts = new ArrayList<>();
+		long totalExtracted = 0;
 
 		try (ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(jarBytes))) {
 			ZipEntry entry;
@@ -94,6 +99,10 @@ class MavenJarDownloader {
 				}
 
 				byte[] content = readEntry(zis, entry);
+				totalExtracted += content.length;
+				if (totalExtracted > MAX_EXTRACTED_SIZE) {
+					throw new MavenImportException("Archive extraction exceeded maximum size");
+				}
 				if (content.length > MAX_ENTRY_SIZE) {
 					logger.warn("Skipping oversized entry: {} ({} bytes)", name, content.length);
 					continue;
@@ -156,6 +165,7 @@ class MavenJarDownloader {
 			throw new MavenImportException(
 					"Invalid repository URL scheme: " + uri.getScheme() + " (only http/https allowed)");
 		}
+		UrlValidator.validateExternalUrl(url);
 	}
 
 	record ExtractedContract(String contractName, String content, String contentType) {

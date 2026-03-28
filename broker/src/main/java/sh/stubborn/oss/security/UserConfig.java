@@ -17,11 +17,18 @@ package sh.stubborn.oss.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
+/**
+ * Default in-memory users for development and testing. NOT active in the "production"
+ * profile — production deployments must configure an external identity provider
+ * (LDAP/OAuth2/OIDC) via Spring Security's standard auto-configuration.
+ */
 @Configuration
+@Profile("!production")
 class UserConfig {
 
 	@Bean

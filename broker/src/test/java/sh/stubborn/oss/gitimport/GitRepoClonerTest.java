@@ -254,6 +254,52 @@ class GitRepoClonerTest {
 		assertThat(result.contracts().get(0).contractName()).isEqualTo("small.json");
 	}
 
+	/**
+	 * @see <a href="../../../../../docs/specs/039-data-integrity.md">Spec 039 — Data
+	 * Integrity</a>
+	 */
+	@Test
+	void should_skip_symlinks_during_contract_extraction(@TempDir Path tempDir) throws Exception {
+		// given — create a repo where one contract is a symlink to a file outside
+		// contracts/
+		Path repoDir = tempDir.resolve("symlink-repo");
+		try (Git git = Git.init().setDirectory(repoDir.toFile()).setInitialBranch("main").call()) {
+			Path contractsDir = repoDir.resolve("contracts");
+			Files.createDirectories(contractsDir);
+			Files.writeString(contractsDir.resolve("real.json"), "{\"real\":true}", StandardCharsets.UTF_8);
+
+			// Create a secret file outside contracts directory
+			Path secretFile = repoDir.resolve("secret.txt");
+			Files.writeString(secretFile, "super-secret-data", StandardCharsets.UTF_8);
+
+			// Create a symlink inside contracts pointing to the secret file
+			Path symlinkPath = contractsDir.resolve("stolen.json");
+			try {
+				Files.createSymbolicLink(symlinkPath, secretFile);
+			}
+			catch (UnsupportedOperationException | java.io.IOException ex) {
+				// Symlink creation may fail on some OS/filesystems (e.g. Windows
+				// without privileges). Skip test in that case.
+				org.junit.jupiter.api.Assumptions.assumeTrue(false,
+						"Symlink creation not supported: " + ex.getMessage());
+				return;
+			}
+
+			git.add().addFilepattern(".").call();
+			git.commit().setMessage("Commit with symlink").call();
+		}
+
+		// when
+		GitRepoCloner.CloneResult result = this.cloner.cloneAndExtract(repoDir.toUri().toString(), "main", "contracts/",
+				"NONE", null, null);
+
+		// then — only the real file should be extracted, symlink should be skipped
+		assertThat(result.contracts()).extracting(GitRepoCloner.ExtractedContract::contractName)
+			.containsExactly("real.json");
+		assertThat(result.contracts()).extracting(GitRepoCloner.ExtractedContract::content)
+			.noneMatch(c -> c.contains("super-secret-data"));
+	}
+
 	@Test
 	void should_have_circuit_breaker_annotation_on_clone_method() throws Exception {
 		// The @CircuitBreaker annotation is AOP-based and only activates in a

@@ -53,6 +53,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Timeout(value = 10, unit = TimeUnit.MINUTES)
+@org.junit.jupiter.api.Tag("ui-e2e")
 class ImportUiE2ETest {
 
 	private static final Path SCREENSHOTS_DIR = Path.of("target/screenshots");

@@ -21,10 +21,22 @@ import javax.crypto.KeyGenerator;
 
 import org.junit.jupiter.api.Test;
 
+import org.springframework.core.env.Environment;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
 
 class CredentialEncryptionServiceTest {
+
+	private final Environment environment = createDefaultEnvironment();
+
+	private static Environment createDefaultEnvironment() {
+		Environment env = mock(Environment.class);
+		given(env.getActiveProfiles()).willReturn(new String[0]);
+		return env;
+	}
 
 	private static String generateBase64Key() throws Exception {
 		KeyGenerator keyGen = KeyGenerator.getInstance("AES");
@@ -32,11 +44,15 @@ class CredentialEncryptionServiceTest {
 		return Base64.getEncoder().encodeToString(keyGen.generateKey().getEncoded());
 	}
 
+	private CredentialEncryptionService createService(@org.jspecify.annotations.Nullable String key) {
+		return new CredentialEncryptionService(key, this.environment);
+	}
+
 	@Test
 	void should_encrypt_and_decrypt_roundtrip() throws Exception {
 		// given
 		String key = generateBase64Key();
-		CredentialEncryptionService service = new CredentialEncryptionService(key);
+		CredentialEncryptionService service = createService(key);
 		String plaintext = "my-secret-password";
 
 		// when
@@ -52,7 +68,7 @@ class CredentialEncryptionServiceTest {
 	void should_produce_different_ciphertexts_for_same_plaintext() throws Exception {
 		// given
 		String key = generateBase64Key();
-		CredentialEncryptionService service = new CredentialEncryptionService(key);
+		CredentialEncryptionService service = createService(key);
 		String plaintext = "my-secret-password";
 
 		// when
@@ -70,7 +86,7 @@ class CredentialEncryptionServiceTest {
 	@Test
 	void should_passthrough_when_key_is_empty() {
 		// given
-		CredentialEncryptionService service = new CredentialEncryptionService("");
+		CredentialEncryptionService service = createService("");
 		String plaintext = "my-secret-password";
 
 		// when
@@ -86,7 +102,7 @@ class CredentialEncryptionServiceTest {
 	@Test
 	void should_passthrough_when_key_is_null() {
 		// given
-		CredentialEncryptionService service = new CredentialEncryptionService(null);
+		CredentialEncryptionService service = createService(null);
 
 		// when / then
 		assertThat(service.encrypt("password")).isEqualTo("password");
@@ -98,7 +114,7 @@ class CredentialEncryptionServiceTest {
 	void should_handle_null_plaintext() throws Exception {
 		// given
 		String key = generateBase64Key();
-		CredentialEncryptionService service = new CredentialEncryptionService(key);
+		CredentialEncryptionService service = createService(key);
 
 		// when / then
 		assertThat(service.encrypt(null)).isNull();
@@ -111,7 +127,7 @@ class CredentialEncryptionServiceTest {
 		String shortKey = Base64.getEncoder().encodeToString(new byte[16]);
 
 		// then
-		assertThatThrownBy(() -> new CredentialEncryptionService(shortKey)).isInstanceOf(IllegalArgumentException.class)
+		assertThatThrownBy(() -> createService(shortKey)).isInstanceOf(IllegalArgumentException.class)
 			.hasMessageContaining("256 bits");
 	}
 
@@ -119,7 +135,7 @@ class CredentialEncryptionServiceTest {
 	void should_report_encryption_enabled_when_key_set() throws Exception {
 		// given
 		String key = generateBase64Key();
-		CredentialEncryptionService service = new CredentialEncryptionService(key);
+		CredentialEncryptionService service = createService(key);
 
 		// then
 		assertThat(service.isEncryptionEnabled()).isTrue();
@@ -129,7 +145,7 @@ class CredentialEncryptionServiceTest {
 	void should_fail_to_decrypt_tampered_ciphertext() throws Exception {
 		// given
 		String key = generateBase64Key();
-		CredentialEncryptionService service = new CredentialEncryptionService(key);
+		CredentialEncryptionService service = createService(key);
 		String encrypted = service.encrypt("my-secret");
 
 		// tamper with the ciphertext
@@ -143,10 +159,20 @@ class CredentialEncryptionServiceTest {
 	}
 
 	@Test
+	void should_fail_on_startup_when_production_profile_and_no_key() {
+		// given
+		given(this.environment.getActiveProfiles()).willReturn(new String[] { "production" });
+
+		// then
+		assertThatThrownBy(() -> createService("")).isInstanceOf(IllegalStateException.class)
+			.hasMessageContaining("production");
+	}
+
+	@Test
 	void should_encrypt_various_plaintext_values() throws Exception {
 		// given
 		String key = generateBase64Key();
-		CredentialEncryptionService service = new CredentialEncryptionService(key);
+		CredentialEncryptionService service = createService(key);
 
 		// when / then — roundtrip for various values
 		for (String plaintext : new String[] { "", "a", "short", "a-longer-password-with-special-chars!@#$%^&*()" }) {

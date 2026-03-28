@@ -28,6 +28,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import sh.stubborn.oss.application.ApplicationNotFoundException;
 import sh.stubborn.oss.application.ApplicationService;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -333,6 +334,33 @@ class ContractServiceTest {
 
 		// then
 		then(this.contractRepository).should().delete(contract);
+	}
+
+	/**
+	 * Simulates the race condition: existsBy...() returns false (check passes) but save()
+	 * hits a unique constraint violation. The service should catch the
+	 * DataIntegrityViolationException and throw ContractAlreadyExistsException (409).
+	 * @see <a href="../../../../../docs/specs/039-data-integrity.md">Spec 039 — Data
+	 * Integrity</a>
+	 */
+	@Test
+	void should_throw_conflict_when_save_hits_unique_constraint_violation() {
+		// given — existsBy returns false (race: another thread inserted between check
+		// and save)
+		given(this.applicationService.findIdByName("order-service")).willReturn(this.applicationId);
+		given(this.contractRepository.existsByApplicationIdAndVersionAndContractName(eq(this.applicationId),
+				eq("1.0.0"), eq("create-order")))
+			.willReturn(false);
+		given(this.contractRepository.save(any(Contract.class)))
+			.willThrow(new DataIntegrityViolationException("unique constraint violation"));
+
+		// when/then — should get 409 ContractAlreadyExistsException, not 500
+		assertThatThrownBy(() -> this.contractService.publish("order-service", "1.0.0", "create-order", "content",
+				"application/json"))
+			.isInstanceOf(ContractAlreadyExistsException.class)
+			.hasMessageContaining("order-service")
+			.hasMessageContaining("1.0.0")
+			.hasMessageContaining("create-order");
 	}
 
 }

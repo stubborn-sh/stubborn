@@ -27,6 +27,7 @@ import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import sh.stubborn.oss.application.ApplicationNotFoundException;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import sh.stubborn.oss.audit.AuditService;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -45,6 +46,10 @@ class DependencyGraphControllerTest {
 
 	@MockitoBean
 	DependencyGraphService dependencyGraphService;
+
+	@SuppressWarnings("unused")
+	@MockitoBean
+	AuditService auditService;
 
 	@Test
 	void should_return_full_graph_with_nodes_and_edges() throws Exception {

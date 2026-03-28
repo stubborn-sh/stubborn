@@ -27,8 +27,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
 
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.AuditTable;
+
 @Entity
 @Table(name = "maven_import_sources")
+@Audited
+@AuditTable("maven_import_sources_aud")
 class MavenImportSource {
 
 	@Id

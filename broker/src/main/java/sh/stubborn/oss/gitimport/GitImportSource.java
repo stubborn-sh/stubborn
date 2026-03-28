@@ -25,10 +25,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.AuditTable;
 import org.jspecify.annotations.Nullable;
 
 @Entity
 @Table(name = "git_import_sources")
+@Audited
+@AuditTable("git_import_sources_aud")
 class GitImportSource {
 
 	@Id

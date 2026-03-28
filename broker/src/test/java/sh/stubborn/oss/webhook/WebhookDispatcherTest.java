@@ -35,6 +35,8 @@ import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClient;
 
+import org.springframework.mock.env.MockEnvironment;
+
 import sh.stubborn.oss.security.CredentialEncryptionService;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
@@ -180,7 +182,7 @@ class WebhookDispatcherTest {
 					"create-order");
 			WebhookDispatcher realDispatcher = new WebhookDispatcher(this.webhookRepo, this.executionRepo,
 					RestClient.builder(), JsonMapper.builder().build(), new OssWebhookEventFilter(),
-					new CredentialEncryptionService(""));
+					new CredentialEncryptionService("", new MockEnvironment()));
 
 			// when
 			long start = System.nanoTime();
@@ -214,7 +216,7 @@ class WebhookDispatcherTest {
 					"create-order");
 			WebhookDispatcher realDispatcher = new WebhookDispatcher(this.webhookRepo, this.executionRepo,
 					RestClient.builder(), JsonMapper.builder().build(), new OssWebhookEventFilter(),
-					new CredentialEncryptionService(""));
+					new CredentialEncryptionService("", new MockEnvironment()));
 
 			// when
 			realDispatcher.deliverWithRetry(webhook, event);

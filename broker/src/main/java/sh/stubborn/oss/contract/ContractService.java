@@ -28,6 +28,7 @@ import org.jspecify.annotations.Nullable;
 
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.dao.DataIntegrityViolationException;
 import sh.stubborn.oss.application.ApplicationService;
 import sh.stubborn.oss.webhook.BrokerEvent;
 import org.springframework.context.ApplicationEventPublisher;
@@ -70,7 +71,13 @@ public class ContractService {
 		String contentHash = computeContentHash(content);
 		Contract contract = Contract.create(applicationId, version, contractName, content, contentType, branch,
 				contentHash);
-		Contract saved = this.contractRepository.save(contract);
+		Contract saved;
+		try {
+			saved = this.contractRepository.save(contract);
+		}
+		catch (DataIntegrityViolationException ex) {
+			throw new ContractAlreadyExistsException(applicationName, version, contractName);
+		}
 		this.eventPublisher
 			.publishEvent(BrokerEvent.contractPublished(applicationId, applicationName, version, contractName));
 		return saved;
