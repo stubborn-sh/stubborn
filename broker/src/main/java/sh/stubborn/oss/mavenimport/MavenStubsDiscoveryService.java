@@ -50,7 +50,7 @@ public class MavenStubsDiscoveryService {
 
 	private final String centralBaseUrl;
 
-	MavenStubsDiscoveryService(RestClient.Builder restClientBuilder) {
+	public MavenStubsDiscoveryService(RestClient.Builder restClientBuilder) {
 		this(restClientBuilder, DEFAULT_CENTRAL_BASE_URL);
 	}
 
