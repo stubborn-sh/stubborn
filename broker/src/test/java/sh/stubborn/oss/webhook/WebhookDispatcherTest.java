@@ -73,9 +73,9 @@ class WebhookDispatcherTest {
 		given(this.restClientBuilder.requestFactory(any(ClientHttpRequestFactory.class)))
 			.willReturn(this.restClientBuilder);
 		given(this.restClientBuilder.build()).willReturn(this.restClient);
-		// Passthrough encryption for tests
-		given(this.encryptionService.decrypt(any())).willAnswer(inv -> inv.getArgument(0));
-		given(this.encryptionService.encrypt(any())).willAnswer(inv -> inv.getArgument(0));
+		// Passthrough encryption for tests (lenient — not all tests trigger encryption)
+		org.mockito.Mockito.lenient().when(this.encryptionService.decrypt(any())).thenAnswer(inv -> inv.getArgument(0));
+		org.mockito.Mockito.lenient().when(this.encryptionService.encrypt(any())).thenAnswer(inv -> inv.getArgument(0));
 		WebhookEventFilter eventFilter = new OssWebhookEventFilter();
 		this.dispatcher = new WebhookDispatcher(this.webhookRepository, this.executionRepository,
 				this.restClientBuilder, JsonMapper.builder().build(), eventFilter, this.encryptionService);
