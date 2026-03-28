@@ -50,6 +50,7 @@ public class MavenStubsDiscoveryService {
 
 	private final String centralBaseUrl;
 
+	@org.springframework.beans.factory.annotation.Autowired
 	public MavenStubsDiscoveryService(RestClient.Builder restClientBuilder) {
 		this(restClientBuilder, DEFAULT_CENTRAL_BASE_URL);
 	}
