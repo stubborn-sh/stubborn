@@ -127,6 +127,14 @@ class SecurityContractTest {
 	@org.springframework.test.context.bean.override.mockito.MockitoBean
 	BrokerLicenseChecker brokerLicenseChecker;
 
+	@SuppressWarnings("unused")
+	@org.springframework.test.context.bean.override.mockito.MockitoBean
+	sh.stubborn.oss.mavenimport.MavenStubsDiscoveryService mavenStubsDiscoveryService;
+
+	@SuppressWarnings("unused")
+	@org.springframework.test.context.bean.override.mockito.MockitoBean
+	sh.stubborn.oss.security.CredentialEncryptionService credentialEncryptionService;
+
 	@Test
 	void should_return_401_when_not_authenticated() throws Exception {
 		// when/then — no authentication, Spring Security returns 401

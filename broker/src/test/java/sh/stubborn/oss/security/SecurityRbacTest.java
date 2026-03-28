@@ -123,6 +123,14 @@ class SecurityRbacTest {
 	@MockitoBean
 	BrokerLicenseChecker brokerLicenseChecker;
 
+	@SuppressWarnings("unused")
+	@MockitoBean
+	sh.stubborn.oss.mavenimport.MavenStubsDiscoveryService mavenStubsDiscoveryService;
+
+	@SuppressWarnings("unused")
+	@MockitoBean
+	sh.stubborn.oss.security.CredentialEncryptionService credentialEncryptionService;
+
 	// --- READER role ---
 
 	@Test

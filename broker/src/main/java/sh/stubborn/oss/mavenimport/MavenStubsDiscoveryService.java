@@ -34,7 +34,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
 @Service
-class MavenStubsDiscoveryService {
+public class MavenStubsDiscoveryService {
 
 	private static final Logger logger = LoggerFactory.getLogger(MavenStubsDiscoveryService.class);
 
