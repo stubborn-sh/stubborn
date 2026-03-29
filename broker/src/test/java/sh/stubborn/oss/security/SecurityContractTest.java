@@ -40,10 +40,12 @@ import sh.stubborn.oss.mavenimport.MavenImportService;
 import sh.stubborn.oss.matrix.MatrixService;
 import sh.stubborn.oss.selector.SelectorService;
 import sh.stubborn.oss.mavenimport.MavenStubsDiscoveryService;
+import sh.stubborn.oss.audit.AuditService;
 import sh.stubborn.oss.spi.BrokerLicenseChecker;
 import sh.stubborn.oss.tag.TagService;
 import sh.stubborn.oss.webhook.WebhookService;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import static org.springframework.cloud.contract.wiremock.restdocs.SpringCloudContractRestDocs.dslContract;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -69,72 +71,76 @@ class SecurityContractTest {
 	MockMvc mockMvc;
 
 	@SuppressWarnings("unused")
-	@org.springframework.test.context.bean.override.mockito.MockitoBean
+	@MockitoBean
 	ApplicationService applicationService;
 
 	@SuppressWarnings("unused")
-	@org.springframework.test.context.bean.override.mockito.MockitoBean
+	@MockitoBean
 	ContractService contractService;
 
 	@SuppressWarnings("unused")
-	@org.springframework.test.context.bean.override.mockito.MockitoBean
+	@MockitoBean
 	VerificationService verificationService;
 
 	@SuppressWarnings("unused")
-	@org.springframework.test.context.bean.override.mockito.MockitoBean
+	@MockitoBean
 	DeploymentService deploymentService;
 
 	@SuppressWarnings("unused")
-	@org.springframework.test.context.bean.override.mockito.MockitoBean
+	@MockitoBean
 	CanIDeployService canIDeployService;
 
 	@SuppressWarnings("unused")
-	@org.springframework.test.context.bean.override.mockito.MockitoBean
+	@MockitoBean
 	DependencyGraphService dependencyGraphService;
 
 	@SuppressWarnings("unused")
-	@org.springframework.test.context.bean.override.mockito.MockitoBean
+	@MockitoBean
 	WebhookService webhookService;
 
 	@SuppressWarnings("unused")
-	@org.springframework.test.context.bean.override.mockito.MockitoBean
+	@MockitoBean
 	MatrixService matrixService;
 
 	@SuppressWarnings("unused")
-	@org.springframework.test.context.bean.override.mockito.MockitoBean
+	@MockitoBean
 	SelectorService selectorService;
 
 	@SuppressWarnings("unused")
-	@org.springframework.test.context.bean.override.mockito.MockitoBean
+	@MockitoBean
 	TagService tagService;
 
 	@SuppressWarnings("unused")
-	@org.springframework.test.context.bean.override.mockito.MockitoBean
+	@MockitoBean
 	CleanupService cleanupService;
 
 	@SuppressWarnings("unused")
-	@org.springframework.test.context.bean.override.mockito.MockitoBean
+	@MockitoBean
 	EnvironmentService environmentService;
 
 	@SuppressWarnings("unused")
-	@org.springframework.test.context.bean.override.mockito.MockitoBean
+	@MockitoBean
 	MavenImportService mavenImportService;
 
 	@SuppressWarnings("unused")
-	@org.springframework.test.context.bean.override.mockito.MockitoBean
+	@MockitoBean
 	GitImportService gitImportService;
 
 	@SuppressWarnings("unused")
-	@org.springframework.test.context.bean.override.mockito.MockitoBean
+	@MockitoBean
 	BrokerLicenseChecker brokerLicenseChecker;
 
 	@SuppressWarnings("unused")
-	@org.springframework.test.context.bean.override.mockito.MockitoBean
+	@MockitoBean
 	MavenStubsDiscoveryService mavenStubsDiscoveryService;
 
 	@SuppressWarnings("unused")
-	@org.springframework.test.context.bean.override.mockito.MockitoBean
+	@MockitoBean
 	CredentialEncryptionService credentialEncryptionService;
+
+	@SuppressWarnings("unused")
+	@MockitoBean
+	AuditService auditService;
 
 	@Test
 	void should_return_401_when_not_authenticated() throws Exception {
