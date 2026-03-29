@@ -25,6 +25,13 @@ public class ContractAlreadyExistsException extends RuntimeException {
 		this.contractName = contractName;
 	}
 
+	public ContractAlreadyExistsException(String applicationName, String version, String contractName,
+			Throwable cause) {
+		super("Contract already exists: " + contractName + " for application " + applicationName + " version "
+				+ version, cause);
+		this.contractName = contractName;
+	}
+
 	public String getContractName() {
 		return this.contractName;
 	}

@@ -76,7 +76,7 @@ public class ContractService {
 			saved = this.contractRepository.save(contract);
 		}
 		catch (DataIntegrityViolationException ex) {
-			throw new ContractAlreadyExistsException(applicationName, version, contractName);
+			throw new ContractAlreadyExistsException(applicationName, version, contractName, ex);
 		}
 		this.eventPublisher
 			.publishEvent(BrokerEvent.contractPublished(applicationId, applicationName, version, contractName));
