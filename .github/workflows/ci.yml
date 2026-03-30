@@ -86,7 +86,14 @@ jobs:
             **/target/failsafe-reports/
           retention-days: 7
 
-      - name: Mutation tests
+      - name: Restore PITest history cache
+        uses: actions/cache@v4
+        with:
+          path: broker/target/pit-history.bin
+          key: pitest-history-${{ github.sha }}
+          restore-keys: pitest-history-
+
+      - name: Mutation tests (incremental)
         run: ./mvnw pitest:mutationCoverage -pl broker -DtimeoutConstant=10000
 
       - name: Upload E2E screenshots

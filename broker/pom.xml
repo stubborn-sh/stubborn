@@ -477,6 +477,9 @@
 					</mutators>
 					<mutationThreshold>90</mutationThreshold>
 					<timestampedReports>false</timestampedReports>
+					<withHistory>true</withHistory>
+					<historyInputFile>${project.build.directory}/pit-history.bin</historyInputFile>
+					<historyOutputFile>${project.build.directory}/pit-history.bin</historyOutputFile>
 				</configuration>
 			</plugin>
 
