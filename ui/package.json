@@ -26,14 +26,14 @@
     "@radix-ui/react-tabs": "^1.1.13",
     "@radix-ui/react-tooltip": "^1.2.8",
     "@tanstack/react-query": "^5.62.0",
-    "@xyflow/react": "^12.10.1",
+    "@xyflow/react": "^12.10.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.577.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-router-dom": "^7.1.0",
-    "recharts": "^3.8.0",
+    "react-router-dom": "^7.13.2",
+    "recharts": "^3.8.1",
     "tailwind-merge": "^3.5.0"
   },
   "devDependencies": {
@@ -41,7 +41,7 @@
     "@stryker-mutator/core": "^9.6.0",
     "@stryker-mutator/typescript-checker": "^9.6.0",
     "@stryker-mutator/vitest-runner": "^9.6.0",
-    "@tailwindcss/postcss": "^4.2.1",
+    "@tailwindcss/postcss": "^4.2.2",
     "@testing-library/jest-dom": "^6.6.0",
     "@testing-library/react": "^16.1.0",
     "@testing-library/user-event": "^14.5.0",
@@ -57,17 +57,17 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.5.2",
     "eslint-plugin-security": "^4.0.0",
-    "eslint-plugin-testing-library": "^7.16.0",
+    "eslint-plugin-testing-library": "^7.16.2",
     "fast-check": "^4.6.0",
     "globals": "^17.4.0",
     "jsdom": "^28.1.0",
-    "msw": "^2.7.0",
+    "msw": "^2.12.14",
     "postcss": "^8.5.8",
     "prettier": "^3.8.1",
     "tailwindcss": "^4.0.0",
     "typescript": "^5.7.0",
     "typescript-eslint": "^8.57.0",
-    "vite": "^8.0.0",
-    "vitest": "^4.1.0"
+    "vite": "^8.0.3",
+    "vitest": "^4.1.2"
   }
 }
