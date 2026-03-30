@@ -7,6 +7,7 @@ on:
 env:
   JAVA_VERSION: '25'
   JAVA_DISTRIBUTION: 'liberica'
+  DEMO_URL: 'https://stubborn-demo.fly.dev'
 
 jobs:
   deploy:
@@ -39,3 +40,39 @@ jobs:
         run: flyctl deploy --image registry.fly.io/stubborn-demo:latest
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+  smoke-test:
+    name: Post-Deploy Smoke Test
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install Playwright
+        run: npx playwright install chromium --with-deps
+
+      - name: Wait for app to be ready
+        run: |
+          for i in $(seq 1 30); do
+            if curl -sf "${{ env.DEMO_URL }}/actuator/health" | grep -q "UP"; then
+              echo "App is ready"
+              exit 0
+            fi
+            echo "Waiting for app... attempt $i"
+            sleep 10
+          done
+          echo "App did not become ready in time"
+          exit 1
+
+      - name: Run Playwright smoke test
+        run: npx playwright test tests/demo-smoke.spec.ts --reporter=list
+        env:
+          DEMO_URL: ${{ env.DEMO_URL }}
+
+      - name: Upload smoke test screenshots
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: demo-smoke-screenshots
+          path: test-results/
+          retention-days: 7
