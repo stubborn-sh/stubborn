@@ -266,7 +266,7 @@
 							<outputDirectory>${project.build.outputDirectory}/static</outputDirectory>
 							<resources>
 								<resource>
-									<directory>${project.basedir}/../ui/dist</directory>
+									<directory>${maven.multiModuleProjectDirectory}/ui/dist</directory>
 								</resource>
 							</resources>
 						</configuration>
