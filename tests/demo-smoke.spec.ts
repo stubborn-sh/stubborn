@@ -24,12 +24,13 @@ test.beforeEach(async ({ page }) => {
 test.describe('Demo App Smoke Test', () => {
 
   test('should load the dashboard', async ({ page }) => {
-    await page.goto('/', { waitUntil: 'domcontentloaded', timeout: 120_000 });
+    // First request may hit cold start (>60s), so use full test timeout
+    await page.goto('/', { waitUntil: 'domcontentloaded', timeout: 150_000 });
     // Wait for React to render something into #root
     await page.waitForFunction(() => {
       const root = document.getElementById('root');
       return root && root.children.length > 0;
-    }, { timeout: 60_000 });
+    }, { timeout: 120_000 });
     await expect(page).toHaveTitle(/Stubborn/i);
     await page.screenshot({ path: 'test-results/01-dashboard.png' });
   });
@@ -65,7 +66,7 @@ test.describe('Demo App Smoke Test', () => {
     await page.waitForFunction(() => document.getElementById('root')?.children.length! > 0, { timeout: 60_000 });
     await page.getByRole('link', { name: /git import/i }).first().click();
     await page.waitForLoadState('domcontentloaded');
-    await expect(page.getByText('github.com/example/order-service').or(page.getByText('order-service'))).toBeVisible({ timeout: 60_000 });
+    await expect(page.getByText('github.com/example/order-service').or(page.getByText('order-service')).first()).toBeVisible({ timeout: 60_000 });
     await page.screenshot({ path: 'test-results/04-git-import.png' });
   });
 
@@ -74,7 +75,7 @@ test.describe('Demo App Smoke Test', () => {
     await page.waitForFunction(() => document.getElementById('root')?.children.length! > 0, { timeout: 60_000 });
     await page.getByRole('link', { name: /maven import/i }).first().click();
     await page.waitForLoadState('domcontentloaded');
-    await expect(page.getByText('order-service-stubs').or(page.getByText('com.example'))).toBeVisible({ timeout: 60_000 });
+    await expect(page.getByText('order-service-stubs').or(page.getByText('com.example')).first()).toBeVisible({ timeout: 60_000 });
     await page.screenshot({ path: 'test-results/05-maven-import.png' });
   });
 
