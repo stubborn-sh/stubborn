@@ -5,7 +5,7 @@ export default defineConfig({
   timeout: 180_000,
   expect: { timeout: 60_000 },
   use: {
-    baseURL: process.env.DEMO_URL || 'https://stubborn-demo.fly.dev',
+    baseURL: process.env.DEMO_URL || 'https://demo.stubborn.sh',
     screenshot: 'on',
     trace: 'retain-on-failure',
   },

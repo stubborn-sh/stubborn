@@ -7,7 +7,7 @@ on:
 env:
   JAVA_VERSION: '25'
   JAVA_DISTRIBUTION: 'liberica'
-  DEMO_URL: 'https://stubborn-demo.fly.dev'
+  DEMO_URL: 'https://demo.stubborn.sh'
 
 jobs:
   deploy:
