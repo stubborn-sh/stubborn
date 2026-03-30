@@ -51,7 +51,10 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Install Playwright
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
         run: npx playwright install chromium --with-deps
 
       - name: Wait for app to be ready
