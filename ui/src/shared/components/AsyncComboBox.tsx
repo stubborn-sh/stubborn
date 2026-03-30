@@ -120,6 +120,8 @@ export default function AsyncComboBox({
 
   useEffect(() => {
     if (activeIndex >= 0 && listRef.current) {
+      // activeIndex is a bounded numeric index controlled by this component, not user input
+      // eslint-disable-next-line security/detect-object-injection
       const active = listRef.current.children[activeIndex] as HTMLElement | undefined;
       if (active && typeof active.scrollIntoView === "function") {
         active.scrollIntoView({ block: "nearest" });

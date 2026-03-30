@@ -40,4 +40,6 @@ function Button({
   return <Comp className={cn(buttonVariants({ variant, size, className }))} {...props} />;
 }
 
+// buttonVariants is exported alongside Button so consumers can compose styles — co-location is intentional
+// eslint-disable-next-line react-refresh/only-export-components
 export { Button, buttonVariants };

@@ -216,5 +216,5 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: sbom
-          path: '**/target/classes/META-INF/sbom/application.cdx.json'
+          path: 'target/bom.json'
           retention-days: 90

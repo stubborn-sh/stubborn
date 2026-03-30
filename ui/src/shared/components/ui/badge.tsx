@@ -34,4 +34,6 @@ function Badge({
   return <Comp className={cn(badgeVariants({ variant }), className)} {...props} />;
 }
 
+// badgeVariants is exported alongside Badge so consumers can compose styles — co-location is intentional
+// eslint-disable-next-line react-refresh/only-export-components
 export { Badge, badgeVariants };

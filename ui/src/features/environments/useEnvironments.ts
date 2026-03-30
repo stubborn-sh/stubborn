@@ -37,14 +37,23 @@ export function useDeploymentMatrix(environments: EnvironmentResponse[] | undefi
   if (!isLoading && !isError && queries.length > 0) {
     const appVersions = new Map<string, Record<string, string | null>>();
     envNames.forEach((env, idx) => {
+      // idx is a numeric loop index bounded by envNames.length — safe array access
+      // eslint-disable-next-line security/detect-object-injection
       const deployments = queries[idx]?.data?.content ?? [];
       for (const d of deployments) {
         if (!appVersions.has(d.applicationName)) {
           const record: Record<string, string | null> = {};
+          // env comes from envNames (server-controlled list), not raw user input
+          // eslint-disable-next-line security/detect-object-injection
           for (const e of envNames) record[e] = null;
           appVersions.set(d.applicationName, record);
         }
-        appVersions.get(d.applicationName)![env] = d.version;
+        const row = appVersions.get(d.applicationName);
+        if (row) {
+          // env comes from envNames (server-controlled list), not raw user input
+          // eslint-disable-next-line security/detect-object-injection
+          row[env] = d.version;
+        }
       }
     });
     matrix = Array.from(appVersions.entries())
