@@ -60,7 +60,7 @@
     "eslint-plugin-testing-library": "^7.16.2",
     "fast-check": "^4.6.0",
     "globals": "^17.4.0",
-    "jsdom": "^28.1.0",
+    "jsdom": "^29.0.1",
     "msw": "^2.12.14",
     "postcss": "^8.5.8",
     "prettier": "^3.8.1",
