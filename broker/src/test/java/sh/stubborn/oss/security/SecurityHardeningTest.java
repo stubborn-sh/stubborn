@@ -196,20 +196,20 @@ class SecurityHardeningTest {
 
 	@Test
 	@Order(4)
-	void should_return_cors_headers_for_allowed_origin() throws Exception {
+	void should_return_cors_headers_for_any_origin() throws Exception {
 		this.mockMvc
 			.perform(options("/api/v1/applications").header("Origin", "https://stubborn.sh")
 				.header("Access-Control-Request-Method", "GET"))
-			.andExpect(header().string("Access-Control-Allow-Origin", "https://stubborn.sh"));
+			.andExpect(header().string("Access-Control-Allow-Origin", "*"));
 	}
 
 	@Test
 	@Order(5)
-	void should_reject_cors_for_disallowed_origin() throws Exception {
+	void should_allow_cors_for_external_origins() throws Exception {
 		this.mockMvc
-			.perform(options("/api/v1/applications").header("Origin", "https://evil.com")
+			.perform(options("/api/v1/applications").header("Origin", "https://custom-install.example.com")
 				.header("Access-Control-Request-Method", "GET"))
-			.andExpect(header().doesNotExist("Access-Control-Allow-Origin"));
+			.andExpect(header().string("Access-Control-Allow-Origin", "*"));
 	}
 
 	// --- Rate limiting ---
