@@ -5,7 +5,7 @@ test.describe('Demo App Smoke Test', () => {
   test('should load the dashboard', async ({ page }) => {
     await page.goto('/', { waitUntil: 'domcontentloaded', timeout: 120_000 });
     await expect(page.locator('body')).toBeVisible();
-    await expect(page).toHaveTitle(/Stubborn|Broker|Contract/i);
+    await expect(page).toHaveTitle(/Stubborn/i);
     await page.screenshot({ path: 'test-results/01-dashboard.png' });
   });
 
