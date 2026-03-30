@@ -87,9 +87,11 @@ jobs:
           retention-days: 7
 
       - name: Seed PITest history from repo
+        if: github.event_name == 'pull_request'
         run: cp broker/pitest-history.bin /tmp/sh.stubborn.stubborn-broker.0.1.0-SNAPSHOT_pitest_history.bin 2>/dev/null || true
 
-      - name: Mutation tests (incremental)
+      - name: Mutation tests (incremental, PR only)
+        if: github.event_name == 'pull_request'
         run: ./mvnw pitest:mutationCoverage -pl broker -DtimeoutConstant=10000
 
       - name: Upload E2E screenshots

@@ -200,10 +200,8 @@ class WebhookDispatcherTest {
 					msg -> assertThat(msg).contains("HttpTimeoutException"),
 					msg -> assertThat(msg).containsIgnoringCase("request cancelled"),
 					msg -> assertThat(msg).containsIgnoringCase("I/O error"));
-			// Each attempt should be cut short at ~15s (not waiting the full 16s
-			// delay). With 4 attempts plus retry backoff delays (1+5+25=31s) the
-			// total should stay well under 2 minutes.
-			assertThat(elapsed).isLessThan(Duration.ofMinutes(2));
+			// 2 attempts (initial + 1 retry) × ~15s timeout + 1s backoff ≈ 31s
+			assertThat(elapsed).isLessThan(Duration.ofSeconds(60));
 		}
 
 		@Test

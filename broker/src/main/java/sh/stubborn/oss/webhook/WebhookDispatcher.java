@@ -40,9 +40,9 @@ class WebhookDispatcher {
 
 	private static final Logger log = LoggerFactory.getLogger(WebhookDispatcher.class);
 
-	private static final int MAX_RETRIES = 3;
+	private static final int MAX_RETRIES = 1;
 
-	private static final long[] RETRY_DELAYS_MS = { 1000, 5000, 25000 };
+	private static final long[] RETRY_DELAYS_MS = { 1000 };
 
 	static final Duration CONNECT_TIMEOUT = Duration.ofSeconds(5);
 
