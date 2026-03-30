@@ -36,7 +36,8 @@ class SecurityConfig {
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		return http.csrf(csrf -> csrf.disable()).cors(cors -> cors.configurationSource(request -> {
 			var config = new CorsConfiguration();
-			config.setAllowedOrigins(List.of("https://stubborn.sh", "http://localhost:5173"));
+			config.setAllowedOrigins(
+						List.of("https://stubborn.sh", "https://demo.stubborn.sh", "http://localhost:5173"));
 			config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
 			config.setAllowedHeaders(List.of("*"));
 			return config;
