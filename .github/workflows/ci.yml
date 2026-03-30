@@ -87,7 +87,7 @@ jobs:
           retention-days: 7
 
       - name: Mutation tests
-        run: ./mvnw pitest:mutationTest -pl broker -DtimeoutConstant=10000
+        run: ./mvnw pitest:mutationCoverage -pl broker -DtimeoutConstant=10000
 
       - name: Upload E2E screenshots
         if: always()

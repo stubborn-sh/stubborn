@@ -1,6 +1,13 @@
 app = 'stubborn-demo'
 primary_region = 'arn'
 
+[build]
+  builder = 'paketobuildpacks/builder-jammy-base'
+  [build.args]
+    BP_JVM_VERSION = '25'
+    BP_MAVEN_BUILT_ARTIFACT = 'broker/target/stubborn-broker-*-exec.jar'
+    BP_MAVEN_BUILD_ARGUMENTS = '-pl broker -am -DskipTests package'
+
 [env]
   SPRING_PROFILES_ACTIVE = 'demo'
   SERVER_PORT = '8080'
