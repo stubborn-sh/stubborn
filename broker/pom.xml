@@ -266,7 +266,7 @@
 							<outputDirectory>${project.build.outputDirectory}/static</outputDirectory>
 							<resources>
 								<resource>
-									<directory>${project.parent.basedir}/ui/dist</directory>
+									<directory>${project.basedir}/../ui/dist</directory>
 								</resource>
 							</resources>
 						</configuration>
