@@ -6,10 +6,14 @@ updates:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 10
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
     groups:
       patch-updates:
-        update-types:
-          - "patch"
+        update-types: ["patch"]
+      minor-updates:
+        update-types: ["minor"]
 
   - package-ecosystem: "npm"
     directory: "/"
@@ -17,10 +21,14 @@ updates:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 10
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
     groups:
       patch-updates:
-        update-types:
-          - "patch"
+        update-types: ["patch"]
+      minor-updates:
+        update-types: ["minor"]
 
   - package-ecosystem: "npm"
     directory: "/ui"
@@ -28,10 +36,14 @@ updates:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 10
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
     groups:
       patch-updates:
-        update-types:
-          - "patch"
+        update-types: ["patch"]
+      minor-updates:
+        update-types: ["minor"]
 
   - package-ecosystem: "npm"
     directory: "/js"
@@ -39,10 +51,14 @@ updates:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 10
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
     groups:
       patch-updates:
-        update-types:
-          - "patch"
+        update-types: ["patch"]
+      minor-updates:
+        update-types: ["minor"]
 
   - package-ecosystem: "github-actions"
     directory: "/"
@@ -50,10 +66,14 @@ updates:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 10
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
     groups:
       patch-updates:
-        update-types:
-          - "patch"
+        update-types: ["patch"]
+      minor-updates:
+        update-types: ["minor"]
 
   - package-ecosystem: "docker"
     directory: "/"
@@ -61,7 +81,11 @@ updates:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 10
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
     groups:
       patch-updates:
-        update-types:
-          - "patch"
+        update-types: ["patch"]
+      minor-updates:
+        update-types: ["minor"]
