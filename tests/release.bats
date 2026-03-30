@@ -126,6 +126,71 @@ validate_semver() {
 # Workflow file structure
 # ──────────────────────────────────────────────
 
+# ──────────────────────────────────────────────
+# Helm chart version automation
+# ──────────────────────────────────────────────
+
+@test "release workflow updates Chart.yaml version" {
+  local wf="$BATS_TEST_DIRNAME/../.github/workflows/release.yml"
+  grep -q 'sed.*version.*Chart.yaml' "$wf"
+}
+
+@test "release workflow updates Chart.yaml appVersion" {
+  local wf="$BATS_TEST_DIRNAME/../.github/workflows/release.yml"
+  grep -q 'sed.*appVersion.*Chart.yaml' "$wf"
+}
+
+@test "Chart.yaml version sed produces correct output" {
+  local tmpfile
+  tmpfile=$(mktemp)
+  cat > "$tmpfile" <<'CHART'
+apiVersion: v2
+name: stubborn-broker
+version: 0.1.0
+appVersion: 0.1.0-SNAPSHOT
+CHART
+  VERSION="0.0.1"
+  sed -i "s/^version:.*/version: $VERSION/" "$tmpfile"
+  sed -i "s/^appVersion:.*/appVersion: \"$VERSION\"/" "$tmpfile"
+  grep -q "version: 0.0.1" "$tmpfile"
+  grep -q 'appVersion: "0.0.1"' "$tmpfile"
+  rm "$tmpfile"
+}
+
+@test "Chart.yaml snapshot reset produces correct output" {
+  local tmpfile
+  tmpfile=$(mktemp)
+  cat > "$tmpfile" <<'CHART'
+apiVersion: v2
+name: stubborn-broker
+version: 0.0.1
+appVersion: "0.0.1"
+CHART
+  NEXT_SNAPSHOT="0.1.0-SNAPSHOT"
+  NEXT_DEV=$(echo "$NEXT_SNAPSHOT" | sed 's/-SNAPSHOT//')
+  sed -i "s/^version:.*/version: ${NEXT_DEV}/" "$tmpfile"
+  sed -i "s/^appVersion:.*/appVersion: \"$NEXT_SNAPSHOT\"/" "$tmpfile"
+  grep -q "version: 0.1.0" "$tmpfile"
+  grep -q 'appVersion: "0.1.0-SNAPSHOT"' "$tmpfile"
+  rm "$tmpfile"
+}
+
+@test "Chart.yaml exists at expected path" {
+  [ -f "$BATS_TEST_DIRNAME/../charts/stubborn-broker/Chart.yaml" ]
+}
+
+@test "Chart.yaml has required fields" {
+  local chart="$BATS_TEST_DIRNAME/../charts/stubborn-broker/Chart.yaml"
+  grep -q "^apiVersion:" "$chart"
+  grep -q "^name:" "$chart"
+  grep -q "^version:" "$chart"
+  grep -q "^appVersion:" "$chart"
+}
+
+# ──────────────────────────────────────────────
+# Workflow file structure
+# ──────────────────────────────────────────────
+
 @test "release workflow file exists" {
   [ -f "$BATS_TEST_DIRNAME/../.github/workflows/release.yml" ]
 }
