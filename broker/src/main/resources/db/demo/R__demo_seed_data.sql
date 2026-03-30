@@ -3,6 +3,8 @@
 
 DELETE FROM webhook_executions;
 DELETE FROM webhooks;
+DELETE FROM git_import_sources;
+DELETE FROM maven_import_sources;
 DELETE FROM version_tags;
 DELETE FROM deployments;
 DELETE FROM verifications;
@@ -299,6 +301,24 @@ VALUES
     ((SELECT id FROM applications WHERE name = 'order-service'),   '1.2.0', 'latest'),
     ((SELECT id FROM applications WHERE name = 'order-service'),   '1.2.0', 'stable'),
     ((SELECT id FROM applications WHERE name = 'payment-service'), '2.1.0', 'latest');
+
+-- ============================================================
+-- Git Import Sources
+-- ============================================================
+INSERT INTO git_import_sources (application_name, repository_url, branch, contracts_directory, auth_type, sync_enabled)
+VALUES
+    ('order-service', 'https://github.com/example/order-service', 'main', 'src/test/resources/contracts', 'NONE', TRUE),
+    ('payment-service', 'https://github.com/example/payment-service', 'main', 'contracts/', 'NONE', TRUE),
+    ('inventory-service', 'https://github.com/example/inventory-service', 'develop', 'src/contractTest/resources', 'NONE', FALSE);
+
+-- ============================================================
+-- Maven Import Sources
+-- ============================================================
+INSERT INTO maven_import_sources (repository_url, group_id, artifact_id, sync_enabled)
+VALUES
+    ('https://repo.maven.apache.org/maven2', 'com.example', 'order-service-stubs', TRUE),
+    ('https://repo.maven.apache.org/maven2', 'com.example', 'payment-service-stubs', TRUE),
+    ('https://nexus.example.com/repository/releases', 'com.example', 'inventory-service-stubs', FALSE);
 
 -- ============================================================
 -- Webhooks
