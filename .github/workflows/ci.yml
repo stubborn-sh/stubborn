@@ -104,7 +104,7 @@ jobs:
 
       - name: Publish unit test results
         if: always()
-        uses: dorny/test-reporter@v1
+        uses: dorny/test-reporter@v3
         with:
           name: Unit Test Results
           path: '**/target/surefire-reports/TEST-*.xml'
@@ -113,7 +113,7 @@ jobs:
 
       - name: Publish E2E test results
         if: always()
-        uses: dorny/test-reporter@v1
+        uses: dorny/test-reporter@v3
         with:
           name: E2E Test Results
           path: 'e2e-tests/target/failsafe-reports/TEST-*.xml'
