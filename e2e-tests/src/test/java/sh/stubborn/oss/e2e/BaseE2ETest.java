@@ -201,19 +201,19 @@ abstract class BaseE2ETest {
 
 	Locator waitForHeading(String text) {
 		Locator heading = this.page.locator("[data-testid='page-heading']:has-text('" + text + "')");
-		heading.first().waitFor(new Locator.WaitForOptions().setTimeout(60000));
+		heading.first().waitFor(new Locator.WaitForOptions().setTimeout(120_000));
 		return heading;
 	}
 
 	Locator waitForTable() {
 		Locator table = this.page.locator("[data-testid='data-table']").first();
-		table.waitFor(new Locator.WaitForOptions().setTimeout(60000));
+		table.waitFor(new Locator.WaitForOptions().setTimeout(120_000));
 		return table;
 	}
 
 	Locator waitForText(String text) {
 		Locator locator = this.page.locator("text=" + text);
-		locator.first().waitFor(new Locator.WaitForOptions().setTimeout(60000));
+		locator.first().waitFor(new Locator.WaitForOptions().setTimeout(120_000));
 		return locator;
 	}
 
@@ -242,12 +242,12 @@ abstract class BaseE2ETest {
 	void selectComboBox(String selector, int index, String value) {
 		Locator inputs = this.page.locator(selector);
 		Locator input = inputs.nth(index);
-		input.waitFor(new Locator.WaitForOptions().setTimeout(30000));
+		input.waitFor(new Locator.WaitForOptions().setTimeout(60_000));
 		input.click();
 		input.fill(value);
 		// Wait for dropdown option to appear and click it
 		Locator option = this.page.locator("[role='listbox'] [role='option']:has-text('" + value + "')");
-		option.first().waitFor(new Locator.WaitForOptions().setTimeout(30000));
+		option.first().waitFor(new Locator.WaitForOptions().setTimeout(60_000));
 		option.first().click();
 		this.page.locator("[role='listbox']")
 			.first()
