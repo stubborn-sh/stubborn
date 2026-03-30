@@ -52,7 +52,7 @@
     "autoprefixer": "^10.4.20",
     "eslint": "^9.39.4",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-boundaries": "^5.4.0",
+    "eslint-plugin-boundaries": "^6.0.2",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.5.2",

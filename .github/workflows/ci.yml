@@ -57,24 +57,24 @@ jobs:
             samples/js-consumer/package-lock.json
 
       - name: Format check
-        run: ./mvnw io.spring.javaformat:spring-javaformat-maven-plugin:validate -q
+        run: ./mvnw io.spring.javaformat:spring-javaformat-maven-plugin:validate -q -B
 
       - name: Build, test & install (core modules)
-        run: ./mvnw clean install
+        run: ./mvnw clean install -B
 
       - name: Test JS SDK
         run: cd js && npm run test:ci
 
 
       - name: Build & test samples
-        run: ./mvnw verify -Psamples -pl samples -also-make-dependents
+        run: ./mvnw verify -Psamples -pl samples -also-make-dependents -B
 
       - name: Run E2E tests
         uses: nick-fields/retry@v3
         with:
           max_attempts: 2
           timeout_minutes: 20
-          command: ./mvnw failsafe:integration-test failsafe:verify -pl e2e-tests
+          command: ./mvnw failsafe:integration-test failsafe:verify -pl e2e-tests -B
 
       - name: Upload test reports
         if: always()
@@ -92,7 +92,7 @@ jobs:
 
       - name: Mutation tests (incremental, PR only)
         if: github.event_name == 'pull_request'
-        run: ./mvnw pitest:mutationCoverage -pl broker -DtimeoutConstant=10000
+        run: ./mvnw pitest:mutationCoverage -pl broker -DtimeoutConstant=10000 -B
 
       - name: Upload E2E screenshots
         if: always()
@@ -210,7 +210,7 @@ jobs:
             samples/js-consumer/package-lock.json
 
       - name: Generate SBOM
-        run: ./mvnw package -Psbom -DskipTests -DskipStubs=true
+        run: ./mvnw package -Psbom -DskipTests -DskipStubs=true -B
 
       - name: Upload SBOM artifacts
         uses: actions/upload-artifact@v7
