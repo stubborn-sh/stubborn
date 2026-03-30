@@ -86,12 +86,8 @@ jobs:
             **/target/failsafe-reports/
           retention-days: 7
 
-      - name: Restore PITest history cache
-        uses: actions/cache@v4
-        with:
-          path: /tmp/*_pitest_history.bin
-          key: pitest-history-${{ github.sha }}
-          restore-keys: pitest-history-
+      - name: Seed PITest history from repo
+        run: cp broker/pitest-history.bin /tmp/sh.stubborn.stubborn-broker.0.1.0-SNAPSHOT_pitest_history.bin 2>/dev/null || true
 
       - name: Mutation tests (incremental)
         run: ./mvnw pitest:mutationCoverage -pl broker -DtimeoutConstant=10000
