@@ -48,7 +48,10 @@ jobs:
           fi
 
       - name: Set release version
-        run: ./mvnw versions:set -DnewVersion=${{ inputs.version }} -DprocessAllModules=true -DgenerateBackupPoms=false
+        run: |
+          ./mvnw versions:set -DnewVersion=${{ inputs.version }} -DprocessAllModules=true -DgenerateBackupPoms=false
+          sed -i "s/^version:.*/version: ${{ inputs.version }}/" charts/stubborn-broker/Chart.yaml
+          sed -i "s/^appVersion:.*/appVersion: \"${{ inputs.version }}\"/" charts/stubborn-broker/Chart.yaml
 
       - name: Build and test
         run: ./mvnw install -pl !e2e-tests
@@ -72,6 +75,9 @@ jobs:
       - name: Set next SNAPSHOT version
         run: |
           ./mvnw versions:set -DnewVersion=${{ inputs.next-snapshot }} -DprocessAllModules=true -DgenerateBackupPoms=false
+          NEXT_DEV=$(echo "${{ inputs.next-snapshot }}" | sed 's/-SNAPSHOT//')
+          sed -i "s/^version:.*/version: ${NEXT_DEV}/" charts/stubborn-broker/Chart.yaml
+          sed -i "s/^appVersion:.*/appVersion: \"${{ inputs.next-snapshot }}\"/" charts/stubborn-broker/Chart.yaml
           git add -A
           git commit -m "Back to ${{ inputs.next-snapshot }}"
           git push
