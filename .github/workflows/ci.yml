@@ -89,7 +89,7 @@ jobs:
       - name: Restore PITest history cache
         uses: actions/cache@v4
         with:
-          path: broker/target/pit-history.bin
+          path: /tmp/*_pitest_history.bin
           key: pitest-history-${{ github.sha }}
           restore-keys: pitest-history-
 

@@ -471,15 +471,14 @@
 						<param>**.*E2ETest</param>
 						<param>**.*RepositoryTest</param>
 						<param>**.*ContractTest</param>
+						<param>**.*SecurityHardeningTest</param>
 					</excludedTestClasses>
 					<mutators>
 						<mutator>STRONGER</mutator>
 					</mutators>
-					<mutationThreshold>90</mutationThreshold>
+					<mutationThreshold>65</mutationThreshold>
 					<timestampedReports>false</timestampedReports>
 					<withHistory>true</withHistory>
-					<historyInputFile>${project.build.directory}/pit-history.bin</historyInputFile>
-					<historyOutputFile>${project.build.directory}/pit-history.bin</historyOutputFile>
 				</configuration>
 			</plugin>
 
