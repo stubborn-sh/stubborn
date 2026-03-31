@@ -75,7 +75,8 @@ jobs:
       - name: Set next SNAPSHOT version
         run: |
           ./mvnw versions:set -DnewVersion=${{ inputs.next-snapshot }} -DprocessAllModules=true -DgenerateBackupPoms=false
-          NEXT_DEV=$(echo "${{ inputs.next-snapshot }}" | sed 's/-SNAPSHOT//')
+          NEXT_DEV="${{ inputs.next-snapshot }}"
+          NEXT_DEV="${NEXT_DEV//-SNAPSHOT/}"
           sed -i "s/^version:.*/version: ${NEXT_DEV}/" charts/stubborn-broker/Chart.yaml
           sed -i "s/^appVersion:.*/appVersion: \"${{ inputs.next-snapshot }}\"/" charts/stubborn-broker/Chart.yaml
           git add -A
