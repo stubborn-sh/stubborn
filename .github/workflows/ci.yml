@@ -104,6 +104,7 @@ jobs:
 
       - name: Publish unit test results
         if: always()
+        continue-on-error: true
         uses: dorny/test-reporter@v1
         with:
           name: Unit Test Results
@@ -113,6 +114,7 @@ jobs:
 
       - name: Publish E2E test results
         if: always()
+        continue-on-error: true
         uses: dorny/test-reporter@v1
         with:
           name: E2E Test Results
