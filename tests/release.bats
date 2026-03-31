@@ -179,6 +179,21 @@ CHART
   [ -f "$BATS_TEST_DIRNAME/../charts/stubborn-broker/Chart.yaml" ]
 }
 
+@test "Gradle plugin version sed produces correct output" {
+  local tmpfile
+  tmpfile=$(mktemp)
+  echo "version = '0.1.0-SNAPSHOT'" > "$tmpfile"
+  VERSION="0.0.1"
+  sed -i "s/^version = .*/version = '$VERSION'/" "$tmpfile"
+  grep -q "version = '0.0.1'" "$tmpfile"
+  rm "$tmpfile"
+}
+
+@test "release workflow updates Gradle plugin version" {
+  local wf="$BATS_TEST_DIRNAME/../.github/workflows/release.yml"
+  grep -q 'broker-gradle-plugin/build.gradle' "$wf"
+}
+
 @test "Chart.yaml has required fields" {
   local chart="$BATS_TEST_DIRNAME/../charts/stubborn-broker/Chart.yaml"
   grep -q "^apiVersion:" "$chart"

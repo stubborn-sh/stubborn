@@ -52,6 +52,7 @@ jobs:
           ./mvnw versions:set -DnewVersion=${{ inputs.version }} -DprocessAllModules=true -DgenerateBackupPoms=false
           sed -i "s/^version:.*/version: ${{ inputs.version }}/" charts/stubborn-broker/Chart.yaml
           sed -i "s/^appVersion:.*/appVersion: \"${{ inputs.version }}\"/" charts/stubborn-broker/Chart.yaml
+          sed -i "s/^version = .*/version = '${{ inputs.version }}'/" broker-gradle-plugin/build.gradle
 
       - name: Build and test
         run: ./mvnw install -pl !e2e-tests
@@ -79,6 +80,7 @@ jobs:
           NEXT_DEV="${NEXT_DEV//-SNAPSHOT/}"
           sed -i "s/^version:.*/version: ${NEXT_DEV}/" charts/stubborn-broker/Chart.yaml
           sed -i "s/^appVersion:.*/appVersion: \"${{ inputs.next-snapshot }}\"/" charts/stubborn-broker/Chart.yaml
+          sed -i "s/^version = .*/version = '${{ inputs.next-snapshot }}'/" broker-gradle-plugin/build.gradle
           git add -A
           git commit -m "Back to ${{ inputs.next-snapshot }}"
           git push
