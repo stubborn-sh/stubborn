@@ -44,7 +44,6 @@
 		<module>broker-maven-plugin</module>
 		<module>broker-gradle-plugin</module>
 		<module>stub-runner</module>
-		<module>openapi-validator</module>
 		<module>e2e-tests</module>
 	</modules>
 
