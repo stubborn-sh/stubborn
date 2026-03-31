@@ -53,6 +53,7 @@ jobs:
           sed -i "s/^version:.*/version: ${{ inputs.version }}/" charts/stubborn-broker/Chart.yaml
           sed -i "s/^appVersion:.*/appVersion: \"${{ inputs.version }}\"/" charts/stubborn-broker/Chart.yaml
           sed -i "s/^version = .*/version = '${{ inputs.version }}'/" broker-gradle-plugin/build.gradle
+          sed -i "s/^broker-publisher = .*/broker-publisher = \"${{ inputs.version }}\"/" broker-gradle-plugin/gradle/libs.versions.toml
 
       - name: Build and test
         run: ./mvnw install -pl !e2e-tests
@@ -81,6 +82,7 @@ jobs:
           sed -i "s/^version:.*/version: ${NEXT_DEV}/" charts/stubborn-broker/Chart.yaml
           sed -i "s/^appVersion:.*/appVersion: \"${{ inputs.next-snapshot }}\"/" charts/stubborn-broker/Chart.yaml
           sed -i "s/^version = .*/version = '${{ inputs.next-snapshot }}'/" broker-gradle-plugin/build.gradle
+          sed -i "s/^broker-publisher = .*/broker-publisher = \"${{ inputs.next-snapshot }}\"/" broker-gradle-plugin/gradle/libs.versions.toml
           git add -A
           git commit -m "Back to ${{ inputs.next-snapshot }}"
           git push
