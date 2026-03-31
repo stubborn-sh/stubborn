@@ -167,7 +167,7 @@ version: 0.0.1
 appVersion: "0.0.1"
 CHART
   NEXT_SNAPSHOT="0.1.0-SNAPSHOT"
-  NEXT_DEV=$(echo "$NEXT_SNAPSHOT" | sed 's/-SNAPSHOT//')
+  NEXT_DEV="${NEXT_SNAPSHOT//-SNAPSHOT/}"
   sed -i "s/^version:.*/version: ${NEXT_DEV}/" "$tmpfile"
   sed -i "s/^appVersion:.*/appVersion: \"$NEXT_SNAPSHOT\"/" "$tmpfile"
   grep -q "version: 0.1.0" "$tmpfile"
