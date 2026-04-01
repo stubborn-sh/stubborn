@@ -6,7 +6,7 @@
 
 	<groupId>sh.stubborn</groupId>
 	<artifactId>stubborn</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.2</version>
 	<packaging>pom</packaging>
 	<name>Stubborn</name>
 	<description>Stubborn — contract governance broker for Spring Cloud Contract</description>
