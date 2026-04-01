@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>sh.stubborn</groupId>
 		<artifactId>stubborn-build-parent</artifactId>
-		<version>0.0.3</version>
+		<version>0.0.4-SNAPSHOT</version>
 		<relativePath>../build-parent</relativePath>
 	</parent>
 
