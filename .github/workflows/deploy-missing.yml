@@ -27,8 +27,22 @@ jobs:
       - name: Build
         run: ./mvnw install -pl '!e2e-tests,!js' -DskipTests -Dskip.npm=true -DskipStubs=true -B
 
-      - name: Deploy missing modules
-        run: ./mvnw deploy -Ppublish,release -DskipTests -B -pl build-parent,broker-maven-plugin,stub-runner
+      - name: Deploy build-parent
+        run: ./mvnw deploy -Ppublish,release -DskipTests -B -pl build-parent || echo "build-parent may already exist — continuing"
+        env:
+          CENTRAL_USERNAME: ${{ secrets.CENTRAL_USERNAME }}
+          CENTRAL_PASSWORD: ${{ secrets.CENTRAL_PASSWORD }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+
+      - name: Deploy broker-maven-plugin
+        run: ./mvnw deploy -Ppublish,release -DskipTests -B -pl broker-maven-plugin
+        env:
+          CENTRAL_USERNAME: ${{ secrets.CENTRAL_USERNAME }}
+          CENTRAL_PASSWORD: ${{ secrets.CENTRAL_PASSWORD }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+
+      - name: Deploy stub-runner
+        run: ./mvnw deploy -Ppublish,release -DskipTests -B -pl stub-runner
         env:
           CENTRAL_USERNAME: ${{ secrets.CENTRAL_USERNAME }}
           CENTRAL_PASSWORD: ${{ secrets.CENTRAL_PASSWORD }}
