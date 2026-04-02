@@ -18,6 +18,24 @@ jobs:
         with:
           node-version: 22
           registry-url: https://registry.npmjs.org
+      - name: Check packages exist on npm (first publish must be manual)
+        run: |
+          MISSING=0
+          for pkg in broker-client publisher stub-server verifier cli jest stubs-packager; do
+            if ! npm view "@stubborn-sh/${pkg}" name >/dev/null 2>&1; then
+              echo "::error::@stubborn-sh/${pkg} does not exist on npm yet"
+              MISSING=$((MISSING + 1))
+            fi
+          done
+          if [ "$MISSING" -gt 0 ]; then
+            echo ""
+            echo "::error::${MISSING} package(s) not found on npm. First publish of new scoped packages requires interactive 2FA."
+            echo "::error::Run manually: cd js && npm login && npm publish --workspaces --access public"
+            exit 1
+          fi
+          echo "All packages exist on npm — automation token can publish new versions"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Set versions
         working-directory: js
         run: |
