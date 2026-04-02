@@ -17,6 +17,9 @@
 
 	<properties>
 		<e2e.excludedGroups>quarantine,chaos,ui-e2e</e2e.excludedGroups>
+		<maven.deploy.skip>true</maven.deploy.skip>
+		<maven.install.skip>true</maven.install.skip>
+		<central.publishing.enabled>false</central.publishing.enabled>
 	</properties>
 
 	<dependencies>
