@@ -21,8 +21,23 @@ jobs:
       - name: Set versions
         working-directory: js
         run: |
-          npm version ${{ inputs.version }} --workspaces --no-git-tag-version
-          npm version ${{ inputs.version }} --no-git-tag-version
+          VERSION=${{ inputs.version }}
+          # Set version directly in package.json files to avoid npm registry lookups
+          # (npm version fails with E404 if the package was never published before)
+          node -e "
+            const fs = require('fs');
+            const root = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+            root.version = '${VERSION}';
+            fs.writeFileSync('package.json', JSON.stringify(root, null, 2) + '\n');
+          "
+          for pkg in packages/*/package.json; do
+            node -e "
+              const fs = require('fs');
+              const p = JSON.parse(fs.readFileSync('$pkg', 'utf8'));
+              p.version = '${VERSION}';
+              fs.writeFileSync('$pkg', JSON.stringify(p, null, 2) + '\n');
+            "
+          done
       - name: Update inter-package dependencies
         working-directory: js
         run: |
