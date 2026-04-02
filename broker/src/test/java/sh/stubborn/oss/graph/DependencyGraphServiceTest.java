@@ -27,6 +27,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import sh.stubborn.oss.application.ApplicationInfo;
 import sh.stubborn.oss.application.ApplicationService;
+import sh.stubborn.oss.contract.ContractService;
 import sh.stubborn.oss.environment.DeploymentInfo;
 import sh.stubborn.oss.environment.DeploymentService;
 import sh.stubborn.oss.verification.VerificationInfo;
@@ -47,6 +48,9 @@ class DependencyGraphServiceTest {
 	@Mock
 	DeploymentService deploymentService;
 
+	@Mock
+	ContractService contractService;
+
 	DependencyGraphService graphService;
 
 	UUID providerId;
@@ -56,7 +60,7 @@ class DependencyGraphServiceTest {
 	@BeforeEach
 	void setUp() {
 		this.graphService = new DependencyGraphService(this.verificationService, this.applicationService,
-				this.deploymentService);
+				this.deploymentService, this.contractService);
 		this.providerId = UUID.randomUUID();
 		this.consumerId = UUID.randomUUID();
 	}
@@ -66,6 +70,7 @@ class DependencyGraphServiceTest {
 		// given
 		given(this.applicationService.findAllInfo()).willReturn(List.of());
 		given(this.verificationService.findAllInfo()).willReturn(List.of());
+		given(this.contractService.findDistinctTopicNames()).willReturn(List.of());
 
 		// when
 		DependencyGraphResponse result = this.graphService.getGraph(null);
@@ -83,6 +88,7 @@ class DependencyGraphServiceTest {
 					new ApplicationInfo(this.consumerId, "payment-service", "team-payments")));
 		given(this.verificationService.findAllInfo()).willReturn(List.of(new VerificationInfo(this.providerId, "1.0.0",
 				this.consumerId, "2.0.0", "SUCCESS", null, Instant.parse("2026-01-15T10:00:00Z"))));
+		given(this.contractService.findDistinctTopicNames()).willReturn(List.of());
 
 		// when
 		DependencyGraphResponse result = this.graphService.getGraph(null);
@@ -125,6 +131,7 @@ class DependencyGraphServiceTest {
 						Instant.parse("2026-01-16T10:00:00Z"))));
 		given(this.deploymentService.findDeploymentInfoByEnvironment("prod")).willReturn(
 				List.of(new DeploymentInfo(this.providerId, "1.0.0"), new DeploymentInfo(this.consumerId, "2.0.0")));
+		given(this.contractService.findDistinctTopicNames()).willReturn(List.of());
 
 		// when
 		DependencyGraphResponse result = this.graphService.getGraph("prod");
@@ -182,6 +189,7 @@ class DependencyGraphServiceTest {
 			.willReturn(List.of(new ApplicationInfo(this.providerId, "order-service", "team-commerce")));
 		given(this.verificationService.findAllInfo()).willReturn(List.of(new VerificationInfo(this.providerId, "1.0.0",
 				unknownAppId, "2.0.0", "SUCCESS", null, Instant.parse("2026-01-15T10:00:00Z"))));
+		given(this.contractService.findDistinctTopicNames()).willReturn(List.of());
 
 		// when
 		DependencyGraphResponse result = this.graphService.getGraph(null);
@@ -215,6 +223,7 @@ class DependencyGraphServiceTest {
 				this.consumerId, "2.0.0", "SUCCESS", null, Instant.parse("2026-01-15T10:00:00Z"))));
 		given(this.deploymentService.findDeploymentInfoByEnvironment("prod")).willReturn(
 				List.of(new DeploymentInfo(this.providerId, "1.0.0"), new DeploymentInfo(this.consumerId, "3.0.0")));
+		given(this.contractService.findDistinctTopicNames()).willReturn(List.of());
 
 		// when
 		DependencyGraphResponse result = this.graphService.getGraph("prod");
@@ -233,6 +242,7 @@ class DependencyGraphServiceTest {
 				this.consumerId, "2.0.0", "SUCCESS", null, Instant.parse("2026-01-15T10:00:00Z"))));
 		given(this.deploymentService.findDeploymentInfoByEnvironment("prod")).willReturn(
 				List.of(new DeploymentInfo(this.providerId, "9.0.0"), new DeploymentInfo(this.consumerId, "2.0.0")));
+		given(this.contractService.findDistinctTopicNames()).willReturn(List.of());
 
 		// when
 		DependencyGraphResponse result = this.graphService.getGraph("prod");

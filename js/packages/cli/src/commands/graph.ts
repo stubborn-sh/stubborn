@@ -35,6 +35,19 @@ export function createGraphCommand(
             "table",
           ),
         );
+        if (graph.messagingEdges && graph.messagingEdges.length > 0) {
+          console.log("\nMessaging:");
+          console.log(
+            formatOutput(
+              graph.messagingEdges.map((m) => ({
+                application: m.applicationName,
+                topic: m.topicName,
+                version: m.version,
+              })),
+              "table",
+            ),
+          );
+        }
       }
     });
 

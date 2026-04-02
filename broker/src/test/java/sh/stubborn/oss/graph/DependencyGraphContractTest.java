@@ -65,7 +65,8 @@ class DependencyGraphContractTest {
 				List.of(new DependencyNode(providerId, "order-service", "team-commerce"),
 						new DependencyNode(consumerId, "payment-service", "team-payments")),
 				List.of(new DependencyEdge("order-service", "1.0.0", "payment-service", "2.0.0", "SUCCESS",
-						Instant.parse("2026-01-15T10:00:00Z"))));
+						Instant.parse("2026-01-15T10:00:00Z"))),
+				List.of());
 		given(this.dependencyGraphService.getGraph(null)).willReturn(response);
 
 		// when/then

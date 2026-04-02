@@ -17,5 +17,6 @@ package sh.stubborn.oss.graph;
 
 import java.util.List;
 
-record DependencyGraphResponse(List<DependencyNode> nodes, List<DependencyEdge> edges) {
+record DependencyGraphResponse(List<DependencyNode> nodes, List<DependencyEdge> edges,
+		List<MessagingEdge> messagingEdges) {
 }

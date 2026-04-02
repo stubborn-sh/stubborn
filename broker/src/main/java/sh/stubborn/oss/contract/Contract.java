@@ -61,6 +61,9 @@ class Contract {
 	@Column(name = "content_hash", length = 64)
 	private String contentHash;
 
+	@Column(name = "interaction_type", nullable = false, length = 20)
+	private String interactionType;
+
 	@Column(name = "created_at", nullable = false, updatable = false)
 	private Instant createdAt;
 
@@ -87,6 +90,7 @@ class Contract {
 		this.contentType = contentType;
 		this.branch = branch;
 		this.contentHash = contentHash;
+		this.interactionType = "HTTP";
 		this.createdAt = Instant.now();
 		this.updatedAt = this.createdAt;
 	}
@@ -131,6 +135,14 @@ class Contract {
 
 	String getContentHash() {
 		return this.contentHash;
+	}
+
+	String getInteractionType() {
+		return this.interactionType;
+	}
+
+	void setInteractionType(String interactionType) {
+		this.interactionType = interactionType;
 	}
 
 	Instant getCreatedAt() {

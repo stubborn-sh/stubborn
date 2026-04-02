@@ -14,6 +14,8 @@ import type {
   CanIDeployResponse,
   DependencyGraphResponse,
   ApplicationDependenciesResponse,
+  TopicTopologyResponse,
+  TopicNode,
   WebhookResponse,
   CreateWebhookRequest,
   UpdateWebhookRequest,
@@ -224,6 +226,20 @@ export class BrokerClient {
     applicationName: string,
   ): Promise<ApplicationDependenciesResponse> {
     return this.get<ApplicationDependenciesResponse>(`/graph/applications/${enc(applicationName)}`);
+  }
+
+  // ── Topics ────────────────────────────────────────────────────────────
+
+  async getTopics(): Promise<TopicTopologyResponse> {
+    return this.get<TopicTopologyResponse>("/topics");
+  }
+
+  async getTopicByName(topicName: string): Promise<TopicNode> {
+    return this.get<TopicNode>(`/topics/${enc(topicName)}`);
+  }
+
+  async getTopicsForApplication(applicationName: string): Promise<TopicTopologyResponse> {
+    return this.get<TopicTopologyResponse>(`/topics/applications/${enc(applicationName)}`);
   }
 
   // ── Webhooks ──────────────────────────────────────────────────────────

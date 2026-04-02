@@ -14,6 +14,7 @@ import { createTagCommand } from "./commands/tag.js";
 import { createWebhookCommand } from "./commands/webhook.js";
 import { createSelectorCommand } from "./commands/selector.js";
 import { createCleanupCommand } from "./commands/cleanup.js";
+import { createTopicsCommand } from "./commands/topics.js";
 
 const program = new Command()
   .name("stubborn")
@@ -78,6 +79,7 @@ program.addCommand(createTagCommand(getClient, getFormat));
 program.addCommand(createWebhookCommand(getClient, getFormat));
 program.addCommand(createSelectorCommand(getClient, getFormat));
 program.addCommand(createCleanupCommand(getClient, getFormat));
+program.addCommand(createTopicsCommand(getClient, getFormat));
 
 async function main(): Promise<void> {
   await program.parseAsync(process.argv);

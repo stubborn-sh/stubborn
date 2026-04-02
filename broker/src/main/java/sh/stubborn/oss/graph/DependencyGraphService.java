@@ -29,6 +29,8 @@ import org.jspecify.annotations.Nullable;
 import org.springframework.cache.annotation.Cacheable;
 import sh.stubborn.oss.application.ApplicationInfo;
 import sh.stubborn.oss.application.ApplicationService;
+import sh.stubborn.oss.contract.ContractService;
+import sh.stubborn.oss.contract.ContractTopicInfo;
 import sh.stubborn.oss.environment.DeploymentInfo;
 import sh.stubborn.oss.environment.DeploymentService;
 import sh.stubborn.oss.verification.VerificationInfo;
@@ -44,11 +46,14 @@ public class DependencyGraphService {
 
 	private final DeploymentService deploymentService;
 
+	private final ContractService contractService;
+
 	DependencyGraphService(VerificationService verificationService, ApplicationService applicationService,
-			DeploymentService deploymentService) {
+			DeploymentService deploymentService, ContractService contractService) {
 		this.verificationService = verificationService;
 		this.applicationService = applicationService;
 		this.deploymentService = deploymentService;
+		this.contractService = contractService;
 	}
 
 	@Observed(name = "broker.graph.query")
@@ -80,7 +85,19 @@ public class DependencyGraphService {
 			}
 			return new DependencyNode(id, "unknown", "unknown");
 		}).toList();
-		return new DependencyGraphResponse(nodes, edges);
+		List<MessagingEdge> messagingEdges = buildMessagingEdges(appsById);
+		return new DependencyGraphResponse(nodes, edges, messagingEdges);
+	}
+
+	private List<MessagingEdge> buildMessagingEdges(Map<UUID, ApplicationInfo> appsById) {
+		List<String> topicNames = this.contractService.findDistinctTopicNames();
+		return topicNames.stream()
+			.flatMap(topicName -> this.contractService.findTopicsByTopicName(topicName).stream().map(t -> {
+				ApplicationInfo app = appsById.get(t.applicationId());
+				String appName = app != null ? app.name() : "unknown";
+				return new MessagingEdge(appName, topicName, t.version());
+			}))
+			.toList();
 	}
 
 	ApplicationDependenciesResponse getApplicationDependencies(String applicationName) {

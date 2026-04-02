@@ -17,11 +17,12 @@ package sh.stubborn.oss.contract;
 
 import org.jspecify.annotations.Nullable;
 
-public record ContractInfo(String version, String contractName, @Nullable String branch, @Nullable String contentHash) {
+public record ContractInfo(String version, String contractName, @Nullable String branch, @Nullable String contentHash,
+		String interactionType) {
 
 	static ContractInfo from(Contract contract) {
 		return new ContractInfo(contract.getVersion(), contract.getContractName(), contract.getBranch(),
-				contract.getContentHash());
+				contract.getContentHash(), contract.getInteractionType());
 	}
 
 }

@@ -47,10 +47,16 @@ class ContractServiceTest {
 	ContractRepository contractRepository;
 
 	@Mock
+	ContractTopicRepository contractTopicRepository;
+
+	@Mock
 	ApplicationService applicationService;
 
 	@Mock
 	ApplicationEventPublisher eventPublisher;
+
+	@Mock
+	ContractContentAnalyzer contractContentAnalyzer;
 
 	ContractService contractService;
 
@@ -58,8 +64,8 @@ class ContractServiceTest {
 
 	@BeforeEach
 	void setUp() {
-		this.contractService = new ContractService(this.contractRepository, this.applicationService,
-				this.eventPublisher);
+		this.contractService = new ContractService(this.contractRepository, this.contractTopicRepository,
+				this.applicationService, this.eventPublisher, this.contractContentAnalyzer);
 		this.applicationId = UUID.randomUUID();
 	}
 
@@ -71,6 +77,7 @@ class ContractServiceTest {
 				eq("1.0.0"), eq("create-order")))
 			.willReturn(false);
 		given(this.contractRepository.save(any(Contract.class))).willAnswer(invocation -> invocation.getArgument(0));
+		given(this.contractContentAnalyzer.analyze(any(), any())).willReturn(ContractAnalysis.HTTP_DEFAULT);
 
 		// when
 		Contract result = this.contractService.publish("order-service", "1.0.0", "create-order", "request: {}",
@@ -171,6 +178,7 @@ class ContractServiceTest {
 				eq("1.0.0"), eq("create-order")))
 			.willReturn(false);
 		given(this.contractRepository.save(any(Contract.class))).willAnswer(invocation -> invocation.getArgument(0));
+		given(this.contractContentAnalyzer.analyze(any(), any())).willReturn(ContractAnalysis.HTTP_DEFAULT);
 
 		// when
 		Contract result = this.contractService.publish("order-service", "1.0.0", "create-order", "request: {}",
@@ -198,6 +206,7 @@ class ContractServiceTest {
 				eq("1.0.0"), eq("create-order")))
 			.willReturn(false);
 		given(this.contractRepository.save(any(Contract.class))).willAnswer(invocation -> invocation.getArgument(0));
+		given(this.contractContentAnalyzer.analyze(any(), any())).willReturn(ContractAnalysis.HTTP_DEFAULT);
 
 		// when
 		Contract result = this.contractService.publish("order-service", "1.0.0", "create-order", "request: {}",
@@ -353,6 +362,7 @@ class ContractServiceTest {
 			.willReturn(false);
 		given(this.contractRepository.save(any(Contract.class)))
 			.willThrow(new DataIntegrityViolationException("unique constraint violation"));
+		given(this.contractContentAnalyzer.analyze(any(), any())).willReturn(ContractAnalysis.HTTP_DEFAULT);
 
 		// when/then — should get 409 ContractAlreadyExistsException, not 500
 		assertThatThrownBy(() -> this.contractService.publish("order-service", "1.0.0", "create-order", "content",

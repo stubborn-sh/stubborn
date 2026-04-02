@@ -43,6 +43,7 @@ import sh.stubborn.oss.mavenimport.MavenStubsDiscoveryService;
 import sh.stubborn.oss.audit.AuditService;
 import sh.stubborn.oss.spi.BrokerLicenseChecker;
 import sh.stubborn.oss.tag.TagService;
+import sh.stubborn.oss.topic.TopicTopologyService;
 import sh.stubborn.oss.webhook.WebhookService;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -141,6 +142,10 @@ class SecurityContractTest {
 	@SuppressWarnings("unused")
 	@MockitoBean
 	AuditService auditService;
+
+	@SuppressWarnings("unused")
+	@MockitoBean
+	TopicTopologyService topicTopologyService;
 
 	@Test
 	void should_return_401_when_not_authenticated() throws Exception {

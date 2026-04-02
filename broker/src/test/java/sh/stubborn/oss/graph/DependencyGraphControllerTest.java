@@ -61,7 +61,7 @@ class DependencyGraphControllerTest {
 		DependencyEdge edge = new DependencyEdge("order-service", "1.0.0", "payment-service", "2.0.0", "SUCCESS",
 				Instant.parse("2026-01-15T10:30:00Z"));
 		given(this.dependencyGraphService.getGraph(null))
-			.willReturn(new DependencyGraphResponse(List.of(node1, node2), List.of(edge)));
+			.willReturn(new DependencyGraphResponse(List.of(node1, node2), List.of(edge), List.of()));
 
 		// when/then
 		this.mockMvc.perform(get("/api/v1/graph"))
@@ -77,7 +77,8 @@ class DependencyGraphControllerTest {
 	@Test
 	void should_return_empty_graph_when_no_verifications() throws Exception {
 		// given
-		given(this.dependencyGraphService.getGraph(null)).willReturn(new DependencyGraphResponse(List.of(), List.of()));
+		given(this.dependencyGraphService.getGraph(null))
+			.willReturn(new DependencyGraphResponse(List.of(), List.of(), List.of()));
 
 		// when/then
 		this.mockMvc.perform(get("/api/v1/graph"))
@@ -92,7 +93,7 @@ class DependencyGraphControllerTest {
 		UUID appId = UUID.randomUUID();
 		DependencyNode node = new DependencyNode(appId, "order-service", "team-commerce");
 		given(this.dependencyGraphService.getGraph("production"))
-			.willReturn(new DependencyGraphResponse(List.of(node), List.of()));
+			.willReturn(new DependencyGraphResponse(List.of(node), List.of(), List.of()));
 
 		// when/then
 		this.mockMvc.perform(get("/api/v1/graph").param("environment", "production"))

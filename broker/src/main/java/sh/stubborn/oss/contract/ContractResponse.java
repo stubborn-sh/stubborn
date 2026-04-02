@@ -21,12 +21,12 @@ import java.util.UUID;
 import org.jspecify.annotations.Nullable;
 
 record ContractResponse(UUID id, String version, String contractName, String content, String contentType,
-		@Nullable String branch, @Nullable String contentHash, Instant createdAt) {
+		@Nullable String branch, @Nullable String contentHash, String interactionType, Instant createdAt) {
 
 	static ContractResponse from(Contract contract) {
 		return new ContractResponse(contract.getId(), contract.getVersion(), contract.getContractName(),
 				contract.getContent(), contract.getContentType(), contract.getBranch(), contract.getContentHash(),
-				contract.getCreatedAt());
+				contract.getInteractionType(), contract.getCreatedAt());
 	}
 
 }

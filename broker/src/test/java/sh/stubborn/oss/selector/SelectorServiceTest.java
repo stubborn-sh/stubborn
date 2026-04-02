@@ -63,7 +63,7 @@ class SelectorServiceTest {
 			.willReturn(List.of(new ApplicationInfo(this.appId, "order-service", "team-commerce")));
 		given(this.applicationService.findMainBranchByName("order-service")).willReturn("main");
 		given(this.contractService.findInfoByApplicationAndBranch("order-service", "main"))
-			.willReturn(List.of(new ContractInfo("1.0.0", "get-orders", "main", "abc123")));
+			.willReturn(List.of(new ContractInfo("1.0.0", "get-orders", "main", "abc123", "HTTP")));
 
 		// when
 		List<ResolvedContract> result = this.selectorService
@@ -81,7 +81,7 @@ class SelectorServiceTest {
 	void should_resolve_branch_with_consumer_selector() {
 		// given
 		given(this.contractService.findInfoByApplicationAndBranch("payment-service", "feat/refund"))
-			.willReturn(List.of(new ContractInfo("2.0.0", "process-refund", "feat/refund", "def456")));
+			.willReturn(List.of(new ContractInfo("2.0.0", "process-refund", "feat/refund", "def456", "HTTP")));
 
 		// when
 		List<ResolvedContract> result = this.selectorService
@@ -99,7 +99,7 @@ class SelectorServiceTest {
 		given(this.applicationService.findAllInfo())
 			.willReturn(List.of(new ApplicationInfo(this.appId, "order-service", "team-commerce")));
 		given(this.contractService.findInfoByApplicationAndBranch("order-service", "develop"))
-			.willReturn(List.of(new ContractInfo("3.0.0", "list-orders", "develop", "ghi789")));
+			.willReturn(List.of(new ContractInfo("3.0.0", "list-orders", "develop", "ghi789", "HTTP")));
 
 		// when
 		List<ResolvedContract> result = this.selectorService
@@ -117,7 +117,7 @@ class SelectorServiceTest {
 			.willReturn(List.of(new DeploymentInfo(this.appId, "1.5.0")));
 		given(this.applicationService.findNameById(this.appId)).willReturn("order-service");
 		given(this.contractService.findInfoByApplicationAndVersion("order-service", "1.5.0"))
-			.willReturn(List.of(new ContractInfo("1.5.0", "get-order", "main", "jkl012")));
+			.willReturn(List.of(new ContractInfo("1.5.0", "get-order", "main", "jkl012", "HTTP")));
 
 		// when
 		List<ResolvedContract> result = this.selectorService
@@ -134,7 +134,7 @@ class SelectorServiceTest {
 		// given
 		given(this.applicationService.findMainBranchByName("payment-service")).willReturn("main");
 		given(this.contractService.findInfoByApplicationAndBranch("payment-service", "main"))
-			.willReturn(List.of(new ContractInfo("1.0.0", "pay", "main", "mno345")));
+			.willReturn(List.of(new ContractInfo("1.0.0", "pay", "main", "mno345", "HTTP")));
 
 		// when
 		List<ResolvedContract> result = this.selectorService
@@ -150,7 +150,7 @@ class SelectorServiceTest {
 		// given
 		given(this.applicationService.findMainBranchByName("order-service")).willReturn("main");
 		given(this.contractService.findInfoByApplicationAndBranch("order-service", "main"))
-			.willReturn(List.of(new ContractInfo("1.0.0", "get-orders", "main", "abc123")));
+			.willReturn(List.of(new ContractInfo("1.0.0", "get-orders", "main", "abc123", "HTTP")));
 
 		// when — two selectors that both resolve the same contract
 		List<ResolvedContract> result = this.selectorService
@@ -178,7 +178,7 @@ class SelectorServiceTest {
 			.willReturn(List.of(new ApplicationInfo(this.appId, "order-service", "team-commerce")));
 		given(this.applicationService.findMainBranchByName("order-service")).willReturn("main");
 		given(this.contractService.findInfoByApplicationAndBranch("order-service", "main"))
-			.willReturn(List.of(new ContractInfo("1.0.0", "get-orders", "main", "abc123")));
+			.willReturn(List.of(new ContractInfo("1.0.0", "get-orders", "main", "abc123", "HTTP")));
 
 		// when
 		List<ResolvedContract> result = this.selectorService

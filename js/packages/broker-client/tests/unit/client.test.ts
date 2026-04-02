@@ -294,6 +294,62 @@ describe("BrokerClient", () => {
     });
   });
 
+  // ── Topics ──────────────────────────────────────────────────────────
+
+  describe("topics", () => {
+    it("should_get_all_topics", async () => {
+      const topology = {
+        topics: [
+          {
+            topicName: "verifications",
+            publishers: [{ applicationName: "order-service", version: "1.0.0", topicName: "verifications" }],
+          },
+        ],
+      };
+      const fetchFn = mockFetch(200, topology);
+      const result = await client(fetchFn).getTopics();
+      expect(result).toEqual(topology);
+      const url = (fetchFn as ReturnType<typeof vi.fn>).mock.calls[0]?.[0] as string;
+      expect(url).toContain("/api/v1/topics");
+      expect(url).not.toContain("/applications/");
+    });
+
+    it("should_get_topic_by_name", async () => {
+      const topic = {
+        topicName: "verifications",
+        publishers: [{ applicationName: "order-service", version: "1.0.0", topicName: "verifications" }],
+      };
+      const fetchFn = mockFetch(200, topic);
+      const result = await client(fetchFn).getTopicByName("verifications");
+      expect(result).toEqual(topic);
+      const url = (fetchFn as ReturnType<typeof vi.fn>).mock.calls[0]?.[0] as string;
+      expect(url).toContain("/api/v1/topics/verifications");
+    });
+
+    it("should_get_topics_for_application", async () => {
+      const topology = {
+        topics: [
+          {
+            topicName: "orders",
+            publishers: [{ applicationName: "order-service", version: "1.0.0", topicName: "orders" }],
+          },
+        ],
+      };
+      const fetchFn = mockFetch(200, topology);
+      const result = await client(fetchFn).getTopicsForApplication("order-service");
+      expect(result).toEqual(topology);
+      const url = (fetchFn as ReturnType<typeof vi.fn>).mock.calls[0]?.[0] as string;
+      expect(url).toContain("/api/v1/topics/applications/order-service");
+    });
+
+    it("should_encode_topic_name_with_special_chars", async () => {
+      const fetchFn = mockFetch(200, { topicName: "my/topic", publishers: [] });
+      await client(fetchFn).getTopicByName("my/topic");
+      const url = (fetchFn as ReturnType<typeof vi.fn>).mock.calls[0]?.[0] as string;
+      expect(url).toContain("my%2Ftopic");
+    });
+  });
+
   // ── Webhooks ────────────────────────────────────────────────────────
 
   describe("webhooks", () => {

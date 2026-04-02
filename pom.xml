@@ -44,6 +44,8 @@
 		<module>broker-maven-plugin</module>
 		<module>broker-gradle-plugin</module>
 		<module>stub-runner</module>
+		<module>stubborn-messaging-kafka</module>
+		<module>stubborn-messaging-rabbit</module>
 		<module>e2e-tests</module>
 	</modules>
 

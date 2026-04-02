@@ -29,6 +29,7 @@ export interface ContractResponse {
   readonly contractName: string;
   readonly content: string;
   readonly contentType: string;
+  readonly interactionType?: string;
   readonly createdAt: string;
 }
 
@@ -138,10 +139,36 @@ export interface DependencyEdge {
   readonly verifiedAt: string;
 }
 
+/** Messaging edge in the dependency graph. */
+export interface MessagingEdge {
+  readonly applicationName: string;
+  readonly topicName: string;
+  readonly version: string;
+}
+
 /** Full dependency graph. */
 export interface DependencyGraphResponse {
   readonly nodes: readonly DependencyNode[];
   readonly edges: readonly DependencyEdge[];
+  readonly messagingEdges?: readonly MessagingEdge[];
+}
+
+/** Topic participant (an application that publishes to a topic). */
+export interface TopicParticipant {
+  readonly applicationName: string;
+  readonly version: string;
+  readonly topicName: string;
+}
+
+/** Topic node in the topology. */
+export interface TopicNode {
+  readonly topicName: string;
+  readonly publishers: readonly TopicParticipant[];
+}
+
+/** Topic topology response. */
+export interface TopicTopologyResponse {
+  readonly topics: readonly TopicNode[];
 }
 
 /** Application-specific dependencies. */

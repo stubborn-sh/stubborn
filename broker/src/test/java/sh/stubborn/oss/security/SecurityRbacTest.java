@@ -42,6 +42,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import sh.stubborn.oss.audit.AuditService;
+import sh.stubborn.oss.topic.TopicTopologyService;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
@@ -136,6 +137,10 @@ class SecurityRbacTest {
 	@SuppressWarnings("unused")
 	@MockitoBean
 	AuditService auditService;
+
+	@SuppressWarnings("unused")
+	@MockitoBean
+	TopicTopologyService topicTopologyService;
 
 	// --- READER role ---
 

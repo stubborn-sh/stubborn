@@ -63,9 +63,9 @@ class CleanupServiceTest {
 		given(this.applicationService.findOwnerById(this.appId)).willReturn("team-commerce");
 		given(this.applicationService.findMainBranchByName("order-service")).willReturn("main");
 		given(this.contractService.findInfoByApplicationAndBranch("order-service", "main"))
-			.willReturn(List.of(new ContractInfo("3.0.0", "get-orders", "main", "hash3"),
-					new ContractInfo("2.0.0", "get-orders", "main", "hash2"),
-					new ContractInfo("1.0.0", "get-orders", "main", "hash1")));
+			.willReturn(List.of(new ContractInfo("3.0.0", "get-orders", "main", "hash3", "HTTP"),
+					new ContractInfo("2.0.0", "get-orders", "main", "hash2", "HTTP"),
+					new ContractInfo("1.0.0", "get-orders", "main", "hash1", "HTTP")));
 
 		// when — keep 2 latest, no protected environments
 		CleanupResult result = this.cleanupService.cleanup("order-service", 2, List.of());
@@ -83,8 +83,8 @@ class CleanupServiceTest {
 		given(this.applicationService.findMainBranchByName("order-service")).willReturn("main");
 		given(this.applicationService.findNameById(this.appId)).willReturn("order-service");
 		given(this.contractService.findInfoByApplicationAndBranch("order-service", "main"))
-			.willReturn(List.of(new ContractInfo("2.0.0", "get-orders", "main", "hash2"),
-					new ContractInfo("1.0.0", "get-orders", "main", "hash1")));
+			.willReturn(List.of(new ContractInfo("2.0.0", "get-orders", "main", "hash2", "HTTP"),
+					new ContractInfo("1.0.0", "get-orders", "main", "hash1", "HTTP")));
 		given(this.deploymentService.findDeploymentInfoByEnvironment("prod"))
 			.willReturn(List.of(new DeploymentInfo(this.appId, "1.0.0")));
 
@@ -102,8 +102,8 @@ class CleanupServiceTest {
 			.willReturn(List.of(new ApplicationInfo(this.appId, "order-service", "team-commerce")));
 		given(this.applicationService.findMainBranchByName("order-service")).willReturn("main");
 		given(this.contractService.findInfoByApplicationAndBranch("order-service", "main"))
-			.willReturn(List.of(new ContractInfo("2.0.0", "get-orders", "main", "hash2"),
-					new ContractInfo("1.0.0", "get-orders", "main", "hash1")));
+			.willReturn(List.of(new ContractInfo("2.0.0", "get-orders", "main", "hash2", "HTTP"),
+					new ContractInfo("1.0.0", "get-orders", "main", "hash1", "HTTP")));
 
 		// when
 		CleanupResult result = this.cleanupService.cleanup(null, 1, List.of());
@@ -119,7 +119,7 @@ class CleanupServiceTest {
 		given(this.applicationService.findOwnerById(this.appId)).willReturn("team-commerce");
 		given(this.applicationService.findMainBranchByName("order-service")).willReturn("main");
 		given(this.contractService.findInfoByApplicationAndBranch("order-service", "main"))
-			.willReturn(List.of(new ContractInfo("1.0.0", "get-orders", "main", "hash1")));
+			.willReturn(List.of(new ContractInfo("1.0.0", "get-orders", "main", "hash1", "HTTP")));
 
 		// when — keep 5 latest, only 1 exists
 		CleanupResult result = this.cleanupService.cleanup("order-service", 5, List.of());

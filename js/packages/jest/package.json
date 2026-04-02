@@ -1,6 +1,6 @@
 {
   "name": "@stubborn-sh/jest",
-  "version": "0.1.0",
+  "version": "0.0.4",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -11,7 +11,9 @@
       "require": "./dist/index.cjs"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup",
     "typecheck": "tsc --noEmit"
@@ -20,9 +22,9 @@
     "access": "public"
   },
   "dependencies": {
-    "@stubborn-sh/broker-client": "0.1.0",
-    "@stubborn-sh/stub-server": "0.1.0",
-    "@stubborn-sh/verifier": "0.1.0"
+    "@stubborn-sh/broker-client": "0.0.4",
+    "@stubborn-sh/stub-server": "0.0.4",
+    "@stubborn-sh/verifier": "0.0.4"
   },
   "devDependencies": {
     "tsup": "^8.4.0"

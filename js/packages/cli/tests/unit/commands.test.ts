@@ -6,6 +6,7 @@ import { createCanIDeployCommand } from "../../src/commands/can-i-deploy.js";
 import { createEnvCommand } from "../../src/commands/env.js";
 import { createVerifyCommand } from "../../src/commands/verify.js";
 import { createDeployCommand } from "../../src/commands/deploy.js";
+import { createTopicsCommand } from "../../src/commands/topics.js";
 import { Command } from "commander";
 
 function mockClient(): BrokerClient {
@@ -57,6 +58,26 @@ function mockClient(): BrokerClient {
       size: 20,
       totalElements: 1,
       totalPages: 1,
+    }),
+    getTopics: vi.fn().mockResolvedValue({
+      topics: [
+        {
+          topicName: "verifications",
+          publishers: [{ applicationName: "order-service", version: "1.0.0", topicName: "verifications" }],
+        },
+      ],
+    }),
+    getTopicByName: vi.fn().mockResolvedValue({
+      topicName: "verifications",
+      publishers: [{ applicationName: "order-service", version: "1.0.0", topicName: "verifications" }],
+    }),
+    getTopicsForApplication: vi.fn().mockResolvedValue({
+      topics: [
+        {
+          topicName: "verifications",
+          publishers: [{ applicationName: "order-service", version: "1.0.0", topicName: "verifications" }],
+        },
+      ],
     }),
   } as unknown as BrokerClient;
 }
@@ -241,6 +262,35 @@ describe("CLI commands", () => {
           version: "1.0",
         }),
       );
+    });
+  });
+
+  describe("topics command", () => {
+    it("should_list_all_topics", async () => {
+      const program = new Command().exitOverride();
+      program.addCommand(createTopicsCommand(getClient, getFormat));
+      await program.parseAsync(["node", "test", "topics", "list"]);
+
+      expect(client.getTopics).toHaveBeenCalled();
+      expect(consoleSpy).toHaveBeenCalled();
+    });
+
+    it("should_show_single_topic", async () => {
+      const program = new Command().exitOverride();
+      program.addCommand(createTopicsCommand(getClient, getFormat));
+      await program.parseAsync(["node", "test", "topics", "show", "verifications"]);
+
+      expect(client.getTopicByName).toHaveBeenCalledWith("verifications");
+      expect(consoleSpy).toHaveBeenCalled();
+    });
+
+    it("should_show_topics_for_application", async () => {
+      const program = new Command().exitOverride();
+      program.addCommand(createTopicsCommand(getClient, getFormat));
+      await program.parseAsync(["node", "test", "topics", "app", "order-service"]);
+
+      expect(client.getTopicsForApplication).toHaveBeenCalledWith("order-service");
+      expect(consoleSpy).toHaveBeenCalled();
     });
   });
 });

@@ -1,6 +1,6 @@
 {
   "name": "@stubborn-sh/stubs-packager",
-  "version": "0.1.0",
+  "version": "0.0.4",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -11,7 +11,9 @@
       "require": "./dist/index.cjs"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup",
     "typecheck": "tsc --noEmit"
@@ -20,7 +22,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@stubborn-sh/publisher": "0.1.0",
+    "@stubborn-sh/publisher": "0.0.4",
     "archiver": "^7.0.0",
     "js-yaml": "^4.1.0"
   },

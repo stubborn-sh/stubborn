@@ -42,15 +42,22 @@ public class ContractService {
 
 	private final ContractRepository contractRepository;
 
+	private final ContractTopicRepository contractTopicRepository;
+
 	private final ApplicationService applicationService;
 
 	private final ApplicationEventPublisher eventPublisher;
 
-	ContractService(ContractRepository contractRepository, ApplicationService applicationService,
-			ApplicationEventPublisher eventPublisher) {
+	private final ContractContentAnalyzer contentAnalyzer;
+
+	ContractService(ContractRepository contractRepository, ContractTopicRepository contractTopicRepository,
+			ApplicationService applicationService, ApplicationEventPublisher eventPublisher,
+			ContractContentAnalyzer contentAnalyzer) {
 		this.contractRepository = contractRepository;
+		this.contractTopicRepository = contractTopicRepository;
 		this.applicationService = applicationService;
 		this.eventPublisher = eventPublisher;
+		this.contentAnalyzer = contentAnalyzer;
 	}
 
 	@CircuitBreaker(name = "database")
@@ -71,12 +78,18 @@ public class ContractService {
 		String contentHash = computeContentHash(content);
 		Contract contract = Contract.create(applicationId, version, contractName, content, contentType, branch,
 				contentHash);
+		ContractAnalysis analysis = this.contentAnalyzer.analyze(content, contentType);
+		contract.setInteractionType(analysis.interactionType().name());
 		Contract saved;
 		try {
 			saved = this.contractRepository.save(contract);
 		}
 		catch (DataIntegrityViolationException ex) {
 			throw new ContractAlreadyExistsException(applicationName, version, contractName, ex);
+		}
+		for (TopicReference topic : analysis.topics()) {
+			this.contractTopicRepository
+				.save(ContractTopic.create(saved.getId(), applicationId, version, topic.topicName()));
 		}
 		this.eventPublisher
 			.publishEvent(BrokerEvent.contractPublished(applicationId, applicationName, version, contractName));
@@ -132,6 +145,26 @@ public class ContractService {
 	public List<String> findVersionsByApplicationName(String applicationName) {
 		UUID applicationId = this.applicationService.findIdByName(applicationName);
 		return this.contractRepository.findDistinctVersionsByApplicationId(applicationId);
+	}
+
+	public List<String> findDistinctTopicNames() {
+		return this.contractTopicRepository.findDistinctTopicNames();
+	}
+
+	public List<ContractTopicInfo> findTopicsByTopicName(String topicName) {
+		return this.contractTopicRepository.findByTopicName(topicName).stream().map(ContractTopicInfo::from).toList();
+	}
+
+	public List<ContractTopicInfo> findTopicsByApplicationId(UUID applicationId) {
+		return this.contractTopicRepository.findByApplicationId(applicationId)
+			.stream()
+			.map(ContractTopicInfo::from)
+			.toList();
+	}
+
+	public List<ContractTopicInfo> findTopicsByApplicationName(String applicationName) {
+		UUID applicationId = this.applicationService.findIdByName(applicationName);
+		return findTopicsByApplicationId(applicationId);
 	}
 
 	@Transactional
