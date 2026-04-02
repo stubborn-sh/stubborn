@@ -19,7 +19,6 @@
 		<e2e.excludedGroups>quarantine,chaos,ui-e2e</e2e.excludedGroups>
 		<maven.deploy.skip>true</maven.deploy.skip>
 		<maven.install.skip>true</maven.install.skip>
-		<central.publishing.enabled>false</central.publishing.enabled>
 	</properties>
 
 	<dependencies>
@@ -149,6 +148,15 @@
 					<fork>false</fork>
 					<compilerArgs combine.self="override"/>
 					<annotationProcessorPaths combine.self="override"/>
+				</configuration>
+			</plugin>
+
+			<!-- Skip Central publishing for test-only module -->
+			<plugin>
+				<groupId>org.sonatype.central</groupId>
+				<artifactId>central-publishing-maven-plugin</artifactId>
+				<configuration>
+					<skipPublishing>true</skipPublishing>
 				</configuration>
 			</plugin>
 		</plugins>
