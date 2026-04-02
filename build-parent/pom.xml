@@ -13,7 +13,7 @@
 
 	<groupId>sh.stubborn</groupId>
 	<artifactId>stubborn-build-parent</artifactId>
-	<version>0.0.4-SNAPSHOT</version>
+	<version>0.1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Stubborn Build Parent</name>
 	<description>Shared build configuration for all Stubborn modules</description>
