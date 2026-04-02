@@ -67,6 +67,6 @@ jobs:
         run: npm run test:ci
       - name: Publish
         working-directory: js
-        run: npm publish --workspaces --access public --provenance
+        run: npm publish --workspaces --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
