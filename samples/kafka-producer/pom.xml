@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>sh.stubborn</groupId>
+		<artifactId>stubborn-samples</artifactId>
+		<version>0.1.0-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>sample-kafka-producer</artifactId>
+
+	<name>Sample Kafka Producer (Verification Service)</name>
+	<description>Messaging contract testing — producer publishes verification results to Kafka</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-kafka</artifactId>
+		</dependency>
+
+		<!-- Test -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-contract-verifier</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>sh.stubborn</groupId>
+			<artifactId>stubborn-messaging-kafka</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.kafka</groupId>
+			<artifactId>spring-kafka-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>testcontainers-kafka</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-testcontainers</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<!-- Spring Cloud Contract Maven Plugin — generates tests from messaging contracts -->
+			<plugin>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-contract-maven-plugin</artifactId>
+				<version>${spring-cloud-contract.version}</version>
+				<extensions>true</extensions>
+				<configuration>
+					<baseClassForTests>org.example.verification.VerificationContractBase</baseClassForTests>
+					<testMode>EXPLICIT</testMode>
+				</configuration>
+			</plugin>
+
+			<!-- Broker Maven Plugin — publishes contracts to the broker -->
+			<plugin>
+				<groupId>sh.stubborn</groupId>
+				<artifactId>stubborn-maven-plugin</artifactId>
+				<version>${project.version}</version>
+				<executions>
+					<execution>
+						<id>publish-contracts</id>
+						<phase>pre-integration-test</phase>
+						<goals>
+							<goal>publish</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<brokerUrl>http://localhost:18080</brokerUrl>
+					<applicationName>verification-service</applicationName>
+					<applicationVersion>1.0.0</applicationVersion>
+					<description>Sample Verification Service (Kafka)</description>
+					<owner>sample-team</owner>
+					<skip>${compose.skip}</skip>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<includes>
+						<include>**/*Test.java</include>
+					</includes>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

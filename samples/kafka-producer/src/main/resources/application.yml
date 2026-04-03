@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: verification-service
+  kafka:
+    producer:
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer

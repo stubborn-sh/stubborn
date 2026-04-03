@@ -1,0 +1,2 @@
+sh.stubborn.messaging.kafka.StubbornKafkaAutoConfiguration
+sh.stubborn.messaging.kafka.StubbornKafkaContainerConfiguration

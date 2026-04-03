@@ -21,6 +21,10 @@
 		<module>maven-consumer</module>
 		<module>proxy-producer</module>
 		<module>proxy-consumer</module>
+		<module>kafka-producer</module>
+		<module>kafka-consumer</module>
+		<module>rabbit-producer</module>
+		<module>rabbit-consumer</module>
 	</modules>
 
 	<properties>

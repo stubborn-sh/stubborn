@@ -18,6 +18,7 @@ package sh.stubborn.messaging.rabbit;
 import org.testcontainers.containers.RabbitMQContainer;
 
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
@@ -29,6 +30,7 @@ import org.springframework.context.annotation.Bean;
  */
 @AutoConfiguration
 @ConditionalOnClass(RabbitMQContainer.class)
+@AutoConfigureAfter(StubbornRabbitAutoConfiguration.class)
 public class StubbornRabbitContainerConfiguration {
 
 	@Bean

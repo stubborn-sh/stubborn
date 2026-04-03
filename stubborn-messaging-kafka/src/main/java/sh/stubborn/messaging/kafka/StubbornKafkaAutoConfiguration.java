@@ -16,11 +16,14 @@
 package sh.stubborn.messaging.kafka;
 
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.contract.verifier.messaging.MessageVerifierReceiver;
 import org.springframework.cloud.contract.verifier.messaging.MessageVerifierSender;
+import org.springframework.cloud.contract.verifier.messaging.integration.ContractVerifierIntegrationConfiguration;
+import org.springframework.cloud.contract.verifier.messaging.noop.NoOpContractVerifierAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.kafka.core.KafkaTemplate;
 
@@ -29,9 +32,14 @@ import org.springframework.kafka.core.KafkaTemplate;
  * {@link KafkaTemplate} is on the classpath and provides a
  * {@link StubbornKafkaMessageVerifier} that implements both {@link MessageVerifierSender}
  * and {@link MessageVerifierReceiver}.
+ *
+ * <p>
+ * Configured to run before SCC's built-in messaging integrations so that the Kafka
+ * verifier takes precedence when Kafka is on the classpath.
  */
 @AutoConfiguration
 @ConditionalOnClass(KafkaTemplate.class)
+@AutoConfigureBefore({ ContractVerifierIntegrationConfiguration.class, NoOpContractVerifierAutoConfiguration.class })
 @EnableConfigurationProperties(StubbornKafkaProperties.class)
 public class StubbornKafkaAutoConfiguration {
 

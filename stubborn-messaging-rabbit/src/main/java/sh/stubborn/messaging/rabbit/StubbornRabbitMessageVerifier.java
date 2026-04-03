@@ -75,7 +75,15 @@ class StubbornRabbitMessageVerifier implements MessageVerifierSender<Message<?>>
 		if (amqpMessage != null) {
 			Object body = this.rabbitTemplate.getMessageConverter().fromMessage(amqpMessage);
 			log.info("Received message from '{}': {}", destination, body);
-			return MessageBuilder.withPayload(body).build();
+			var builder = MessageBuilder.withPayload(body);
+			String contentType = amqpMessage.getMessageProperties().getContentType();
+			if (contentType != null) {
+				builder.setHeader("contentType", contentType);
+			}
+			else {
+				builder.setHeaderIfAbsent("contentType", "application/json");
+			}
+			return builder.build();
 		}
 		log.warn("No message received from '{}' within {}ms", destination, timeoutMs);
 		return null;

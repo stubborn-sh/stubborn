@@ -70,18 +70,25 @@ class StubbornKafkaMessageVerifier implements MessageVerifierSender<Message<?>>,
 	@Override
 	public @Nullable Message<?> receive(String destination, long timeout, TimeUnit timeUnit,
 			@Nullable YamlContract contract) {
-		Duration pollDuration = Duration.ofMillis(timeUnit.toMillis(timeout));
-		log.info("Receiving message from Kafka topic '{}' with timeout {}", destination, pollDuration);
+		long totalMs = timeUnit.toMillis(timeout);
+		log.info("Receiving message from Kafka topic '{}' with timeout {}ms", destination, totalMs);
 		Properties consumerProps = buildConsumerProperties();
 		try (KafkaConsumer<String, Object> consumer = new KafkaConsumer<>(consumerProps)) {
 			consumer.subscribe(Collections.singletonList(destination));
-			ConsumerRecords<String, Object> records = consumer.poll(pollDuration);
-			for (ConsumerRecord<String, Object> record : records) {
-				log.info("Received message from '{}': {}", destination, record.value());
-				return MessageBuilder.withPayload(record.value()).build();
+			long deadline = System.currentTimeMillis() + totalMs;
+			while (System.currentTimeMillis() < deadline) {
+				long remaining = Math.max(deadline - System.currentTimeMillis(), 100);
+				ConsumerRecords<String, Object> records = consumer.poll(Duration.ofMillis(remaining));
+				for (ConsumerRecord<String, Object> record : records) {
+					log.info("Received message from '{}': {}", destination, record.value());
+					var builder = MessageBuilder.withPayload(record.value());
+					record.headers().forEach((header) -> builder.setHeader(header.key(), new String(header.value())));
+					builder.setHeaderIfAbsent("contentType", "application/json");
+					return builder.build();
+				}
 			}
 		}
-		log.warn("No message received from '{}' within {}", destination, pollDuration);
+		log.warn("No message received from '{}' within {}ms", destination, totalMs);
 		return null;
 	}
 
@@ -91,10 +98,11 @@ class StubbornKafkaMessageVerifier implements MessageVerifierSender<Message<?>>,
 	}
 
 	private Properties buildConsumerProperties() {
-		String bootstrapServers = this.kafkaTemplate.getProducerFactory()
+		Object bootstrapValue = this.kafkaTemplate.getProducerFactory()
 			.getConfigurationProperties()
-			.getOrDefault("bootstrap.servers", "localhost:9092")
-			.toString();
+			.getOrDefault("bootstrap.servers", "localhost:9092");
+		String bootstrapServers = (bootstrapValue instanceof java.util.Collection<?> col)
+				? String.join(",", col.stream().map(Object::toString).toList()) : bootstrapValue.toString();
 		Properties props = new Properties();
 		props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
 		props.put(ConsumerConfig.GROUP_ID_CONFIG, "stubborn-verifier-" + System.nanoTime());
