@@ -4,6 +4,10 @@ status: implemented
 tests:
   - js/packages/broker-client/tests/unit/client.test.ts
   - js/packages/cli/tests/unit/topics.test.ts
+  - js/packages/messaging/tests/unit/contract-parser.test.ts
+  - js/packages/messaging/tests/unit/message-stub.test.ts
+  - js/packages/messaging-kafka/tests/unit/kafka-sender.test.ts
+  - js/packages/messaging-rabbit/tests/unit/rabbit-sender.test.ts
 ---
 
 # npm SDK — Messaging Support
@@ -52,12 +56,40 @@ The npm SDK must surface this data so JavaScript/TypeScript users can:
 - `DependencyGraphResponse` type has `messagingEdges` field
 - CLI `graph show` displays messaging edges when present
 
-## Out of Scope
+### AC-5: `@stubborn-sh/messaging` core package
 
-- `@stubborn-sh/messaging` core abstractions (Phase 2 future)
-- `@stubborn-sh/messaging-kafka` / `messaging-rabbit` packages (Phase 2 future)
-- Contract content parsing in JS (broker handles this server-side)
+- `MessageSender` interface — JS equivalent of SCC's `MessageVerifierSender`
+- `MessageReceiver` interface — JS equivalent of SCC's `MessageVerifierReceiver`
+- `ReceivedMessage` type with destination, payload, headers
+- `MessagingContract` type parsed from YAML contracts
+- `isMessagingContract(yaml)` — detects messaging vs HTTP contracts
+- `parseMessagingContract(name, yaml)` — parses `outputMessage.sentTo` / `input.messageFrom`
+- `MessageStub` — in-memory sender/receiver for unit tests
+
+### AC-6: `@stubborn-sh/messaging-kafka` package
+
+- `KafkaSender` — `MessageSender` impl using kafkajs Producer
+- `KafkaReceiver` — `MessageReceiver` impl using kafkajs Consumer
+- `startKafkaContainer()` — Testcontainers KafkaContainer setup
+- `setupKafkaStubs(config)` / `teardownKafkaStubs()` — drop-in test setup
+- `KafkaStubContext.trigger(label)` — triggers a contract by label
+
+### AC-7: `@stubborn-sh/messaging-rabbit` package
+
+- `RabbitSender` — `MessageSender` impl using amqplib
+- `RabbitReceiver` — `MessageReceiver` impl using amqplib
+- `startRabbitContainer()` — Testcontainers RabbitMQContainer setup
+- `setupRabbitStubs(config)` / `teardownRabbitStubs()` — drop-in test setup
+- `RabbitStubContext.trigger(label)` — triggers a contract by label
+
+### AC-8: JS Kafka samples
+
+- `samples/js-kafka-producer/` — Node.js service publishing to Kafka
+- `samples/js-kafka-consumer/` — Node.js service consuming from Kafka
+- Messaging contracts in YAML format matching Java samples
+- Contract publishing via `@stubborn-sh/publisher`
 
 ## Dependencies
 
 - Phase 1: Broker topic topology API (complete)
+- Phase 3: Java auto-configuration modules (complete)

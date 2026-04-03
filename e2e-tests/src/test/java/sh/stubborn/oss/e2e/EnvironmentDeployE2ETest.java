@@ -15,6 +15,7 @@
  */
 package sh.stubborn.oss.e2e;
 
+import com.microsoft.playwright.APIResponse;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.options.LoadState;
 import org.junit.jupiter.api.Order;
@@ -33,9 +34,13 @@ class EnvironmentDeployE2ETest extends BaseE2ETest {
 
 	private static final String CONSUMER = "env-payment-service";
 
+	private static final String NOTIF_SERVICE = "env-notification-service";
+
 	private static final String VERSION = "1.0.0";
 
 	private static final String CONSUMER_VERSION = "2.0.0";
+
+	private static final String NOTIF_VERSION = "3.0.0";
 
 	private static final String STAGING = "env-staging";
 
@@ -133,71 +138,78 @@ class EnvironmentDeployE2ETest extends BaseE2ETest {
 
 	@Test
 	@Order(4)
-	void should_check_can_i_deploy() {
+	void should_check_can_i_deploy_safe() {
 		assumePriorTestsPassed();
-		// given — verification exists so deployment check has data
+		// given — SUCCESS verification exists so provider is safe to deploy
 		seedVerification(PROVIDER, VERSION, CONSUMER, CONSUMER_VERSION, "SUCCESS");
 		seedDeployment(CONSUMER, CONSUMER_VERSION, STAGING);
 
 		// when
-		navigateTo("/can-i-deploy");
-		waitForHeading("Can I Deploy");
+		performCanIDeploy(PROVIDER, VERSION, STAGING);
 
-		// Select application from ComboBox
-		selectComboBox(0, PROVIDER);
+		// then — result must be SAFE
+		waitForText("SAFE");
 
-		// Select version from ComboBox
-		selectComboBox(1, VERSION);
-
-		// Select environment (native select, hardcoded list, always enabled)
-		Locator envSelect = this.page.locator("#cid-environment");
-		envSelect.selectOption(STAGING);
-		this.page.waitForLoadState(LoadState.NETWORKIDLE);
-
-		// Click Check — use evaluate to ensure the form submit triggers React state
-		Locator checkButton = this.page.locator("button:has-text('Check')");
-		checkButton.first().evaluate("el => el.click()");
-
-		// then — wait for either result or error to appear
-		Locator result = this.page.locator("text=Result")
-			.or(this.page.locator("text=SAFE"))
-			.or(this.page.locator("text=UNSAFE"))
-			.or(this.page.locator("text=Failed"));
-		result.first().waitFor(new Locator.WaitForOptions().setTimeout(30000));
-
-		screenshot("env-03-can-i-deploy");
+		screenshot("env-04-can-i-deploy-safe");
 	}
 
 	@Test
 	@Order(5)
-	void should_check_can_i_deploy_for_consumer() {
+	void should_check_can_i_deploy_unsafe() {
 		assumePriorTestsPassed();
-		// given
+		// given — FAILED verification for a different consumer means provider is UNSAFE
+		seedApp(NOTIF_SERVICE, "env-team");
+		seedContract(NOTIF_SERVICE, NOTIF_VERSION, "get-notification",
+				"request:\n  method: GET\n  url: /notifications/1");
+		seedVerification(PROVIDER, VERSION, NOTIF_SERVICE, NOTIF_VERSION, "FAILED");
+		seedDeployment(NOTIF_SERVICE, NOTIF_VERSION, STAGING);
+
+		// when
+		performCanIDeploy(PROVIDER, VERSION, STAGING);
+
+		// then — result must be UNSAFE
+		waitForText("UNSAFE");
+
+		screenshot("env-05-can-i-deploy-unsafe");
+	}
+
+	@Test
+	@Order(6)
+	void should_check_can_i_deploy_no_consumers() {
+		assumePriorTestsPassed();
+		// given — CONSUMER itself has no consumers depending on it, so it is SAFE
+
+		// when
+		performCanIDeploy(CONSUMER, CONSUMER_VERSION, STAGING);
+
+		// then — no consumers means SAFE
+		waitForText("SAFE");
+
+		screenshot("env-06-can-i-deploy-no-consumers");
+	}
+
+	@Test
+	@Order(7)
+	void should_return_error_for_unknown_app_in_can_i_deploy() {
+		// given — environment exists (seeded in @Order(1))
+		seedEnvironment(STAGING, "Pre-production", 2, false);
+		// when — can-i-deploy for non-existent app
+		APIResponse response = this.apiContext
+			.get("/api/v1/can-i-deploy?application=nonexistent-app-xyz&version=1.0.0&environment=" + STAGING);
+		// then
+		assertThat(response.status()).isIn(400, 404);
+	}
+
+	private void performCanIDeploy(String app, String version, String environment) {
 		navigateTo("/can-i-deploy");
 		waitForHeading("Can I Deploy");
-
-		// when — select consumer from ComboBox
-		selectComboBox(0, CONSUMER);
-
-		// Select version from ComboBox
-		selectComboBox(1, CONSUMER_VERSION);
-
-		// Select environment (native select)
+		selectComboBox(0, app);
+		selectComboBox(1, version);
 		Locator envSelect = this.page.locator("#cid-environment");
-		envSelect.selectOption(STAGING);
+		envSelect.selectOption(environment);
 		this.page.waitForLoadState(LoadState.NETWORKIDLE);
-
 		Locator checkButton = this.page.locator("button:has-text('Check')");
 		checkButton.first().evaluate("el => el.click()");
-
-		// then — result card visible
-		Locator result = this.page.locator("text=Result")
-			.or(this.page.locator("text=SAFE"))
-			.or(this.page.locator("text=UNSAFE"))
-			.or(this.page.locator("text=Failed"));
-		result.first().waitFor(new Locator.WaitForOptions().setTimeout(30000));
-
-		screenshot("env-04-can-i-deploy-consumer");
 	}
 
 }

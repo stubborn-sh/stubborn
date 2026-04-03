@@ -294,6 +294,9 @@ class VerificationServiceTest {
 
 		// then
 		assertThat(result).isTrue();
+		then(this.verificationRepository).should()
+			.existsByProviderIdAndProviderVersionAndConsumerIdAndConsumerVersionAndStatus(eq(this.providerId),
+					eq("1.0.0"), eq(this.consumerId), eq("2.0.0"), eq(VerificationStatus.SUCCESS));
 	}
 
 	@Test
@@ -358,8 +361,9 @@ class VerificationServiceTest {
 		// when
 		long count = this.verificationService.count();
 
-		// then
+		// then — delegates to repository
 		assertThat(count).isEqualTo(10);
+		then(this.verificationRepository).should().count();
 	}
 
 	@Test

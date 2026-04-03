@@ -30,7 +30,6 @@ import org.springframework.cache.annotation.Cacheable;
 import sh.stubborn.oss.application.ApplicationInfo;
 import sh.stubborn.oss.application.ApplicationService;
 import sh.stubborn.oss.contract.ContractService;
-import sh.stubborn.oss.contract.ContractTopicInfo;
 import sh.stubborn.oss.environment.DeploymentInfo;
 import sh.stubborn.oss.environment.DeploymentService;
 import sh.stubborn.oss.verification.VerificationInfo;

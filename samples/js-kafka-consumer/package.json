@@ -1,0 +1,25 @@
+{
+  "name": "@samples/js-kafka-consumer",
+  "version": "1.0.0",
+  "private": true,
+  "engines": {
+    "node": ">=21.2.0"
+  },
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:integration": "vitest run tests/integration"
+  },
+  "dependencies": {
+    "@stubborn-sh/broker-client": "file:../../js/packages/broker-client",
+    "@stubborn-sh/messaging": "file:../../js/packages/messaging",
+    "@stubborn-sh/messaging-kafka": "file:../../js/packages/messaging-kafka",
+    "kafkajs": "^2.2.4"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.0",
+    "typescript": "^5.8.0",
+    "vitest": "^3.1.0"
+  }
+}

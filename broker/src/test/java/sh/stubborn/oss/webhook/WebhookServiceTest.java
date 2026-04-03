@@ -61,7 +61,7 @@ class WebhookServiceTest {
 		lenient().when(this.encryptionService.encrypt(any())).thenAnswer(inv -> inv.getArgument(0));
 		lenient().when(this.encryptionService.decrypt(any())).thenAnswer(inv -> inv.getArgument(0));
 		this.webhookService = new WebhookService(this.webhookRepository, this.executionRepository,
-				this.applicationService, this.encryptionService);
+				this.applicationService, this.encryptionService, true);
 	}
 
 	@Test
@@ -227,6 +227,51 @@ class WebhookServiceTest {
 
 		// then
 		assertThat(count).isEqualTo(5L);
+	}
+
+	@Test
+	void should_reject_http_url_when_insecure_not_allowed() {
+		// given
+		WebhookService strictService = new WebhookService(this.webhookRepository, this.executionRepository,
+				this.applicationService, this.encryptionService, false);
+
+		// when/then
+		assertThatThrownBy(
+				() -> strictService.create(null, EventType.CONTRACT_PUBLISHED, "http://example.com/hook", null, null))
+			.isInstanceOf(IllegalArgumentException.class)
+			.hasMessageContaining("HTTPS");
+	}
+
+	@Test
+	void should_allow_http_url_when_insecure_allowed() {
+		// given
+		WebhookService permissiveService = new WebhookService(this.webhookRepository, this.executionRepository,
+				this.applicationService, this.encryptionService, true);
+		Webhook webhook = Webhook.create(null, EventType.CONTRACT_PUBLISHED, "http://example.com/hook", null, null);
+		given(this.webhookRepository.save(any(Webhook.class))).willReturn(webhook);
+
+		// when
+		Webhook result = permissiveService.create(null, EventType.CONTRACT_PUBLISHED, "http://example.com/hook", null,
+				null);
+
+		// then
+		assertThat(result.getUrl()).isEqualTo("http://example.com/hook");
+	}
+
+	@Test
+	void should_allow_https_url() {
+		// given
+		WebhookService strictService = new WebhookService(this.webhookRepository, this.executionRepository,
+				this.applicationService, this.encryptionService, false);
+		Webhook webhook = Webhook.create(null, EventType.CONTRACT_PUBLISHED, "https://example.com/hook", null, null);
+		given(this.webhookRepository.save(any(Webhook.class))).willReturn(webhook);
+
+		// when
+		Webhook result = strictService.create(null, EventType.CONTRACT_PUBLISHED, "https://example.com/hook", null,
+				null);
+
+		// then
+		assertThat(result.getUrl()).isEqualTo("https://example.com/hook");
 	}
 
 }

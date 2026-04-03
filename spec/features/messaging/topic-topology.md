@@ -1,7 +1,13 @@
 ---
 feature: messaging-topic-topology
-status: planned
-tests: []
+status: implemented
+tests:
+  - sh.stubborn.oss.contract.ContractContentAnalyzerTest
+  - sh.stubborn.oss.contract.ContractServiceTest
+  - sh.stubborn.oss.topic.TopicTopologyServiceTest
+  - sh.stubborn.oss.topic.TopicTopologyControllerTest
+  - sh.stubborn.oss.graph.DependencyGraphServiceTest
+  - sh.stubborn.oss.e2e.DependencyGraphE2ETest
 ---
 
 # Messaging Contract Support — Topic Topology
@@ -53,7 +59,8 @@ A new `contract_topics` table stores the extracted topic references as a denorma
 - `application_id` — FK to the application
 - `version` — contract version
 - `topic_name` — the destination/source name
-- The publishing app is the producer; consumers are identified via verification records
+- `direction` — `PUBLISH` (default, from `outputMessage.sentTo`) or `SUBSCRIBE`
+- Contracts are always publisher-side in SCC. Consumer verification uses Stub Runner.
 
 The `contracts` table gains an `interaction_type` column (`HTTP` or `MESSAGING`, default `HTTP`).
 
@@ -75,12 +82,12 @@ The dependency graph includes messaging edges alongside verification-based edges
 
 ## Acceptance Criteria
 
-- [ ] **AC-1**: Publishing a contract with `outputMessage.sentTo: verifications` results in `interactionType = MESSAGING` on the contract and a `contract_topics` record with `topic_name = verifications`.
-- [ ] **AC-2**: Publishing a standard HTTP contract (with `request`/`response`) results in `interactionType = HTTP` and no `contract_topics` records.
-- [ ] **AC-4**: Publishing a contract with unparseable content defaults to `interactionType = HTTP` with a warning log (no error).
-- [ ] **AC-5**: `GET /api/v1/topics` returns all known topics with their publishers and subscribers grouped by topic name.
+- [x] **AC-1**: Publishing a contract with `outputMessage.sentTo: verifications` results in `interactionType = MESSAGING` on the contract and a `contract_topics` record with `topic_name = verifications`.
+- [x] **AC-2**: Publishing a standard HTTP contract (with `request`/`response`) results in `interactionType = HTTP` and no `contract_topics` records.
+- [x] **AC-4**: Publishing a contract with unparseable content defaults to `interactionType = HTTP` with a warning log (no error).
+- [x] **AC-5**: `GET /api/v1/topics` returns all known topics with their publishers and subscribers grouped by topic name.
 - [ ] **AC-6**: `GET /api/v1/topics/{topicName}` returns 404 for unknown topics.
-- [ ] **AC-7**: `GET /api/v1/topics/applications/{appName}` returns all topics the application publishes to or subscribes from.
-- [ ] **AC-8**: The dependency graph response includes `messagingEdges` alongside existing verification edges.
-- [ ] **AC-9**: `ContractResponse` and `ContractInfo` include the `interactionType` field.
-- [ ] **AC-10**: Existing HTTP contracts are unaffected (default `interactionType = HTTP`).
+- [x] **AC-7**: `GET /api/v1/topics/applications/{appName}` returns all topics the application publishes to or subscribes from.
+- [x] **AC-8**: The dependency graph response includes `messagingEdges` alongside existing verification edges.
+- [x] **AC-9**: `ContractResponse` and `ContractInfo` include the `interactionType` field.
+- [x] **AC-10**: Existing HTTP contracts are unaffected (default `interactionType = HTTP`).

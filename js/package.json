@@ -10,7 +10,10 @@
     "packages/verifier",
     "packages/cli",
     "packages/jest",
-    "packages/stubs-packager"
+    "packages/stubs-packager",
+    "packages/messaging",
+    "packages/messaging-kafka",
+    "packages/messaging-rabbit"
   ],
   "scripts": {
     "lint": "eslint packages/*/src/**/*.ts && prettier --check \"packages/*/src/**/*.ts\" \"packages/*/tests/**/*.ts\"",

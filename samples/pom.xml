@@ -23,6 +23,7 @@
 		<module>proxy-consumer</module>
 		<module>kafka-producer</module>
 		<module>kafka-consumer</module>
+		<module>kafka-consumer-js-stubs</module>
 		<module>rabbit-producer</module>
 		<module>rabbit-consumer</module>
 	</modules>
@@ -157,6 +158,38 @@
 							<arguments>
 								<argument>-c</argument>
 								<argument>cd ${project.basedir}/maven-producer &amp;&amp; ../../mvnw install -DskipTests -q &amp;&amp; cd ${project.basedir}/jar-consumer &amp;&amp; npm ci &amp;&amp; npm test</argument>
+							</arguments>
+						</configuration>
+					</execution>
+					<!-- Cross-language: JS kafka-producer → Java kafka-consumer-js-stubs -->
+					<execution>
+						<id>cross-lang-js-to-java</id>
+						<phase>integration-test</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<skip>${js.tests.skip}</skip>
+							<executable>bash</executable>
+							<arguments>
+								<argument>-c</argument>
+								<argument>cd ${project.basedir}/js-kafka-producer &amp;&amp; npm ci &amp;&amp; BROKER_URL=http://localhost:18080 npm run publish-contracts &amp;&amp; cd ${project.basedir}/kafka-consumer-js-stubs &amp;&amp; ../../mvnw failsafe:integration-test failsafe:verify -Dbroker.url=http://localhost:18080</argument>
+							</arguments>
+						</configuration>
+					</execution>
+					<!-- Cross-language: Java kafka-producer → JS js-kafka-consumer-java-stubs -->
+					<execution>
+						<id>cross-lang-java-to-js</id>
+						<phase>integration-test</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<skip>${js.tests.skip}</skip>
+							<executable>bash</executable>
+							<arguments>
+								<argument>-c</argument>
+								<argument>cd ${project.basedir}/js-kafka-consumer-java-stubs &amp;&amp; npm ci &amp;&amp; BROKER_URL=http://localhost:18080 npm run test:integration</argument>
 							</arguments>
 						</configuration>
 					</execution>

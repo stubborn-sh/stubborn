@@ -302,7 +302,9 @@ describe("BrokerClient", () => {
         topics: [
           {
             topicName: "verifications",
-            publishers: [{ applicationName: "order-service", version: "1.0.0", topicName: "verifications" }],
+            publishers: [
+              { applicationName: "order-service", version: "1.0.0", topicName: "verifications" },
+            ],
           },
         ],
       };
@@ -317,7 +319,9 @@ describe("BrokerClient", () => {
     it("should_get_topic_by_name", async () => {
       const topic = {
         topicName: "verifications",
-        publishers: [{ applicationName: "order-service", version: "1.0.0", topicName: "verifications" }],
+        publishers: [
+          { applicationName: "order-service", version: "1.0.0", topicName: "verifications" },
+        ],
       };
       const fetchFn = mockFetch(200, topic);
       const result = await client(fetchFn).getTopicByName("verifications");
@@ -331,7 +335,9 @@ describe("BrokerClient", () => {
         topics: [
           {
             topicName: "orders",
-            publishers: [{ applicationName: "order-service", version: "1.0.0", topicName: "orders" }],
+            publishers: [
+              { applicationName: "order-service", version: "1.0.0", topicName: "orders" },
+            ],
           },
         ],
       };

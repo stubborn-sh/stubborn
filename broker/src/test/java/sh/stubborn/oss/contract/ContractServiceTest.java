@@ -186,7 +186,7 @@ class ContractServiceTest {
 
 		// then
 		assertThat(result.getBranch()).isEqualTo("feature/payments");
-		assertThat(result.getContentHash()).isNotNull();
+		assertThat(result.getContentHash()).hasSize(64);
 		then(this.contractRepository).should().save(any(Contract.class));
 	}
 
@@ -298,8 +298,9 @@ class ContractServiceTest {
 		// when
 		long count = this.contractService.count();
 
-		// then
+		// then — delegates to repository
 		assertThat(count).isEqualTo(3);
+		then(this.contractRepository).should().count();
 	}
 
 	@Test

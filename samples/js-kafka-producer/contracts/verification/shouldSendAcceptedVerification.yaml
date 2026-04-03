@@ -1,0 +1,12 @@
+description: When verification is accepted, a message is sent to the verifications topic
+label: accepted_verification
+input:
+  triggeredBy: triggerVerification()
+outputMessage:
+  sentTo: verifications
+  headers:
+    contentType: application/json
+  body:
+    id: "vrf-001"
+    status: "ACCEPTED"
+    reason: "All checks passed"

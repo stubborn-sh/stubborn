@@ -126,8 +126,8 @@ Fields not applicable to an event are omitted from the payload (not sent as null
 
 ## Business Rules
 
-1. The `url` field must be a valid HTTPS URL
-2. The `events` array must contain at least one valid event type
+1. The `url` field must be a valid HTTPS URL (set `stubborn.webhooks.allow-insecure=true` for local development with HTTP)
+2. The `eventType` field must be a valid event type
 3. The `applicationName` field is optional; when omitted, the webhook fires for all applications
 4. The `bodyTemplate` field is optional; when omitted, the broker sends a default JSON payload with full event details
 5. Template variables use `${variable}` syntax; available variables include: `event`, `applicationName`, `version`, `consumerName`, `consumerVersion`, `providerName`, `providerVersion`, `environment`, `status`, `timestamp`

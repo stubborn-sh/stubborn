@@ -230,8 +230,11 @@ class WebhookRoundTripE2ETest extends BaseE2ETest {
 		await().atMost(Duration.ofSeconds(timeoutSeconds)).pollInterval(Duration.ofSeconds(1)).untilAsserted(() -> {
 			APIResponse response = this.wiremockApiContext.get("/__admin/requests?urlPathPattern=" + WEBHOOK_PATH);
 			String body = response.text();
-			assertThat(body).contains("\"total\"");
+			// Verify at least one request was received
 			assertThat(body).doesNotContain("\"total\" : 0").doesNotContain("\"total\":0");
+			// Verify payload contains expected event data
+			assertThat(body).contains("CONTRACT_PUBLISHED");
+			assertThat(body).contains(APP_NAME);
 		});
 	}
 

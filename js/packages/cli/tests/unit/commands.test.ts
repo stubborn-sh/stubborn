@@ -63,19 +63,25 @@ function mockClient(): BrokerClient {
       topics: [
         {
           topicName: "verifications",
-          publishers: [{ applicationName: "order-service", version: "1.0.0", topicName: "verifications" }],
+          publishers: [
+            { applicationName: "order-service", version: "1.0.0", topicName: "verifications" },
+          ],
         },
       ],
     }),
     getTopicByName: vi.fn().mockResolvedValue({
       topicName: "verifications",
-      publishers: [{ applicationName: "order-service", version: "1.0.0", topicName: "verifications" }],
+      publishers: [
+        { applicationName: "order-service", version: "1.0.0", topicName: "verifications" },
+      ],
     }),
     getTopicsForApplication: vi.fn().mockResolvedValue({
       topics: [
         {
           topicName: "verifications",
-          publishers: [{ applicationName: "order-service", version: "1.0.0", topicName: "verifications" }],
+          publishers: [
+            { applicationName: "order-service", version: "1.0.0", topicName: "verifications" },
+          ],
         },
       ],
     }),

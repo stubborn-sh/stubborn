@@ -75,6 +75,16 @@ jobs:
         env:
           DEMO_URL: ${{ env.DEMO_URL }}
 
+      - name: Copy screenshots to docs
+        if: success()
+        run: |
+          cp -f test-results/01-dashboard.png docs/screenshots/demo-dashboard.png 2>/dev/null || true
+          cp -f test-results/02-applications.png docs/screenshots/demo-applications.png 2>/dev/null || true
+          cp -f test-results/03-contracts.png docs/screenshots/demo-contracts.png 2>/dev/null || true
+          cp -f test-results/07-topics.png docs/screenshots/demo-topics.png 2>/dev/null || true
+          cp -f test-results/08-messaging-contract.png docs/screenshots/demo-messaging-contract.png 2>/dev/null || true
+          cp -f test-results/09-graph-messaging.png docs/screenshots/demo-graph-messaging.png 2>/dev/null || true
+
       - name: Upload smoke test screenshots
         if: always()
         uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0

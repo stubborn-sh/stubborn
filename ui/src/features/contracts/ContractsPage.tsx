@@ -3,6 +3,7 @@ import { useContracts } from "./useContracts";
 import { useSearchApplications, useVersions } from "@/features/applications";
 import { DataTable, JsonViewer, AsyncComboBox, ComboBox } from "@/shared/components";
 import {
+  Badge,
   Card,
   CardContent,
   CardHeader,
@@ -140,6 +141,16 @@ export default function ContractsPage() {
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Content Type</span>
                         <span className="text-foreground">{expandedContract.contentType}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Interaction Type</span>
+                        <span className="text-foreground">
+                          {expandedContract.interactionType === "MESSAGING" ? (
+                            <Badge variant="default">Messaging</Badge>
+                          ) : (
+                            expandedContract.interactionType
+                          )}
+                        </span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Created</span>

@@ -74,10 +74,12 @@ class ContractContentAnalyzer {
 			if (outputMessage != null) {
 				DslProperty<String> sentTo = outputMessage.getSentTo();
 				if (sentTo != null && sentTo.getClientValue() != null) {
-					topics.add(new TopicReference(sentTo.getClientValue().toString()));
+					topics.add(new TopicReference(sentTo.getClientValue().toString(), TopicDirection.PUBLISH));
 					hasMessaging = true;
 				}
 			}
+			// Contracts are always publisher-side in SCC.
+			// Consumer verification uses Stub Runner, not contracts.
 		}
 		if (hasMessaging) {
 			return new ContractAnalysis(InteractionType.MESSAGING, List.copyOf(topics));

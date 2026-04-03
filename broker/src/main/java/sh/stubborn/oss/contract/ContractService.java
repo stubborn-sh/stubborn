@@ -88,8 +88,8 @@ public class ContractService {
 			throw new ContractAlreadyExistsException(applicationName, version, contractName, ex);
 		}
 		for (TopicReference topic : analysis.topics()) {
-			this.contractTopicRepository
-				.save(ContractTopic.create(saved.getId(), applicationId, version, topic.topicName()));
+			this.contractTopicRepository.save(
+					ContractTopic.create(saved.getId(), applicationId, version, topic.topicName(), topic.direction()));
 		}
 		this.eventPublisher
 			.publishEvent(BrokerEvent.contractPublished(applicationId, applicationName, version, contractName));

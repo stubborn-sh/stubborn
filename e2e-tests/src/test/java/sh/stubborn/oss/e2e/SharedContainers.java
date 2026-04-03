@@ -65,6 +65,7 @@ final class SharedContainers {
 			.withEnv("DATABASE_USERNAME", "broker")
 			.withEnv("DATABASE_PASSWORD", "broker")
 			.withEnv("OTEL_METRICS_ENABLED", "false")
+			.withEnv("STUBBORN_WEBHOOKS_ALLOW_INSECURE", "true")
 			.waitingFor(new HttpWaitStrategy().forPath("/actuator/health")
 				.forPort(8642)
 				.forStatusCode(200)

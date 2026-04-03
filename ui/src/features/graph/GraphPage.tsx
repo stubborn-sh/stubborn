@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { useGraph, useApplicationDependencies } from "./useGraph";
 import { DataTable, SearchInput, AppLink } from "@/shared/components";
 import { Badge } from "@/shared/components/ui";
-import type { DependencyEdge } from "@/api/types";
+import type { DependencyEdge, MessagingEdge } from "@/api/types";
 import { useSearchParams } from "react-router-dom";
 import DependencyGraph from "./DependencyGraph";
 
@@ -40,6 +40,24 @@ const edgeColumns = [
     render: (e: DependencyEdge) => (
       <span className="text-muted-foreground">{new Date(e.verifiedAt).toLocaleString()}</span>
     ),
+  },
+];
+
+const messagingEdgeColumns = [
+  {
+    key: "applicationName",
+    header: "Application",
+    render: (e: MessagingEdge) => (
+      <span className="font-medium text-foreground">
+        <AppLink name={e.applicationName} />{" "}
+        <span className="text-muted-foreground text-xs">v{e.version}</span>
+      </span>
+    ),
+  },
+  {
+    key: "topicName",
+    header: "Topic",
+    render: (e: MessagingEdge) => <span className="text-foreground">{e.topicName}</span>,
   },
 ];
 
@@ -260,24 +278,36 @@ export default function GraphPage() {
               {isLoading ? (
                 <p className="text-muted-foreground">Loading...</p>
               ) : (
-                <DataTable
-                  data={paged}
-                  columns={edgeColumns}
-                  keyFn={(e) =>
-                    `${e.providerName}-${e.providerVersion}-${e.consumerName}-${e.consumerVersion}`
-                  }
-                  pagination={{
-                    page,
-                    pageSize,
-                    totalElements,
-                    totalPages,
-                    onPageChange: setPage,
-                    onPageSizeChange: (size) => {
-                      setPageSize(size);
-                      setPage(0);
-                    },
-                  }}
-                />
+                <>
+                  <DataTable
+                    data={paged}
+                    columns={edgeColumns}
+                    keyFn={(e) =>
+                      `${e.providerName}-${e.providerVersion}-${e.consumerName}-${e.consumerVersion}`
+                    }
+                    pagination={{
+                      page,
+                      pageSize,
+                      totalElements,
+                      totalPages,
+                      onPageChange: setPage,
+                      onPageSizeChange: (size) => {
+                        setPageSize(size);
+                        setPage(0);
+                      },
+                    }}
+                  />
+                  {graph?.messagingEdges && graph.messagingEdges.length > 0 && (
+                    <div className="space-y-3">
+                      <h3 className="text-lg font-semibold text-foreground">Messaging Edges</h3>
+                      <DataTable
+                        data={graph.messagingEdges}
+                        columns={messagingEdgeColumns}
+                        keyFn={(e) => `${e.applicationName}-${e.topicName}-${e.version}`}
+                      />
+                    </div>
+                  )}
+                </>
               )}
             </>
           )}

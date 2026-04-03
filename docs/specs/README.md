@@ -34,6 +34,10 @@
 | 34 | Maven Import UI | [034-maven-import-ui.md](034-maven-import-ui.md) | Done |
 | 35 | Git Import UI | [035-git-import-ui.md](035-git-import-ui.md) | Done |
 | 36 | Credential Encryption | [036-credential-encryption.md](036-credential-encryption.md) | Done |
+| 37 | Audit Logging | [037-audit-logging.md](037-audit-logging.md) | Planned |
+| 38 | Security Hardening | [038-security-hardening.md](038-security-hardening.md) | Done |
+| 39 | Data Integrity | [039-data-integrity.md](039-data-integrity.md) | Done |
+| 40 | MCP AI Features | [040-mcp-ai-features.md](040-mcp-ai-features.md) | Planned |
 
 ## Cross-Cutting Concerns
 

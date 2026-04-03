@@ -1,6 +1,6 @@
 import { Command } from "commander";
 import type { BrokerClient } from "@stubborn-sh/broker-client";
-import { formatOutput, formatSingle } from "../formatter.js";
+import { formatOutput } from "../formatter.js";
 
 export function createTopicsCommand(
   getClient: () => BrokerClient,

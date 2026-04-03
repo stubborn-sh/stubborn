@@ -46,6 +46,7 @@ class ContractContentAnalyzerTest {
 		assertThat(result.interactionType()).isEqualTo(InteractionType.MESSAGING);
 		assertThat(result.topics()).hasSize(1);
 		assertThat(result.topics().getFirst().topicName()).isEqualTo("verifications");
+		assertThat(result.topics().getFirst().direction()).isEqualTo(TopicDirection.PUBLISH);
 	}
 
 	@Test
@@ -108,6 +109,7 @@ class ContractContentAnalyzerTest {
 		assertThat(result.interactionType()).isEqualTo(InteractionType.MESSAGING);
 		assertThat(result.topics()).hasSize(1);
 		assertThat(result.topics().getFirst().topicName()).isEqualTo("topic1");
+		assertThat(result.topics().getFirst().direction()).isEqualTo(TopicDirection.PUBLISH);
 	}
 
 	@Test

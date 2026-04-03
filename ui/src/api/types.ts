@@ -15,6 +15,7 @@ export interface ContractResponse {
   contractName: string;
   content: string;
   contentType: string;
+  interactionType: string;
   createdAt: string;
 }
 
@@ -79,6 +80,7 @@ export interface DependencyEdge {
 export interface DependencyGraphResponse {
   nodes: DependencyNode[];
   edges: DependencyEdge[];
+  messagingEdges: MessagingEdge[];
 }
 
 export interface ApplicationDependenciesResponse {
@@ -227,4 +229,27 @@ export interface MavenImportResultResponse {
   published: number;
   skipped: number;
   total: number;
+}
+
+// Topic topology types
+export interface TopicParticipant {
+  applicationName: string;
+  version: string;
+  contractName: string;
+}
+
+export interface TopicNode {
+  topicName: string;
+  publishers: TopicParticipant[];
+}
+
+export interface TopicTopologyResponse {
+  topics: TopicNode[];
+}
+
+// Messaging edge in dependency graph
+export interface MessagingEdge {
+  applicationName: string;
+  topicName: string;
+  version: string;
 }

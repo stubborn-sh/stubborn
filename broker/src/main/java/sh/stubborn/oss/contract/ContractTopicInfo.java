@@ -17,10 +17,11 @@ package sh.stubborn.oss.contract;
 
 import java.util.UUID;
 
-public record ContractTopicInfo(UUID applicationId, String version, String topicName) {
+public record ContractTopicInfo(UUID applicationId, String version, String topicName, String direction) {
 
 	static ContractTopicInfo from(ContractTopic topic) {
-		return new ContractTopicInfo(topic.getApplicationId(), topic.getVersion(), topic.getTopicName());
+		return new ContractTopicInfo(topic.getApplicationId(), topic.getVersion(), topic.getTopicName(),
+				topic.getDirection());
 	}
 
 }

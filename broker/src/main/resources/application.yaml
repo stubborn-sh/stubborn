@@ -120,6 +120,10 @@ broker:
   credentials:
     encryption-key: '' # Base64-encoded AES-256 key. Empty = no encryption (dev mode)
 
+stubborn:
+  webhooks:
+    allow-insecure: ${STUBBORN_WEBHOOKS_ALLOW_INSECURE:false}
+
 logging:
   pattern:
     correlation: "[${spring.application.name:},%X{traceId:-},%X{spanId:-}] "

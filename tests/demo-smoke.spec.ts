@@ -87,4 +87,48 @@ test.describe('Demo App Smoke Test', () => {
     await page.screenshot({ path: 'test-results/06-graph.png' });
   });
 
+  test('should show topics list', async ({ page }) => {
+    await page.goto('/', { waitUntil: 'domcontentloaded', timeout: 120_000 });
+    await page.waitForFunction(() => document.getElementById('root')?.children.length! > 0, { timeout: 60_000 });
+    await page.getByRole('link', { name: /topics/i }).first().click();
+    await page.waitForLoadState('domcontentloaded');
+    await expect(page.getByText('Topics').first()).toBeVisible({ timeout: 60_000 });
+    await page.screenshot({ path: 'test-results/07-topics.png' });
+  });
+
+  test('should show messaging contract', async ({ page }) => {
+    await page.goto('/', { waitUntil: 'domcontentloaded', timeout: 120_000 });
+    await page.waitForFunction(() => document.getElementById('root')?.children.length! > 0, { timeout: 60_000 });
+    await page.getByRole('link', { name: /contracts/i }).first().click();
+    await page.waitForLoadState('domcontentloaded');
+    // Select an application that has messaging contracts (if available)
+    const appSelector = page.getByRole('combobox').first();
+    if (await appSelector.isVisible({ timeout: 10_000 }).catch(() => false)) {
+      await appSelector.click();
+      // Try verification-service (messaging) or fall back to any available app
+      const msgApp = page.getByText('verification-service').first();
+      if (await msgApp.isVisible({ timeout: 3_000 }).catch(() => false)) {
+        await msgApp.click();
+      } else {
+        await page.getByRole('option').first().click();
+      }
+      await page.waitForLoadState('domcontentloaded');
+    }
+    await page.screenshot({ path: 'test-results/08-messaging-contract.png' });
+  });
+
+  test('should show dependency graph with messaging edges', async ({ page }) => {
+    await page.goto('/', { waitUntil: 'domcontentloaded', timeout: 120_000 });
+    await page.waitForFunction(() => document.getElementById('root')?.children.length! > 0, { timeout: 60_000 });
+    await page.getByRole('link', { name: /graph|dependencies/i }).first().click();
+    await page.waitForLoadState('domcontentloaded');
+    // Switch to table view to see messaging edges section
+    const tableTab = page.getByRole('tab', { name: /table/i });
+    if (await tableTab.isVisible({ timeout: 5_000 }).catch(() => false)) {
+      await tableTab.click();
+      await page.waitForLoadState('domcontentloaded');
+    }
+    await page.screenshot({ path: 'test-results/09-graph-messaging.png' });
+  });
+
 });

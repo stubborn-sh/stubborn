@@ -15,6 +15,7 @@
  */
 package sh.stubborn.oss.e2e;
 
+import com.microsoft.playwright.APIResponse;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.options.WaitForSelectorState;
 import org.junit.jupiter.api.Order;
@@ -64,6 +65,15 @@ class DependencyGraphE2ETest extends BaseE2ETest {
 
 		// Table with edges visible
 		waitForTable();
+
+		// Verify graph API returns correct edges
+		APIResponse graphResponse = this.apiContext.get("/api/v1/graph");
+		assertThat(graphResponse.status()).isEqualTo(200);
+		String graphBody = graphResponse.text();
+		// Check that the seeded edges are present in the response
+		assertThat(graphBody).contains("\"providerName\":\"" + APP_A + "\"");
+		assertThat(graphBody).contains("\"consumerName\":\"" + APP_B + "\"");
+		assertThat(graphBody).contains("\"status\":\"SUCCESS\"");
 
 		screenshot("grp-01-graph");
 	}
@@ -161,6 +171,19 @@ class DependencyGraphE2ETest extends BaseE2ETest {
 		assertThat(h3.count()).isEqualTo(0);
 
 		screenshot("grp-03-cleared");
+	}
+
+	@Test
+	@Order(6)
+	void should_return_response_for_unknown_app_in_graph() {
+		// when
+		APIResponse response = this.apiContext.get("/api/v1/graph/applications/nonexistent-app-xyz-99999");
+		// then — should return 200 with empty data or 404
+		assertThat(response.status()).isIn(200, 404);
+		if (response.status() == 200) {
+			String body = response.text();
+			assertThat(body).contains("\"providers\":[]").contains("\"consumers\":[]");
+		}
 	}
 
 }

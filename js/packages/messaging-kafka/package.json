@@ -1,0 +1,44 @@
+{
+  "name": "@stubborn-sh/messaging-kafka",
+  "version": "0.0.4",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@stubborn-sh/broker-client": "0.0.4",
+    "@stubborn-sh/messaging": "0.0.4",
+    "kafkajs": "^2.2.4"
+  },
+  "devDependencies": {
+    "tsup": "^8.4.0"
+  },
+  "peerDependencies": {
+    "@testcontainers/kafka": "^10.0.0",
+    "testcontainers": "^10.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@testcontainers/kafka": {
+      "optional": true
+    },
+    "testcontainers": {
+      "optional": true
+    }
+  }
+}

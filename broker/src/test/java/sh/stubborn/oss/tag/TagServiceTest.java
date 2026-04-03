@@ -148,8 +148,9 @@ class TagServiceTest {
 		// when
 		long count = this.tagService.count();
 
-		// then
+		// then — delegates to repository
 		assertThat(count).isEqualTo(42L);
+		then(this.versionTagRepository).should().count();
 	}
 
 }

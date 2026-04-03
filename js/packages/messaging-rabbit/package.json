@@ -1,0 +1,45 @@
+{
+  "name": "@stubborn-sh/messaging-rabbit",
+  "version": "0.0.4",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@stubborn-sh/broker-client": "0.0.4",
+    "@stubborn-sh/messaging": "0.0.4",
+    "amqplib": "^0.10.5"
+  },
+  "devDependencies": {
+    "@types/amqplib": "^0.10.6",
+    "tsup": "^8.4.0"
+  },
+  "peerDependencies": {
+    "@testcontainers/rabbitmq": "^10.0.0",
+    "testcontainers": "^10.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@testcontainers/rabbitmq": {
+      "optional": true
+    },
+    "testcontainers": {
+      "optional": true
+    }
+  }
+}

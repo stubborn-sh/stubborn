@@ -297,8 +297,9 @@ class ApplicationServiceTest {
 		// when
 		long count = this.service.count();
 
-		// then
+		// then — delegates to repository
 		assertThat(count).isEqualTo(5);
+		verify(this.repository).count();
 	}
 
 	@Test

@@ -141,7 +141,7 @@ Spring IO attendees
 
 **OSS Repository** (`stubborn`, public):
 - build-tools/bom, build-tools/build-parent
-- openapi-validator, broker, ui, broker-api-client
+- broker, ui, broker-api-client
 - broker-stub-downloader, broker-contract-publisher
 - broker-maven-plugin, broker-gradle-plugin
 - stub-runner, js (broker-client + publisher only)
@@ -393,7 +393,7 @@ stubborn/
 │   └── build-parent/pom.xml         (inherits spring-boot-starter-parent, all shared plugins/deps)
 ├── broker-oss/
 │   ├── pom.xml                      (aggregator)
-│   ├── spring-cloud-contract-openapi-validator/
+│   ├── stubborn-openapi-validator/   (separate repo: stubborn-sh/stubborn-openapi)
 │   ├── ui/
 │   ├── js/
 │   ├── broker/

@@ -17,6 +17,7 @@ import { CleanupPage } from "@/features/cleanup";
 import { SelectorsPage } from "@/features/selectors";
 import { GitImportPage } from "@/features/git-import";
 import { MavenImportPage } from "@/features/maven-import";
+import { TopicsPage } from "@/features/topics";
 
 export default function App() {
   const { isAuthenticated } = useAuth();
@@ -36,6 +37,7 @@ export default function App() {
         <Route path="environments" element={<EnvironmentsPage />} />
         <Route path="can-i-deploy" element={<CanIDeployPage />} />
         <Route path="graph" element={<GraphPage />} />
+        <Route path="topics" element={<TopicsPage />} />
         <Route path="webhooks" element={<WebhooksPage />} />
         <Route path="matrix" element={<MatrixPage />} />
         <Route path="tags" element={<TagsPage />} />

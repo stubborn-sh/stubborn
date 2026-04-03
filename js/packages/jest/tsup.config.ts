@@ -6,9 +6,5 @@ export default defineConfig({
   dts: false,
   clean: true,
   sourcemap: true,
-  external: [
-    "@stubborn-sh/broker-client",
-    "@stubborn-sh/stub-server",
-    "@stubborn-sh/verifier",
-  ],
+  external: ["@stubborn-sh/broker-client", "@stubborn-sh/stub-server", "@stubborn-sh/verifier"],
 });

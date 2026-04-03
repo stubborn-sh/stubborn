@@ -20,6 +20,7 @@ import java.util.UUID;
 import io.micrometer.observation.annotation.Observed;
 import org.jspecify.annotations.Nullable;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import sh.stubborn.oss.application.ApplicationService;
@@ -40,12 +41,16 @@ public class WebhookService {
 
 	private final CredentialEncryptionService encryptionService;
 
+	private final boolean allowInsecureWebhooks;
+
 	WebhookService(WebhookRepository webhookRepository, WebhookExecutionRepository executionRepository,
-			ApplicationService applicationService, CredentialEncryptionService encryptionService) {
+			ApplicationService applicationService, CredentialEncryptionService encryptionService,
+			@Value("${stubborn.webhooks.allow-insecure:false}") boolean allowInsecureWebhooks) {
 		this.webhookRepository = webhookRepository;
 		this.executionRepository = executionRepository;
 		this.applicationService = applicationService;
 		this.encryptionService = encryptionService;
+		this.allowInsecureWebhooks = allowInsecureWebhooks;
 	}
 
 	@Observed(name = "broker.webhook.create")
@@ -53,6 +58,7 @@ public class WebhookService {
 	@CacheEvict(cacheNames = "webhooks", allEntries = true)
 	public Webhook create(@Nullable String applicationName, EventType eventType, String url, @Nullable String headers,
 			@Nullable String bodyTemplate) {
+		validateWebhookUrl(url);
 		UUID applicationId = null;
 		if (applicationName != null) {
 			applicationId = this.applicationService.findIdByName(applicationName);
@@ -116,6 +122,16 @@ public class WebhookService {
 	@Cacheable(cacheNames = "webhooks", key = "'count'")
 	public long count() {
 		return this.webhookRepository.count();
+	}
+
+	private void validateWebhookUrl(String url) {
+		if (this.allowInsecureWebhooks) {
+			return;
+		}
+		if (!url.toLowerCase().startsWith("https://")) {
+			throw new IllegalArgumentException(
+					"Webhook URL must use HTTPS. Use stubborn.webhooks.allow-insecure=true for local development.");
+		}
 	}
 
 	@Nullable private String resolveApplicationName(Webhook webhook) {

@@ -21,6 +21,7 @@ import {
   Server,
   FolderGit2,
   Package,
+  MessageSquare,
 } from "lucide-react";
 import { cn } from "@/shared/lib/utils";
 import { useAuth } from "@/shared/auth/useAuth";
@@ -41,6 +42,7 @@ const navItems: NavItem[] = [
   { to: "/environments", label: "Environments", icon: Globe },
   { to: "/can-i-deploy", label: "Can I Deploy", icon: ShieldCheck },
   { to: "/graph", label: "Dependencies", icon: GitBranch },
+  { to: "/topics", label: "Topics", icon: MessageSquare },
   { to: "/webhooks", label: "Webhooks", icon: Bell },
   { to: "/matrix", label: "Matrix", icon: Table },
   { to: "/tags", label: "Tags", icon: Tag },

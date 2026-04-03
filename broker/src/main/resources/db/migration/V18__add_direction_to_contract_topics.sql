@@ -1,0 +1,1 @@
+ALTER TABLE contract_topics ADD COLUMN direction VARCHAR(10) NOT NULL DEFAULT 'PUBLISH' CHECK (direction IN ('PUBLISH', 'SUBSCRIBE'));

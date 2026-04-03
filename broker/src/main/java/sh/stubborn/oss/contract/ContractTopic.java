@@ -45,18 +45,23 @@ class ContractTopic {
 	@Column(name = "topic_name", nullable = false, length = 256)
 	private String topicName;
 
+	@Column(nullable = false, length = 10)
+	private String direction;
+
 	@Column(name = "created_at", nullable = false, updatable = false)
 	private Instant createdAt;
 
 	protected ContractTopic() {
 	}
 
-	static ContractTopic create(UUID contractId, UUID applicationId, String version, String topicName) {
+	static ContractTopic create(UUID contractId, UUID applicationId, String version, String topicName,
+			TopicDirection direction) {
 		ContractTopic topic = new ContractTopic();
 		topic.contractId = contractId;
 		topic.applicationId = applicationId;
 		topic.version = version;
 		topic.topicName = topicName;
+		topic.direction = direction.name();
 		topic.createdAt = Instant.now();
 		return topic;
 	}
@@ -79,6 +84,10 @@ class ContractTopic {
 
 	String getTopicName() {
 		return this.topicName;
+	}
+
+	String getDirection() {
+		return this.direction;
 	}
 
 	Instant getCreatedAt() {

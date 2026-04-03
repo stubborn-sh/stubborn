@@ -72,7 +72,7 @@ describe("Layout", () => {
 
     // assert
     const links = screen.getAllByRole("link");
-    expect(links.length).toBe(15);
+    expect(links.length).toBe(16);
   });
 
   it("should render correct href for each nav link", () => {

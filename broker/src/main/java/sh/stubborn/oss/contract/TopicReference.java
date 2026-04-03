@@ -15,5 +15,5 @@
  */
 package sh.stubborn.oss.contract;
 
-record TopicReference(String topicName) {
+record TopicReference(String topicName, TopicDirection direction) {
 }

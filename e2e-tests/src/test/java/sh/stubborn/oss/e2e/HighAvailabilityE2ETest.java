@@ -272,7 +272,7 @@ class HighAvailabilityE2ETest {
 
 		// then — the safety check sees the deployment recorded on the other instance
 		String body = canIDeploy.text();
-		assertThat(body).isNotEmpty();
+		assertThat(body).contains("\"safe\"");
 	}
 
 	private GenericContainer<?> createBrokerContainer(String alias) {

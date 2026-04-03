@@ -21,6 +21,8 @@ import type {
   RegisterGitSourceRequest,
   MavenImportSourceResponse,
   MavenImportResultResponse,
+  TopicTopologyResponse,
+  TopicNode,
 } from "./types";
 import { getAuthHeader, clearCredentials } from "@/shared/auth/auth-store";
 
@@ -197,6 +199,15 @@ export const api = {
     getApplicationDependencies: (name: string) =>
       fetchJson<ApplicationDependenciesResponse>(
         `/api/v1/graph/applications/${encodeURIComponent(name)}`,
+      ),
+  },
+  topics: {
+    list: () => fetchJson<TopicTopologyResponse>("/api/v1/topics"),
+    getByName: (topicName: string) =>
+      fetchJson<TopicNode>(`/api/v1/topics/${encodeURIComponent(topicName)}`),
+    getForApplication: (appName: string) =>
+      fetchJson<TopicTopologyResponse>(
+        `/api/v1/topics/applications/${encodeURIComponent(appName)}`,
       ),
   },
   webhooks: {

@@ -43,7 +43,7 @@ jobs:
         run: ./mvnw install -pl !e2e-tests
 
       - name: Deploy Java modules to Maven Central
-        run: ./mvnw deploy -Ppublish -DskipTests -pl build-parent,ui,broker,broker-api-client,broker-stub-downloader,broker-contract-publisher,broker-maven-plugin,stub-runner,openapi-validator
+        run: ./mvnw deploy -Ppublish -DskipTests -pl build-parent,ui,broker,broker-api-client,broker-stub-downloader,broker-contract-publisher,broker-maven-plugin,stub-runner
         env:
           CENTRAL_USERNAME: ${{ secrets.CENTRAL_USERNAME }}
           CENTRAL_PASSWORD: ${{ secrets.CENTRAL_PASSWORD }}

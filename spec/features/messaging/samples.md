@@ -99,7 +99,40 @@ from the `notifications` queue.
 - [ ] Contracts published to broker successfully (requires Docker Compose)
 - [ ] Consumer tests fetch stubs from broker and verify (requires Docker Compose)
 
+## JS Kafka Samples
+
+### js-kafka-producer (Verification Service)
+
+A Node.js service that publishes `VerificationResult` messages to a `verifications`
+Kafka topic via kafkajs.
+
+**Contract:** `shouldSendAcceptedVerification.yaml` — same format as Java producer.
+**Publishing:** Uses `@stubborn-sh/publisher` to publish contracts to broker.
+
+### js-kafka-consumer (Verification Processor)
+
+A Node.js service with a `VerificationListener` that consumes verification messages
+from the `verifications` topic via kafkajs.
+
+**Testing:** Uses `@stubborn-sh/messaging-kafka` for contract-driven verification.
+Loads producer contracts, sends to Kafka, verifies consumer processes correctly.
+
+## Cross-Language Kafka Samples
+
+### kafka-consumer-js-stubs (Java consumer ← JS producer)
+
+A Java Spring Boot consumer that fetches messaging contracts from the **JS** producer
+(`js-verification-service`) via `@AutoConfigureStubRunner` with `sccbroker://`.
+
+Proves that a Java `@KafkaListener` can work with contracts published by a Node.js producer.
+
+### js-kafka-consumer-java-stubs (JS consumer ← Java producer)
+
+A Node.js consumer that fetches messaging contracts from the **Java** producer
+(`verification-service`) via `@stubborn-sh/messaging-kafka`.
+
+Proves that a kafkajs consumer can work with contracts published by a Spring Boot producer.
+
 ## Not Yet Implemented
 
-- JS Kafka samples (`js-kafka-producer/`, `js-kafka-consumer/`) — plan step 4.3
 - E2E verification: full flow through broker — plan step 4.4

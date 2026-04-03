@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: verification-processor-js-stubs
+  kafka:
+    consumer:
+      auto-offset-reset: earliest
+      properties:
+        spring.json.trusted.packages: "org.example.verification"
