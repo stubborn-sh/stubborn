@@ -99,11 +99,14 @@ export default function LoginPage() {
           </CardContent>
         </Card>
 
-        <p className="text-center text-xs text-muted-foreground">
-          Default credentials: <span className="font-medium">admin:admin</span> /{" "}
-          <span className="font-medium">publisher:publisher</span> /{" "}
-          <span className="font-medium">reader:reader</span>
-        </p>
+        {(window.location.hostname.includes("demo.stubborn.sh") ||
+          window.location.hostname.includes("stubborn-demo")) && (
+          <p className="text-center text-xs text-muted-foreground">
+            Demo credentials: <span className="font-medium">admin:admin</span> /{" "}
+            <span className="font-medium">publisher:publisher</span> /{" "}
+            <span className="font-medium">reader:reader</span>
+          </p>
+        )}
       </div>
     </div>
   );
