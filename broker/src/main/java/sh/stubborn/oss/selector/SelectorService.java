@@ -28,6 +28,7 @@ import sh.stubborn.oss.contract.ContractService;
 import sh.stubborn.oss.environment.DeploymentInfo;
 import sh.stubborn.oss.environment.DeploymentService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class SelectorService {
@@ -46,6 +47,7 @@ public class SelectorService {
 	}
 
 	@Observed(name = "broker.selector.resolve")
+	@Transactional(readOnly = true)
 	public List<ResolvedContract> resolve(List<ConsumerVersionSelector> selectors) {
 		Set<String> seen = new LinkedHashSet<>();
 		List<ResolvedContract> results = new ArrayList<>();
