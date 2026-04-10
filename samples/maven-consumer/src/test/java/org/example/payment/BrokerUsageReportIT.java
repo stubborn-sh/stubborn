@@ -85,10 +85,7 @@ class BrokerUsageReportIT {
 		// given — verification was reported in @Order(1)
 
 		// when
-		ResponseEntity<Map> response = this.restClient.get()
-			.uri("/api/v1/graph")
-			.retrieve()
-			.toEntity(Map.class);
+		ResponseEntity<Map> response = this.restClient.get().uri("/api/v1/graph").retrieve().toEntity(Map.class);
 
 		// then
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -97,8 +94,8 @@ class BrokerUsageReportIT {
 
 		List<Map<String, Object>> edges = (List<Map<String, Object>>) body.get("edges");
 		assertThat(edges).isNotEmpty();
-		assertThat(edges).anyMatch(
-				edge -> "order-service".equals(edge.get("providerName")) && "payment-service".equals(edge.get("consumerName")));
+		assertThat(edges).anyMatch(edge -> "order-service".equals(edge.get("providerName"))
+				&& "payment-service".equals(edge.get("consumerName")));
 
 		List<Map<String, Object>> nodes = (List<Map<String, Object>>) body.get("nodes");
 		assertThat(nodes).isNotEmpty();

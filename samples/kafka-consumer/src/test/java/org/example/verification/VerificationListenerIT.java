@@ -34,7 +34,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * can send the contract-defined message to the Kafka topic. The
  * {@code VerificationListener} processes it, and we assert it was received.
  */
-@SpringBootTest
+@SpringBootTest(classes = VerificationProcessorApplication.class)
 @AutoConfigureStubRunner(ids = "sh.stubborn:verification-service:1.0.0:stubs",
 		repositoryRoot = "sccbroker://http://localhost:18080", stubsMode = StubRunnerProperties.StubsMode.REMOTE,
 		properties = { "spring.cloud.contract.stubrunner.username=reader",

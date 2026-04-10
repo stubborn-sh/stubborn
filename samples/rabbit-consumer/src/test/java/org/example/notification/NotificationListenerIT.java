@@ -34,7 +34,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * can send the contract-defined message to the RabbitMQ queue. The
  * {@code NotificationListener} processes it, and we assert it was received.
  */
-@SpringBootTest
+@SpringBootTest(classes = NotificationProcessorApplication.class)
 @AutoConfigureStubRunner(ids = "sh.stubborn:notification-service:1.0.0:stubs",
 		repositoryRoot = "sccbroker://http://localhost:18080", stubsMode = StubRunnerProperties.StubsMode.REMOTE,
 		properties = { "spring.cloud.contract.stubrunner.username=reader",

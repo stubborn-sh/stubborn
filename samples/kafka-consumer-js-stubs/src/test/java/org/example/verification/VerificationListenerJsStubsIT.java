@@ -28,17 +28,17 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Cross-language consumer contract test: JS producer → Java consumer.
  *
  * <p>
- * The JS {@code js-kafka-producer} publishes messaging contracts to the broker
- * under application name "js-verification-service". This Java consumer fetches
- * those contracts via {@code @AutoConfigureStubRunner} with {@code sccbroker://}
- * and verifies the {@code VerificationListener} can process the messages.
+ * The JS {@code js-kafka-producer} publishes messaging contracts to the broker under
+ * application name "js-verification-service". This Java consumer fetches those contracts
+ * via {@code @AutoConfigureStubRunner} with {@code sccbroker://} and verifies the
+ * {@code VerificationListener} can process the messages.
  *
  * <p>
  * The message format is identical to the Java producer — both publish the same
- * {@code VerificationResult} shape to the "verifications" topic. This test proves
- * that a Java consumer can work with contracts published by a JS producer.
+ * {@code VerificationResult} shape to the "verifications" topic. This test proves that a
+ * Java consumer can work with contracts published by a JS producer.
  */
-@SpringBootTest
+@SpringBootTest(classes = VerificationProcessorApplication.class)
 @AutoConfigureStubRunner(ids = "sh.stubborn:js-verification-service:1.0.0:stubs",
 		repositoryRoot = "sccbroker://http://localhost:18080", stubsMode = StubRunnerProperties.StubsMode.REMOTE,
 		properties = { "spring.cloud.contract.stubrunner.username=reader",
