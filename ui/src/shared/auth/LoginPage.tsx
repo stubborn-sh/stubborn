@@ -100,7 +100,9 @@ export default function LoginPage() {
         </Card>
 
         <p className="text-center text-xs text-muted-foreground">
-          Default users: admin / publisher / reader
+          Default credentials: <span className="font-medium">admin:admin</span> /{" "}
+          <span className="font-medium">publisher:publisher</span> /{" "}
+          <span className="font-medium">reader:reader</span>
         </p>
       </div>
     </div>
