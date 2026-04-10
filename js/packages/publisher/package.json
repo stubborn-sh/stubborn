@@ -1,6 +1,6 @@
 {
   "name": "@stubborn-sh/publisher",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -22,7 +22,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@stubborn-sh/broker-client": "0.0.4"
+    "@stubborn-sh/broker-client": "0.1.0"
   },
   "devDependencies": {
     "tsup": "^8.4.0"

@@ -1,6 +1,6 @@
 {
   "name": "@stubborn-sh/messaging-kafka",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -22,8 +22,8 @@
     "access": "public"
   },
   "dependencies": {
-    "@stubborn-sh/broker-client": "0.0.4",
-    "@stubborn-sh/messaging": "0.0.4",
+    "@stubborn-sh/broker-client": "0.1.0",
+    "@stubborn-sh/messaging": "0.1.0",
     "kafkajs": "^2.2.4"
   },
   "devDependencies": {
