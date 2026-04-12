@@ -14,9 +14,8 @@ wrappers expose it as build goals and tasks.
 The `BrokerPublisher` facade handles all broker communication.
 Both plugins delegate to it:
 
-1. Check if the application exists (`GET /api/v1/applications/{name}`)
-2. Auto-register the application if missing (`POST /api/v1/applications`)
-3. Publish each contract file (`POST /api/v1/applications/{name}/versions/{version}/contracts`)
+1. Register the application (`POST /api/v1/applications`) — 409 is treated as "already exists"
+2. Publish each contract file (`POST /api/v1/applications/{name}/versions/{version}/contracts`)
 
 Content type is inferred from the file extension:
 

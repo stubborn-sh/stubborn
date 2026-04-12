@@ -86,4 +86,4 @@ Environment variable fallbacks: `SCC_BROKER_URL`, `SCC_BROKER_USERNAME`, `SCC_BR
 == MCP Server
 
 The `broker-mcp-server` module exposes the broker API as an MCP (Model Context Protocol) server
-for AI agents. It provides 22 tools, 4 resources, and 4 prompts, running on port 8643.
+for AI agents. It provides 20 tools (25 with AI features enabled), 4 resources, and 7 prompts, running on port 8643.
