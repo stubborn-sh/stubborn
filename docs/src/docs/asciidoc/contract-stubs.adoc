@@ -23,13 +23,13 @@ These are generated automatically from contract tests using Spring REST Docs + `
 | `list-applications` | GET | `/api/v1/applications` | List all applications (paginated)
 | `delete-application` | DELETE | `/api/v1/applications/{name}` | Delete an application
 | `publish-contract` | POST | `/api/v1/applications/{name}/versions/{version}/contracts` | Publish a contract
-| `get-contract` | GET | `/api/v1/applications/{name}/versions/{version}/contracts/{id}` | Get a contract
+| `get-contract` | GET | `/api/v1/applications/{name}/versions/{version}/contracts/{contractName}` | Get a contract
 | `list-contracts` | GET | `/api/v1/applications/{name}/versions/{version}/contracts` | List contracts
 | `record-verification` | POST | `/api/v1/verifications` | Record a verification result
 | `list-verifications` | GET | `/api/v1/verifications` | List verification results
-| `record-deployment` | POST | `/api/v1/deployments` | Record a deployment
-| `get-deployment` | GET | `/api/v1/deployments/{environment}/{application}` | Get a deployment
-| `list-deployments` | GET | `/api/v1/deployments/{environment}` | List deployments
+| `record-deployment` | POST | `/api/v1/environments/{env}/deployments` | Record a deployment
+| `get-deployment` | GET | `/api/v1/environments/{env}/deployments/{applicationName}` | Get a deployment
+| `list-deployments` | GET | `/api/v1/environments/{env}/deployments` | List deployments
 | `can-i-deploy-safe` | GET | `/api/v1/can-i-deploy` | Can-I-Deploy check (safe result)
 | `can-i-deploy-unsafe` | GET | `/api/v1/can-i-deploy` | Can-I-Deploy check (unsafe result)
 |===
@@ -41,8 +41,8 @@ These are generated automatically from contract tests using Spring REST Docs + `
 [source,xml]
 ----
 <dependency>
-    <groupId>org.springframework.cloud</groupId>
-    <artifactId>stubborn</artifactId>
+    <groupId>sh.stubborn</groupId>
+    <artifactId>stubborn-broker</artifactId>
     <version>${broker.version}</version>
     <classifier>stubs</classifier>
     <scope>test</scope>
@@ -55,7 +55,7 @@ These are generated automatically from contract tests using Spring REST Docs + `
 ----
 @SpringBootTest
 @AutoConfigureStubRunner(
-    ids = "sh.stubborn:stubborn:+:stubs:8090",
+    ids = "sh.stubborn:stubborn-broker:+:stubs:8090",
     stubsMode = StubRunnerProperties.StubsMode.LOCAL
 )
 class BrokerClientTest {
@@ -86,7 +86,7 @@ class BrokerClientTest {
 ----
 StubRunner stubRunner = new StubRunner(
     StubRunnerOptionsBuilder.builder()
-        .withStubsFromClasspath("sh.stubborn:stubborn")
+        .withStubsFromClasspath("sh.stubborn:stubborn-broker")
         .withPort(8090)
         .build()
 );

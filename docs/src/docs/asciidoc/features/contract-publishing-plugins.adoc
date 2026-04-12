@@ -11,8 +11,8 @@ wrappers expose it as build goals and tasks.
 
 == Core Library: BrokerPublisher
 
-The `BrokerPublisher` facade is a standalone Java library with no Spring dependency.
-Both plugins delegate to it for all broker communication:
+The `BrokerPublisher` facade handles all broker communication.
+Both plugins delegate to it:
 
 1. Check if the application exists (`GET /api/v1/applications/{name}`)
 2. Auto-register the application if missing (`POST /api/v1/applications`)
@@ -30,15 +30,15 @@ Content type is inferred from the file extension:
 | `.groovy`
 | `application/x-spring-cloud-contract+groovy`
 
-| `.java`
-| `application/x-spring-cloud-contract+java`
+| `.json`
+| `application/json`
 |===
 
 == Maven Plugin
 
 Plugin coordinates: `sh.stubborn:stubborn-maven-plugin`
 
-Goal: `publish` (default phase: `install`)
+Goal: `publish` (no default phase — invoke explicitly or bind in an `<execution>`)
 
 [source,xml]
 ----
@@ -48,12 +48,11 @@ Goal: `publish` (default phase: `install`)
     <version>${broker.version}</version>
     <configuration>
         <brokerUrl>http://localhost:8642</brokerUrl>
-        <username>publisher</username>
-        <password>publisher</password>
+        <username>admin</username>
+        <password>admin</password>
         <applicationName>${project.artifactId}</applicationName>
         <applicationVersion>${project.version}</applicationVersion>
         <contractsDirectory>${project.basedir}/src/test/resources/contracts</contractsDirectory>
-        <autoCreateApplication>true</autoCreateApplication>
     </configuration>
     <executions>
         <execution>
@@ -72,18 +71,11 @@ Run manually:
 mvn stubborn:publish
 ----
 
-Or as part of the build lifecycle (bound to `install` phase by default):
-
-[source,bash]
-----
-mvn install
-----
-
 == Gradle Plugin
 
 Plugin ID: `sh.stubborn.broker`
 
-Task: `publishContracts` (depends on `test`)
+Task: `publishContracts`
 
 [source,groovy]
 ----
@@ -93,12 +85,11 @@ plugins {
 
 broker {
     brokerUrl = 'http://localhost:8642'
-    username = 'publisher'
-    password = 'publisher'
+    username = 'admin'
+    password = 'admin'
     applicationName = project.name
     applicationVersion = project.version
     contractsDirectory = file("src/test/resources/contracts")
-    autoCreateApplication = true
 }
 ----
 
@@ -145,17 +136,17 @@ gradle publishContracts
 | `src/test/resources/contracts`
 | Directory containing contract files
 
-| `autoCreateApplication`
+| `description`
 | No
-| `true`
-| Register application if it does not exist
+| --
+| Application description (used during auto-registration)
 
-| `failOnError`
+| `owner`
 | No
-| `true`
-| Fail the build if any contract fails to publish
+| `unknown`
+| Application owner (used during auto-registration)
 
-| `skipPublish`
+| `skip` (Maven property: `broker.skip`)
 | No
 | `false`
 | Skip contract publishing entirely
