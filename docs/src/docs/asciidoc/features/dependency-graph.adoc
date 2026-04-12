@@ -30,6 +30,11 @@ Returns provider and consumer dependencies for a specific application.
       "status": "SUCCESS",
       "verifiedAt": "2025-01-15T10:30:00Z"
     }
+  ],
+  "messagingEdges": [
+    {
+      ...
+    }
   ]
 }
 ----

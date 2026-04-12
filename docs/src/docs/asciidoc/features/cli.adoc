@@ -17,7 +17,7 @@ java -jar broker-cli/target/broker-cli.jar --help
 * `--broker-url` -- broker base URL (default: `http://localhost:8642`, env: `SCC_BROKER_URL`)
 * `--username` -- HTTP Basic username (env: `SCC_BROKER_USERNAME`)
 * `--password` -- HTTP Basic password (env: `SCC_BROKER_PASSWORD`)
-* `--format` -- output format: `table` (default) or `json`
+* `--output` -- output format: `table` (default) or `json`
 
 == Commands
 
@@ -26,10 +26,10 @@ java -jar broker-cli/target/broker-cli.jar --help
 | Command | Description
 
 | `app list\|get\|register\|delete` | Manage applications
-| `contract list\|get\|publish` | Manage contracts
+| `contract list\|get\|publish\|delete` | Manage contracts
 | `verify record\|list` | Record and list verifications
-| `deploy record\|list` | Record and list deployments
-| `can-i-deploy --app --version [--env]` | Check deployment safety
+| `deploy record\|list\|get` | Record and list deployments
+| `can-i-deploy --app --version --env` | Check deployment safety
 | `env list\|get\|create\|update\|delete` | Manage environments
 | `graph show\|app` | View dependency graph
 | `matrix query` | Query compatibility matrix
@@ -51,5 +51,5 @@ stubborn app list
 stubborn can-i-deploy --app order-service --version 1.0.0 --env staging
 
 # List webhooks in JSON format
-stubborn --format json webhook list
+stubborn --output json webhook list
 ----

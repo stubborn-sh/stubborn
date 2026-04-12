@@ -11,7 +11,7 @@ This information is used by the Can I Deploy safety check to determine compatibi
 
 * `POST /api/v1/environments/{env}/deployments` — Record a deployment
 * `GET /api/v1/environments/{env}/deployments` — List deployments in an environment
-* `GET /api/v1/environments/{env}/deployments/{appName}` — Get deployment for a specific application
+* `GET /api/v1/environments/{env}/deployments/{applicationName}` — Get deployment for a specific application
 
 See specification: https://github.com/stubborn-sh/stubborn/blob/main/docs/specs/004-environment-tracking.md[docs/specs/004-environment-tracking.md]
 

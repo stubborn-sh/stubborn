@@ -16,10 +16,10 @@ The fastest way to get the broker running is with Docker:
 
 [source,bash]
 ----
-docker run -p 8080:8080 mgrzejszczak/stubborn
+docker run -p 8642:8642 mgrzejszczak/stubborn
 ----
 
-The broker is now available at http://localhost:8080.
+The broker is now available at http://localhost:8642.
 
 == Development Setup
 
@@ -45,7 +45,7 @@ For the UI (in a separate terminal):
 cd ui && npm run dev
 ----
 
-- Broker API: http://localhost:8080
+- Broker API: http://localhost:8642
 - UI: http://localhost:5173
 - Grafana dashboards: http://localhost:3000
 
@@ -71,7 +71,7 @@ java -jar broker-cli/target/broker-cli.jar --username admin --password admin app
 
 [source,bash]
 ----
-curl -u admin:admin -X POST http://localhost:8080/api/v1/applications \
+curl -u admin:admin -X POST http://localhost:8642/api/v1/applications \
   -H 'Content-Type: application/json' \
   -d '{"name":"order-service","owner":"team-orders"}'
 ----
@@ -83,7 +83,7 @@ This registers `order-service` so you can publish contracts and track deployment
 [source,bash]
 ----
 curl -u publisher:publisher -X POST \
-  http://localhost:8080/api/v1/applications/order-service/versions/1.0.0/contracts \
+  http://localhost:8642/api/v1/applications/order-service/versions/1.0.0/contracts \
   -H 'Content-Type: application/json' \
   -d '{"contractName":"get-order","content":"request:\n  method: GET\n  url: /orders/1\nresponse:\n  status: 200","contentType":"application/x-spring-cloud-contract+yaml"}'
 ----
@@ -94,7 +94,7 @@ In practice, the Maven or Gradle plugin publishes contracts automatically from y
 
 [source,bash]
 ----
-curl -u publisher:publisher -X POST http://localhost:8080/api/v1/verifications \
+curl -u publisher:publisher -X POST http://localhost:8642/api/v1/verifications \
   -H 'Content-Type: application/json' \
   -d '{"providerName":"order-service","providerVersion":"1.0.0","consumerName":"payment-service","consumerVersion":"2.0.0","status":"SUCCESS"}'
 ----
@@ -106,7 +106,7 @@ This records that `payment-service` 2.0.0 successfully verified against `order-s
 [source,bash]
 ----
 curl -u publisher:publisher -X POST \
-  http://localhost:8080/api/v1/environments/staging/deployments \
+  http://localhost:8642/api/v1/environments/staging/deployments \
   -H 'Content-Type: application/json' \
   -d '{"applicationName":"order-service","version":"1.0.0"}'
 ----
@@ -116,7 +116,7 @@ curl -u publisher:publisher -X POST \
 [source,bash]
 ----
 curl -u reader:reader \
-  'http://localhost:8080/api/v1/can-i-deploy?application=order-service&version=1.0.0&environment=staging'
+  'http://localhost:8642/api/v1/can-i-deploy?application=order-service&version=1.0.0&environment=staging'
 ----
 
 Returns `{"safe":true, ...}` when all consumers deployed to `staging` have verified against this version.

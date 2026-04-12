@@ -18,12 +18,13 @@ List webhooks (paginated). Filter by URL with `?search=`.
 
 `POST /api/v1/webhooks`::
 Create a webhook. Requires `eventType` and `url`. Optionally scope to an `applicationName`.
+Optional fields: `headers` (custom HTTP headers) and `bodyTemplate` (custom body template).
 
 `GET /api/v1/webhooks/{id}`::
 Get a specific webhook by UUID.
 
 `PUT /api/v1/webhooks/{id}`::
-Update a webhook (event type, URL, enabled flag).
+Update a webhook (event type, URL, enabled flag, `headers`, and `bodyTemplate`).
 
 `DELETE /api/v1/webhooks/{id}`::
 Delete a webhook.

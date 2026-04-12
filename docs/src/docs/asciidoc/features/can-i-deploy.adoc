@@ -15,9 +15,10 @@ It examines:
 
 == API
 
-* `GET /api/v1/can-i-deploy?application=X&version=Y&environment=Z` — Safety check
+* `GET /api/v1/can-i-deploy?application=X&version=Y&environment=Z&branch=B` — Safety check
+  (`branch` is optional)
 
-Returns `{"safe": true/false, "summary": "...", "consumerResults": [...]}`.
+Returns `{"application": "...", "version": "...", "environment": "...", "branch": "...", "safe": true/false, "summary": "...", "consumerResults": [...]}`.
 
 See specification: https://github.com/stubborn-sh/stubborn/blob/main/docs/specs/005-can-i-deploy.md[docs/specs/005-can-i-deploy.md]
 

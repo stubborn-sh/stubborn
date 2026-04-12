@@ -6,16 +6,16 @@ See specification: https://github.com/stubborn-sh/stubborn/blob/main/docs/specs/
 
 == Endpoints
 
-`POST /api/v1/applications/{name}/versions/{version}/tags/{tag}`::
+`PUT /api/v1/applications/{name}/versions/{version}/tags/{tag}`::
 Add a tag to a version.
 
 `DELETE /api/v1/applications/{name}/versions/{version}/tags/{tag}`::
 Remove a tag from a version.
 
-`GET /api/v1/applications/{name}/tags`::
-List all tags for an application.
+`GET /api/v1/applications/{name}/versions/{version}/tags`::
+List all tags for a version.
 
-`GET /api/v1/applications/{name}/tags/{tag}/latest`::
+`GET /api/v1/applications/{name}/versions/latest?tag={tag}`::
 Get the latest version with a specific tag.
 
 == Use Case

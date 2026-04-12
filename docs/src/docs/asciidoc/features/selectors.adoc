@@ -9,7 +9,7 @@ See specification: https://github.com/stubborn-sh/stubborn/blob/main/docs/specs/
 
 `POST /api/v1/selectors/resolve`::
 Resolves selectors to a list of contracts. Accepts a list of selectors with criteria:
-`consumer`, `mainBranch`, `deployed`, `branch`.
+`consumer`, `mainBranch`, `deployed`, `branch`, `environment`.
 
 == Selector Criteria
 
@@ -17,6 +17,7 @@ Resolves selectors to a list of contracts. Accepts a list of selectors with crit
 * `mainBranch` (boolean) -- select contracts from the main branch
 * `deployed` (boolean) -- select contracts from versions currently deployed
 * `branch` -- select contracts from a specific branch
+* `environment` -- select contracts from versions deployed to a specific environment
 
 Multiple selectors are combined with OR logic (union of results).
 

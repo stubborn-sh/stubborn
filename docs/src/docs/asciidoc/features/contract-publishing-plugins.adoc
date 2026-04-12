@@ -36,18 +36,18 @@ Content type is inferred from the file extension:
 
 == Maven Plugin
 
-Plugin coordinates: `org.springframework.cloud:broker-maven-plugin`
+Plugin coordinates: `sh.stubborn:stubborn-maven-plugin`
 
 Goal: `publish` (default phase: `install`)
 
 [source,xml]
 ----
 <plugin>
-    <groupId>org.springframework.cloud</groupId>
-    <artifactId>broker-maven-plugin</artifactId>
+    <groupId>sh.stubborn</groupId>
+    <artifactId>stubborn-maven-plugin</artifactId>
     <version>${broker.version}</version>
     <configuration>
-        <brokerUrl>http://localhost:8080</brokerUrl>
+        <brokerUrl>http://localhost:8642</brokerUrl>
         <username>publisher</username>
         <password>publisher</password>
         <applicationName>${project.artifactId}</applicationName>
@@ -69,7 +69,7 @@ Run manually:
 
 [source,bash]
 ----
-mvn broker:publish
+mvn stubborn:publish
 ----
 
 Or as part of the build lifecycle (bound to `install` phase by default):
@@ -92,7 +92,7 @@ plugins {
 }
 
 broker {
-    brokerUrl = 'http://localhost:8080'
+    brokerUrl = 'http://localhost:8642'
     username = 'publisher'
     password = 'publisher'
     applicationName = project.name
@@ -180,7 +180,7 @@ A typical CI pipeline publishes contracts after tests pass:
 [source,bash]
 ----
 # Maven
-mvn clean verify broker:publish \
+mvn clean verify stubborn:publish \
     -Dbroker.url=https://broker.example.com \
     -Dbroker.username=${BROKER_USER} \
     -Dbroker.password=${BROKER_PASS}

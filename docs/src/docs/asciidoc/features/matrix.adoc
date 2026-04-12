@@ -7,15 +7,12 @@ See specification: https://github.com/stubborn-sh/stubborn/blob/main/docs/specs/
 == Endpoints
 
 `GET /api/v1/matrix`::
-Query the full matrix. Filter by `provider`, `consumer`, and/or `environment`.
-
-`GET /api/v1/matrix/providers/{name}`::
-Query matrix rows for a specific provider, showing all consumers that have verified against it.
+Query the full matrix. Filter by `provider` and/or `consumer`.
 
 == Response
 
 Returns a list of matrix entries, each containing provider name/version, consumer name/version,
-verification status (SUCCESS/FAILED), verification timestamp, and environment (if filtered).
+verification status (SUCCESS/FAILED), and verification timestamp.
 
 == Use Case
 

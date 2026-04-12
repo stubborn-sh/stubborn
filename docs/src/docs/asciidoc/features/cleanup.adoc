@@ -6,12 +6,11 @@ See specification: https://github.com/stubborn-sh/stubborn/blob/main/docs/specs/
 
 == Endpoints
 
-`POST /api/v1/cleanup`::
-Run cleanup across all applications. Accepts `keepVersions` parameter (default: 10)
-specifying how many recent versions to retain per application.
-
-`POST /api/v1/cleanup/applications/{name}`::
-Run cleanup for a specific application.
+`POST /api/v1/maintenance/cleanup`::
+Run cleanup across all applications or a specific application (via `applicationName` in the
+request body). Accepts `keepLatestVersions` parameter (default: 10) specifying how many recent
+versions to retain per application. An optional `protectedEnvironments` list prevents cleanup
+of versions deployed to those environments.
 
 == What Gets Cleaned
 
