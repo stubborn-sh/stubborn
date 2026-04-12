@@ -48,4 +48,4 @@ spring.ai:
       temperature: 0.2
 ----
 
-See specification: `docs/specs/007-ai-traffic-proxy.md`
+See specification: https://github.com/stubborn-sh/stubborn/blob/main/docs/specs/007-ai-traffic-proxy.md[docs/specs/007-ai-traffic-proxy.md]

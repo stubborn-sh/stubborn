@@ -8,6 +8,7 @@ DELETE FROM maven_import_sources;
 DELETE FROM version_tags;
 DELETE FROM deployments;
 DELETE FROM verifications;
+DELETE FROM contract_topics;
 DELETE FROM contracts;
 DELETE FROM applications;
 DELETE FROM environments;
@@ -205,6 +206,100 @@ VALUES
      E'request:\n  method: GET\n  url: /orders/1\n  headers:\n    Authorization: Bearer token-123\nresponse:\n  status: 200\n  body:\n    id: 1\n    status: CREATED',
      'application/x-spring-cloud-contract+yaml',
      'c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3');
+
+-- ============================================================
+-- Messaging Contracts
+-- ============================================================
+
+-- order-service publishes to order-events topic (v1.2.0)
+INSERT INTO contracts (application_id, version, contract_name, content, content_type, content_hash, interaction_type)
+VALUES
+    ((SELECT id FROM applications WHERE name = 'order-service'), '1.2.0', 'shouldPublishOrderCreated.yml',
+     E'label: order_created\ninput:\n  triggeredBy: trigger()\noutputMessage:\n  sentTo: order-events\n  body:\n    orderId: 1\n    status: CREATED\n    total: 99.99\n    currency: USD\n  headers:\n    contentType: application/json',
+     'application/x-spring-cloud-contract+yaml',
+     'e1e2e3e4e5e6e7e8e9e0e1e2e3e4e5e6e7e8e9e0e1e2e3e4e5e6e7e8e9e0e1e2',
+     'MESSAGING');
+
+INSERT INTO contracts (application_id, version, contract_name, content, content_type, content_hash, interaction_type)
+VALUES
+    ((SELECT id FROM applications WHERE name = 'order-service'), '1.2.0', 'shouldPublishOrderCancelled.yml',
+     E'label: order_cancelled\ninput:\n  triggeredBy: trigger()\noutputMessage:\n  sentTo: order-events\n  body:\n    orderId: 1\n    status: CANCELLED\n    reason: customer_request\n  headers:\n    contentType: application/json',
+     'application/x-spring-cloud-contract+yaml',
+     'f1f2f3f4f5f6f7f8f9f0f1f2f3f4f5f6f7f8f9f0f1f2f3f4f5f6f7f8f9f0f1f2',
+     'MESSAGING');
+
+-- payment-service publishes to payment-events topic (v2.1.0)
+INSERT INTO contracts (application_id, version, contract_name, content, content_type, content_hash, interaction_type)
+VALUES
+    ((SELECT id FROM applications WHERE name = 'payment-service'), '2.1.0', 'shouldPublishPaymentCompleted.yml',
+     E'label: payment_completed\ninput:\n  triggeredBy: trigger()\noutputMessage:\n  sentTo: payment-events\n  body:\n    paymentId: 1\n    orderId: 1\n    status: COMPLETED\n    amount: 99.99\n    transactionId: txn-abc-123\n  headers:\n    contentType: application/json',
+     'application/x-spring-cloud-contract+yaml',
+     'a1a2a3a4a5a6a7a8a9a0a1a2a3a4a5a6a7a8a9a0a1a2a3a4a5a6a7a8a9a0a1a2',
+     'MESSAGING');
+
+INSERT INTO contracts (application_id, version, contract_name, content, content_type, content_hash, interaction_type)
+VALUES
+    ((SELECT id FROM applications WHERE name = 'payment-service'), '2.1.0', 'shouldPublishPaymentFailed.yml',
+     E'label: payment_failed\ninput:\n  triggeredBy: trigger()\noutputMessage:\n  sentTo: payment-events\n  body:\n    paymentId: 1\n    orderId: 1\n    status: FAILED\n    reason: insufficient_funds\n  headers:\n    contentType: application/json',
+     'application/x-spring-cloud-contract+yaml',
+     'b1b2b3b4b5b6b7b8b9b0b1b2b3b4b5b6b7b8b9b0b1b2b3b4b5b6b7b8b9b0b1b2',
+     'MESSAGING');
+
+-- inventory-service publishes to stock-events topic (v1.1.0)
+INSERT INTO contracts (application_id, version, contract_name, content, content_type, content_hash, interaction_type)
+VALUES
+    ((SELECT id FROM applications WHERE name = 'inventory-service'), '1.1.0', 'shouldPublishStockReserved.yml',
+     E'label: stock_reserved\ninput:\n  triggeredBy: trigger()\noutputMessage:\n  sentTo: stock-events\n  body:\n    productId: 100\n    quantity: 2\n    orderId: 1\n    warehouse: MAIN\n  headers:\n    contentType: application/json',
+     'application/x-spring-cloud-contract+yaml',
+     'c1c2c3c4c5c6c7c8c9c0c1c2c3c4c5c6c7c8c9c0c1c2c3c4c5c6c7c8c9c0c1c2',
+     'MESSAGING');
+
+-- notification-service publishes to notification-events topic (v1.0.0)
+INSERT INTO contracts (application_id, version, contract_name, content, content_type, content_hash, interaction_type)
+VALUES
+    ((SELECT id FROM applications WHERE name = 'notification-service'), '1.0.0', 'shouldPublishEmailDelivered.yml',
+     E'label: email_delivered\ninput:\n  triggeredBy: trigger()\noutputMessage:\n  sentTo: notification-events\n  body:\n    notificationId: 101\n    channel: EMAIL\n    status: DELIVERED\n    recipient: customer@example.com\n  headers:\n    contentType: application/json',
+     'application/x-spring-cloud-contract+yaml',
+     'd1d2d3d4d5d6d7d8d9d0d1d2d3d4d5d6d7d8d9d0d1d2d3d4d5d6d7d8d9d0d1d2',
+     'MESSAGING');
+
+-- ============================================================
+-- Contract Topics (messaging edges for dependency graph)
+-- ============================================================
+
+-- order-service publishes to order-events
+INSERT INTO contract_topics (contract_id, application_id, version, topic_name, direction)
+VALUES
+    ((SELECT id FROM contracts WHERE contract_name = 'shouldPublishOrderCreated.yml' AND version = '1.2.0'),
+     (SELECT id FROM applications WHERE name = 'order-service'), '1.2.0', 'order-events', 'PUBLISH');
+
+INSERT INTO contract_topics (contract_id, application_id, version, topic_name, direction)
+VALUES
+    ((SELECT id FROM contracts WHERE contract_name = 'shouldPublishOrderCancelled.yml' AND version = '1.2.0'),
+     (SELECT id FROM applications WHERE name = 'order-service'), '1.2.0', 'order-events', 'PUBLISH');
+
+-- payment-service publishes to payment-events
+INSERT INTO contract_topics (contract_id, application_id, version, topic_name, direction)
+VALUES
+    ((SELECT id FROM contracts WHERE contract_name = 'shouldPublishPaymentCompleted.yml' AND version = '2.1.0'),
+     (SELECT id FROM applications WHERE name = 'payment-service'), '2.1.0', 'payment-events', 'PUBLISH');
+
+INSERT INTO contract_topics (contract_id, application_id, version, topic_name, direction)
+VALUES
+    ((SELECT id FROM contracts WHERE contract_name = 'shouldPublishPaymentFailed.yml' AND version = '2.1.0'),
+     (SELECT id FROM applications WHERE name = 'payment-service'), '2.1.0', 'payment-events', 'PUBLISH');
+
+-- inventory-service publishes to stock-events
+INSERT INTO contract_topics (contract_id, application_id, version, topic_name, direction)
+VALUES
+    ((SELECT id FROM contracts WHERE contract_name = 'shouldPublishStockReserved.yml' AND version = '1.1.0'),
+     (SELECT id FROM applications WHERE name = 'inventory-service'), '1.1.0', 'stock-events', 'PUBLISH');
+
+-- notification-service publishes to notification-events
+INSERT INTO contract_topics (contract_id, application_id, version, topic_name, direction)
+VALUES
+    ((SELECT id FROM contracts WHERE contract_name = 'shouldPublishEmailDelivered.yml' AND version = '1.0.0'),
+     (SELECT id FROM applications WHERE name = 'notification-service'), '1.0.0', 'notification-events', 'PUBLISH');
 
 -- ============================================================
 -- Verifications

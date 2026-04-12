@@ -1,5 +1,5 @@
-import { useState, useEffect, useMemo } from "react";
-import { NavLink, Outlet } from "react-router-dom";
+import { useState, useEffect, useMemo, useCallback } from "react";
+import { NavLink, Outlet, useLocation } from "react-router-dom";
 import {
   LayoutDashboard,
   Building2,
@@ -22,6 +22,8 @@ import {
   FolderGit2,
   Package,
   MessageSquare,
+  Menu,
+  X,
 } from "lucide-react";
 import { cn } from "@/shared/lib/utils";
 import { useAuth } from "@/shared/auth/useAuth";
@@ -86,21 +88,40 @@ export default function Layout() {
   const { dark, toggle } = useTheme();
   const { data: brokerInfo } = useBrokerInfo();
   const proEnabled = brokerInfo?.proEnabled ?? false;
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const location = useLocation();
   const visibleNavItems = useMemo(
     () => navItems.filter((item) => !item.proOnly || proEnabled),
     [proEnabled],
   );
+
+  // Close sidebar on navigation (mobile)
+  useEffect(() => {
+    setSidebarOpen(false);
+  }, [location.pathname]);
+
+  const closeSidebar = useCallback(() => {
+    setSidebarOpen(false);
+  }, []);
+
   return (
     <div className="min-h-screen bg-background">
       <header className="bg-card border-b border-border sticky top-0 z-50">
-        <div className="px-6 py-4 flex items-center justify-between">
+        <div className="px-4 md:px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
+            <button
+              onClick={() => setSidebarOpen((o) => !o)}
+              className="md:hidden flex items-center justify-center rounded-md p-2 text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+              aria-label={sidebarOpen ? "Close menu" : "Open menu"}
+            >
+              {sidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </button>
             <div className="bg-emerald-500 p-2 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-lg leading-none">S</span>
             </div>
             <div>
               <h1 className="font-semibold text-foreground">Stubborn</h1>
-              <p className="text-xs text-muted-foreground">Contract Governance</p>
+              <p className="text-xs text-muted-foreground hidden sm:block">Contract Governance</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
@@ -111,20 +132,37 @@ export default function Layout() {
             >
               {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             </button>
-            <span className="text-sm text-muted-foreground">{username}</span>
+            <span className="text-sm text-muted-foreground hidden sm:inline">{username}</span>
             <button
               onClick={logout}
               className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
             >
               <LogOut className="h-4 w-4" />
-              Sign out
+              <span className="hidden sm:inline">Sign out</span>
             </button>
           </div>
         </div>
       </header>
 
       <div className="flex">
-        <aside className="w-64 bg-sidebar border-r border-sidebar-border min-h-[calc(100vh-73px)] sticky top-[73px]">
+        {/* Mobile overlay */}
+        {sidebarOpen && (
+          <div
+            className="fixed inset-0 bg-black/50 z-40 md:hidden"
+            onClick={closeSidebar}
+            aria-hidden="true"
+          />
+        )}
+
+        <aside
+          className={cn(
+            "bg-sidebar border-r border-sidebar-border min-h-[calc(100vh-73px)] z-40",
+            // Desktop: always visible, sticky
+            "hidden md:block md:w-64 md:sticky md:top-[73px]",
+            // Mobile: fixed overlay when open
+            sidebarOpen && "!block fixed top-[73px] left-0 w-64 bottom-0 overflow-y-auto",
+          )}
+        >
           <nav className="p-4 space-y-1">
             {visibleNavItems.map((item) => (
               <NavLink
@@ -148,7 +186,7 @@ export default function Layout() {
             v0.1.0-SNAPSHOT
           </div>
         </aside>
-        <main className="flex-1 overflow-auto p-8">
+        <main className="flex-1 overflow-auto p-4 md:p-8">
           <Outlet />
         </main>
       </div>

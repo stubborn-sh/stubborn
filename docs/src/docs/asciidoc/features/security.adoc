@@ -16,4 +16,4 @@ HTTP Basic authentication. CSRF disabled for stateless API usage.
 
 * `/actuator/health` — Available without authentication
 
-See specification: `docs/specs/006-security.md`
+See specification: https://github.com/stubborn-sh/stubborn/blob/main/docs/specs/006-security.md[docs/specs/006-security.md]

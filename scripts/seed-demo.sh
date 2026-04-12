@@ -82,6 +82,37 @@ publish_contract shipping-service 1.0.0 track-shipment GET "/shipments/1" 200
 publish_contract checkout-ui 3.0.0 get-cart GET "/cart" 200
 publish_contract checkout-ui 3.1.0 get-cart GET "/cart" 200
 
+# ── Messaging Contracts ──────────────────────────────────────────────────
+echo "  Messaging contracts..."
+publish_messaging_contract() {
+  local app="$1" version="$2" name="$3" topic="$4" body="$5" branch="${6:-main}"
+  local content="label: $name\ninput:\n  triggeredBy: trigger()\noutputMessage:\n  sentTo: $topic\n  body:\n    $body\n  headers:\n    contentType: application/json"
+  post "/api/v1/applications/$app/versions/$version/contracts" \
+    "{\"contractName\":\"$name\",\"content\":\"$content\",\"contentType\":\"application/x-spring-cloud-contract+yaml\",\"branch\":\"$branch\"}" > /dev/null
+}
+
+# order-service publishes order events
+for v in 1.2.0 2.0.0; do
+  publish_messaging_contract order-service "$v" order-created order-events "orderId: 123\n    status: CREATED\n    totalAmount: 99.99"
+  publish_messaging_contract order-service "$v" order-cancelled order-events "orderId: 123\n    status: CANCELLED\n    reason: customer_request"
+done
+
+# payment-service publishes payment events
+for v in 1.1.0 2.0.0; do
+  publish_messaging_contract payment-service "$v" payment-completed payment-events "paymentId: 456\n    orderId: 123\n    status: COMPLETED\n    amount: 99.99"
+  publish_messaging_contract payment-service "$v" payment-failed payment-events "paymentId: 456\n    orderId: 123\n    status: FAILED\n    reason: insufficient_funds"
+done
+
+# inventory-service publishes stock events
+publish_messaging_contract inventory-service 1.1.0 stock-reserved stock-events "sku: SKU-1\n    quantity: 2\n    orderId: 123"
+publish_messaging_contract inventory-service 1.1.0 stock-depleted stock-events "sku: SKU-1\n    availableQuantity: 0"
+
+# shipping-service publishes shipment tracking events
+publish_messaging_contract shipping-service 1.0.0 shipment-dispatched shipment-events "shipmentId: 789\n    orderId: 123\n    carrier: DHL\n    trackingNumber: DHL-123456"
+
+# notification-service publishes notification delivery events
+publish_messaging_contract notification-service 1.0.0 email-delivered notification-events "notificationId: 101\n    channel: EMAIL\n    status: DELIVERED"
+
 # ── Verifications ─────────────────────────────────────────────────────────
 echo "  Verifications..."
 verify() {
@@ -183,15 +214,17 @@ post "/api/v1/webhooks" '{"eventType":"DEPLOYMENT_RECORDED","url":"https://ci.ex
 echo ""
 echo "==> Demo data seeded successfully!"
 echo ""
-echo "  8 applications, 3 environments, ~30 contracts"
+echo "  8 applications, 3 environments, ~30 HTTP contracts, ~11 messaging contracts"
 echo "  15 verifications (13 SUCCESS, 2 FAILED)"
 echo "  20 deployments across dev/staging/production"
 echo "  8 version tags, 3 webhooks"
+echo "  4 topics: order-events, payment-events, stock-events, shipment-events"
 echo ""
 echo "  Interesting scenarios to explore:"
 echo "    - can-i-deploy order-service 2.0.0 to production  (UNSAFE — notification-service failed)"
 echo "    - can-i-deploy checkout-ui 3.1.0 to staging       (SAFE)"
 echo "    - can-i-deploy user-service 2.0.0 to staging      (UNSAFE — admin-dashboard failed)"
 echo "    - dependency graph shows checkout-ui depends on 3 services"
+echo "    - dependency graph shows messaging edges (order-events, payment-events, etc.)"
 echo "    - matrix shows order-service has 4 consumers"
 echo "    - feature branch order-service 2.1.0-SNAPSHOT has pending failure"

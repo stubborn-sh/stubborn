@@ -2,55 +2,28 @@
 
 == Multi-Module Structure
 
-The project is organized as a multi-module Maven reactor:
+The project is organized as a multi-module Maven reactor.
+Run `ls -d */` from the project root or check `pom.xml` `<modules>` for the current list.
 
-[source]
-----
-stubborn/
-├── pom.xml                    (parent POM, packaging=pom)
-├── proxy/                     (AI traffic-to-contract proxy — independent Spring Boot app)
-├── ui/                        (React frontend — Vite + TailwindCSS + React Query)
-├── broker/                    (core REST API, DB, UI static resources, stubs JAR)
-├── broker-api-client/         (generated REST client JAR — OpenAPI Generator)
-├── broker-cli/                (Picocli CLI wrapping broker-api-client — 13 commands)
-├── broker-mcp-server/         (MCP server — AI agent tools/resources/prompts)
-├── broker-stub-downloader/    (StubDownloaderBuilder SPI — sccbroker:// protocol)
-├── broker-contract-publisher/ (core Java library — file scanning, REST calls to broker)
-├── broker-maven-plugin/       (Maven Mojo wrapping broker-contract-publisher)
-├── broker-gradle-plugin/      (Gradle plugin wrapping broker-contract-publisher)
-├── stub-runner/               (Stub Runner Boot — serves broker stubs for consumer testing)
-├── e2e-tests/                 (Playwright browser-based E2E tests)
-├── samples/                   (6 sample apps — behind -Psamples profile)
-├── docs/                      (AsciiDoc documentation sources)
-├── charts/                    (Helm chart)
-└── k8s/                       (Kustomize overlays)
-----
+Key modules:
 
-All dependency versions are centralized in the root `pom.xml`.
+* **broker** — core REST API, database, UI static resources, stubs JAR assembly
+* **ui** — React frontend (Vite + TailwindCSS + React Query)
+* **broker-stub-downloader** — `StubDownloaderBuilder` SPI for the `sccbroker://` protocol
+* **broker-contract-publisher** — Java library for scanning and publishing contracts
+* **broker-maven-plugin** / **broker-gradle-plugin** — build tool plugins wrapping the publisher
+* **stub-runner** — Stub Runner Boot for consumer testing
+* **e2e-tests** — Playwright browser-based E2E tests
+* **js/** — Node.js packages (CLI, stub-server, stubs-packager, Jest integration)
 
 == Broker Module — Vertical Slice Architecture
 
-The broker module is organized by feature (vertical slices), not by technical layer:
+The broker module is organized by feature (vertical slices), not by technical layer.
+Each package under `broker/src/main/java/sh/stubborn/oss/` is a self-contained feature
+with its own controller, DTOs, entity, repository, and service.
 
-[source]
-----
-broker/src/main/java/.../broker/
-├── application/     # Application Registration
-├── contract/        # Contract/Stub Publishing
-├── verification/    # Verification Results
-├── environment/     # Environment Tracking
-├── safety/          # Can I Deploy
-├── graph/           # Dependency Graph
-├── webhook/         # Event Webhooks
-├── tag/             # Version Tagging
-├── selector/        # Consumer Version Selectors
-├── matrix/          # Compatibility Matrix
-├── maintenance/     # Data Cleanup / Retention
-├── security/        # Cross-cutting security
-└── observability/   # Metrics, health indicators, caching
-----
-
-Each feature slice contains its controller, request/response DTOs, entity, repository, and business logic.
+This structure is enforced by `ArchitectureTest.java` (ArchUnit) — controllers cannot access
+repositories directly, services cannot depend on controllers, and entities must be package-private.
 
 == Proxy Module
 

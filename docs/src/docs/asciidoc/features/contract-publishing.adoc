@@ -13,4 +13,4 @@ Consumers can then retrieve these contracts to generate stubs for testing.
 * `GET /api/v1/applications/{name}/versions/{version}/contracts` — List contracts for a version
 * `GET /api/v1/applications/{name}/versions/{version}/contracts/{contractName}` — Get a specific contract
 
-See specification: `docs/specs/002-contract-publishing.md`
+See specification: https://github.com/stubborn-sh/stubborn/blob/main/docs/specs/002-contract-publishing.md[docs/specs/002-contract-publishing.md]

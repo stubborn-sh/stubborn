@@ -192,4 +192,4 @@ gradle build publishContracts \
     -Pbroker.password=${BROKER_PASS}
 ----
 
-See specification: `docs/specs/008-contract-publishing-plugins.md`
+See specification: https://github.com/stubborn-sh/stubborn/blob/main/docs/specs/008-contract-publishing-plugins.md[docs/specs/008-contract-publishing-plugins.md]

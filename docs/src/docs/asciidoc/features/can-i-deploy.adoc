@@ -19,6 +19,6 @@ It examines:
 
 Returns `{"safe": true/false, "summary": "...", "consumerResults": [...]}`.
 
-See specification: `docs/specs/005-can-i-deploy.md`
+See specification: https://github.com/stubborn-sh/stubborn/blob/main/docs/specs/005-can-i-deploy.md[docs/specs/005-can-i-deploy.md]
 
 image::demo-can-i-deploy.png[Can I Deploy,width=100%]

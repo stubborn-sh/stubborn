@@ -12,4 +12,4 @@ After a consumer runs contract tests against a provider's stubs, the verificatio
 * `POST /api/v1/verifications` — Record a verification result
 * `GET /api/v1/verifications` — Query verification results (filter by provider, consumer, version)
 
-See specification: `docs/specs/003-verification-results.md`
+See specification: https://github.com/stubborn-sh/stubborn/blob/main/docs/specs/003-verification-results.md[docs/specs/003-verification-results.md]

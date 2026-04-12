@@ -13,6 +13,6 @@ This information is used by the Can I Deploy safety check to determine compatibi
 * `GET /api/v1/environments/{env}/deployments` — List deployments in an environment
 * `GET /api/v1/environments/{env}/deployments/{appName}` — Get deployment for a specific application
 
-See specification: `docs/specs/004-environment-tracking.md`
+See specification: https://github.com/stubborn-sh/stubborn/blob/main/docs/specs/004-environment-tracking.md[docs/specs/004-environment-tracking.md]
 
 image::demo-environments.png[Environments,width=100%]
