@@ -37,7 +37,7 @@ jobs:
           cache: maven
 
       - name: Build docs
-        run: ./mvnw asciidoctor:process-asciidoc -pl broker -B
+        run: ./mvnw asciidoctor:process-asciidoc@generate-docs -pl broker -B
 
       - name: Prepare site
         run: |
