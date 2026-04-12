@@ -9,53 +9,14 @@ on:
       - '.github/workflows/docs.yml'
   workflow_dispatch:
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: pages
-  cancel-in-progress: false
-
-env:
-  JAVA_VERSION: '25'
-  JAVA_DISTRIBUTION: 'liberica'
-
 jobs:
-  build:
-    name: Build Docs
+  trigger-website:
+    name: Trigger Website Rebuild
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-
-      - name: Set up JDK
-        uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5.2.0
+      - name: Dispatch to stubborn-website
+        uses: peter-evans/repository-dispatch@ff45666b9427631e3450c54a1bcbee4d9ff4d7c0 # v3.0.0
         with:
-          java-version: ${{ env.JAVA_VERSION }}
-          distribution: ${{ env.JAVA_DISTRIBUTION }}
-          cache: maven
-
-      - name: Build docs
-        run: ./mvnw asciidoctor:process-asciidoc -pl broker -B
-
-      - name: Prepare site
-        run: |
-          mkdir -p _site
-          cp -r broker/target/generated-docs/* _site/
-          touch _site/.nojekyll
-
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3.0.1
-
-  deploy:
-    name: Deploy to GitHub Pages
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac553fd0d31 # v4.0.5
+          token: ${{ secrets.DOCS_DISPATCH_TOKEN }}
+          repository: stubborn-sh/stubborn-website
+          event-type: docs-updated
