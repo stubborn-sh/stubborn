@@ -80,7 +80,7 @@ The `broker-cli` module provides a Picocli-based command-line interface wrapping
 It supports 13 top-level commands: `app`, `contract`, `verify`, `deploy`, `can-i-deploy`, `env`, `graph`,
 `matrix`, `tag`, `webhook`, `selector`, `cleanup`, and `version`.
 
-Global options: `--broker-url`, `--username`, `--password`, `--format` (table or json).
+Global options: `--broker-url`, `--username`, `--password`, `--output` (table or json).
 Environment variable fallbacks: `SCC_BROKER_URL`, `SCC_BROKER_USERNAME`, `SCC_BROKER_PASSWORD`.
 
 == MCP Server
