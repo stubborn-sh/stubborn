@@ -4,6 +4,8 @@ The broker can import existing stubs JARs from Maven repositories (Nexus/Artifac
 into its contract database. This enables teams to migrate from repository-based contract
 sharing to broker-managed contracts without re-publishing every contract manually.
 
+See specification: https://github.com/stubborn-sh/stubborn/blob/main/docs/specs/027-maven-import.md[docs/specs/027-maven-import.md]
+
 === One-Time Import
 
 Import contracts from a specific stubs JAR by Maven coordinates:

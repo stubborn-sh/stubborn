@@ -2,6 +2,8 @@
 
 Tags are semantic labels attached to application versions (e.g., RELEASE, SNAPSHOT, STABLE).
 
+See specification: https://github.com/stubborn-sh/stubborn/blob/main/docs/specs/017-version-tags.md[docs/specs/017-version-tags.md]
+
 == Endpoints
 
 `POST /api/v1/applications/{name}/versions/{version}/tags/{tag}`::

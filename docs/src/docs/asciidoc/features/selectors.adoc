@@ -3,6 +3,8 @@
 Consumer version selectors provide a flexible query mechanism for determining which consumer
 contract versions a provider should verify against.
 
+See specification: https://github.com/stubborn-sh/stubborn/blob/main/docs/specs/015-consumer-version-selectors.md[docs/specs/015-consumer-version-selectors.md]
+
 == Endpoint
 
 `POST /api/v1/selectors/resolve`::

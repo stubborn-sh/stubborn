@@ -5,6 +5,8 @@ identical content already exists for the same application version, it is not sto
 
 This prevents database bloat when CI pipelines re-publish the same contracts on every build.
 
+See specification: https://github.com/stubborn-sh/stubborn/blob/main/docs/specs/012-content-hash.md[docs/specs/012-content-hash.md]
+
 == How It Works
 
 1. On publish, the broker computes `SHA-256(content)`.

@@ -2,6 +2,8 @@
 
 The broker provides configurable data retention to prevent unbounded database growth.
 
+See specification: https://github.com/stubborn-sh/stubborn/blob/main/docs/specs/018-data-cleanup.md[docs/specs/018-data-cleanup.md]
+
 == Endpoints
 
 `POST /api/v1/cleanup`::

@@ -3,6 +3,8 @@
 Environments are managed as a first-class resource with CRUD operations, replacing hardcoded
 environment lists.
 
+See specification: https://github.com/stubborn-sh/stubborn/blob/main/docs/specs/022-configurable-environments.md[docs/specs/022-configurable-environments.md]
+
 == Endpoints
 
 `GET /api/v1/environments`::

@@ -2,6 +2,8 @@
 
 The broker fires HTTP webhooks on key events, enabling CI/CD automation.
 
+See specification: https://github.com/stubborn-sh/stubborn/blob/main/docs/specs/013-webhooks.md[docs/specs/013-webhooks.md]
+
 == Event Types
 
 * `CONTRACT_PUBLISHED` -- when a new contract version is published

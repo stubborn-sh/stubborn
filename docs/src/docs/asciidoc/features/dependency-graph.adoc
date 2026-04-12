@@ -2,6 +2,8 @@
 
 The broker builds a dependency graph from verification results, showing provider/consumer relationships across applications.
 
+See specification: https://github.com/stubborn-sh/stubborn/blob/main/docs/specs/009-dependency-graph.md[docs/specs/009-dependency-graph.md]
+
 == Endpoints
 
 `GET /api/v1/graph`::

@@ -2,6 +2,8 @@
 
 The compatibility matrix shows provider-consumer verification status in a grid format.
 
+See specification: https://github.com/stubborn-sh/stubborn/blob/main/docs/specs/016-compatibility-matrix.md[docs/specs/016-compatibility-matrix.md]
+
 == Endpoints
 
 `GET /api/v1/matrix`::

@@ -3,6 +3,8 @@
 The `broker-mcp-server` module exposes the broker API as an MCP (Model Context Protocol) server
 for AI coding agents such as Claude Code, GitHub Copilot, and others.
 
+See specification: https://github.com/stubborn-sh/stubborn/blob/main/docs/specs/010-mcp-server.md[docs/specs/010-mcp-server.md]
+
 == Overview
 
 * 22 tools for all broker operations (register, publish, verify, deploy, can-i-deploy, etc.)

@@ -3,6 +3,8 @@
 The `broker-cli` module provides a command-line interface for interacting with the broker,
 replacing `curl` commands with a user-friendly tool.
 
+See specification: https://github.com/stubborn-sh/stubborn/blob/main/docs/specs/023-cli.md[docs/specs/023-cli.md]
+
 == Installation
 
 [source,bash]

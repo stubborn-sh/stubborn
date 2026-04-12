@@ -2,6 +2,8 @@
 
 Contracts and verifications can be associated with a source code branch, enabling branch-aware workflows.
 
+See specification: https://github.com/stubborn-sh/stubborn/blob/main/docs/specs/011-branches.md[docs/specs/011-branches.md]
+
 == How It Works
 
 When publishing a contract or recording a verification, an optional `branch` field tracks which
