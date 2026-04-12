@@ -7,6 +7,7 @@ See specification: https://github.com/stubborn-sh/stubborn/blob/main/docs/specs/
 == Event Types
 
 * `CONTRACT_PUBLISHED` -- when a new contract version is published
+* `VERIFICATION_PUBLISHED` -- when a verification result is recorded
 * `VERIFICATION_SUCCEEDED` -- when a verification passes
 * `VERIFICATION_FAILED` -- when a verification fails
 * `DEPLOYMENT_RECORDED` -- when a deployment is recorded to an environment

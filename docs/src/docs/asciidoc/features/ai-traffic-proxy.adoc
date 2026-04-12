@@ -13,12 +13,12 @@ Send requests through the proxy by setting the `X-Target-Url` header:
 
 [source,bash]
 ----
-curl -X GET http://broker:8080/api/v1/proxy/api/orders \
+curl -X GET http://proxy:8080/api/v1/proxy/api/orders \
   -H "X-Target-Url: http://producer:8080" \
-  -u publisher:publisher
+  -u admin:admin
 ----
 
-The broker will:
+The proxy will:
 
 1. Forward the request to `http://producer:8080/api/orders`
 2. Capture the request/response pair

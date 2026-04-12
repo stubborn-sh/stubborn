@@ -112,13 +112,13 @@ gradle publishContracts
 | Base URL of the broker
 
 | `username`
-| Yes
-| --
+| No
+| `admin`
 | HTTP Basic auth username
 
 | `password`
-| Yes
-| --
+| No
+| `admin`
 | HTTP Basic auth password
 
 | `applicationName`
@@ -136,7 +136,7 @@ gradle publishContracts
 | `src/test/resources/contracts`
 | Directory containing contract files
 
-| `description`
+| `description` (Gradle: `appDescription`)
 | No
 | --
 | Application description (used during auto-registration)
