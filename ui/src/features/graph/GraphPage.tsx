@@ -160,7 +160,7 @@ export default function GraphPage() {
               <DependencyGraph
                 nodes={graph.nodes}
                 edges={graph.edges}
-                messagingEdges={inferSubscribers(graph.edges, graph.messagingEdges ?? [])}
+                messagingEdges={inferSubscribers(graph.edges, graph.messagingEdges)}
                 onNodeSelect={handleGraphNodeSelect}
               />
               {selectedApp && appDeps && (
