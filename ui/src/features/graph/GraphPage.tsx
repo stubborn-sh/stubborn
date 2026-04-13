@@ -112,7 +112,7 @@ export default function GraphPage() {
             Dependencies
           </h2>
           <p className="text-muted-foreground mt-1">
-            Service dependency graph derived from verifications
+            Service dependency graph derived from verifications and messaging contracts
           </p>
         </div>
         <div className="flex rounded-md border border-border" role="tablist">
