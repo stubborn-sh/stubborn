@@ -86,12 +86,12 @@ function buildLayout(
   });
 
   // Build flow nodes
-  type FlowNode = {
+  interface FlowNode {
     id: string;
     type: string;
     position: { x: number; y: number };
     data: Record<string, unknown>;
-  };
+  }
   const flowNodes: FlowNode[] = graphNodes.map((n) => {
     const pos = g.node(n.applicationName) as { x: number; y: number };
     return {
@@ -122,13 +122,13 @@ function buildLayout(
   });
 
   // Build flow edges
-  type FlowEdge = {
+  interface FlowEdge {
     id: string;
     source: string;
     target: string;
     style: Record<string, unknown>;
     label?: string;
-  };
+  }
   const flowEdges: FlowEdge[] = uniqueEdges.map((e) => ({
     id: `${e.providerName}->${e.consumerName}`,
     source: e.providerName,
@@ -214,12 +214,7 @@ describe("DependencyGraph messaging edge support", () => {
     });
 
     it("should produce zero topic nodes when messagingEdges is empty", () => {
-      const { topicNames } = buildLayout(
-        [makeNode("order-service")],
-        [],
-        [],
-        null,
-      );
+      const { topicNames } = buildLayout([makeNode("order-service")], [], [], null);
       expect(topicNames.size).toBe(0);
     });
 
@@ -262,10 +257,7 @@ describe("DependencyGraph messaging edge support", () => {
       const { topicNames } = buildLayout(
         [makeNode("app-a"), makeNode("app-b")],
         [],
-        [
-          makeMessagingEdge("app-a", "shared-topic"),
-          makeMessagingEdge("app-b", "shared-topic"),
-        ],
+        [makeMessagingEdge("app-a", "shared-topic"), makeMessagingEdge("app-b", "shared-topic")],
         null,
       );
       expect(topicNames.size).toBe(1);
@@ -299,10 +291,7 @@ describe("DependencyGraph messaging edge support", () => {
       const { flowNodes } = buildLayout(
         [makeNode("app-a")],
         [],
-        [
-          makeMessagingEdge("app-a", "topic-x"),
-          makeMessagingEdge("app-a", "topic-y"),
-        ],
+        [makeMessagingEdge("app-a", "topic-x"), makeMessagingEdge("app-a", "topic-y")],
         null,
       );
       const topicNodes = flowNodes.filter((n) => n.type === "topicNode");
@@ -501,10 +490,7 @@ describe("DependencyGraph messaging edge support", () => {
       const { connectedNodes } = buildLayout(
         [makeNode("app-a"), makeNode("app-b")],
         [],
-        [
-          makeMessagingEdge("app-a", "shared-topic"),
-          makeMessagingEdge("app-b", "shared-topic"),
-        ],
+        [makeMessagingEdge("app-a", "shared-topic"), makeMessagingEdge("app-b", "shared-topic")],
         "topic:shared-topic",
       );
       expect(connectedNodes.has("app-a")).toBe(true);
