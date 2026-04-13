@@ -11,7 +11,8 @@ vi.mock("@xyflow/react", () => ({
 import TopicNode from "@/features/graph/TopicNode";
 
 function renderTopicNode(label: string, dimmed: boolean) {
-  const props = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- NodeProps requires many internal fields
+  const props: any = {
     id: "test-node",
     data: { label, dimmed },
     type: "topic",
@@ -25,7 +26,7 @@ function renderTopicNode(label: string, dimmed: boolean) {
     selectable: false,
     draggable: false,
   };
-  return render(<TopicNode {...(props as never)} />);
+  return render(<TopicNode {...props} />);
 }
 
 describe("TopicNode", () => {
