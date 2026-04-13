@@ -36,7 +36,7 @@ java -jar broker-cli/target/broker-cli.jar --help
 | `tag add\|remove\|list\|latest` | Manage version tags
 | `webhook list\|get\|create\|update\|delete\|executions` | Manage webhooks
 | `selector resolve` | Resolve consumer version selectors
-| `cleanup run` | Run data cleanup
+| `cleanup` | Run data cleanup
 | `version` | Show CLI version
 |===
 

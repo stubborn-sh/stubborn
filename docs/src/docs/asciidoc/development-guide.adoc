@@ -18,12 +18,11 @@
 
 # Single module tests
 ./mvnw test -pl broker          # Broker unit tests
-./mvnw test -pl broker-cli      # CLI unit tests (Stub Runner)
-./mvnw test -pl proxy           # Proxy unit tests
+./mvnw test -pl stub-runner     # Stub Runner tests
 ./mvnw test -pl ui              # UI Vitest unit tests
 
 # Integration tests (Docker required)
-./mvnw failsafe:integration-test failsafe:verify -pl broker,proxy,e2e-tests
+./mvnw failsafe:integration-test failsafe:verify -pl broker,e2e-tests
 
 # Mutation testing
 ./mvnw org.pitest:pitest-maven:mutationCoverage -pl broker
@@ -63,9 +62,10 @@ All 6 tools run during the build and fail on any violation:
 
 == Architecture
 
-Multi-module project with 14 Maven modules including `broker`, `broker-api-client`, `broker-cli`,
-`proxy`, `ui`, `broker-mcp-server`, `broker-stub-downloader`, `broker-contract-publisher`,
-`broker-maven-plugin`, `broker-gradle-plugin`, `stub-runner`, and `e2e-tests`.
+Multi-module project with 15 Maven modules including `broker`, `broker-api-client`,
+`ui`, `js`, `broker-stub-downloader`, `broker-contract-publisher`,
+`broker-maven-plugin`, `broker-gradle-plugin`, `stub-runner`,
+`stubborn-messaging-kafka`, `stubborn-messaging-rabbit`, and `e2e-tests`.
 
 The broker module uses vertical slice architecture -- each feature is a self-contained package:
 

@@ -7,7 +7,7 @@ See specification: https://github.com/stubborn-sh/stubborn/blob/main/docs/specs/
 
 == Overview
 
-* 20 tools for all broker operations (25 with AI features enabled)
+* 71 tools for all broker operations (91 with AI features enabled)
 * 4 resources for reading broker state
 * 7 prompts for guided workflows
 * Runs on port 8643 (broker on 8642)
