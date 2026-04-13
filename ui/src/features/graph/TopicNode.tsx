@@ -15,19 +15,11 @@ function TopicNode({ data }: NodeProps) {
         dimmed ? "opacity-30" : "opacity-100"
       }`}
     >
-      <Handle
-        type="target"
-        position={Position.Left}
-        className="!bg-violet-500 !w-2 !h-2"
-      />
+      <Handle type="target" position={Position.Left} className="!bg-violet-500 !w-2 !h-2" />
       <div className="text-xs font-semibold text-violet-600 dark:text-violet-400 text-center">
         {label}
       </div>
-      <Handle
-        type="source"
-        position={Position.Right}
-        className="!bg-violet-500 !w-2 !h-2"
-      />
+      <Handle type="source" position={Position.Right} className="!bg-violet-500 !w-2 !h-2" />
     </div>
   );
 }
