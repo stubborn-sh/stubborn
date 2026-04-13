@@ -1,7 +1,12 @@
 import type { DependencyEdge, MessagingEdge } from "@/api/types";
 
+export interface InferredMessagingEdges {
+  publishers: MessagingEdge[];
+  subscribers: MessagingEdge[];
+}
+
 /**
- * Infer messaging subscribers from HTTP verification edges.
+ * Separate messaging edges into publishers (from API) and inferred subscribers.
  *
  * If consumer A has a successful verification against provider B,
  * and B publishes to topic T, then A is inferred as a subscriber to T.
@@ -13,7 +18,7 @@ import type { DependencyEdge, MessagingEdge } from "@/api/types";
 export function inferSubscribers(
   httpEdges: DependencyEdge[],
   messagingEdges: MessagingEdge[],
-): MessagingEdge[] {
+): InferredMessagingEdges {
   // Build a map: provider → topics they publish to
   const providerTopics = new Map<string, Set<string>>();
   for (const me of messagingEdges) {
@@ -22,11 +27,11 @@ export function inferSubscribers(
     providerTopics.set(me.applicationName, topics);
   }
 
-  // Build a set of existing messaging edges for dedup
+  // Build a set of existing publisher edges for dedup
   const existing = new Set(messagingEdges.map((e) => `${e.applicationName}:${e.topicName}`));
 
   // Infer subscribers from successful verifications
-  const inferred: MessagingEdge[] = [];
+  const subscribers: MessagingEdge[] = [];
   for (const edge of httpEdges) {
     if (edge.status !== "SUCCESS") continue;
     if (edge.consumerName === edge.providerName) continue;
@@ -38,7 +43,7 @@ export function inferSubscribers(
       const key = `${edge.consumerName}:${topic}`;
       if (!existing.has(key)) {
         existing.add(key);
-        inferred.push({
+        subscribers.push({
           applicationName: edge.consumerName,
           topicName: topic,
           version: edge.consumerVersion,
@@ -47,5 +52,5 @@ export function inferSubscribers(
     }
   }
 
-  return [...messagingEdges, ...inferred];
+  return { publishers: messagingEdges, subscribers };
 }

@@ -14,12 +14,13 @@ import dagre from "@dagrejs/dagre";
 import "@xyflow/react/dist/style.css";
 import CustomNode from "./CustomNode";
 import TopicNode from "./TopicNode";
-import type { DependencyNode, DependencyEdge, MessagingEdge } from "@/api/types";
+import type { DependencyNode, DependencyEdge } from "@/api/types";
+import type { InferredMessagingEdges } from "./inferSubscribers";
 
 interface DependencyGraphProps {
   nodes: DependencyNode[];
   edges: DependencyEdge[];
-  messagingEdges?: MessagingEdge[];
+  messagingEdges?: InferredMessagingEdges;
   onNodeSelect: (name: string | null) => void;
 }
 
@@ -33,9 +34,13 @@ const nodeTypes = { appNode: CustomNode, topicNode: TopicNode };
 function buildLayout(
   graphNodes: DependencyNode[],
   graphEdges: DependencyEdge[],
-  messagingEdges: MessagingEdge[],
+  messaging: InferredMessagingEdges,
   selectedNode: string | null,
 ) {
+  const allMessagingEdges = [...messaging.publishers, ...messaging.subscribers];
+  const subscriberKeys = new Set(
+    messaging.subscribers.map((s) => `${s.applicationName}:${s.topicName}`),
+  );
   const g = new dagre.graphlib.Graph();
   g.setDefaultEdgeLabel(() => ({}));
   g.setGraph({ rankdir: "LR", ranksep: 120, nodesep: 60 });
@@ -59,15 +64,34 @@ function buildLayout(
     g.setEdge(e.providerName, e.consumerName);
   });
 
-  // Add topic nodes and messaging edges
+  // Add topic nodes and messaging edges (publishers: app→topic, subscribers: topic→app)
   const topicNames = new Set<string>();
+  interface MsgEdgeInfo {
+    key: string;
+    source: string;
+    target: string;
+    label: string;
+    color: string;
+  }
+  const msgEdgeInfos: MsgEdgeInfo[] = [];
   const msgEdgeKeys = new Set<string>();
-  messagingEdges.forEach((me) => {
+  allMessagingEdges.forEach((me) => {
     topicNames.add(me.topicName);
-    const key = `${me.applicationName}->topic:${me.topicName}`;
+    const topicId = `topic:${me.topicName}`;
+    const isSubscriber = subscriberKeys.has(`${me.applicationName}:${me.topicName}`);
+    const source = isSubscriber ? topicId : me.applicationName;
+    const target = isSubscriber ? me.applicationName : topicId;
+    const key = `${source}->${target}`;
     if (!msgEdgeKeys.has(key)) {
       msgEdgeKeys.add(key);
-      g.setEdge(me.applicationName, `topic:${me.topicName}`);
+      msgEdgeInfos.push({
+        key,
+        source,
+        target,
+        label: isSubscriber ? "subscribes" : "publishes",
+        color: isSubscriber ? "#3b82f6" : "#8b5cf6",
+      });
+      g.setEdge(source, target);
     }
   });
   topicNames.forEach((topic) => {
@@ -84,7 +108,7 @@ function buildLayout(
       if (e.providerName === selectedNode) connectedNodes.add(e.consumerName);
       if (e.consumerName === selectedNode) connectedNodes.add(e.providerName);
     });
-    messagingEdges.forEach((me) => {
+    allMessagingEdges.forEach((me) => {
       if (me.applicationName === selectedNode) connectedNodes.add(`topic:${me.topicName}`);
       if (`topic:${me.topicName}` === selectedNode) connectedNodes.add(me.applicationName);
     });
@@ -149,25 +173,24 @@ function buildLayout(
     });
   });
 
-  // Messaging edges (dashed, violet)
-  msgEdgeKeys.forEach((key) => {
-    const [appName, topicId] = key.split("->");
+  // Messaging edges (dashed — violet for publish, blue for subscribe)
+  msgEdgeInfos.forEach((info) => {
     flowEdges.push({
-      id: key,
-      source: appName,
-      target: topicId,
+      id: info.key,
+      source: info.source,
+      target: info.target,
       style: {
-        stroke: "#8b5cf6",
+        stroke: info.color,
         strokeWidth: 2,
         strokeDasharray: "6 3",
         opacity: selectedNode
-          ? connectedNodes.has(appName) && connectedNodes.has(topicId)
+          ? connectedNodes.has(info.source) && connectedNodes.has(info.target)
             ? 1
             : 0.15
           : 1,
       },
-      label: "publishes",
-      labelStyle: { fontSize: 10, fill: "#8b5cf6" },
+      label: info.label,
+      labelStyle: { fontSize: 10, fill: info.color },
       labelBgStyle: { fill: "var(--color-card, #fff)", fillOpacity: 0.8 },
     });
   });
@@ -175,10 +198,12 @@ function buildLayout(
   return { flowNodes, flowEdges };
 }
 
+const emptyMessaging: InferredMessagingEdges = { publishers: [], subscribers: [] };
+
 export default function DependencyGraph({
   nodes: gNodes,
   edges: gEdges,
-  messagingEdges: gMsgEdges = [],
+  messagingEdges: gMsgEdges = emptyMessaging,
   onNodeSelect,
 }: DependencyGraphProps) {
   const [selectedNode, setSelectedNode] = useState<string | null>(null);
