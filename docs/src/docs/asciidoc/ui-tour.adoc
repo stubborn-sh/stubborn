@@ -44,7 +44,7 @@ image::demo-can-i-deploy.png[Can I Deploy,width=100%]
 
 Visualize service dependencies and their verification status. Click any node to see its providers and consumers.
 
-image::demo-graph.png[Dependency Graph,width=100%]
+image::demo-graph-messaging.png[Dependency Graph with HTTP and Messaging edges,width=100%]
 
 == Webhooks
 
