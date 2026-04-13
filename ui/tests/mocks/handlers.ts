@@ -433,7 +433,7 @@ export const handlers = [
 
   // Graph
   http.get("/api/v1/graph", () =>
-    HttpResponse.json({ nodes: mockGraphNodes, edges: mockGraphEdges }),
+    HttpResponse.json({ nodes: mockGraphNodes, edges: mockGraphEdges, messagingEdges: [] }),
   ),
   http.get("/api/v1/graph/applications/:name", ({ params }) => {
     const name = params.name as string;

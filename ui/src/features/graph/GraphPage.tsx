@@ -5,6 +5,7 @@ import { Badge } from "@/shared/components/ui";
 import type { DependencyEdge, MessagingEdge } from "@/api/types";
 import { useSearchParams } from "react-router-dom";
 import DependencyGraph from "./DependencyGraph";
+import { inferSubscribers } from "./inferSubscribers";
 
 const edgeColumns = [
   {
@@ -152,10 +153,14 @@ export default function GraphPage() {
             <p className="text-muted-foreground">Loading...</p>
           ) : graph && graph.nodes.length > 0 ? (
             <>
+              <p className="text-sm text-muted-foreground mb-3">
+                This graph shows <strong>contract dependencies</strong> derived from verifications
+                and published messaging contracts &mdash; not actual runtime calls.
+              </p>
               <DependencyGraph
                 nodes={graph.nodes}
                 edges={graph.edges}
-                messagingEdges={graph.messagingEdges}
+                messagingEdges={inferSubscribers(graph.edges, graph.messagingEdges ?? [])}
                 onNodeSelect={handleGraphNodeSelect}
               />
               {selectedApp && appDeps && (
