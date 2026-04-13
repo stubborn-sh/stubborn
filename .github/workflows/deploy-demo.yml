@@ -25,7 +25,7 @@ jobs:
           cache: maven
 
       - name: Build OCI image with Spring Boot Buildpacks
-        run: ./mvnw install -DskipTests -B && ./mvnw spring-boot:build-image -pl broker -DskipTests -B
+        run: ./mvnw install -DskipTests -DskipStubs -B && ./mvnw spring-boot:build-image -pl broker -DskipTests -B
 
       - uses: superfly/flyctl-actions/setup-flyctl@fc53c09e1bc3be6f54706524e3b82c4f462f77be # v1.5
 
