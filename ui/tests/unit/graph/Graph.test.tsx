@@ -76,7 +76,9 @@ describe("GraphPage", () => {
   it("should render subtitle text", () => {
     renderWithProviders(<GraphPage />);
     expect(
-      screen.getByText("Service dependency graph derived from verifications"),
+      screen.getByText(
+        "Service dependency graph derived from verifications and messaging contracts",
+      ),
     ).toBeInTheDocument();
   });
 
