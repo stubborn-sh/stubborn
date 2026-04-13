@@ -58,34 +58,130 @@ const result = await publisher.publish({
 console.log(`Published ${result.published.length} contracts`);
 ----
 
-=== Consuming Stubs (Consumer)
+=== Consuming Stubs (Consumer — Stub Runner)
 
-A JS/TS consumer fetches stubs from the broker and starts a local stub server:
+A JS/TS consumer fetches stubs from the broker and runs a local stub server.
+This is the Node.js equivalent of Java's `@AutoConfigureStubRunner`.
+
+==== In a Test File (Jest / Vitest)
 
 [source,typescript]
 ----
 import { setupStubs, teardownStubs } from "@stubborn-sh/jest";
 
-// In beforeAll
-const port = await setupStubs({
-  brokerUrl: "http://localhost:8642",
-  applicationName: "order-service",
-  version: "1.0.0",
-  username: "reader",
-  password: "reader",
+describe("OrderClient", () => {
+  let stubPort: number;
+
+  beforeAll(async () => {
+    stubPort = await setupStubs({
+      brokerUrl: "http://localhost:8642",
+      applicationName: "order-service",
+      version: "1.0.0",
+      username: "reader",
+      password: "reader",
+    });
+  });
+
+  afterAll(async () => {
+    await teardownStubs();
+  });
+
+  it("should fetch order from stub", async () => {
+    const response = await fetch(`http://localhost:${stubPort}/api/orders/1`);
+    expect(response.status).toBe(200);
+    const order = await response.json();
+    expect(order.id).toBe(1);
+  });
 });
-
-// Test against http://localhost:{port}
-const response = await fetch(`http://localhost:${port}/api/orders/1`);
-const order = await response.json();
-
-// In afterAll
-await teardownStubs();
 ----
 
-=== Verifying Contracts
+==== Using `withStubs` (Setup + Teardown in One Call)
 
-A JS/TS producer verifies its implementation against contracts:
+[source,typescript]
+----
+import { withStubs } from "@stubborn-sh/jest";
+
+it("should process order", async () => {
+  await withStubs(
+    { brokerUrl: "http://localhost:8642", applicationName: "order-service", version: "1.0.0" },
+    async (port) => {
+      const client = new OrderClient(`http://localhost:${port}`);
+      const order = await client.getOrder("1");
+      expect(order.status).toBe("CREATED");
+    }
+  );
+  // Stub server automatically cleaned up, even if test throws
+});
+----
+
+==== From Local Contracts (No Broker Required)
+
+[source,typescript]
+----
+const port = await setupStubs({
+  contractsDir: "./stubs/order-service",
+});
+----
+
+==== Stub Sources
+
+The stub server accepts contracts from multiple sources:
+
+[cols="1,2"]
+|===
+| Source | Config
+
+| Broker API
+| `{ brokerUrl, applicationName, version }`
+
+| Local YAML contracts
+| `{ contractsDir: "./contracts" }`
+
+| Local WireMock JSON
+| `{ mappingsDir: "./mappings" }`
+
+| Local Maven stubs JAR
+| `{ jarPath: "~/.m2/.../stubs.jar" }`
+|===
+
+=== Verifying Contracts (Producer)
+
+A JS/TS producer verifies that its running HTTP service satisfies the contracts.
+The verifier sends real HTTP requests to the service and compares responses against contract expectations.
+
+==== In a Test File
+
+[source,typescript]
+----
+import { verifyContracts } from "@stubborn-sh/jest";
+import { BrokerClient } from "@stubborn-sh/broker-client";
+
+const broker = new BrokerClient({
+  baseUrl: "http://localhost:8642",
+  username: "publisher",
+  password: "publisher",
+});
+
+describe("Contract Verification", () => {
+  // Start your service before running (e.g., via beforeAll)
+
+  it("should satisfy all consumer contracts", async () => {
+    const result = await verifyContracts({
+      providerBaseUrl: "http://localhost:3000",  // Your running service
+      providerName: "product-service",
+      providerVersion: "1.0.0",
+      consumerName: "web-app",
+      consumerVersion: "2.0.0",
+      contractsDir: "./contracts",     // Contracts to verify against
+      reportToBroker: broker,          // Reports SUCCESS/FAILED to broker
+    });
+
+    expect(result.passed).toBe(true);
+  });
+});
+----
+
+==== Using the Verifier Directly
 
 [source,typescript]
 ----
@@ -105,7 +201,40 @@ const verifier = new ContractVerifier({
 });
 
 const result = await verifier.verify();
-console.log(`Passed: ${result.passedContracts}/${result.totalContracts}`);
+// result.totalContracts, result.passedContracts, result.failedContracts
+// result.passed (boolean)
+----
+
+==== What the Verifier Checks
+
+For each contract the verifier:
+
+1. Sends the request defined in the contract to `providerBaseUrl`
+2. Compares the actual response against the expected response:
+   - Status code must match
+   - Required headers must be present
+   - Body is validated (supports `by_regex`, `by_type`, and `by_equality` matchers)
+3. Reports the result to the broker (if `reportToBroker` is set)
+
+==== Loading Contracts from the Broker
+
+Instead of local files, contracts can be fetched from the broker at verification time:
+
+[source,typescript]
+----
+const verifier = new ContractVerifier({
+  providerBaseUrl: "http://localhost:3000",
+  providerName: "product-service",
+  providerVersion: "1.0.0",
+  consumerName: "web-app",
+  consumerVersion: "2.0.0",
+  broker: {
+    client: brokerClient,
+    applicationName: "web-app",
+    version: "2.0.0",
+  },
+  reportToBroker: brokerClient,
+});
 ----
 
 === Loading Stubs from a Local JAR
