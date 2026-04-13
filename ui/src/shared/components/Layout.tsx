@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 import {
   LayoutDashboard,
@@ -88,21 +88,13 @@ export default function Layout() {
   const { dark, toggle } = useTheme();
   const { data: brokerInfo } = useBrokerInfo();
   const proEnabled = brokerInfo?.proEnabled ?? false;
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarPath, setSidebarPath] = useState<string | null>(null);
   const location = useLocation();
+  const sidebarOpen = sidebarPath === location.pathname;
   const visibleNavItems = useMemo(
     () => navItems.filter((item) => !item.proOnly || proEnabled),
     [proEnabled],
   );
-
-  // Close sidebar on navigation (mobile)
-  useEffect(() => {
-    setSidebarOpen(false);
-  }, [location.pathname]);
-
-  const closeSidebar = useCallback(() => {
-    setSidebarOpen(false);
-  }, []);
 
   return (
     <div className="min-h-screen bg-background">
@@ -110,7 +102,9 @@ export default function Layout() {
         <div className="px-4 md:px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <button
-              onClick={() => setSidebarOpen((o) => !o)}
+              onClick={() => {
+                setSidebarPath((p) => (p === location.pathname ? null : location.pathname));
+              }}
               className="md:hidden flex items-center justify-center rounded-md p-2 text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
               aria-label={sidebarOpen ? "Close menu" : "Open menu"}
             >
@@ -149,7 +143,9 @@ export default function Layout() {
         {sidebarOpen && (
           <div
             className="fixed inset-0 bg-black/50 z-40 md:hidden"
-            onClick={closeSidebar}
+            onClick={() => {
+              setSidebarPath(null);
+            }}
             aria-hidden="true"
           />
         )}
