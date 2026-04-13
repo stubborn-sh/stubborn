@@ -13,22 +13,27 @@ import {
 import dagre from "@dagrejs/dagre";
 import "@xyflow/react/dist/style.css";
 import CustomNode from "./CustomNode";
-import type { DependencyNode, DependencyEdge } from "@/api/types";
+import TopicNode from "./TopicNode";
+import type { DependencyNode, DependencyEdge, MessagingEdge } from "@/api/types";
 
 interface DependencyGraphProps {
   nodes: DependencyNode[];
   edges: DependencyEdge[];
+  messagingEdges?: MessagingEdge[];
   onNodeSelect: (name: string | null) => void;
 }
 
 const NODE_WIDTH = 180;
 const NODE_HEIGHT = 60;
+const TOPIC_WIDTH = 160;
+const TOPIC_HEIGHT = 50;
 
-const nodeTypes = { appNode: CustomNode };
+const nodeTypes = { appNode: CustomNode, topicNode: TopicNode };
 
 function buildLayout(
   graphNodes: DependencyNode[],
   graphEdges: DependencyEdge[],
+  messagingEdges: MessagingEdge[],
   selectedNode: string | null,
 ) {
   const g = new dagre.graphlib.Graph();
@@ -54,6 +59,21 @@ function buildLayout(
     g.setEdge(e.providerName, e.consumerName);
   });
 
+  // Add topic nodes and messaging edges
+  const topicNames = new Set<string>();
+  const msgEdgeKeys = new Set<string>();
+  messagingEdges.forEach((me) => {
+    topicNames.add(me.topicName);
+    const key = `${me.applicationName}->topic:${me.topicName}`;
+    if (!msgEdgeKeys.has(key)) {
+      msgEdgeKeys.add(key);
+      g.setEdge(me.applicationName, `topic:${me.topicName}`);
+    }
+  });
+  topicNames.forEach((topic) => {
+    g.setNode(`topic:${topic}`, { width: TOPIC_WIDTH, height: TOPIC_HEIGHT });
+  });
+
   dagre.layout(g);
 
   // Determine which nodes are connected to the selected node
@@ -63,6 +83,10 @@ function buildLayout(
     uniqueEdges.forEach((e) => {
       if (e.providerName === selectedNode) connectedNodes.add(e.consumerName);
       if (e.consumerName === selectedNode) connectedNodes.add(e.providerName);
+    });
+    messagingEdges.forEach((me) => {
+      if (me.applicationName === selectedNode) connectedNodes.add(`topic:${me.topicName}`);
+      if (`topic:${me.topicName}` === selectedNode) connectedNodes.add(me.applicationName);
     });
   }
 
@@ -110,19 +134,58 @@ function buildLayout(
     labelBgStyle: { fill: "var(--color-card, #fff)", fillOpacity: 0.8 },
   }));
 
+  // Topic nodes
+  topicNames.forEach((topic) => {
+    const id = `topic:${topic}`;
+    const pos = g.node(id) as { x: number; y: number };
+    flowNodes.push({
+      id,
+      type: "topicNode",
+      position: { x: pos.x - TOPIC_WIDTH / 2, y: pos.y - TOPIC_HEIGHT / 2 },
+      data: {
+        label: topic,
+        dimmed: selectedNode !== null && !connectedNodes.has(id),
+      },
+    });
+  });
+
+  // Messaging edges (dashed, violet)
+  msgEdgeKeys.forEach((key) => {
+    const [appName, topicId] = key.split("->");
+    flowEdges.push({
+      id: key,
+      source: appName,
+      target: topicId,
+      style: {
+        stroke: "#8b5cf6",
+        strokeWidth: 2,
+        strokeDasharray: "6 3",
+        opacity: selectedNode
+          ? connectedNodes.has(appName) && connectedNodes.has(topicId)
+            ? 1
+            : 0.15
+          : 1,
+      },
+      label: "publishes",
+      labelStyle: { fontSize: 10, fill: "#8b5cf6" },
+      labelBgStyle: { fill: "var(--color-card, #fff)", fillOpacity: 0.8 },
+    });
+  });
+
   return { flowNodes, flowEdges };
 }
 
 export default function DependencyGraph({
   nodes: gNodes,
   edges: gEdges,
+  messagingEdges: gMsgEdges = [],
   onNodeSelect,
 }: DependencyGraphProps) {
   const [selectedNode, setSelectedNode] = useState<string | null>(null);
 
   const { flowNodes, flowEdges } = useMemo(
-    () => buildLayout(gNodes, gEdges, selectedNode),
-    [gNodes, gEdges, selectedNode],
+    () => buildLayout(gNodes, gEdges, gMsgEdges, selectedNode),
+    [gNodes, gEdges, gMsgEdges, selectedNode],
   );
 
   const [nodes, setNodes, onNodesChange] = useNodesState(flowNodes);

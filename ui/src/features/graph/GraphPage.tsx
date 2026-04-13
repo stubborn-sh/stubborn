@@ -155,6 +155,7 @@ export default function GraphPage() {
               <DependencyGraph
                 nodes={graph.nodes}
                 edges={graph.edges}
+                messagingEdges={graph.messagingEdges}
                 onNodeSelect={handleGraphNodeSelect}
               />
               {selectedApp && appDeps && (
