@@ -1,6 +1,18 @@
 spring:
+  datasource:
+    url: jdbc:h2:mem:broker;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    database-platform: org.hibernate.dialect.H2Dialect
   flyway:
-    locations: classpath:db/migration,classpath:db/demo
+    locations: classpath:db/migration-h2,classpath:db/demo-h2
   docker:
     compose:
+      enabled: false
+  h2:
+    console:
       enabled: false

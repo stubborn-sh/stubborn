@@ -35,16 +35,18 @@ import org.springframework.web.client.RestClient;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Integration test verifying that the demo profile activates read-only mode and loads
- * seed data. Uses embedded H2 database in PostgreSQL compatibility mode (no external DB
- * required).
+ * Integration test verifying that the demo profile works with embedded H2 database (no
+ * PostgreSQL/Testcontainers required). Validates that H2 migrations load, seed data is
+ * present, and all read-only endpoints function correctly.
  *
- * @see DemoModeH2E2ETest
+ * @see sh.stubborn.oss.demo.DemoReadOnlyFilter
+ * @see <a href="../../../../../../spec/features/demo/h2-demo-profile.md">H2 Demo Profile
+ * Spec</a>
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("demo")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class DemoModeE2ETest {
+class DemoModeH2E2ETest {
 
 	@LocalServerPort
 	int port;
@@ -63,55 +65,39 @@ class DemoModeE2ETest {
 
 	@Test
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	void get_applications_returns_seeded_data() {
+	void get_applications_returns_six_seeded_apps() {
 		ResponseEntity<Map> response = this.restClient.get().uri("/api/v1/applications").retrieve().toEntity(Map.class);
 
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 		Map<String, Object> body = Objects.requireNonNull(response.getBody());
-		// Paginated response: content holds the list of applications
 		List<Object> content = (List<Object>) body.get("content");
 		assertThat(content).hasSize(6);
 	}
 
 	@Test
-	@SuppressWarnings("rawtypes")
-	void post_applications_blocked_in_demo_mode() {
-		ResponseEntity<Map> response = this.restClient.post()
-			.uri("/api/v1/applications")
-			.contentType(MediaType.APPLICATION_JSON)
-			.body(Map.of("name", "blocked-app", "description", "Should not be created", "owner", "team-test"))
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	void get_contracts_returns_seeded_contracts() {
+		ResponseEntity<Map> response = this.restClient.get()
+			.uri("/api/v1/applications/order-service/versions/1.2.0/contracts")
 			.retrieve()
 			.toEntity(Map.class);
 
-		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
-		assertThat(response.getBody()).containsEntry("code", "DEMO_READ_ONLY");
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+		Map<String, Object> body = Objects.requireNonNull(response.getBody());
+		List<Object> content = (List<Object>) body.get("content");
+		assertThat(content).isNotEmpty();
 	}
 
 	@Test
 	@SuppressWarnings("rawtypes")
-	void delete_application_blocked_in_demo_mode() {
-		ResponseEntity<Map> response = this.restClient.delete()
-			.uri("/api/v1/applications/order-service")
+	void get_environments_returns_three() {
+		ResponseEntity<List> response = this.restClient.get()
+			.uri("/api/v1/environments")
 			.retrieve()
-			.toEntity(Map.class);
+			.toEntity(List.class);
 
-		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
-		assertThat(response.getBody()).containsEntry("code", "DEMO_READ_ONLY");
-	}
-
-	@Test
-	@SuppressWarnings("rawtypes")
-	void post_verifications_blocked_in_demo_mode() {
-		ResponseEntity<Map> response = this.restClient.post()
-			.uri("/api/v1/verifications")
-			.contentType(MediaType.APPLICATION_JSON)
-			.body(Map.of("providerName", "order-service", "providerVersion", "1.2.0", "consumerName", "payment-service",
-					"consumerVersion", "2.1.0", "status", "SUCCESS"))
-			.retrieve()
-			.toEntity(Map.class);
-
-		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
-		assertThat(response.getBody()).containsEntry("code", "DEMO_READ_ONLY");
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+		assertThat(Objects.requireNonNull(response.getBody())).hasSize(3);
 	}
 
 	@Test
@@ -132,6 +118,34 @@ class DemoModeE2ETest {
 		ResponseEntity<Map> response = this.restClient.get().uri("/api/v1/graph").retrieve().toEntity(Map.class);
 
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+	}
+
+	@Test
+	@SuppressWarnings("rawtypes")
+	void post_applications_blocked_in_demo_mode() {
+		ResponseEntity<Map> response = this.restClient.post()
+			.uri("/api/v1/applications")
+			.contentType(MediaType.APPLICATION_JSON)
+			.body(Map.of("name", "blocked-app", "description", "Should not be created", "owner", "team-test"))
+			.retrieve()
+			.toEntity(Map.class);
+
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+		assertThat(response.getBody()).containsEntry("code", "DEMO_READ_ONLY");
+	}
+
+	@Test
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	void get_verifications_returns_seeded_data() {
+		ResponseEntity<Map> response = this.restClient.get()
+			.uri("/api/v1/verifications?provider=order-service")
+			.retrieve()
+			.toEntity(Map.class);
+
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+		Map<String, Object> body = Objects.requireNonNull(response.getBody());
+		List<Object> content = (List<Object>) body.get("content");
+		assertThat(content).isNotEmpty();
 	}
 
 }
