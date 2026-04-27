@@ -1,7 +1,12 @@
 import { readdir, readFile } from "node:fs/promises";
 import { join } from "node:path";
 import type { BrokerClient } from "@stubborn-sh/broker-client";
-import { parseContract, type ParsedContract } from "@stubborn-sh/stub-server";
+import {
+  parseContract,
+  parseOpenApiContracts,
+  looksLikeOpenApi,
+  type ParsedContract,
+} from "@stubborn-sh/stub-server";
 import { fetchAllPages } from "@stubborn-sh/broker-client";
 
 /** Load contracts from a local directory. */
@@ -31,7 +36,11 @@ async function walkDir(
 
     const content = await readFile(fullPath, "utf-8");
     const name = fullPath.slice(rootDir.length + 1).replace(/\\/g, "/");
-    contracts.push(parseContract(name, content));
+    if (looksLikeOpenApi(content)) {
+      contracts.push(...parseOpenApiContracts(name, content));
+    } else {
+      contracts.push(parseContract(name, content));
+    }
   }
 }
 
@@ -47,5 +56,10 @@ export async function loadFromBroker(
 
   return contracts
     .filter((c) => c.contentType === "application/x-yaml")
-    .map((c) => parseContract(c.contractName, c.content));
+    .flatMap((c) => {
+      if (looksLikeOpenApi(c.content)) {
+        return parseOpenApiContracts(c.contractName, c.content);
+      }
+      return [parseContract(c.contractName, c.content)];
+    });
 }

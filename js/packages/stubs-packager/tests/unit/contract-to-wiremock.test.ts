@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { contractToWireMock } from "../../src/contract-to-wiremock.js";
+import { contractToWireMock, openApiContractsToWireMock } from "../../src/contract-to-wiremock.js";
 import type { ScannedContract } from "@stubborn-sh/publisher";
 
 function makeContract(name: string, yamlContent: string): ScannedContract {
@@ -195,6 +195,69 @@ describe("contractToWireMock", () => {
     // Should be pretty-printed valid JSON
     expect(() => JSON.parse(json)).not.toThrow();
     expect(json).toContain("\n"); // pretty-printed
+  });
+
+  // @spec 042-openapi-contract-support AC11
+  describe("openApiContractsToWireMock", () => {
+    it("should_produce_one_wiremock_mapping_per_x_contracts_entry", () => {
+      const openApiContent = [
+        "openapi: 3.0.0",
+        "info:",
+        "  title: Test",
+        '  version: "1.0.0"',
+        "paths:",
+        "  /test:",
+        "    get:",
+        "      x-contracts:",
+        "        - contractId: 1",
+        '          name: "get test ok"',
+        "        - contractId: 2",
+        '          name: "get test error"',
+        "      responses:",
+        "        '200':",
+        "          x-contracts:",
+        "            - contractId: 1",
+        '              body: "ok"',
+        "        '500':",
+        "          x-contracts:",
+        "            - contractId: 2",
+        '              body: "error"',
+      ].join("\n");
+
+      const contract = makeContract("openapi.yaml", openApiContent);
+      const mappings = openApiContractsToWireMock(contract);
+
+      expect(mappings).toHaveLength(2);
+
+      const parsed0 = JSON.parse(mappings[0]);
+      const parsed1 = JSON.parse(mappings[1]);
+
+      expect(parsed0.request.method).toBe("GET");
+      expect(parsed0.request.urlPath).toBe("/test");
+      expect(parsed1.request.method).toBe("GET");
+
+      const statuses = [parsed0.response.status, parsed1.response.status].sort();
+      expect(statuses).toEqual([200, 500]);
+    });
+
+    it("should_return_empty_for_openapi_without_x_contracts", () => {
+      const openApiContent = [
+        "openapi: 3.0.0",
+        "info:",
+        "  title: Test",
+        '  version: "1.0.0"',
+        "paths:",
+        "  /test:",
+        "    get:",
+        "      responses:",
+        "        '200':",
+        "          description: ok",
+      ].join("\n");
+
+      const contract = makeContract("openapi.yaml", openApiContent);
+      const mappings = openApiContractsToWireMock(contract);
+      expect(mappings).toHaveLength(0);
+    });
   });
 
   it("should_roundtrip_through_parse_and_convert", () => {

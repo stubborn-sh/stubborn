@@ -2,7 +2,8 @@ import { createWriteStream } from "node:fs";
 import { extname } from "node:path";
 import archiver from "archiver";
 import { scanContracts } from "@stubborn-sh/publisher";
-import { contractToWireMock } from "./contract-to-wiremock.js";
+import { looksLikeOpenApi } from "@stubborn-sh/stub-server";
+import { contractToWireMock, openApiContractsToWireMock } from "./contract-to-wiremock.js";
 
 /** Maven coordinates for the stubs JAR. */
 export interface MavenCoordinates {
@@ -72,7 +73,7 @@ export async function packageStubsJar(options: PackageOptions): Promise<PackageR
       resolve({
         outputPath: options.outputPath,
         contractCount: contracts.length,
-        mappingCount: contracts.length,
+        mappingCount,
         sizeBytes,
       });
     });
@@ -89,12 +90,26 @@ export async function packageStubsJar(options: PackageOptions): Promise<PackageR
     }
 
     // Convert each contract to WireMock JSON and add as mapping
+    let mappingCount = 0;
     for (const contract of contracts) {
-      const wireMockJson = contractToWireMock(contract);
-      const mappingName = toMappingFileName(sanitizeEntryName(contract.contractName));
-      archive.append(wireMockJson, {
-        name: `${basePath}/mappings/${mappingName}`,
-      });
+      const safeName = sanitizeEntryName(contract.contractName);
+      if (looksLikeOpenApi(contract.content)) {
+        const mappings = openApiContractsToWireMock(contract);
+        for (let i = 0; i < mappings.length; i++) {
+          const mappingName = toMappingFileName(safeName).replace(".json", `_${i}.json`);
+          archive.append(mappings[i], {
+            name: `${basePath}/mappings/${mappingName}`,
+          });
+          mappingCount++;
+        }
+      } else {
+        const wireMockJson = contractToWireMock(contract);
+        const mappingName = toMappingFileName(safeName);
+        archive.append(wireMockJson, {
+          name: `${basePath}/mappings/${mappingName}`,
+        });
+        mappingCount++;
+      }
     }
 
     // Add minimal MANIFEST.MF

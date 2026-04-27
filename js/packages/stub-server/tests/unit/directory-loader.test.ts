@@ -151,6 +151,62 @@ describe("loadFromDirectory", () => {
     expect(contracts).toHaveLength(0);
   });
 
+  // @spec 042-openapi-contract-support AC7
+  describe("openapi format", () => {
+    const OPENAPI_SPEC = `
+openapi: 3.0.0
+info:
+  title: Test
+  version: "1.0.0"
+paths:
+  /test:
+    get:
+      x-contracts:
+        - contractId: 1
+          name: "get test"
+        - contractId: 2
+          name: "get test 2"
+      responses:
+        '200':
+          x-contracts:
+            - contractId: 1
+              body: "ok"
+            - contractId: 2
+              body: "also ok"
+`;
+
+    it("should_load_openapi_yaml_alongside_scc_yaml", async () => {
+      await writeFile(join(testDir, "scc-contract.yaml"), YAML_CONTRACT);
+      await writeFile(join(testDir, "openapi.yaml"), OPENAPI_SPEC);
+
+      const contracts = await loadFromDirectory(testDir, "auto");
+
+      // 1 SCC contract + 2 OpenAPI contracts
+      expect(contracts).toHaveLength(3);
+      const names = contracts.map((c) => c.name).sort();
+      expect(names).toContain("get test");
+      expect(names).toContain("get test 2");
+    });
+
+    it("should_load_openapi_in_contracts_mode", async () => {
+      await writeFile(join(testDir, "openapi.yml"), OPENAPI_SPEC);
+
+      const contracts = await loadFromDirectory(testDir, "contracts");
+
+      expect(contracts).toHaveLength(2);
+    });
+
+    it("should_produce_multiple_contracts_from_one_openapi_file", async () => {
+      await writeFile(join(testDir, "api.yaml"), OPENAPI_SPEC);
+
+      const contracts = await loadFromDirectory(testDir);
+
+      expect(contracts).toHaveLength(2);
+      expect(contracts[0].request.method).toBe("GET");
+      expect(contracts[1].request.method).toBe("GET");
+    });
+  });
+
   it("should_ignore_non_contract_files", async () => {
     await writeFile(join(testDir, "README.md"), "# Contracts");
     await writeFile(join(testDir, "config.xml"), "<config/>");

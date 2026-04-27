@@ -13,6 +13,7 @@ export { parseWireMockMapping } from "./wiremock-parser.js";
 export type { WireMockParseOptions } from "./wiremock-parser.js";
 export { loadFromDirectory } from "./directory-loader.js";
 export type { LoadFormat } from "./directory-loader.js";
+export { parseOpenApiContracts, looksLikeOpenApi } from "./openapi-parser.js";
 export { matchRequest } from "./request-matcher.js";
 export type { MatchResult } from "./request-matcher.js";
 export { buildResponse } from "./response-builder.js";

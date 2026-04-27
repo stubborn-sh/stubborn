@@ -1,5 +1,6 @@
 import type { ScannedContract } from "@stubborn-sh/publisher";
 import yaml from "js-yaml";
+import { looksLikeOpenApi, parseOpenApiContracts } from "@stubborn-sh/stub-server";
 
 /** Raw WireMock mapping JSON structure for serialization. */
 interface WireMockMapping {
@@ -159,4 +160,60 @@ function buildWireMockResponse(res: NonNullable<ParsedYamlContract["response"]>)
   }
 
   return result as unknown as WireMockResponse;
+}
+
+/**
+ * Convert a scanned OpenAPI contract to multiple WireMock JSON mapping strings.
+ * One WireMock mapping is produced per x-contracts entry.
+ */
+export function openApiContractsToWireMock(contract: ScannedContract): readonly string[] {
+  const parsed = parseOpenApiContracts(contract.contractName, contract.content);
+  return parsed.map((c) => {
+    const request: Record<string, unknown> = {
+      method: c.request.method,
+    };
+    if (c.request.urlPath !== undefined) {
+      request["urlPath"] = c.request.urlPath;
+    } else if (c.request.url !== undefined) {
+      request["url"] = c.request.url;
+    }
+    if (c.request.headers !== undefined && Object.keys(c.request.headers).length > 0) {
+      const wireMockHeaders: Record<string, WireMockMatcher> = {};
+      for (const [key, value] of Object.entries(c.request.headers)) {
+        wireMockHeaders[key] = { equalTo: value };
+      }
+      request["headers"] = wireMockHeaders;
+    }
+    if (c.request.queryParameters !== undefined && Object.keys(c.request.queryParameters).length > 0) {
+      const wireMockParams: Record<string, WireMockMatcher> = {};
+      for (const [key, value] of Object.entries(c.request.queryParameters)) {
+        wireMockParams[key] = { equalTo: value };
+      }
+      request["queryParameters"] = wireMockParams;
+    }
+    if (c.request.body !== undefined) {
+      const bodyStr = typeof c.request.body === "string" ? c.request.body : JSON.stringify(c.request.body);
+      request["bodyPatterns"] = [{ equalToJson: bodyStr }];
+    }
+
+    const response: Record<string, unknown> = {
+      status: c.response.status,
+    };
+    if (c.response.headers !== undefined && Object.keys(c.response.headers).length > 0) {
+      response["headers"] = c.response.headers;
+    }
+    if (c.response.body !== undefined) {
+      if (typeof c.response.body === "object" && c.response.body !== null) {
+        response["jsonBody"] = c.response.body;
+      } else {
+        response["body"] = typeof c.response.body === "string" ? c.response.body : JSON.stringify(c.response.body);
+      }
+    }
+
+    const mapping: Record<string, unknown> = { request, response };
+    if (c.priority !== undefined) {
+      mapping["priority"] = c.priority;
+    }
+    return JSON.stringify(mapping, null, 2);
+  });
 }

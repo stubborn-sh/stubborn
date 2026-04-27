@@ -3,6 +3,7 @@ import { join, extname } from "node:path";
 import type { ParsedContract } from "./contract-parser.js";
 import { parseContract } from "./contract-parser.js";
 import { parseWireMockMapping, type WireMockParseOptions } from "./wiremock-parser.js";
+import { looksLikeOpenApi, parseOpenApiContracts } from "./openapi-parser.js";
 
 /** How to interpret files in the directory. */
 export type LoadFormat = "auto" | "contracts" | "wiremock";
@@ -53,7 +54,11 @@ async function walkDir(
 
     if (isYamlFile(ext) && (format === "contracts" || format === "auto")) {
       const content = await readFile(fullPath, "utf-8");
-      contracts.push(parseContract(name, content));
+      if (looksLikeOpenApi(content)) {
+        contracts.push(...parseOpenApiContracts(name, content));
+      } else {
+        contracts.push(parseContract(name, content));
+      }
     } else if (ext === ".json" && (format === "wiremock" || format === "auto")) {
       const content = await readFile(fullPath, "utf-8");
       if (format === "wiremock") {

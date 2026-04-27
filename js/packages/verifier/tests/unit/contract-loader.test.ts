@@ -14,6 +14,18 @@ vi.mock("@stubborn-sh/stub-server", () => ({
     request: { method: "GET", urlPath: "/api" },
     response: { status: 200 },
   })),
+  looksLikeOpenApi: vi.fn().mockImplementation((content: string) => {
+    for (const line of content.split("\n")) {
+      const trimmed = line.trim();
+      if (trimmed === "" || trimmed.startsWith("#")) continue;
+      return trimmed.startsWith("openapi") || trimmed.startsWith("swagger");
+    }
+    return false;
+  }),
+  parseOpenApiContracts: vi.fn().mockImplementation((name: string) => [
+    { name: `${name}#oa-1`, request: { method: "GET", urlPath: "/oa" }, response: { status: 200 } },
+    { name: `${name}#oa-2`, request: { method: "GET", urlPath: "/oa" }, response: { status: 400 } },
+  ]),
 }));
 
 vi.mock("@stubborn-sh/broker-client", () => ({
@@ -89,6 +101,19 @@ describe("loadFromDirectory", () => {
     const contracts = await loadFromDirectory("/empty");
     expect(contracts).toHaveLength(0);
   });
+
+  // @spec 042-openapi-contract-support AC7
+  it("should_load_openapi_yaml_via_openapi_parser", async () => {
+    mockReaddir.mockResolvedValueOnce([
+      { name: "openapi.yaml", isFile: () => true, isDirectory: () => false },
+    ]);
+    mockReadFile.mockResolvedValue("openapi: 3.0.0\npaths: {}");
+
+    const contracts = await loadFromDirectory("/contracts");
+    // looksLikeOpenApi returns true → parseOpenApiContracts returns 2 contracts
+    expect(contracts).toHaveLength(2);
+    expect(contracts[0]?.name).toContain("oa-1");
+  });
 });
 
 describe("loadFromBroker", () => {
@@ -99,5 +124,25 @@ describe("loadFromBroker", () => {
     // Only the YAML contract should be loaded (not the JSON one)
     expect(contracts).toHaveLength(1);
     expect(contracts[0]?.name).toBe("contract1.yaml");
+  });
+
+  // @spec 042-openapi-contract-support AC10
+  it("should_parse_openapi_content_from_broker_via_openapi_parser", async () => {
+    const { fetchAllPages } = await import("@stubborn-sh/broker-client");
+    vi.mocked(fetchAllPages).mockResolvedValueOnce([
+      {
+        contractName: "openapi-spec.yaml",
+        content: "openapi: 3.0.0\npaths:\n  /test:\n    get:\n      x-contracts: []",
+        contentType: "application/x-yaml",
+      },
+    ]);
+
+    const client = {} as BrokerClient;
+    const contracts = await loadFromBroker(client, "my-app", "1.0.0");
+
+    // looksLikeOpenApi returns true → parseOpenApiContracts returns 2 mock contracts
+    expect(contracts).toHaveLength(2);
+    expect(contracts[0]?.name).toContain("oa-1");
+    expect(contracts[1]?.name).toContain("oa-2");
   });
 });
