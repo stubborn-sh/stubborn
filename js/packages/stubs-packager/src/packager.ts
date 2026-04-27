@@ -95,12 +95,14 @@ export async function packageStubsJar(options: PackageOptions): Promise<PackageR
       const safeName = sanitizeEntryName(contract.contractName);
       if (looksLikeOpenApi(contract.content)) {
         const mappings = openApiContractsToWireMock(contract);
-        for (let i = 0; i < mappings.length; i++) {
-          const mappingName = toMappingFileName(safeName).replace(".json", `_${i}.json`);
-          archive.append(mappings[i], {
+        let suffix = 0;
+        for (const mapping of mappings) {
+          const mappingName = toMappingFileName(safeName).replace(".json", `_${suffix}.json`);
+          archive.append(mapping, {
             name: `${basePath}/mappings/${mappingName}`,
           });
           mappingCount++;
+          suffix++;
         }
       } else {
         const wireMockJson = contractToWireMock(contract);

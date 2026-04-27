@@ -496,6 +496,12 @@ info:
     const content = `{"openapi": "3.0.0", "info": {"title": "Test"}, "paths": {}}`;
     expect(looksLikeOpenApi(content)).toBe(true);
   });
+
+  it("should_return_false_for_json_with_nested_openapi_in_body", () => {
+    // A SCC contract whose response body mentions "openapi" should NOT be misidentified
+    const content = `{"request":{"method":"GET","urlPath":"/spec"},"response":{"status":200,"body":{"openapi":"3.0.0"}}}`;
+    expect(looksLikeOpenApi(content)).toBe(false);
+  });
 });
 
 describe("parseOpenApiContracts — contractId type normalization", () => {

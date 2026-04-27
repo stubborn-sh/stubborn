@@ -1,6 +1,6 @@
 {
   "name": "@stubborn-sh/cli",
-  "version": "0.0.4",
+  "version": "0.2.0-SNAPSHOT",
   "type": "module",
   "bin": {
     "stubborn": "./dist/index.js"

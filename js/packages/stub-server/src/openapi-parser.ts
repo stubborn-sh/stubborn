@@ -1,12 +1,15 @@
 import yaml from "js-yaml";
 import type { ParsedContract, ContractRequest, ContractResponse } from "./contract-parser.js";
 
+/** Matches `{"openapi":` or `{ "swagger":` etc. at the start of JSON content. */
+const JSON_OPENAPI_RE = /^\{\s*"(openapi|swagger)"\s*:/;
+
 /**
  * Check if YAML/JSON content looks like an OpenAPI specification.
  * Inspects the first non-blank, non-comment, non-directive line for OpenAPI indicators.
  *
- * For JSON content (starts with `{`), requires `"openapi"` or `"swagger"` to appear
- * somewhere in the content to avoid misidentifying non-OpenAPI JSON as OpenAPI.
+ * For JSON content (starts with `{`), requires `"openapi"` or `"swagger"` as the
+ * first key at the root level to avoid misidentifying non-OpenAPI JSON.
  */
 export function looksLikeOpenApi(content: string): boolean {
   let start = 0;
@@ -24,7 +27,7 @@ export function looksLikeOpenApi(content: string): boolean {
       return true;
     }
     if (line.startsWith("{")) {
-      return content.includes('"openapi"') || content.includes('"swagger"');
+      return JSON_OPENAPI_RE.test(content);
     }
     return false;
   }
@@ -166,6 +169,13 @@ function resolveUrlPath(
     }
   }
 
+  const unresolved = resolved.match(/\{[^}]+\}/g);
+  if (unresolved !== null && unresolved.length > 0) {
+    console.warn(
+      `[openapi-parser] Unresolved path parameters in "${pathPattern}" for contractId=${contractId}: ${unresolved.join(", ")}`,
+    );
+  }
+
   return resolved;
 }
 
@@ -214,8 +224,9 @@ function buildRequest(
     const rbContent = (requestBody as Record<string, unknown>).content;
     if (rbContent !== undefined && rbContent !== null && typeof rbContent === "object") {
       const mediaTypes = Object.keys(rbContent as Record<string, unknown>);
-      if (mediaTypes.length > 0 && headers["Content-Type"] === undefined) {
-        headers["Content-Type"] = mediaTypes[0];
+      const firstMediaType = mediaTypes[0];
+      if (firstMediaType !== undefined && headers["Content-Type"] === undefined) {
+        headers["Content-Type"] = firstMediaType;
       }
     }
 
@@ -274,8 +285,9 @@ function buildResponse(
       const content = (responseObj as Record<string, unknown>).content;
       if (content !== undefined && content !== null && typeof content === "object") {
         const mediaTypes = Object.keys(content as Record<string, unknown>);
-        if (mediaTypes.length > 0) {
-          headers["Content-Type"] = mediaTypes[0];
+        const firstMediaType = mediaTypes[0];
+        if (firstMediaType !== undefined) {
+          headers["Content-Type"] = firstMediaType;
         }
       }
     }

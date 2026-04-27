@@ -90,7 +90,7 @@ export function contractToWireMock(contract: ScannedContract): string {
   }
 
   const mapping = buildMapping(parsed);
-  return JSON.stringify(mapping, null, 2);
+  return safeStringify(mapping, contract.contractName);
 }
 
 function buildMapping(parsed: ParsedYamlContract): WireMockMapping {
@@ -198,6 +198,16 @@ export function openApiContractsToWireMock(contract: ScannedContract): readonly 
       responseBody: c.response.body,
       priority: c.priority,
     });
-    return JSON.stringify(mapping, null, 2);
+    return safeStringify(mapping, contract.contractName);
   });
+}
+
+function safeStringify(value: unknown, contractName: string): string {
+  try {
+    return JSON.stringify(value, null, 2);
+  } catch (err: unknown) {
+    throw new Error(
+      `Failed to serialize WireMock mapping for "${contractName}": ${err instanceof Error ? err.message : String(err)}`,
+    );
+  }
 }

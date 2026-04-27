@@ -127,7 +127,7 @@ describe.skipIf(!fixtureExists)(
 
 const jsonFixtureExists = existsSync(JAVA_OPENAPI_FIXTURE_JSON);
 
-describe.skipIf(!jsonFixtureExists)(
+describe.skipIf(!fixtureExists || !jsonFixtureExists)(
   "Cross-language: Java OpenAPI fixture → JS parser (JSON)",
   () => {
     let jsonContent: string;
