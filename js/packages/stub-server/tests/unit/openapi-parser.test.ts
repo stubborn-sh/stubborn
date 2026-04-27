@@ -476,6 +476,29 @@ paths:
   });
 });
 
+// Mutation-killing tests for looksLikeOpenApi branches
+describe("looksLikeOpenApi — mutation killers", () => {
+  it("should_return_false_for_only_comments_and_blanks", () => {
+    expect(looksLikeOpenApi("# just a comment\n\n# another")).toBe(false);
+  });
+
+  it("should_handle_content_without_newlines", () => {
+    expect(looksLikeOpenApi("openapi: 3.0.0")).toBe(true);
+  });
+
+  it("should_return_false_for_yaml_starting_with_arbitrary_key", () => {
+    expect(looksLikeOpenApi("server:\n  port: 8080")).toBe(false);
+  });
+
+  it("should_handle_swagger_in_json", () => {
+    expect(looksLikeOpenApi('{"swagger": "2.0", "info": {}}')).toBe(true);
+  });
+
+  it("should_return_false_for_json_without_root_openapi", () => {
+    expect(looksLikeOpenApi('{"info": {"openapi": "3.0.0"}}')).toBe(false);
+  });
+});
+
 // Edge cases found by adversarial review
 describe("looksLikeOpenApi — edge cases", () => {
   it("should_return_true_when_yaml_starts_with_document_separator", () => {
@@ -578,6 +601,395 @@ paths:
     const contracts = parseOpenApiContracts("test.yaml", spec);
     expect(contracts).toHaveLength(1);
     expect(contracts[0].name).toBe("valid");
+  });
+});
+
+// Mutation-killing tests for defensive branches
+describe("parseOpenApiContracts — defensive branches", () => {
+  it("should_return_empty_for_scalar_yaml", () => {
+    expect(parseOpenApiContracts("scalar.yaml", "openapi: 3.0.0")).toHaveLength(0);
+  });
+
+  it("should_return_empty_for_null_yaml", () => {
+    expect(parseOpenApiContracts("null.yaml", "null")).toHaveLength(0);
+  });
+
+  it("should_return_empty_for_paths_null", () => {
+    const spec = `openapi: 3.0.0\ninfo:\n  title: T\npaths: null`;
+    expect(parseOpenApiContracts("test.yaml", spec)).toHaveLength(0);
+  });
+
+  it("should_skip_null_path_items", () => {
+    const spec = `
+openapi: 3.0.0
+info:
+  title: T
+  version: "1"
+paths:
+  /null-item: null
+  /real:
+    get:
+      x-contracts:
+        - contractId: 1
+      responses:
+        '200':
+          x-contracts:
+            - contractId: 1
+              body: ok
+`;
+    const contracts = parseOpenApiContracts("test.yaml", spec);
+    expect(contracts).toHaveLength(1);
+    expect(contracts[0]!.request.urlPath).toBe("/real");
+  });
+
+  it("should_skip_operations_without_x_contracts", () => {
+    const spec = `
+openapi: 3.0.0
+info:
+  title: T
+  version: "1"
+paths:
+  /test:
+    get:
+      responses:
+        '200':
+          description: ok
+    post:
+      x-contracts:
+        - contractId: 1
+      responses:
+        '201':
+          x-contracts:
+            - contractId: 1
+              body: created
+`;
+    const contracts = parseOpenApiContracts("test.yaml", spec);
+    expect(contracts).toHaveLength(1);
+    expect(contracts[0]!.request.method).toBe("POST");
+  });
+
+  it("should_skip_contractId_undefined", () => {
+    const spec = `
+openapi: 3.0.0
+info:
+  title: T
+  version: "1"
+paths:
+  /test:
+    get:
+      x-contracts:
+        - name: "no id"
+      responses:
+        '200':
+          x-contracts:
+            - body: ok
+`;
+    expect(parseOpenApiContracts("test.yaml", spec)).toHaveLength(0);
+  });
+
+  it("should_skip_non_numeric_response_keys", () => {
+    const spec = `
+openapi: 3.0.0
+info:
+  title: T
+  version: "1"
+paths:
+  /test:
+    get:
+      x-contracts:
+        - contractId: 1
+      responses:
+        'default':
+          x-contracts:
+            - contractId: 1
+              body: ok
+`;
+    expect(parseOpenApiContracts("test.yaml", spec)).toHaveLength(0);
+  });
+
+  it("should_handle_request_body_without_content", () => {
+    const spec = `
+openapi: 3.0.0
+info:
+  title: T
+  version: "1"
+paths:
+  /test:
+    post:
+      x-contracts:
+        - contractId: 1
+      requestBody:
+        description: no content key
+      responses:
+        '201':
+          x-contracts:
+            - contractId: 1
+              body: ok
+`;
+    const contracts = parseOpenApiContracts("test.yaml", spec);
+    expect(contracts).toHaveLength(1);
+    expect(contracts[0]!.request.headers).toBeUndefined();
+  });
+
+  it("should_handle_response_without_content_for_content_type", () => {
+    const spec = `
+openapi: 3.0.0
+info:
+  title: T
+  version: "1"
+paths:
+  /test:
+    get:
+      x-contracts:
+        - contractId: 1
+      responses:
+        '204':
+          description: no content
+          x-contracts:
+            - contractId: 1
+`;
+    const contracts = parseOpenApiContracts("test.yaml", spec);
+    expect(contracts).toHaveLength(1);
+    expect(contracts[0]!.response.headers).toBeUndefined();
+    expect(contracts[0]!.response.status).toBe(204);
+  });
+
+  it("should_derive_content_type_from_response_media_when_x_contracts_headers_absent", () => {
+    const spec = `
+openapi: 3.0.0
+info:
+  title: T
+  version: "1"
+paths:
+  /test:
+    get:
+      x-contracts:
+        - contractId: 1
+      responses:
+        '200':
+          content:
+            text/plain: {}
+          x-contracts:
+            - contractId: 1
+              body: hello
+`;
+    const contracts = parseOpenApiContracts("test.yaml", spec);
+    expect(contracts).toHaveLength(1);
+    expect(contracts[0]!.response.headers?.["Content-Type"]).toBe("text/plain");
+  });
+
+  it("should_handle_path_param_with_no_matching_x_contracts_value", () => {
+    const spec = `
+openapi: 3.0.0
+info:
+  title: T
+  version: "1"
+paths:
+  /users/{id}:
+    get:
+      parameters:
+        - name: id
+          in: path
+      x-contracts:
+        - contractId: 1
+      responses:
+        '200':
+          x-contracts:
+            - contractId: 1
+              body: ok
+`;
+    const contracts = parseOpenApiContracts("test.yaml", spec);
+    expect(contracts).toHaveLength(1);
+    // Unresolved — placeholder stays
+    expect(contracts[0]!.request.urlPath).toBe("/users/{id}");
+  });
+
+  it("should_use_request_body_content_type_as_header", () => {
+    const spec = `
+openapi: 3.0.0
+info:
+  title: T
+  version: "1"
+paths:
+  /test:
+    post:
+      x-contracts:
+        - contractId: 1
+      requestBody:
+        content:
+          application/xml: {}
+        x-contracts:
+          - contractId: 1
+            body: "<data/>"
+      responses:
+        '200':
+          x-contracts:
+            - contractId: 1
+              body: ok
+`;
+    const contracts = parseOpenApiContracts("test.yaml", spec);
+    expect(contracts).toHaveLength(1);
+    expect(contracts[0]!.request.headers?.["Content-Type"]).toBe("application/xml");
+    expect(contracts[0]!.request.body).toBe("<data/>");
+  });
+
+  it("should_not_override_explicit_content_type_header_with_media_type", () => {
+    const spec = `
+openapi: 3.0.0
+info:
+  title: T
+  version: "1"
+paths:
+  /test:
+    post:
+      x-contracts:
+        - contractId: 1
+          headers:
+            Content-Type: text/custom
+      requestBody:
+        content:
+          application/json: {}
+        x-contracts:
+          - contractId: 1
+            body: "{}"
+      responses:
+        '200':
+          x-contracts:
+            - contractId: 1
+              body: ok
+`;
+    const contracts = parseOpenApiContracts("test.yaml", spec);
+    expect(contracts).toHaveLength(1);
+    expect(contracts[0]!.request.headers?.["Content-Type"]).toBe("text/custom");
+  });
+
+  it("should_skip_param_without_name", () => {
+    const spec = `
+openapi: 3.0.0
+info:
+  title: T
+  version: "1"
+paths:
+  /test/{id}:
+    get:
+      parameters:
+        - in: path
+          x-contracts:
+            - contractId: 1
+              value: "123"
+      x-contracts:
+        - contractId: 1
+      responses:
+        '200':
+          x-contracts:
+            - contractId: 1
+              body: ok
+`;
+    const contracts = parseOpenApiContracts("test.yaml", spec);
+    expect(contracts).toHaveLength(1);
+    // param has no name so placeholder stays
+    expect(contracts[0]!.request.urlPath).toBe("/test/{id}");
+  });
+
+  it("should_skip_non_path_params_in_url_resolution", () => {
+    const spec = `
+openapi: 3.0.0
+info:
+  title: T
+  version: "1"
+paths:
+  /test:
+    get:
+      parameters:
+        - name: filter
+          in: query
+          x-contracts:
+            - contractId: 1
+              value: "active"
+      x-contracts:
+        - contractId: 1
+      responses:
+        '200':
+          x-contracts:
+            - contractId: 1
+              body: ok
+`;
+    const contracts = parseOpenApiContracts("test.yaml", spec);
+    expect(contracts).toHaveLength(1);
+    expect(contracts[0]!.request.urlPath).toBe("/test");
+    expect(contracts[0]!.request.queryParameters).toEqual({ filter: "active" });
+  });
+
+  it("should_drop_contract_when_response_has_no_matching_contractId", () => {
+    const spec = `
+openapi: 3.0.0
+info:
+  title: T
+  version: "1"
+paths:
+  /test:
+    get:
+      x-contracts:
+        - contractId: 1
+        - contractId: 2
+      responses:
+        '200':
+          x-contracts:
+            - contractId: 1
+              body: ok
+`;
+    const contracts = parseOpenApiContracts("test.yaml", spec);
+    // contractId 2 has no matching response → dropped
+    expect(contracts).toHaveLength(1);
+    expect(contracts[0]!.response.status).toBe(200);
+  });
+
+  it("should_generate_fallback_name_when_name_is_empty_string", () => {
+    const spec = `
+openapi: 3.0.0
+info:
+  title: T
+  version: "1"
+paths:
+  /test:
+    get:
+      x-contracts:
+        - contractId: 1
+          name: ""
+      responses:
+        '200':
+          x-contracts:
+            - contractId: 1
+              body: ok
+`;
+    const contracts = parseOpenApiContracts("test.yaml", spec);
+    expect(contracts).toHaveLength(1);
+    expect(contracts[0]!.name).toBe("GET /test #1");
+  });
+
+  it("should_skip_non_string_header_values", () => {
+    const spec = `
+openapi: 3.0.0
+info:
+  title: T
+  version: "1"
+paths:
+  /test:
+    get:
+      x-contracts:
+        - contractId: 1
+          headers:
+            X-Valid: "value"
+            X-Number: 42
+      responses:
+        '200':
+          x-contracts:
+            - contractId: 1
+              body: ok
+`;
+    const contracts = parseOpenApiContracts("test.yaml", spec);
+    expect(contracts).toHaveLength(1);
+    expect(contracts[0]!.request.headers).toEqual({ "X-Valid": "value" });
   });
 });
 
