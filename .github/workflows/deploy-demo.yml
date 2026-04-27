@@ -27,7 +27,7 @@ jobs:
       - name: Build OCI image with Spring Boot Buildpacks
         run: ./mvnw install -DskipTests -DskipStubs -B && ./mvnw spring-boot:build-image -pl broker -DskipTests -B
 
-      - uses: superfly/flyctl-actions/setup-flyctl@fc53c09e1bc3be6f54706524e3b82c4f462f77be # v1.5
+      - uses: superfly/flyctl-actions/setup-flyctl@ed8efb33836e8b2096c7fd3ba1c8afe303ebbff1 # v1.6
 
       - name: Tag and push image to Fly.io registry
         run: |
