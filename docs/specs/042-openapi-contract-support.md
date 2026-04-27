@@ -1,6 +1,6 @@
 ---
 feature: openapi-contract-support
-status: in-progress
+status: implemented
 tests:
   - js/packages/stub-server/tests/unit/openapi-parser.test.ts
   - js/packages/stub-server/tests/unit/directory-loader.test.ts

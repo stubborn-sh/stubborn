@@ -1,6 +1,7 @@
 import type { ScannedContract } from "@stubborn-sh/publisher";
+import type { ParsedContract } from "@stubborn-sh/stub-server";
 import yaml from "js-yaml";
-import { looksLikeOpenApi, parseOpenApiContracts } from "@stubborn-sh/stub-server";
+import { parseOpenApiContracts } from "@stubborn-sh/stub-server";
 
 /** Raw WireMock mapping JSON structure for serialization. */
 interface WireMockMapping {
@@ -97,69 +98,85 @@ function buildMapping(parsed: ParsedYamlContract): WireMockMapping {
   const req = parsed.request as NonNullable<ParsedYamlContract["request"]>;
   const res = parsed.response as NonNullable<ParsedYamlContract["response"]>;
 
-  const request = buildWireMockRequest(req);
-  const response = buildWireMockResponse(res);
-
-  return {
-    request,
-    response,
-    ...(parsed.priority !== undefined ? { priority: parsed.priority } : {}),
-  };
+  return parsedContractToWireMock({
+    method: (req.method ?? "").toUpperCase(),
+    url: req.url,
+    urlPath: req.urlPath,
+    headers: req.headers,
+    queryParameters: req.queryParameters,
+    body: req.body,
+    status: res.status ?? 200,
+    responseHeaders: res.headers,
+    responseBody: res.body,
+    priority: parsed.priority,
+  });
 }
 
-function buildWireMockRequest(req: NonNullable<ParsedYamlContract["request"]>): WireMockRequest {
-  const result: Record<string, unknown> = {
-    method: (req.method ?? "").toUpperCase(),
-  };
+interface WireMockInput {
+  readonly method: string;
+  readonly url?: string;
+  readonly urlPath?: string;
+  readonly headers?: Readonly<Record<string, string>>;
+  readonly queryParameters?: Readonly<Record<string, string>>;
+  readonly body?: unknown;
+  readonly status: number;
+  readonly responseHeaders?: Readonly<Record<string, string>>;
+  readonly responseBody?: unknown;
+  readonly priority?: number;
+}
 
-  if (req.urlPath !== undefined) {
-    result["urlPath"] = req.urlPath;
-  } else if (req.url !== undefined) {
-    result["url"] = req.url;
+function parsedContractToWireMock(input: WireMockInput): WireMockMapping {
+  const request: Record<string, unknown> = { method: input.method };
+
+  if (input.urlPath !== undefined) {
+    request["urlPath"] = input.urlPath;
+  } else if (input.url !== undefined) {
+    request["url"] = input.url;
   }
 
-  if (req.headers !== undefined && Object.keys(req.headers).length > 0) {
+  if (input.headers !== undefined && Object.keys(input.headers).length > 0) {
     const wireMockHeaders: Record<string, WireMockMatcher> = {};
-    for (const [key, value] of Object.entries(req.headers)) {
+    for (const [key, value] of Object.entries(input.headers)) {
       wireMockHeaders[key] = { equalTo: value };
     }
-    result["headers"] = wireMockHeaders;
+    request["headers"] = wireMockHeaders;
   }
 
-  if (req.queryParameters !== undefined && Object.keys(req.queryParameters).length > 0) {
+  if (input.queryParameters !== undefined && Object.keys(input.queryParameters).length > 0) {
     const wireMockParams: Record<string, WireMockMatcher> = {};
-    for (const [key, value] of Object.entries(req.queryParameters)) {
+    for (const [key, value] of Object.entries(input.queryParameters)) {
       wireMockParams[key] = { equalTo: value };
     }
-    result["queryParameters"] = wireMockParams;
+    request["queryParameters"] = wireMockParams;
   }
 
-  if (req.body !== undefined) {
-    const bodyStr = typeof req.body === "string" ? req.body : JSON.stringify(req.body);
-    result["bodyPatterns"] = [{ equalToJson: bodyStr }];
+  if (input.body !== undefined) {
+    const bodyStr = typeof input.body === "string" ? input.body : JSON.stringify(input.body);
+    request["bodyPatterns"] = [{ equalToJson: bodyStr }];
   }
 
-  return result as unknown as WireMockRequest;
-}
+  const response: Record<string, unknown> = { status: input.status };
 
-function buildWireMockResponse(res: NonNullable<ParsedYamlContract["response"]>): WireMockResponse {
-  const result: Record<string, unknown> = {
-    status: res.status ?? 200,
-  };
-
-  if (res.headers !== undefined && Object.keys(res.headers).length > 0) {
-    result["headers"] = res.headers;
+  if (input.responseHeaders !== undefined && Object.keys(input.responseHeaders).length > 0) {
+    response["headers"] = input.responseHeaders;
   }
 
-  if (res.body !== undefined) {
-    if (typeof res.body === "object" && res.body !== null) {
-      result["jsonBody"] = res.body;
+  if (input.responseBody !== undefined) {
+    if (typeof input.responseBody === "object" && input.responseBody !== null) {
+      response["jsonBody"] = input.responseBody;
     } else {
-      result["body"] = typeof res.body === "string" ? res.body : JSON.stringify(res.body);
+      response["body"] =
+        typeof input.responseBody === "string"
+          ? input.responseBody
+          : JSON.stringify(input.responseBody);
     }
   }
 
-  return result as unknown as WireMockResponse;
+  return {
+    request: request as unknown as WireMockRequest,
+    response: response as unknown as WireMockResponse,
+    ...(input.priority !== undefined ? { priority: input.priority } : {}),
+  };
 }
 
 /**
@@ -169,51 +186,18 @@ function buildWireMockResponse(res: NonNullable<ParsedYamlContract["response"]>)
 export function openApiContractsToWireMock(contract: ScannedContract): readonly string[] {
   const parsed = parseOpenApiContracts(contract.contractName, contract.content);
   return parsed.map((c) => {
-    const request: Record<string, unknown> = {
+    const mapping = parsedContractToWireMock({
       method: c.request.method,
-    };
-    if (c.request.urlPath !== undefined) {
-      request["urlPath"] = c.request.urlPath;
-    } else if (c.request.url !== undefined) {
-      request["url"] = c.request.url;
-    }
-    if (c.request.headers !== undefined && Object.keys(c.request.headers).length > 0) {
-      const wireMockHeaders: Record<string, WireMockMatcher> = {};
-      for (const [key, value] of Object.entries(c.request.headers)) {
-        wireMockHeaders[key] = { equalTo: value };
-      }
-      request["headers"] = wireMockHeaders;
-    }
-    if (c.request.queryParameters !== undefined && Object.keys(c.request.queryParameters).length > 0) {
-      const wireMockParams: Record<string, WireMockMatcher> = {};
-      for (const [key, value] of Object.entries(c.request.queryParameters)) {
-        wireMockParams[key] = { equalTo: value };
-      }
-      request["queryParameters"] = wireMockParams;
-    }
-    if (c.request.body !== undefined) {
-      const bodyStr = typeof c.request.body === "string" ? c.request.body : JSON.stringify(c.request.body);
-      request["bodyPatterns"] = [{ equalToJson: bodyStr }];
-    }
-
-    const response: Record<string, unknown> = {
+      url: c.request.url,
+      urlPath: c.request.urlPath,
+      headers: c.request.headers,
+      queryParameters: c.request.queryParameters,
+      body: c.request.body,
       status: c.response.status,
-    };
-    if (c.response.headers !== undefined && Object.keys(c.response.headers).length > 0) {
-      response["headers"] = c.response.headers;
-    }
-    if (c.response.body !== undefined) {
-      if (typeof c.response.body === "object" && c.response.body !== null) {
-        response["jsonBody"] = c.response.body;
-      } else {
-        response["body"] = typeof c.response.body === "string" ? c.response.body : JSON.stringify(c.response.body);
-      }
-    }
-
-    const mapping: Record<string, unknown> = { request, response };
-    if (c.priority !== undefined) {
-      mapping["priority"] = c.priority;
-    }
+      responseHeaders: c.response.headers,
+      responseBody: c.response.body,
+      priority: c.priority,
+    });
     return JSON.stringify(mapping, null, 2);
   });
 }

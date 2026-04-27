@@ -3,19 +3,30 @@ import type { ParsedContract, ContractRequest, ContractResponse } from "./contra
 
 /**
  * Check if YAML/JSON content looks like an OpenAPI specification.
- * Inspects the first non-blank, non-comment line for OpenAPI indicators.
+ * Inspects the first non-blank, non-comment, non-directive line for OpenAPI indicators.
+ *
+ * For JSON content (starts with `{`), requires `"openapi"` or `"swagger"` to appear
+ * somewhere in the content to avoid misidentifying non-OpenAPI JSON as OpenAPI.
  */
 export function looksLikeOpenApi(content: string): boolean {
-  for (const line of content.split("\n")) {
-    const trimmed = line.trim();
-    if (trimmed === "" || trimmed.startsWith("#")) continue;
-    return (
-      trimmed.startsWith("openapi") ||
-      trimmed.startsWith("swagger") ||
-      trimmed.startsWith('"openapi"') ||
-      trimmed.startsWith('"swagger"') ||
-      trimmed.startsWith("{")
-    );
+  let start = 0;
+  while (start < content.length) {
+    const end = content.indexOf("\n", start);
+    const line = (end === -1 ? content.slice(start) : content.slice(start, end)).trim();
+    start = end === -1 ? content.length : end + 1;
+    if (line === "" || line.startsWith("#") || line === "---") continue;
+    if (
+      line.startsWith("openapi") ||
+      line.startsWith("swagger") ||
+      line.startsWith('"openapi"') ||
+      line.startsWith('"swagger"')
+    ) {
+      return true;
+    }
+    if (line.startsWith("{")) {
+      return content.includes('"openapi"') || content.includes('"swagger"');
+    }
+    return false;
   }
   return false;
 }
@@ -66,8 +77,8 @@ export function parseOpenApiContracts(
       for (const entry of xContracts) {
         if (entry.ignored === true) continue;
 
-        const contractId = entry.contractId;
-        if (contractId === undefined) continue;
+        const contractId = normalizeContractId(entry.contractId);
+        if (contractId === "") continue;
 
         const parsed = buildContract(
           pathPattern,
@@ -93,7 +104,7 @@ function buildContract(
   httpMethod: string,
   operation: RawOperation,
   entry: XContractEntry,
-  contractId: unknown,
+  contractId: string,
 ): ParsedContract | null {
   // Resolve URL path
   const urlPath = resolveUrlPath(pathPattern, operation, entry, contractId);
@@ -128,7 +139,7 @@ function resolveUrlPath(
   pathPattern: string,
   operation: RawOperation,
   entry: XContractEntry,
-  contractId: unknown,
+  contractId: string,
 ): string {
   // contractPath override
   if (typeof entry.contractPath === "string" && entry.contractPath !== "") {
@@ -147,9 +158,11 @@ function resolveUrlPath(
     if (typeof paramName !== "string") continue;
 
     const paramXContracts = getXContracts(param);
-    const matching = paramXContracts.find((x) => x.contractId === contractId);
+    const matching = paramXContracts.find(
+      (x) => normalizeContractId(x.contractId) === contractId,
+    );
     if (matching !== undefined && matching.value !== undefined) {
-      resolved = resolved.replace(`{${paramName}}`, String(matching.value));
+      resolved = resolved.split(`{${paramName}}`).join(String(matching.value));
     }
   }
 
@@ -161,7 +174,7 @@ function buildRequest(
   urlPath: string,
   operation: RawOperation,
   entry: XContractEntry,
-  contractId: unknown,
+  contractId: string,
 ): ContractRequest {
   const headers: Record<string, string> = {};
   const queryParameters: Record<string, string> = {};
@@ -182,7 +195,9 @@ function buildRequest(
     if (param === null || typeof param !== "object") continue;
 
     const paramXContracts = getXContracts(param);
-    const matching = paramXContracts.find((x) => x.contractId === contractId);
+    const matching = paramXContracts.find(
+      (x) => normalizeContractId(x.contractId) === contractId,
+    );
     if (matching === undefined || matching.value === undefined) continue;
 
     if (param.in === "query" && typeof param.name === "string") {
@@ -206,7 +221,9 @@ function buildRequest(
 
     // Body from requestBody x-contracts
     const rbXContracts = getXContracts(requestBody as HasExtensions);
-    const matching = rbXContracts.find((x) => x.contractId === contractId);
+    const matching = rbXContracts.find(
+      (x) => normalizeContractId(x.contractId) === contractId,
+    );
     if (matching !== undefined && matching.body !== undefined) {
       body = matching.body;
     }
@@ -273,7 +290,7 @@ function buildResponse(
 
 function findResponse(
   operation: RawOperation,
-  contractId: unknown,
+  contractId: string,
 ): { statusCode: number; xContract: XContractEntry } | null {
   const responses = operation.responses ?? {};
 
@@ -284,7 +301,9 @@ function findResponse(
     if (responseObj === null || typeof responseObj !== "object") continue;
 
     const xContracts = getXContracts(responseObj as HasExtensions);
-    const matching = xContracts.find((x) => x.contractId === contractId);
+    const matching = xContracts.find(
+      (x) => normalizeContractId(x.contractId) === contractId,
+    );
     if (matching !== undefined) {
       return { statusCode: code, xContract: matching };
     }
@@ -296,7 +315,15 @@ function findResponse(
 function getXContracts(obj: HasExtensions): readonly XContractEntry[] {
   const raw = obj["x-contracts"];
   if (!Array.isArray(raw)) return [];
-  return raw as XContractEntry[];
+  return raw.filter(
+    (el): el is XContractEntry => typeof el === "object" && el !== null,
+  );
+}
+
+/** Normalize contractId to string for consistent comparison across YAML types. */
+function normalizeContractId(id: unknown): string {
+  if (id === undefined || id === null) return "";
+  return String(id);
 }
 
 // Raw types for the parsed YAML structure
@@ -331,7 +358,4 @@ interface XContractEntry {
   readonly headers?: unknown;
   readonly body?: unknown;
   readonly value?: unknown;
-  readonly request?: {
-    readonly queryParameters?: readonly { key: string; value: string }[];
-  };
 }

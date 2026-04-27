@@ -476,6 +476,105 @@ paths:
   });
 });
 
+// Edge cases found by adversarial review
+describe("looksLikeOpenApi — edge cases", () => {
+  it("should_return_true_when_yaml_starts_with_document_separator", () => {
+    const content = `---
+openapi: 3.0.0
+info:
+  title: Test`;
+    expect(looksLikeOpenApi(content)).toBe(true);
+  });
+
+  it("should_return_false_for_json_object_without_openapi_key", () => {
+    // A JSON-style SCC contract must NOT be misidentified as OpenAPI
+    const content = `{"request": {"method": "GET", "urlPath": "/test"}, "response": {"status": 200}}`;
+    expect(looksLikeOpenApi(content)).toBe(false);
+  });
+
+  it("should_return_true_for_json_object_with_openapi_key", () => {
+    const content = `{"openapi": "3.0.0", "info": {"title": "Test"}, "paths": {}}`;
+    expect(looksLikeOpenApi(content)).toBe(true);
+  });
+});
+
+describe("parseOpenApiContracts — contractId type normalization", () => {
+  it("should_match_string_contractId_with_numeric_contractId", () => {
+    // YAML parses bare 1 as number and "1" as string — both should match
+    const spec = `
+openapi: 3.0.0
+info:
+  title: Test
+  version: "1.0.0"
+paths:
+  /test:
+    get:
+      x-contracts:
+        - contractId: "1"
+          name: "string id"
+      responses:
+        '200':
+          x-contracts:
+            - contractId: 1
+              body: "ok"
+`;
+    const contracts = parseOpenApiContracts("test.yaml", spec);
+    expect(contracts).toHaveLength(1);
+    expect(contracts[0].name).toBe("string id");
+  });
+});
+
+describe("parseOpenApiContracts — null safety", () => {
+  it("should_skip_null_elements_in_x_contracts_array", () => {
+    const spec = `
+openapi: 3.0.0
+info:
+  title: Test
+  version: "1.0.0"
+paths:
+  /test:
+    get:
+      x-contracts:
+        - null
+        - contractId: 1
+          name: "valid"
+      responses:
+        '200':
+          x-contracts:
+            - contractId: 1
+              body: "ok"
+`;
+    const contracts = parseOpenApiContracts("test.yaml", spec);
+    expect(contracts).toHaveLength(1);
+    expect(contracts[0].name).toBe("valid");
+  });
+
+  it("should_skip_contractId_null", () => {
+    const spec = `
+openapi: 3.0.0
+info:
+  title: Test
+  version: "1.0.0"
+paths:
+  /test:
+    get:
+      x-contracts:
+        - contractId: null
+          name: "null id"
+        - contractId: 1
+          name: "valid"
+      responses:
+        '200':
+          x-contracts:
+            - contractId: 1
+              body: "ok"
+`;
+    const contracts = parseOpenApiContracts("test.yaml", spec);
+    expect(contracts).toHaveLength(1);
+    expect(contracts[0].name).toBe("valid");
+  });
+});
+
 // Full example from stubborn-openapi test resources
 const EXAMPLE_SPEC = `
 openapi: 3.0.0
