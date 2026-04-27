@@ -335,7 +335,10 @@ function getXContracts(obj: HasExtensions): readonly XContractEntry[] {
 /** Normalize contractId to string for consistent comparison across YAML types. */
 function normalizeContractId(id: unknown): string {
   if (id === undefined || id === null) return "";
-  return String(id);
+  if (typeof id === "string" || typeof id === "number" || typeof id === "boolean") {
+    return String(id);
+  }
+  return "";
 }
 
 // Raw types for the parsed YAML structure
@@ -369,5 +372,5 @@ interface XContractEntry {
   readonly ignored?: boolean;
   readonly headers?: unknown;
   readonly body?: unknown;
-  readonly value?: unknown;
+  readonly value?: string | number | boolean;
 }

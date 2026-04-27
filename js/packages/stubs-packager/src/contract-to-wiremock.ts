@@ -1,5 +1,4 @@
 import type { ScannedContract } from "@stubborn-sh/publisher";
-import type { ParsedContract } from "@stubborn-sh/stub-server";
 import yaml from "js-yaml";
 import { parseOpenApiContracts } from "@stubborn-sh/stub-server";
 
