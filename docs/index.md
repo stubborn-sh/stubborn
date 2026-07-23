@@ -8,10 +8,10 @@ hero:
   actions:
     - theme: brand
       text: Get Started
-      link: /stubborn/getting-started
+      link: /getting-started
     - theme: alt
       text: Can I Deploy?
-      link: /stubborn/features/can-i-deploy
+      link: /features/can-i-deploy
 
 features:
   - title: Deployment Safety Gate

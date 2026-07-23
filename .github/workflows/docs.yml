@@ -65,9 +65,11 @@ jobs:
           mkdir -p _site/contract
           cp -r stubborn-contract/docs/.vitepress/dist/. _site/contract/
 
-      # Root landing page (redirects to /stubborn/)
-      - name: Create root landing page
-        run: cp docs/public/hub.html _site/index.html
+      # Root landing page (redirects to /stubborn/) + custom domain
+      - name: Create root landing page and CNAME
+        run: |
+          cp docs/public/hub.html _site/index.html
+          echo "docs.stubborn.sh" > _site/CNAME
 
       # Verify no broken links in either site
       - name: Check broker docs links
