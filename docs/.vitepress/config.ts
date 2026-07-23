@@ -5,6 +5,7 @@ export default defineConfig({
   title: 'Stubborn Broker',
   description: 'Contract governance for any stack — JVM, Node.js, and beyond.',
   base: '/stubborn/',
+  appearance: 'dark',
 
   head: [
     ['link', { rel: 'icon', type: 'image/svg+xml', href: '/stubborn/favicon.svg' }],
