@@ -1,0 +1,134 @@
+# Contract Publishing Plugins
+
+Automate contract publishing with Maven and Gradle build tool plugins.
+
+## Overview
+
+The contract publishing plugins integrate with your build lifecycle to automatically
+publish Spring Cloud Contract definitions to the broker. A shared core library
+(`BrokerPublisher`) handles the REST API communication, while thin Maven and Gradle
+wrappers expose it as build goals and tasks.
+
+## Core Library: BrokerPublisher
+
+The `BrokerPublisher` facade handles all broker communication.
+Both plugins delegate to it:
+
+1. Register the application (`POST /api/v1/applications`) — 409 is treated as "already exists"
+2. Publish each contract file (`POST /api/v1/applications/{name}/versions/{version}/contracts`)
+
+Content type is inferred from the file extension:
+
+| Extension | Content Type |
+| --- | --- |
+| `.yml`, `.yaml` | `application/x-spring-cloud-contract+yaml` |
+| `.groovy` | `application/x-spring-cloud-contract+groovy` |
+| `.json` | `application/json` |
+
+## Maven Plugin
+
+Plugin coordinates: `sh.stubborn:stubborn-maven-plugin`
+
+Goal: `publish` (no default phase — invoke explicitly or bind in an `<execution>`)
+
+```xml
+<plugin>
+    <groupId>sh.stubborn</groupId>
+    <artifactId>stubborn-maven-plugin</artifactId>
+    <version>${broker.version}</version>
+    <configuration>
+        <brokerUrl>http://localhost:8642</brokerUrl>
+        <username>admin</username>
+        <password>admin</password>
+        <applicationName>${project.artifactId}</applicationName>
+        <applicationVersion>${project.version}</applicationVersion>
+        <contractsDirectory>${project.basedir}/src/test/resources/contracts</contractsDirectory>
+    </configuration>
+    <executions>
+        <execution>
+            <goals>
+                <goal>publish</goal>
+            </goals>
+        </execution>
+    </executions>
+</plugin>
+```
+
+Run manually:
+
+```bash
+mvn stubborn:publish
+```
+
+## Gradle Plugin
+
+Plugin ID: `sh.stubborn.broker`
+
+Task: `publishContracts`
+
+```groovy
+plugins {
+    id 'sh.stubborn.broker' version "${brokerVersion}"
+}
+
+broker {
+    brokerUrl = 'http://localhost:8642'
+    username = 'admin'
+    password = 'admin'
+    applicationName = project.name
+    applicationVersion = project.version
+    contractsDirectory = file("src/test/resources/contracts")
+}
+```
+
+Run:
+
+```bash
+gradle publishContracts
+```
+
+## Configuration Reference
+
+| Parameter | Required | Default | Description |
+| --- | --- | --- | --- |
+| `brokerUrl` | Yes | -- | Base URL of the broker |
+| `username` | No | `admin` | HTTP Basic auth username |
+| `password` | No | `admin` | HTTP Basic auth password |
+| `applicationName` | Yes | Project artifact ID / name | Application name in the broker |
+| `applicationVersion` | Yes | Project version | Version to publish contracts under |
+| `contractsDirectory` | No | `src/test/resources/contracts` | Directory containing contract files |
+| `description` (Gradle: `appDescription`) | No | -- | Application description (used during auto-registration) |
+| `owner` | No | `unknown` | Application owner (used during auto-registration) |
+| `skip` (Maven property: `broker.skip`) | No | `false` | Skip contract publishing entirely |
+
+## Error Handling
+
+The plugin handles broker errors as follows:
+
+* **Authentication failure (401/403)** -- build fails with "Authentication failed"
+* **Broker unreachable** -- build fails with "Cannot connect to broker"
+* **Server error (5xx)** -- build fails with HTTP status and response body
+* **Contract already exists (409)** -- warning logged, continues to next contract (idempotent)
+* **No contracts found** -- warning logged, build succeeds
+
+Credentials are never written to build output.
+
+## Example: CI/CD Pipeline
+
+A typical CI pipeline publishes contracts after tests pass:
+
+```bash
+# Maven
+mvn clean verify stubborn:publish \
+    -Dbroker.url=https://broker.example.com \
+    -Dbroker.username=${BROKER_USER} \
+    -Dbroker.password=${BROKER_PASS}
+
+# Gradle
+gradle build publishContracts \
+    -Pbroker.url=https://broker.example.com \
+    -Pbroker.username=${BROKER_USER} \
+    -Pbroker.password=${BROKER_PASS}
+```
+
+See specification: [docs/specs/008-contract-publishing-plugins.md](https://github.com/stubborn-sh/stubborn/blob/main/docs/specs/008-contract-publishing-plugins.md)

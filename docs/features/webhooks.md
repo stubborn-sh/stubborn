@@ -1,0 +1,46 @@
+# Event Webhooks
+
+The broker fires HTTP webhooks on key events, enabling CI/CD automation.
+
+See specification: [docs/specs/013-webhooks.md](https://github.com/stubborn-sh/stubborn/blob/main/docs/specs/013-webhooks.md)
+
+## Event Types
+
+* `CONTRACT_PUBLISHED` -- when a new contract version is published
+* `VERIFICATION_PUBLISHED` -- when a verification result is recorded
+* `VERIFICATION_SUCCEEDED` -- when a verification passes
+* `VERIFICATION_FAILED` -- when a verification fails
+* `DEPLOYMENT_RECORDED` -- when a deployment is recorded to an environment
+
+## Endpoints
+
+**`GET /api/v1/webhooks`**
+List webhooks (paginated). Filter by URL with `?search=`.
+
+**`POST /api/v1/webhooks`**
+Create a webhook. Requires `eventType` and `url`. Optionally scope to an `applicationName`.
+Optional fields: `headers` (custom HTTP headers) and `bodyTemplate` (custom body template).
+
+**`GET /api/v1/webhooks/{id}`**
+Get a specific webhook by UUID.
+
+**`PUT /api/v1/webhooks/{id}`**
+Update a webhook (event type, URL, enabled flag, `headers`, and `bodyTemplate`).
+
+**`DELETE /api/v1/webhooks/{id}`**
+Delete a webhook.
+
+**`GET /api/v1/webhooks/{id}/executions`**
+List execution history for a webhook (paginated). Shows success/failure, HTTP status, and timestamp.
+
+## Delivery
+
+Webhooks are delivered asynchronously with retry on failure (exponential backoff).
+Each execution is recorded with the HTTP response status and any error message.
+
+## Security
+
+Creating, updating, and deleting webhooks requires the ADMIN role.
+Listing and viewing webhooks requires the READER role.
+
+![Webhooks](/images/demo-webhooks.png)

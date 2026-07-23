@@ -1,0 +1,16 @@
+# Verification Results
+
+Record and query consumer-side contract verification outcomes.
+
+## Overview
+
+After a consumer runs contract tests against a provider's stubs, the verification result
+(SUCCESS or FAILED) is recorded in the broker. This data feeds into the Can I Deploy safety check.
+
+## API
+
+* `POST /api/v1/verifications` — Record a verification result
+* `GET /api/v1/verifications` — Query verification results (filter by `provider`, `providerVersion`, `search`)
+* `GET /api/v1/verifications/{id}` — Get a specific verification result by UUID
+
+See specification: [docs/specs/003-verification-results.md](https://github.com/stubborn-sh/stubborn/blob/main/docs/specs/003-verification-results.md)

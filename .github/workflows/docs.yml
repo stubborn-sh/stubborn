@@ -5,8 +5,9 @@ on:
     branches: [main]
     paths:
       - 'docs/**'
-      - 'broker/pom.xml'
       - '.github/workflows/docs.yml'
+  repository_dispatch:
+    types: [contract-docs-updated]
   workflow_dispatch:
 
 permissions:
@@ -18,36 +19,76 @@ concurrency:
   group: pages
   cancel-in-progress: false
 
-env:
-  JAVA_VERSION: '25'
-  JAVA_DISTRIBUTION: 'liberica'
-
 jobs:
   build:
-    name: Build Docs
+    name: Build Unified Docs
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up JDK
-        uses: actions/setup-java@v4
+      # Checkout stubborn-contract repo (public, no token required)
+      - uses: actions/checkout@v4
         with:
-          java-version: ${{ env.JAVA_VERSION }}
-          distribution: ${{ env.JAVA_DISTRIBUTION }}
-          cache: maven
+          repository: stubborn-sh/stubborn-contract
+          path: stubborn-contract
 
-      - name: Build docs
-        run: ./mvnw asciidoctor:process-asciidoc@generate-docs -pl broker -B
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
 
-      - name: Prepare site
+      # Build broker VitePress docs → _site/stubborn/
+      - name: Install broker docs dependencies
+        run: npm install
+        working-directory: docs
+
+      - name: Build broker docs
+        run: npm run docs:build
+        working-directory: docs
+
+      - name: Copy broker docs to _site
         run: |
-          mkdir -p _site
-          cp -r broker/target/generated-docs/* _site/
-          echo 'docs.stubborn.sh' > _site/CNAME
-          touch _site/.nojekyll
+          mkdir -p _site/stubborn
+          cp -r docs/.vitepress/dist/. _site/stubborn/
+
+      # Build stubborn-contract VitePress docs → _site/contract/
+      - name: Install contract docs dependencies
+        run: npm install
+        working-directory: stubborn-contract
+
+      - name: Build contract docs
+        run: npm run docs:build
+        working-directory: stubborn-contract
+
+      - name: Copy contract docs to _site
+        run: |
+          mkdir -p _site/contract
+          cp -r stubborn-contract/docs/.vitepress/dist/. _site/contract/
+
+      # Root landing page (redirects to /stubborn/)
+      - name: Create root landing page
+        run: cp docs/public/hub.html _site/index.html
+
+      # Verify no broken links in either site
+      - name: Check broker docs links
+        run: bash scripts/check-docs-links.sh
+        env:
+          DIST: _site/stubborn
+          PORT: 4173
+
+      - name: Check contract docs links
+        run: bash scripts/check-docs-links.sh
+        env:
+          DIST: _site/contract
+          PORT: 4174
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site/
 
   deploy:
     name: Deploy to GitHub Pages

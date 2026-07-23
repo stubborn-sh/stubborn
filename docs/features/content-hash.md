@@ -1,0 +1,14 @@
+# Content Hash Deduplication
+
+The broker computes a SHA-256 hash of each contract's content on publish. If a contract with
+identical content already exists for the same application version, it is not stored again.
+
+This prevents database bloat when CI pipelines re-publish the same contracts on every build.
+
+See specification: [docs/specs/012-content-hash.md](https://github.com/stubborn-sh/stubborn/blob/main/docs/specs/012-content-hash.md)
+
+## How It Works
+
+1. On publish, the broker computes `SHA-256(content)`.
+2. If a contract with the same `applicationName`, `version`, `contractName`, and `contentHash` exists, the existing contract is returned (HTTP 200 instead of 201).
+3. If the content differs, a new contract record is created.

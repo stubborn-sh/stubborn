@@ -1,0 +1,20 @@
+# Compatibility Matrix
+
+The compatibility matrix shows provider-consumer verification status in a grid format.
+
+See specification: [docs/specs/016-compatibility-matrix.md](https://github.com/stubborn-sh/stubborn/blob/main/docs/specs/016-compatibility-matrix.md)
+
+## Endpoints
+
+**`GET /api/v1/matrix`**
+Query the full matrix. Filter by `provider` and/or `consumer`.
+
+## Response
+
+Returns a list of matrix entries, each containing provider name/version, consumer name/version,
+verification status (SUCCESS/FAILED), and verification timestamp.
+
+## Use Case
+
+The matrix provides a quick overview of which service versions are compatible, helping teams
+identify broken integrations and track verification coverage across their service mesh.

@@ -1,0 +1,27 @@
+# MCP Server
+
+The `broker-mcp-server` module exposes the broker API as an MCP (Model Context Protocol) server
+for AI coding agents such as Claude Code, GitHub Copilot, and others.
+
+See specification: [docs/specs/010-mcp-server.md](https://github.com/stubborn-sh/stubborn/blob/main/docs/specs/010-mcp-server.md)
+
+## Overview
+
+* 71 tools for all broker operations (91 with AI features enabled)
+* 4 resources for reading broker state
+* 7 prompts for guided workflows
+* Runs on port 8643 (broker on 8642)
+* Stateless mode with HTTP Basic authentication
+
+## Configuration
+
+The MCP server connects to the broker REST API using `RestClient` with HTTP Basic auth.
+Configure via environment variables or application properties:
+
+* `broker.mcp.url` -- broker base URL (default: `http://localhost:8642`)
+* `broker.mcp.username` / `broker.mcp.password` -- authentication credentials
+
+## Usage
+
+Add the MCP server URL to your AI agent's MCP configuration to enable natural-language
+interaction with the broker (e.g., "register order-service", "can I deploy v1.2.0 to staging?").

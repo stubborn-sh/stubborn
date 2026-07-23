@@ -1,0 +1,22 @@
+# Data Cleanup
+
+The broker provides configurable data retention to prevent unbounded database growth.
+
+See specification: [docs/specs/018-data-cleanup.md](https://github.com/stubborn-sh/stubborn/blob/main/docs/specs/018-data-cleanup.md)
+
+## Endpoints
+
+**`POST /api/v1/maintenance/cleanup`**
+Run cleanup across all applications or a specific application (via `applicationName` in the
+request body). Accepts `keepLatestVersions` parameter (default: 10) specifying how many recent
+versions to retain per application. An optional `protectedEnvironments` list prevents cleanup
+of versions deployed to those environments.
+
+## What Gets Cleaned
+
+Old contract versions, their associated verifications, and deployment records are removed.
+The most recent N versions (by publish date) are always retained.
+
+## Security
+
+Cleanup endpoints require the ADMIN role.
