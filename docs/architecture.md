@@ -19,6 +19,37 @@ Key modules:
 * **e2e-tests** — Playwright browser-based E2E tests
 * **js/** — Node.js packages (CLI, stub-server, stubs-packager, Jest integration)
 
+```mermaid
+graph TD
+    subgraph OSS["stubborn-sh/stubborn (OSS)"]
+        UI[ui\nReact + Vite]
+        Broker[broker\nSpring Boot REST API]
+        Client[broker-api-client\nGenerated REST client]
+        Publisher[broker-contract-publisher\nContract scanner]
+        Maven[broker-maven-plugin]
+        Gradle[broker-gradle-plugin]
+        StubDL[broker-stub-downloader\nsccbroker:// protocol]
+        SR[stub-runner\nStub Runner Boot]
+        JS[js/\n@stubborn-sh/cli & jest]
+    end
+
+    subgraph PRO["stubborn-sh/stubborn-pro (PRO)"]
+        MCP[broker-mcp-server\nMCP Server]
+        Proxy[proxy\nAI Traffic Proxy]
+        CLI[broker-cli\nJava Picocli CLI]
+    end
+
+    UI --> Broker
+    Maven --> Publisher
+    Gradle --> Publisher
+    Publisher --> Broker
+    StubDL --> Broker
+    SR --> StubDL
+    MCP --> Client
+    CLI --> Client
+    Client --> Broker
+```
+
 ## Broker Module — Vertical Slice Architecture
 
 The broker module is organized by feature (vertical slices), not by technical layer.

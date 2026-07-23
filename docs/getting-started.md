@@ -54,6 +54,15 @@ Once running, the dashboard gives you an overview of all applications, verificat
 
 ## 5-Minute Walkthrough
 
+```mermaid
+flowchart LR
+    A[Register\nApplication] --> B[Publish\nContracts]
+    B --> C[Record\nVerification Results]
+    C --> D[Can I\nDeploy?]
+    D -->|✅ Safe| E[Deploy]
+    D -->|❌ Not safe| C
+```
+
 Once the broker is running, you can interact with the REST API using `curl` or the `stubborn` CLI.
 The default users are `admin:admin` (full access), `publisher:publisher` (read + write), and `reader:reader` (read only).
 

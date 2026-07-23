@@ -13,6 +13,19 @@ It examines:
 2. For each consumer deployed there, whether a successful verification exists against the
    provider version being deployed
 
+```mermaid
+flowchart TD
+    A["Can I Deploy?\napp=X, version=Y, env=E"] --> B{Any consumers\ndeployed in env E?}
+    B -->|No consumers| C[✅ Safe — no consumers\nto verify against]
+    B -->|Consumers exist| D{All consumers verified\nagainst version Y?}
+    D -->|All verified| E[✅ Safe to deploy]
+    D -->|Missing verifications| F[❌ Not safe\n— list of missing verifications]
+
+    style C fill:#2d5a27,color:#fff
+    style E fill:#2d5a27,color:#fff
+    style F fill:#5a2727,color:#fff
+```
+
 ## API
 
 * `GET /api/v1/can-i-deploy?application=X&version=Y&environment=Z&branch=B` — Safety check
