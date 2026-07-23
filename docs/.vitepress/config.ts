@@ -1,6 +1,6 @@
-import { defineConfig } from 'vitepress'
+import { withMermaid } from 'vitepress-plugin-mermaid'
 
-export default defineConfig({
+export default withMermaid({
   lang: 'en-US',
   title: 'Stubborn Broker',
   description: 'Contract governance for any stack — JVM, Node.js, and beyond.',
