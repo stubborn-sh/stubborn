@@ -1,14 +1,11 @@
 # CLI
 
-The `broker-cli` module provides a command-line interface for interacting with the broker,
-replacing `curl` commands with a user-friendly tool.
-
-See specification: [docs/specs/023-cli.md](https://github.com/stubborn-sh/stubborn/blob/main/docs/specs/023-cli.md)
+The Stubborn broker ships with an npm CLI (`@stubborn-sh/cli`) for interacting with the broker from the terminal.
 
 ## Installation
 
 ```bash
-java -jar broker-cli/target/broker-cli.jar --help
+npm install -g @stubborn-sh/cli
 ```
 
 ## Global Options
@@ -48,3 +45,7 @@ stubborn can-i-deploy --app order-service --version 1.0.0 --env staging
 # List webhooks in JSON format
 stubborn --output json webhook list
 ```
+
+::: tip PRO: Enhanced Java CLI
+[Stubborn Pro](https://stubborn.sh/pro) includes a full-featured Java/Picocli CLI with richer table output, offline support, and additional commands.
+:::

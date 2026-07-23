@@ -44,3 +44,7 @@ Creating, updating, and deleting webhooks requires the ADMIN role.
 Listing and viewing webhooks requires the READER role.
 
 ![Webhooks](/images/demo-webhooks.png)
+
+::: tip PRO Enhancement
+[Stubborn Pro](https://stubborn.sh/pro) includes `FullWebhookEventFilter`, which adds fine-grained event filtering — fire webhooks only for specific applications, environments, or event combinations.
+:::

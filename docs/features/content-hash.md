@@ -12,3 +12,7 @@ See specification: [docs/specs/012-content-hash.md](https://github.com/stubborn-
 1. On publish, the broker computes `SHA-256(content)`.
 2. If a contract with the same `applicationName`, `version`, `contractName`, and `contentHash` exists, the existing contract is returned (HTTP 200 instead of 201).
 3. If the content differs, a new contract record is created.
+
+::: tip PRO Enhancement
+[Stubborn Pro](https://stubborn.sh/pro) includes `ContentHashVerificationMatcher`, which uses content hashing for smarter contract matching during verification — useful when contract content changes but semantics are equivalent.
+:::

@@ -1,6 +1,10 @@
 # AI Traffic-to-Contract Proxy
 
-Automatically generate Spring Cloud Contract definitions from live HTTP traffic.
+::: info ⭐ PRO Feature
+The AI Traffic-to-Contract Proxy is available in [Stubborn Pro](https://stubborn.sh/pro).
+:::
+
+Automatically generate Stubborn Contract definitions from live HTTP traffic.
 
 ## Overview
 

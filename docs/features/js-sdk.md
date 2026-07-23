@@ -1,4 +1,4 @@
-## TypeScript/Node.js SDK
+# TypeScript / Node.js SDK
 
 The TypeScript/Node.js SDK (`@stubborn-sh/*`) enables JavaScript and TypeScript
 applications to participate in the Spring Cloud Contract ecosystem without requiring Java tooling.

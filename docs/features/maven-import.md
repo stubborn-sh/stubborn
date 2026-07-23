@@ -1,4 +1,4 @@
-## Maven Import
+# Maven Import
 
 The broker can import existing stubs JARs from Maven repositories (Nexus/Artifactory)
 into its contract database. This enables teams to migrate from repository-based contract

@@ -9,10 +9,13 @@ Key modules:
 
 * **broker** — core REST API, database, UI static resources, stubs JAR assembly
 * **ui** — React frontend (Vite + TailwindCSS + React Query)
+* **broker-api-client** — generated REST client JAR from `spec/contracts/broker-api.yaml`
 * **broker-stub-downloader** — `StubDownloaderBuilder` SPI for the `sccbroker://` protocol
 * **broker-contract-publisher** — Java library for scanning and publishing contracts
 * **broker-maven-plugin** / **broker-gradle-plugin** — build tool plugins wrapping the publisher
 * **stub-runner** — Stub Runner Boot for consumer testing
+* **stubborn-messaging-kafka** — Kafka messaging support
+* **stubborn-messaging-rabbit** — RabbitMQ messaging support
 * **e2e-tests** — Playwright browser-based E2E tests
 * **js/** — Node.js packages (CLI, stub-server, stubs-packager, Jest integration)
 
@@ -64,25 +67,19 @@ Both scan the build output for contract files and push them to the broker REST A
 
 ## Stub Downloader
 
-The `broker-stub-downloader` module implements the Spring Cloud Contract `StubDownloaderBuilder` SPI.
+The `broker-stub-downloader` module implements the Stubborn Contract `StubDownloaderBuilder` SPI.
 Consumers add it as a test dependency and configure `@AutoConfigureStubRunner` with the `sccbroker://` protocol
 to fetch contracts and stubs from the broker API.
 
 ## API Client
 
 The `broker-api-client` module is a generated REST client JAR produced from `spec/contracts/broker-api.yaml`
-using OpenAPI Generator with the `restclient` library. It is used by `broker-cli` and `broker-mcp-server`.
+using OpenAPI Generator with the `restclient` library.
 
-## CLI
+## CLI (PRO)
 
-The `broker-cli` module provides a Picocli-based command-line interface wrapping `broker-api-client`.
-It supports 13 top-level commands: `app`, `contract`, `verify`, `deploy`, `can-i-deploy`, `env`, `graph`,
-`matrix`, `tag`, `webhook`, `selector`, `cleanup`, and `version`.
+The Picocli-based Java CLI (`broker-cli`) is available in [Stubborn Pro](https://stubborn.sh/pro). The OSS project includes a Node.js CLI — see [CLI docs](/features/cli).
 
-Global options: `--broker-url`, `--username`, `--password`, `--output` (table or json).
-Environment variable fallbacks: `SCC_BROKER_URL`, `SCC_BROKER_USERNAME`, `SCC_BROKER_PASSWORD`.
+## MCP Server (PRO)
 
-## MCP Server
-
-The `broker-mcp-server` module exposes the broker API as an MCP (Model Context Protocol) server
-for AI agents. It provides 71 tools (91 with AI features enabled), 4 resources, and 7 prompts, running on port 8643.
+The MCP server (`broker-mcp-server`) is available in [Stubborn Pro](https://stubborn.sh/pro). See [MCP Server docs](/features/mcp-server).

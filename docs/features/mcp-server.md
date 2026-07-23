@@ -1,5 +1,9 @@
 # MCP Server
 
+::: info ⭐ PRO Feature
+The MCP Server is available in [Stubborn Pro](https://stubborn.sh/pro).
+:::
+
 The `broker-mcp-server` module exposes the broker API as an MCP (Model Context Protocol) server
 for AI coding agents such as Claude Code, GitHub Copilot, and others.
 
@@ -7,7 +11,7 @@ See specification: [docs/specs/010-mcp-server.md](https://github.com/stubborn-sh
 
 ## Overview
 
-* 71 tools for all broker operations (91 with AI features enabled)
+* 20+ tools covering all broker operations (spec 010), with AI-enhanced tools in the pipeline (spec 040)
 * 4 resources for reading broker state
 * 7 prompts for guided workflows
 * Runs on port 8643 (broker on 8642)

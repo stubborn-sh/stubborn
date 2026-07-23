@@ -21,3 +21,7 @@ The `branch` field is accepted on:
 
 * `POST /api/v1/applications/{name}/versions/{version}/contracts` -- contract publishing
 * `POST /api/v1/verifications` -- verification recording
+
+::: tip PRO Enhancement
+[Stubborn Pro](https://stubborn.sh/pro) includes `BranchAwareDeploymentSafetyChecker`, which enhances Can I Deploy to factor in branch metadata when evaluating deployment safety across feature branches.
+:::
