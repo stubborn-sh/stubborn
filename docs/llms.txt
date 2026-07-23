@@ -1,0 +1,60 @@
+# Stubborn Broker
+
+> Central governance server for consumer-driven contract (CDC) testing. Teams register services, publish contracts, and record verification results. The broker answers Can I Deploy queries — given a service version and target environment, have all its consumers verified it successfully in that environment? This is the Pact Broker equivalent for the Stubborn Contract ecosystem.
+
+Core vocabulary:
+- **application**: a named service (consumer or producer) registered in the broker
+- **contract**: a YAML/Groovy file describing an API interaction between consumer and provider
+- **verification**: a recorded test result — did the producer's tests PASS or FAIL against the consumer's contract?
+- **deployment**: a record that version X of service Y is currently deployed in environment E
+- **environment**: a named deployment target (production, staging, development) registered in the broker
+- **can-i-deploy**: safety gate that returns safe=true only when every consumer deployed to the target environment has a passing verification against the given provider version
+- **pending contract**: a newly-published contract with no verifications yet — treated as safe by can-i-deploy until first verified (bootstrapping grace period)
+
+Core data hierarchy: Application → Version → Contract → Verification → Deployment (per Environment)
+
+Default roles: READER (all GETs), PUBLISHER (read + publish contracts/verifications/deployments), ADMIN (full access). Default dev credentials: admin/admin, publisher/publisher, reader/reader — change before production.
+
+API base URL: /api/v1/. Authentication: HTTP Basic by default. OAuth2/OIDC supported (set spring.security.oauth2.resourceserver.jwt.issuer-uri).
+
+## Getting Started
+
+- [Getting Started](docs/getting-started.md): Docker one-liner (docker run -p 8080:8080 mgrzejszczak/stubborn), 5-min walkthrough, first contract publish
+
+## REST API Reference
+
+- [Full API Reference](docs/api-reference.md): all endpoints, request/response schemas, status codes, authentication headers
+- [Application Registration](docs/features/application-registration.md): POST /api/v1/applications, fields: name (required), repositoryUrl, mainBranch; auto-registered by Maven plugin
+- [Contract Publishing](docs/features/contract-publishing.md): PUT /api/v1/contracts/{consumer}/{consumerVersion}/{provider}/{providerVersion}; Content-Type: application/yaml; body: the contract YAML
+- [Verification Results](docs/features/verification-results.md): POST /api/v1/verifications; body: {provider, providerVersion, consumer, consumerVersion, status: SUCCESS|FAILED}; recorded automatically by Maven plugin after test run
+- [Environment Tracking](docs/features/environment-tracking.md): POST /api/v1/environments/{env}/deployments; body: {application, version}; tells broker what is deployed where
+- [Can I Deploy](docs/features/can-i-deploy.md): GET /api/v1/can-i-deploy?application=X&version=Y&environment=Z; returns {safe: bool, consumerResults: [{consumerName, providerName, success, contractUrl}]}
+
+## Governance Features
+
+- [Dependency Graph](docs/features/dependency-graph.md): GET /api/v1/graph; shows which consumers depend on which providers with contract counts
+- [Compatibility Matrix](docs/features/matrix.md): GET /api/v1/matrix?provider=X&consumer=Y; table of pass/fail across version combinations
+- [Consumer Version Selectors](docs/features/selectors.md): filter which consumer versions to check in can-i-deploy (latest, deployed-to-env, tag-based)
+- [Pending Contracts](docs/features/pending-contracts.md): newly-published contracts treated as safe until first verified — prevents bootstrapping deadlock
+- [Branches](docs/features/branches.md): branch field on contracts and verifications; BranchAwareDeploymentSafetyChecker (PRO)
+- [Content Hash](docs/features/content-hash.md): detect changed contracts; ContentHashVerificationMatcher (PRO)
+- [Tags](docs/features/tags.md): PUT/DELETE /api/v1/applications/{name}/versions/{version}/tags/{tag}; standard tags: RELEASE, SNAPSHOT, STABLE
+- [Configurable Environments](docs/features/configurable-environments.md): CRUD for named environments at /api/v1/environments; production flag controls can-i-deploy strictness
+- [Webhooks](docs/features/webhooks.md): outbound HTTP events on contract-published, verification-recorded, deployment-recorded; retry policy 3×
+- [Data Cleanup](docs/features/cleanup.md): POST /api/v1/cleanup (ADMIN); removes old versions; keepLatestVersions controls retention
+
+## Integrations
+
+- [Maven & Gradle Plugins](docs/features/contract-publishing-plugins.md): brokerUrl + applicationName config; goals: publish, publish-to-environment, can-i-deploy; exit code 1 = unsafe
+- [CLI (npm)](docs/features/cli.md): npm install -g @stubborn-sh/cli; commands: can-i-deploy, publish, record-deployment; exit codes 0=safe 1=unsafe
+- [JavaScript SDK](docs/features/js-sdk.md): ContractPublisher, ContractVerifier, setupStubs — TypeScript/Node.js client for the broker API
+- [MCP Server](docs/features/mcp-server.md): 20+ AI-agent tools for all broker operations; startup via npx @stubborn-sh/mcp-server (PRO)
+- [Contract Stubs JAR](docs/contract-stubs.md): consuming broker API stubs in tests via @AutoConfigureStubRunner
+
+## Operations
+
+- [Security](docs/features/security.md): READER/PUBLISHER/ADMIN role matrix per endpoint; HTTP Basic config; OAuth2/OIDC (spring.security.oauth2.resourceserver.jwt.issuer-uri)
+- [Observability](docs/observability.md): OTEL (OTEL_EXPORTER_OTLP_ENDPOINT, TRACING_SAMPLING_PROBABILITY); Grafana port 3000; logs via SLF4J
+- [Data Cleanup](docs/features/cleanup.md): POST /api/v1/cleanup; keepLatestVersions; protectedEnvironments list
+
+> Full text of key pages: llms-full.txt
