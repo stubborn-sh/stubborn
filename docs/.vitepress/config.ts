@@ -7,7 +7,7 @@ export default defineConfig({
   base: '/stubborn/',
 
   head: [
-    ['link', { rel: 'icon', href: '/stubborn/favicon.ico' }],
+    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/stubborn/favicon.svg' }],
   ],
 
   srcExclude: ['**/specs/**', '**/decisions/**', '**/plan/**'],
@@ -17,6 +17,7 @@ export default defineConfig({
   ],
 
   themeConfig: {
+    logo: '/logo.svg',
     siteTitle: 'Stubborn',
 
     nav: [
