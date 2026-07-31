@@ -13,52 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package sh.stubborn.oss.stubdownloader;
+package sh.stubborn.oss.stubdownloader.scc;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
-import sh.stubborn.contract.stubrunner.StubResource;
+import org.springframework.core.io.AbstractResource;
 
 /**
- * Stubborn Contract {@link StubResource} wrapping a broker URL. Used to identify that the
- * stub repository root points to a Stubborn Broker instance.
+ * Spring Cloud Contract 5.x variant of the broker
+ * {@link org.springframework.core.io.Resource}. Wraps a broker URL so the SCC stub runner
+ * can recognise that the stub repository root points to a Stubborn Broker instance.
  *
  * <p>
  * The broker URL is extracted by stripping the {@code stubborn://} prefix (or the legacy
  * {@code sccbroker://} alias) from the location string. For example,
  * {@code stubborn://http://localhost:18080} yields {@code http://localhost:18080}.
  */
-public class BrokerResource implements StubResource {
+public class SccBrokerResource extends AbstractResource {
 
-	/**
-	 * Primary protocol prefix used to point the stub runner at a Stubborn Broker.
-	 */
 	static final String PROTOCOL = "stubborn";
 
-	/**
-	 * Legacy protocol prefix, retained for backward compatibility with existing
-	 * {@code repositoryRoot = "sccbroker://..."} configuration.
-	 */
 	static final String LEGACY_PROTOCOL = "sccbroker";
 
 	private final String brokerUrl;
 
-	BrokerResource(String location) {
+	SccBrokerResource(String location) {
 		this.brokerUrl = stripProtocol(location);
 	}
 
-	/**
-	 * Whether the given location targets a Stubborn Broker (either the primary
-	 * {@code stubborn://} protocol or the legacy {@code sccbroker://} alias).
-	 * @param location the stub repository root location
-	 * @return {@code true} if the location uses a broker protocol
-	 */
 	static boolean isBrokerLocation(String location) {
 		return location.startsWith(PROTOCOL + "://") || location.startsWith(LEGACY_PROTOCOL + "://");
 	}
@@ -89,26 +73,6 @@ public class BrokerResource implements StubResource {
 	@Override
 	public InputStream getInputStream() {
 		return new ByteArrayInputStream(this.brokerUrl.getBytes(StandardCharsets.UTF_8));
-	}
-
-	@Override
-	public URI getURI() {
-		return URI.create(this.brokerUrl);
-	}
-
-	@Override
-	public URL getURL() throws IOException {
-		return URI.create(this.brokerUrl).toURL();
-	}
-
-	@Override
-	public File getFile() throws IOException {
-		throw new IOException("Stubborn Broker resource is not backed by a file: " + this.brokerUrl);
-	}
-
-	@Override
-	public String getFilename() {
-		return this.brokerUrl;
 	}
 
 }

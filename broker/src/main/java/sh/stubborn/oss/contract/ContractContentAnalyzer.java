@@ -26,9 +26,9 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.springframework.cloud.contract.spec.internal.DslProperty;
-import org.springframework.cloud.contract.spec.internal.OutputMessage;
-import org.springframework.cloud.contract.verifier.converter.YamlContractConverter;
+import sh.stubborn.contract.spec.internal.DslProperty;
+import sh.stubborn.contract.spec.internal.OutputMessage;
+import sh.stubborn.contract.verifier.converter.YamlContractConverter;
 import org.springframework.stereotype.Component;
 
 /**

@@ -23,9 +23,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
-import org.springframework.cloud.contract.verifier.converter.YamlContract;
-import org.springframework.cloud.contract.verifier.messaging.MessageVerifierReceiver;
-import org.springframework.cloud.contract.verifier.messaging.MessageVerifierSender;
+import sh.stubborn.contract.verifier.converter.YamlContract;
+import sh.stubborn.contract.verifier.messaging.MessageVerifierReceiver;
+import sh.stubborn.contract.verifier.messaging.MessageVerifierSender;
 import org.springframework.messaging.Message;
 
 import static org.assertj.core.api.Assertions.assertThat;

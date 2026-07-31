@@ -13,17 +13,34 @@
 
 	<artifactId>stubborn-stub-downloader</artifactId>
 	<name>Stubborn Stub Downloader</name>
-	<description>StubDownloaderBuilder SPI for fetching contracts from the broker REST API (sccbroker:// protocol)</description>
+	<description>StubDownloaderBuilder SPI for fetching contracts from the broker REST API (stubborn:// protocol)</description>
 
 	<dependencies>
-		<!-- SCC Stub Runner (provided — consumer brings it) -->
+		<!-- Stubborn Contract stub runner (provided — consumer brings it) -->
+		<dependency>
+			<groupId>sh.stubborn</groupId>
+			<artifactId>stubborn-contract-stub-runner</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- Stubborn Contract verifier for contract-to-WireMock conversion (provided) -->
+		<dependency>
+			<groupId>sh.stubborn</groupId>
+			<artifactId>stubborn-contract-verifier</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<!--
+			Spring Cloud Contract 5.x (provided) — kept only to compile the backward
+			-compatibility layer (sh.stubborn.oss.stubdownloader.scc) so consumers still
+			on SCC 5.x can resolve stubs from the broker. New consumers use the Stubborn
+			Contract implementation above.
+		-->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-contract-stub-runner</artifactId>
 			<scope>provided</scope>
 		</dependency>
-
-		<!-- SCC Verifier for contract-to-WireMock conversion (provided — transitive via stub-runner) -->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-contract-verifier</artifactId>

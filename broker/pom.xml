@@ -143,10 +143,10 @@
 			<artifactId>jackson-dataformat-yaml</artifactId>
 		</dependency>
 
-		<!-- SCC contract parsing (used by ContractContentAnalyzer for messaging detection) -->
+		<!-- Contract parsing (used by ContractContentAnalyzer for messaging detection) -->
 		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-contract-verifier</artifactId>
+			<groupId>sh.stubborn</groupId>
+			<artifactId>stubborn-contract-verifier</artifactId>
 		</dependency>
 
 		<!-- Docker Compose dev support -->
@@ -228,10 +228,10 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- Test: Spring Cloud Contract -->
+		<!-- Test: Stubborn Contract stub runner -->
 		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-contract-stub-runner</artifactId>
+			<groupId>sh.stubborn</groupId>
+			<artifactId>stubborn-contract-stub-runner-spring-boot</artifactId>
 			<scope>test</scope>
 		</dependency>
 
@@ -247,10 +247,10 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- Test: Spring Cloud Contract WireMock (RestDocs -> SCC integration) -->
+		<!-- Test: Stubborn WireMock (RestDocs -> Stubborn Contract integration) -->
 		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-contract-wiremock</artifactId>
+			<groupId>sh.stubborn</groupId>
+			<artifactId>stubborn-wiremock-spring</artifactId>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

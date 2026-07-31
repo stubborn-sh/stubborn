@@ -17,6 +17,7 @@ java {
 repositories {
     mavenCentral()
     maven { url 'https://repo.spring.io/milestone' }
+    maven { url 'https://central.sonatype.com/repository/maven-snapshots/' }
     mavenLocal()
 }
 
@@ -34,7 +35,7 @@ dependencies {
     implementation libs.spring.boot.starter.web
 
     testImplementation libs.spring.boot.starter.test
-    testImplementation libs.spring.cloud.contract.stub.runner
+    testImplementation libs.stubborn.contract.stub.runner
     testImplementation libs.broker.stub.downloader
 }
 

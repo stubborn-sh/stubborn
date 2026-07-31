@@ -32,8 +32,8 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-contract-verifier</artifactId>
+			<groupId>sh.stubborn</groupId>
+			<artifactId>stubborn-contract-verifier-spring-boot</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -63,9 +63,9 @@
 		<plugins>
 			<!-- Spring Cloud Contract Maven Plugin — generates tests from messaging contracts -->
 			<plugin>
-				<groupId>org.springframework.cloud</groupId>
-				<artifactId>spring-cloud-contract-maven-plugin</artifactId>
-				<version>${spring-cloud-contract.version}</version>
+				<groupId>sh.stubborn</groupId>
+				<artifactId>stubborn-contract-maven-plugin</artifactId>
+				<version>${stubborn-contract.version}</version>
 				<extensions>true</extensions>
 				<configuration>
 					<baseClassForTests>org.example.verification.VerificationContractBase</baseClassForTests>

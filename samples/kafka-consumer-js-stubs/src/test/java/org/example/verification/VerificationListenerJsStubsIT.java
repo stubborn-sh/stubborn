@@ -19,8 +19,8 @@ import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.cloud.contract.stubrunner.spring.AutoConfigureStubRunner;
-import org.springframework.cloud.contract.stubrunner.spring.StubRunnerProperties;
+import sh.stubborn.contract.stubrunner.spring.AutoConfigureStubRunner;
+import sh.stubborn.contract.stubrunner.spring.StubRunnerProperties;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

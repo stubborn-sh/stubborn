@@ -16,7 +16,7 @@
 		<!-- Gradle sample executions and Docker Compose only when compose.skip=false (e.g. CI with Docker) -->
 	</properties>
 	<name>Sample Maven Consumer (Payment Service)</name>
-	<description>Consumer using @AutoConfigureStubRunner with sccbroker:// protocol</description>
+	<description>Consumer using @AutoConfigureStubRunner with stubborn:// protocol</description>
 
 	<dependencies>
 		<dependency>
@@ -38,8 +38,8 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-contract-stub-runner</artifactId>
+			<groupId>sh.stubborn</groupId>
+			<artifactId>stubborn-contract-stub-runner-spring-boot</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

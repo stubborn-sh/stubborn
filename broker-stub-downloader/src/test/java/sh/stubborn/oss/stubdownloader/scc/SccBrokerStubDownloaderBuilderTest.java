@@ -13,47 +13,55 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package sh.stubborn.oss.stubdownloader;
+package sh.stubborn.oss.stubdownloader.scc;
 
 import java.util.Objects;
 
 import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 
-import sh.stubborn.contract.stubrunner.StubResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
-class BrokerStubDownloaderBuilderTest {
+/**
+ * Verifies the Spring Cloud Contract 5.x backward-compatibility builder still resolves
+ * broker locations, so consumers on SCC 5.x keep working.
+ */
+class SccBrokerStubDownloaderBuilderTest {
 
-	private final BrokerStubDownloaderBuilder builder = new BrokerStubDownloaderBuilder();
+	private final SccBrokerStubDownloaderBuilder builder = new SccBrokerStubDownloaderBuilder();
+
+	private final ResourceLoader resourceLoader = mock(ResourceLoader.class);
 
 	@Test
 	void should_resolve_stubborn_protocol() {
 		// when
-		@Nullable StubResource resource = this.builder.resolve("stubborn://http://localhost:18080");
+		@Nullable Resource resource = this.builder.resolve("stubborn://http://localhost:18080", this.resourceLoader);
 
 		// then
-		assertThat(resource).isNotNull().isInstanceOf(BrokerResource.class);
-		BrokerResource brokerResource = (BrokerResource) Objects.requireNonNull(resource);
+		assertThat(resource).isNotNull().isInstanceOf(SccBrokerResource.class);
+		SccBrokerResource brokerResource = (SccBrokerResource) Objects.requireNonNull(resource);
 		assertThat(brokerResource.getBrokerUrl()).isEqualTo("http://localhost:18080");
 	}
 
 	@Test
 	void should_resolve_legacy_sccbroker_protocol() {
 		// when
-		@Nullable StubResource resource = this.builder.resolve("sccbroker://http://localhost:18080");
+		@Nullable Resource resource = this.builder.resolve("sccbroker://http://localhost:18080", this.resourceLoader);
 
 		// then
-		assertThat(resource).isNotNull().isInstanceOf(BrokerResource.class);
-		BrokerResource brokerResource = (BrokerResource) Objects.requireNonNull(resource);
+		assertThat(resource).isNotNull().isInstanceOf(SccBrokerResource.class);
+		SccBrokerResource brokerResource = (SccBrokerResource) Objects.requireNonNull(resource);
 		assertThat(brokerResource.getBrokerUrl()).isEqualTo("http://localhost:18080");
 	}
 
 	@Test
 	void should_return_null_for_non_broker_protocol() {
 		// when
-		@Nullable StubResource resource = this.builder.resolve("https://repo.example.com/stubs");
+		@Nullable Resource resource = this.builder.resolve("https://repo.example.com/stubs", this.resourceLoader);
 
 		// then
 		assertThat(resource).isNull();
@@ -62,7 +70,7 @@ class BrokerStubDownloaderBuilderTest {
 	@Test
 	void should_return_null_for_empty_location() {
 		// when
-		@Nullable StubResource resource = this.builder.resolve("");
+		@Nullable Resource resource = this.builder.resolve("", this.resourceLoader);
 
 		// then
 		assertThat(resource).isNull();

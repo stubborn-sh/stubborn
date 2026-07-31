@@ -24,9 +24,9 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.cloud.contract.verifier.converter.YamlContract;
-import org.springframework.cloud.contract.verifier.messaging.MessageVerifierReceiver;
-import org.springframework.cloud.contract.verifier.messaging.MessageVerifierSender;
+import sh.stubborn.contract.verifier.converter.YamlContract;
+import sh.stubborn.contract.verifier.messaging.MessageVerifierReceiver;
+import sh.stubborn.contract.verifier.messaging.MessageVerifierSender;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 

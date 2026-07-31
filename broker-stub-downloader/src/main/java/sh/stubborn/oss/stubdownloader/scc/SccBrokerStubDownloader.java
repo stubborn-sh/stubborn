@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package sh.stubborn.oss.stubdownloader;
+package sh.stubborn.oss.stubdownloader.scc;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,31 +33,30 @@ import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sh.stubborn.contract.spec.Contract;
-import sh.stubborn.contract.stubrunner.StubConfiguration;
-import sh.stubborn.contract.stubrunner.StubDownloader;
-import sh.stubborn.contract.stubrunner.StubRunnerOptions;
-import sh.stubborn.contract.verifier.converter.YamlContractConverter;
-import sh.stubborn.contract.verifier.dsl.wiremock.WireMockStubStrategy;
-import sh.stubborn.contract.verifier.file.ContractMetadata;
-
+import org.springframework.cloud.contract.spec.Contract;
+import org.springframework.cloud.contract.stubrunner.StubConfiguration;
+import org.springframework.cloud.contract.stubrunner.StubDownloader;
+import org.springframework.cloud.contract.stubrunner.StubRunnerOptions;
+import org.springframework.cloud.contract.verifier.converter.YamlContractConverter;
+import org.springframework.cloud.contract.verifier.dsl.wiremock.WireMockStubStrategy;
+import org.springframework.cloud.contract.verifier.file.ContractMetadata;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.web.client.RestClient;
 
 /**
- * Downloads contracts from the Stubborn Broker REST API and writes them to a temp
- * directory structured as the stub runner expects ({@code contracts/} and
- * {@code mappings/} subdirectories).
+ * Spring Cloud Contract 5.x variant of the broker stub downloader. Downloads contracts
+ * from the Stubborn Broker REST API and writes them to a temp directory structured as the
+ * SCC stub runner expects ({@code contracts/} and {@code mappings/} subdirectories).
  */
-class BrokerStubDownloader implements StubDownloader {
+class SccBrokerStubDownloader implements StubDownloader {
 
-	private static final Logger log = LoggerFactory.getLogger(BrokerStubDownloader.class);
+	private static final Logger log = LoggerFactory.getLogger(SccBrokerStubDownloader.class);
 
 	private final RestClient restClient;
 
 	private final ObjectMapper objectMapper;
 
-	BrokerStubDownloader(StubRunnerOptions options, BrokerResource resource) {
+	SccBrokerStubDownloader(StubRunnerOptions options, SccBrokerResource resource) {
 		RestClient.Builder builder = RestClient.builder().baseUrl(resource.getBrokerUrl());
 		String username = resolveCredential(options, "username");
 		String password = resolveCredential(options, "password");
@@ -140,7 +139,7 @@ class BrokerStubDownloader implements StubDownloader {
 
 	/**
 	 * Converts a YAML contract file to a WireMock JSON mapping and writes it to the
-	 * mappings directory. Uses Stubborn Contract's {@link YamlContractConverter} and
+	 * mappings directory. Uses SCC's {@link YamlContractConverter} and
 	 * {@link WireMockStubStrategy} for the conversion.
 	 */
 	private static void convertToWireMockMapping(Path contractFile, String contractName, Path mappingsDir) {
