@@ -20,7 +20,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import sh.stubborn.contract.stubrunner.spring.AutoConfigureStubRunner;
-import sh.stubborn.contract.stubrunner.spring.StubRunnerProperties;
+import sh.stubborn.contract.stubrunner.StubsMode;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -36,7 +36,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 @SpringBootTest(classes = VerificationProcessorApplication.class)
 @AutoConfigureStubRunner(ids = "sh.stubborn:verification-service:1.0.0:stubs",
-		repositoryRoot = "sccbroker://http://localhost:18080", stubsMode = StubRunnerProperties.StubsMode.REMOTE,
+		repositoryRoot = "stubborn://http://localhost:18080", stubsMode = StubsMode.REMOTE,
 		properties = { "spring.cloud.contract.stubrunner.username=reader",
 				"spring.cloud.contract.stubrunner.password=reader" })
 class VerificationListenerIT {

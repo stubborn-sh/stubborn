@@ -100,7 +100,7 @@ class StubbornKafkaAutoConfigurationTest {
 		}
 
 		@Override
-		public <T> void send(T payload, Map<String, Object> headers, String destination,
+		public <T> void send(T payload, @Nullable Map<String, Object> headers, String destination,
 				@Nullable YamlContract contract) {
 		}
 

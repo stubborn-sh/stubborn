@@ -39,7 +39,7 @@ import sh.stubborn.contract.stubrunner.StubsMode;
  * &#64;AutoConfigureStubRunner(
  *     ids = "org.example:order-service:1.0.0:stubs",
  *     repositoryRoot = "stubborn://http://localhost:18080",
- *     stubsMode = StubRunnerProperties.StubsMode.REMOTE
+ *     stubsMode = StubsMode.REMOTE
  * )
  * </pre>
  *

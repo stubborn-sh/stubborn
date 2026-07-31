@@ -61,7 +61,8 @@ class StubbornKafkaMessageVerifier implements MessageVerifierSender<Message<?>>,
 	}
 
 	@Override
-	public <T> void send(T payload, Map<String, Object> headers, String destination, @Nullable YamlContract contract) {
+	public <T> void send(T payload, @Nullable Map<String, Object> headers, String destination,
+			@Nullable YamlContract contract) {
 		Message<T> message = MessageBuilder.withPayload(payload).copyHeaders(headers).build();
 		log.info("Sending message to Kafka topic '{}': {}", destination, payload);
 		var unused = this.kafkaTemplate.send(destination, message);

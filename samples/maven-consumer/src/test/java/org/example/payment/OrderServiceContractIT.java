@@ -22,18 +22,18 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import sh.stubborn.contract.stubrunner.spring.AutoConfigureStubRunner;
-import sh.stubborn.contract.stubrunner.spring.StubRunnerProperties;
+import sh.stubborn.contract.stubrunner.StubsMode;
 import sh.stubborn.contract.stubrunner.spring.StubRunnerPort;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Consumer contract test that uses @AutoConfigureStubRunner with sccbroker:// protocol to
+ * Consumer contract test that uses @AutoConfigureStubRunner with stubborn:// protocol to
  * fetch contracts from the running broker instance and configure WireMock stubs.
  */
 @SpringBootTest
 @AutoConfigureStubRunner(ids = "sh.stubborn:order-service:1.0.0:stubs",
-		repositoryRoot = "sccbroker://http://localhost:18080", stubsMode = StubRunnerProperties.StubsMode.REMOTE,
+		repositoryRoot = "stubborn://http://localhost:18080", stubsMode = StubsMode.REMOTE,
 		properties = { "spring.cloud.contract.stubrunner.username=reader",
 				"spring.cloud.contract.stubrunner.password=reader" })
 class OrderServiceContractIT {
