@@ -40,21 +40,42 @@ import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMoc
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Verifies the Spring Cloud Contract 5.x backward-compatibility downloader talks to the
- * broker correctly (REST endpoints, Basic auth, empty-result handling), so consumers on
- * SCC 5.x keep working.
+ * Verifies the Spring Cloud Contract 5.x backward-compatibility downloader end-to-end
+ * against the broker (REST endpoints, Basic auth, version resolution, empty-result
+ * handling, and downloading contracts), so consumers on SCC 5.x keep working.
  *
  * <p>
- * These tests deliberately avoid the YAML-to-WireMock conversion step: that path runs
- * Spring Cloud Contract 5.x's Groovy {@code Contract} parser, which cannot execute inside
- * this module's test classpath because it also carries Stubborn Contract's Groovy 5
- * runtime. In a real SCC 5.x consumer the two ecosystems never mix (the broker's
- * Stubborn/SCC dependencies are {@code provided}), so the full conversion works there —
- * and it is exercised end-to-end by
+ * The one thing these tests cannot assert here is the WireMock <em>mapping</em> output:
+ * that step runs Spring Cloud Contract 5.x's Groovy {@code Contract} parser, which cannot
+ * execute inside this module's test classpath because it also carries Stubborn Contract's
+ * Groovy 5 runtime. The download treats that conversion as best-effort (it logs and
+ * continues), so the contracts are still delivered. In a real SCC 5.x consumer the two
+ * ecosystems never mix (the broker's Stubborn/SCC dependencies are {@code provided}), so
+ * the mapping conversion also succeeds there — and it is exercised end-to-end (contracts
+ * <em>and</em> mappings) by
  * {@link sh.stubborn.oss.stubdownloader.BrokerStubDownloaderTest} against the primary
  * Stubborn Contract implementation, which shares the same download logic.
  */
 class SccBrokerStubDownloaderTest {
+
+	private static final String CONTRACT_YAML = """
+			request:
+			  method: GET
+			  url: /orders/1
+			response:
+			  status: 200
+			  body:
+			    id: 1""";
+
+	private static final String CONTRACTS_PAGE_RESPONSE = """
+			{
+			  "content": [{
+			    "contractName": "get-order",
+			    "content": "%s",
+			    "contentType": "application/x-spring-cloud-contract+yaml"
+			  }],
+			  "totalElements": 1
+			}""".formatted(CONTRACT_YAML.replace("\n", "\\n"));
 
 	private static final String EMPTY_CONTRACTS_PAGE = """
 			{
@@ -90,6 +111,28 @@ class SccBrokerStubDownloaderTest {
 
 		// then
 		assertThat(result).isNull();
+	}
+
+	@Test
+	void should_download_and_write_contracts() {
+		// given
+		this.wireMock.stubFor(get(urlPathEqualTo("/api/v1/applications/order-service/versions/1.0.0/contracts"))
+			.willReturn(aResponse().withStatus(200)
+				.withHeader("Content-Type", "application/json")
+				.withBody(CONTRACTS_PAGE_RESPONSE)));
+		SccBrokerStubDownloader downloader = downloaderFor("order-service");
+		StubConfiguration config = new StubConfiguration("com.example", "order-service", "1.0.0", "stubs");
+
+		// when
+		Map.@Nullable Entry<StubConfiguration, File> result = downloader.downloadAndUnpackStubJar(config);
+
+		// then — contracts are delivered (WireMock mapping conversion is best-effort; see
+		// the class javadoc for why the mapping step cannot run in this module's
+		// classpath).
+		assertThat(result).isNotNull();
+		File tempDir = Objects.requireNonNull(result).getValue();
+		assertThat(tempDir).isDirectory();
+		assertThat(new File(tempDir, "contracts").listFiles()).isNotEmpty();
 	}
 
 	@Test

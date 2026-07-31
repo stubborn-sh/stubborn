@@ -158,7 +158,9 @@ class SccBrokerStubDownloader implements StubDownloader {
 				index++;
 			}
 		}
-		catch (Exception ex) {
+		catch (Exception | LinkageError ex) {
+			// Best-effort conversion: contracts are still delivered even if the WireMock
+			// mapping step fails or the converter is not classpath-compatible.
 			log.warn("Failed to convert contract {} to WireMock mapping", contractName, ex);
 		}
 	}

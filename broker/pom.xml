@@ -228,12 +228,6 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- Test: Stubborn Contract stub runner -->
-		<dependency>
-			<groupId>sh.stubborn</groupId>
-			<artifactId>stubborn-contract-stub-runner-spring-boot</artifactId>
-			<scope>test</scope>
-		</dependency>
 
 		<!-- Test: RestDocs -->
 		<dependency>

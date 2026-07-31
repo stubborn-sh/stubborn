@@ -21,6 +21,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Properties;
 import java.util.ServiceLoader;
 
 import org.junit.jupiter.api.Test;
@@ -62,9 +63,25 @@ class StubDownloaderCompatibilityTest {
 
 	@Test
 	void scc_builder_is_registered_in_spring_factories() throws IOException {
-		String factories = readClasspathResources("META-INF/spring.factories");
-		assertThat(factories).contains("org.springframework.cloud.contract.stubrunner.StubDownloaderBuilder");
-		assertThat(factories).contains("sh.stubborn.oss.stubdownloader.scc.SccBrokerStubDownloaderBuilder");
+		// Assert our builder is the SCC key's value, not merely present elsewhere.
+		String sccKey = "org.springframework.cloud.contract.stubrunner.StubDownloaderBuilder";
+		String expected = "sh.stubborn.oss.stubdownloader.scc.SccBrokerStubDownloaderBuilder";
+		boolean registered = false;
+		Enumeration<URL> urls = Thread.currentThread()
+			.getContextClassLoader()
+			.getResources("META-INF/spring.factories");
+		while (urls.hasMoreElements()) {
+			Properties props = new Properties();
+			try (InputStream in = urls.nextElement().openStream()) {
+				props.load(in);
+			}
+			String value = props.getProperty(sccKey);
+			if (value != null && value.contains(expected)) {
+				registered = true;
+				break;
+			}
+		}
+		assertThat(registered).as("spring.factories maps the SCC StubDownloaderBuilder key to %s", expected).isTrue();
 	}
 
 	@Test
