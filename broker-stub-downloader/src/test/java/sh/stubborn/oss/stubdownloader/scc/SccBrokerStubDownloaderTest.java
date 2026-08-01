@@ -114,6 +114,27 @@ class SccBrokerStubDownloaderTest {
 	}
 
 	@Test
+	void should_return_null_when_application_not_found() {
+		// given — the broker replies 404 with its structured error body when the
+		// application (or version) is unknown; this must be treated as "no stubs
+		// available" rather than a malformed success response.
+		this.wireMock.stubFor(get(urlPathEqualTo("/api/v1/applications/order-service/versions/1.0.0/contracts"))
+			.willReturn(aResponse().withStatus(404).withHeader("Content-Type", "application/json").withBody("""
+					{
+					  "code": "APPLICATION_NOT_FOUND",
+					  "message": "Application not found: order-service"
+					}""")));
+		SccBrokerStubDownloader downloader = downloaderFor("order-service");
+		StubConfiguration config = new StubConfiguration("com.example", "order-service", "1.0.0", "stubs");
+
+		// when
+		Map.@Nullable Entry<StubConfiguration, File> result = downloader.downloadAndUnpackStubJar(config);
+
+		// then
+		assertThat(result).isNull();
+	}
+
+	@Test
 	void should_download_and_write_contracts() {
 		// given
 		this.wireMock.stubFor(get(urlPathEqualTo("/api/v1/applications/order-service/versions/1.0.0/contracts"))

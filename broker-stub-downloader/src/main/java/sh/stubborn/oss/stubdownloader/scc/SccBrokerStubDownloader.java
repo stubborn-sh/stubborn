@@ -40,7 +40,9 @@ import org.springframework.cloud.contract.stubrunner.StubRunnerOptions;
 import org.springframework.cloud.contract.verifier.converter.YamlContractConverter;
 import org.springframework.cloud.contract.verifier.dsl.wiremock.WireMockStubStrategy;
 import org.springframework.cloud.contract.verifier.file.ContractMetadata;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClient;
 
 /**
@@ -84,10 +86,24 @@ class SccBrokerStubDownloader implements StubDownloader {
 			return null;
 		}
 		log.info("Downloading contracts from broker for {}:{}", appName, version);
-		String json = this.restClient.get()
+		ResponseEntity<String> response = this.restClient.get()
 			.uri("/api/v1/applications/{app}/versions/{ver}/contracts", appName, version)
 			.retrieve()
-			.body(String.class);
+			.toEntity(String.class);
+		HttpStatusCode status = response.getStatusCode();
+		if (status.value() == HttpStatus.NOT_FOUND.value()) {
+			// The broker returns 404 (e.g. {"code":"APPLICATION_NOT_FOUND"}) when the app
+			// or version is unknown. Treat it as "no stubs available" so the stub runner
+			// can decide (fail fast per stubs-mode, or skip) instead of failing context
+			// loading with a misleading "unexpected response format" error.
+			log.warn("Broker has no stubs for {}:{} (application or version not found)", appName, version);
+			return null;
+		}
+		if (status.isError()) {
+			throw new IllegalStateException("Broker returned " + status.value() + " for " + appName + ":" + version
+					+ ": " + response.getBody());
+		}
+		String json = response.getBody();
 		if (json == null || json.isBlank()) {
 			log.warn("No contracts found for {}:{}", appName, version);
 			return null;
