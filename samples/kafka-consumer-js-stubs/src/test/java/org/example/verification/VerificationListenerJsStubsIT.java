@@ -15,6 +15,8 @@
  */
 package org.example.verification;
 
+import java.time.Duration;
+
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,7 @@ import sh.stubborn.contract.stubrunner.spring.AutoConfigureStubRunner;
 import sh.stubborn.contract.stubrunner.StubsMode;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
 
 /**
  * Cross-language consumer contract test: JS producer → Java consumer.
@@ -53,9 +56,12 @@ class VerificationListenerJsStubsIT {
 		// given — StubRunner fetches JS producer contracts from broker and sends
 		// the message to Kafka
 
-		// then — listener should have received and processed the message
-		assertThat(this.verificationListener.getReceived()).isNotEmpty();
-		assertThat(this.verificationListener.getReceived().getFirst().status()).isEqualTo("ACCEPTED");
+		// then — the @KafkaListener consumes asynchronously, so poll until the message
+		// has been received and processed instead of asserting immediately.
+		await().atMost(Duration.ofSeconds(30)).untilAsserted(() -> {
+			assertThat(this.verificationListener.getReceived()).isNotEmpty();
+			assertThat(this.verificationListener.getReceived().getFirst().status()).isEqualTo("ACCEPTED");
+		});
 	}
 
 }

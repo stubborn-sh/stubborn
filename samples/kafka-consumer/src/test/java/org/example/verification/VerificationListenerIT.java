@@ -15,6 +15,8 @@
  */
 package org.example.verification;
 
+import java.time.Duration;
+
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,7 @@ import sh.stubborn.contract.stubrunner.spring.AutoConfigureStubRunner;
 import sh.stubborn.contract.stubrunner.StubsMode;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
 
 /**
  * Consumer contract test using {@code @AutoConfigureStubRunner} with sccbroker:// to
@@ -48,9 +51,13 @@ class VerificationListenerIT {
 	void should_process_verification_message_from_contract() {
 		// given — StubRunner sends the contract-defined message to Kafka at startup
 
-		// then — listener should have received and processed the message
-		assertThat(this.verificationListener.getReceived()).isNotEmpty();
-		assertThat(this.verificationListener.getReceived().getFirst().status()).isEqualTo("ACCEPTED");
+		// then — the @KafkaListener consumes asynchronously (send -> Kafka -> consumer
+		// group assignment -> deliver), so poll until the message has been processed
+		// instead of asserting immediately.
+		await().atMost(Duration.ofSeconds(30)).untilAsserted(() -> {
+			assertThat(this.verificationListener.getReceived()).isNotEmpty();
+			assertThat(this.verificationListener.getReceived().getFirst().status()).isEqualTo("ACCEPTED");
+		});
 	}
 
 }
