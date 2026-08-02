@@ -62,10 +62,22 @@ class UserAcceptanceE2ETest extends BaseE2ETest {
 		waitForHeading("Applications");
 		waitForTable();
 
-		// then — all apps visible
-		Locator providerRow = waitForText(PROVIDER);
+		// then — each app is visible once searched. The list is server-paginated and
+		// shared across all E2E classes, so a "uat-" app can land beyond the default
+		// first
+		// page. Filter for it first, mirroring should_search_applications.
+		Locator searchInput = this.page.locator("input[placeholder*='Search']").first();
+
+		searchInput.fill(PROVIDER);
+		this.page.waitForLoadState(LoadState.NETWORKIDLE);
+		Locator providerRow = this.page.locator("td:has-text('" + PROVIDER + "')");
+		providerRow.first().waitFor(new Locator.WaitForOptions().setTimeout(30000));
 		assertThat(providerRow.count()).isGreaterThan(0);
-		Locator consumerRow = waitForText(CONSUMER);
+
+		searchInput.fill(CONSUMER);
+		this.page.waitForLoadState(LoadState.NETWORKIDLE);
+		Locator consumerRow = this.page.locator("td:has-text('" + CONSUMER + "')");
+		consumerRow.first().waitFor(new Locator.WaitForOptions().setTimeout(30000));
 		assertThat(consumerRow.count()).isGreaterThan(0);
 
 		screenshot("uat-01-applications-list");
@@ -78,6 +90,11 @@ class UserAcceptanceE2ETest extends BaseE2ETest {
 		// given
 		navigateTo("/applications");
 		waitForTable();
+
+		// search first so the provider row is on the visible (server-paginated) page
+		Locator searchInput = this.page.locator("input[placeholder*='Search']").first();
+		searchInput.fill(PROVIDER);
+		this.page.waitForLoadState(LoadState.NETWORKIDLE);
 
 		// when — click application name button
 		Locator appButton = this.page.locator("button:has-text('" + PROVIDER + "')");
@@ -183,6 +200,13 @@ class UserAcceptanceE2ETest extends BaseE2ETest {
 		navigateTo("/verifications");
 		waitForHeading("Verifications");
 		waitForTable();
+
+		// search for the provider so both seeded verifications (SUCCESS and FAILED, both
+		// with this provider) land on the visible page — the list is server-paginated and
+		// shared across all E2E classes, so these rows can otherwise sit beyond page one
+		Locator searchInput = this.page.locator("input[placeholder*='Search']").first();
+		searchInput.fill(PROVIDER);
+		this.page.waitForLoadState(LoadState.NETWORKIDLE);
 
 		// then — both SUCCESS and FAILED verifications visible
 		Locator successBadge = waitForText("SUCCESS");
@@ -385,6 +409,14 @@ class UserAcceptanceE2ETest extends BaseE2ETest {
 
 		// then — matrix table shows verification data
 		waitForTable();
+
+		// filter for the provider so its rows land on the visible page — the matrix table
+		// is paginated and shared across all E2E classes, so these rows can otherwise sit
+		// beyond page one (the matrix filter box is labelled "Filter results...")
+		Locator filterInput = this.page.locator("input[placeholder*='Filter']").first();
+		filterInput.fill(PROVIDER);
+		this.page.waitForLoadState(LoadState.NETWORKIDLE);
+
 		Locator providerText = this.page.locator("td:has-text('" + PROVIDER + "')");
 		providerText.first().waitFor(new Locator.WaitForOptions().setTimeout(30000));
 		assertThat(providerText.count()).isGreaterThan(0);
