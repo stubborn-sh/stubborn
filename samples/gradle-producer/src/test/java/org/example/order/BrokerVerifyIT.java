@@ -52,6 +52,16 @@ class BrokerVerifyIT {
 	@Test
 	@SuppressWarnings("rawtypes")
 	void should_report_verification_success_to_broker() {
+		// given — ensure the consumer application is registered (the broker rejects a
+		// verification with 404 when either participant is unknown)
+		this.restClient.post()
+			.uri("/api/v1/applications")
+			.contentType(MediaType.APPLICATION_JSON)
+			.body(Map.of("name", "inventory-service", "description", "Sample Inventory Service", "owner",
+					"inventory-team"))
+			.retrieve()
+			.toEntity(Map.class);
+
 		// when
 		ResponseEntity<Map> response = this.restClient.post()
 			.uri("/api/v1/verifications")
@@ -61,8 +71,8 @@ class BrokerVerifyIT {
 			.retrieve()
 			.toEntity(Map.class);
 
-		// then
-		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+		// then — 201 on first run, 409 if the verification already exists (idempotent reruns)
+		assertThat(response.getStatusCode()).isIn(HttpStatus.CREATED, HttpStatus.CONFLICT);
 	}
 
 }
