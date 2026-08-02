@@ -6,7 +6,7 @@ stubbornContract = "0.1.0-SNAPSHOT"
 [libraries]
 spring-boot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web" }
 spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test" }
-stubborn-contract-verifier = { module = "sh.stubborn:stubborn-contract-verifier" }
+stubborn-contract-verifier = { module = "sh.stubborn:stubborn-contract-verifier", version.ref = "stubbornContract" }
 rest-assured-spring-mock-mvc = { module = "io.rest-assured:spring-mock-mvc", version = "6.0.0" }
 
 [plugins]
