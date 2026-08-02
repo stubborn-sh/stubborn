@@ -95,7 +95,14 @@
 				</configuration>
 			</plugin>
 
-			<!-- Docker Compose lifecycle for integration tests -->
+			<!-- Docker Compose lifecycle for integration tests.
+			     inherited=false: these executions orchestrate the whole samples run from the
+			     aggregator (start the broker once, run the JS/cross-language suites, tear down).
+			     They must NOT propagate to child modules — a child inherits ${project.basedir}
+			     as its own directory, so an inherited docker-compose-up looks for a per-module
+			     compose.yaml that does not exist (the single compose.yaml lives here in samples/).
+			     Children (e.g. maven-producer, built by jar-consumer-test) simply use the broker
+			     the aggregator already started. -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
@@ -209,6 +216,7 @@
 						</configuration>
 					</execution>
 				</executions>
+				<inherited>false</inherited>
 			</plugin>
 
 			<!-- Failsafe for integration tests -->
