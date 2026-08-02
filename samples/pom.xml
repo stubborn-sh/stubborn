@@ -164,7 +164,7 @@
 							<executable>bash</executable>
 							<arguments>
 								<argument>-c</argument>
-								<argument>cd ${project.basedir}/maven-producer &amp;&amp; ../../mvnw install -DskipTests -q &amp;&amp; cd ${project.basedir}/jar-consumer &amp;&amp; npm ci &amp;&amp; npm test</argument>
+								<argument>cd ${project.basedir}/maven-producer &amp;&amp; ../../mvnw install -DskipTests -q &amp;&amp; cd ${project.basedir}/jar-consumer &amp;&amp; npm ci &amp;&amp; STUBS_JAR_VERSION=${project.version} npm test</argument>
 							</arguments>
 						</configuration>
 					</execution>
