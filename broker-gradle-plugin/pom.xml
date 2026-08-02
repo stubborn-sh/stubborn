@@ -14,7 +14,7 @@
 	<artifactId>stubborn-gradle-plugin</artifactId>
 	<packaging>pom</packaging>
 	<name>Stubborn Gradle Plugin</name>
-	<description>Gradle plugin for publishing contracts to the SCC Broker (built with Gradle, wrapped for Maven reactor)</description>
+	<description>Gradle plugin for publishing contracts to the Stubborn Broker (built with Gradle, wrapped for Maven reactor)</description>
 
 	<properties>
 		<gradlew.extension></gradlew.extension>

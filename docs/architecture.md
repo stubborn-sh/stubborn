@@ -10,7 +10,7 @@ Key modules:
 * **broker** — core REST API, database, UI static resources, stubs JAR assembly
 * **ui** — React frontend (Vite + TailwindCSS + React Query)
 * **broker-api-client** — generated REST client JAR from `spec/contracts/broker-api.yaml`
-* **broker-stub-downloader** — `StubDownloaderBuilder` SPI for the `sccbroker://` protocol
+* **broker-stub-downloader** — `StubDownloaderBuilder` SPI for the `stubborn://` protocol (legacy `sccbroker://` alias supported)
 * **broker-contract-publisher** — Java library for scanning and publishing contracts
 * **broker-maven-plugin** / **broker-gradle-plugin** — build tool plugins wrapping the publisher
 * **stub-runner** — Stub Runner Boot for consumer testing
@@ -28,7 +28,7 @@ graph TD
         Publisher[broker-contract-publisher\nContract scanner]
         Maven[broker-maven-plugin]
         Gradle[broker-gradle-plugin]
-        StubDL[broker-stub-downloader\nsccbroker:// protocol]
+        StubDL[broker-stub-downloader\nstubborn:// protocol]
         SR[stub-runner\nStub Runner Boot]
         JS[js/\n@stubborn-sh/cli & jest]
     end
@@ -99,7 +99,7 @@ Both scan the build output for contract files and push them to the broker REST A
 ## Stub Downloader
 
 The `broker-stub-downloader` module implements the Stubborn Contract `StubDownloaderBuilder` SPI.
-Consumers add it as a test dependency and configure `@AutoConfigureStubRunner` with the `sccbroker://` protocol
+Consumers add it as a test dependency and configure `@AutoConfigureStubRunner` with the `stubborn://` protocol (legacy `sccbroker://` still supported)
 to fetch contracts and stubs from the broker API.
 
 ## API Client
