@@ -18,9 +18,14 @@ package org.example.verification;
 import java.time.Duration;
 
 import org.junit.jupiter.api.Test;
+import org.testcontainers.kafka.KafkaContainer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import sh.stubborn.contract.stubrunner.spring.AutoConfigureStubRunner;
 import sh.stubborn.contract.stubrunner.StubFinder;
 import sh.stubborn.contract.stubrunner.StubsMode;
@@ -43,7 +48,19 @@ import static org.awaitility.Awaitility.await;
 		repositoryRoot = "stubborn://http://localhost:18080", stubsMode = StubsMode.REMOTE,
 		properties = { "spring.cloud.contract.stubrunner.username=reader",
 				"spring.cloud.contract.stubrunner.password=reader" })
+@Import(VerificationListenerIT.KafkaContainerConfig.class)
 class VerificationListenerIT {
+
+	@Configuration(proxyBeanMethods = false)
+	static class KafkaContainerConfig {
+
+		@Bean
+		@ServiceConnection
+		KafkaContainer kafkaContainer() {
+			return new KafkaContainer("apache/kafka");
+		}
+
+	}
 
 	@Autowired
 	VerificationListener verificationListener;

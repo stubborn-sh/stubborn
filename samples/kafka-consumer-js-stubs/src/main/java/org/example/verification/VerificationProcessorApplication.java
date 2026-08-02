@@ -30,9 +30,10 @@ public class VerificationProcessorApplication {
 	}
 
 	/**
-	 * Declare the "verifications" topic so KafkaAdmin creates it at startup. Without this,
-	 * StubRunner's producer can send the contract message before the listener's subscription
-	 * has auto-created the topic, failing with "Topic verifications not present in metadata".
+	 * Declare the "verifications" topic so KafkaAdmin creates it at startup. Without
+	 * this, StubRunner's producer can send the contract message before the listener's
+	 * subscription has auto-created the topic, failing with "Topic verifications not
+	 * present in metadata".
 	 */
 	@Bean
 	NewTopic verificationsTopic() {
