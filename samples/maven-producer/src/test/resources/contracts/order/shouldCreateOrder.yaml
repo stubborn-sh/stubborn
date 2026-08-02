@@ -11,6 +11,7 @@ response:
   headers:
     Content-Type: application/json
   body:
+    id: "1001"
     product: "iPhone 16"
     amount: 999.99
     status: "CREATED"
