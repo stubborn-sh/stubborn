@@ -44,6 +44,13 @@ class ContractContentAnalyzer {
 		if (content == null || content.isBlank()) {
 			return ContractAnalysis.HTTP_DEFAULT;
 		}
+		// The Spring Cloud Contract and Stubborn-native YAML content types
+		// (see ContractContentTypes.YAML) describe the same underlying YAML contract
+		// format and are analyzed identically. Any other (or absent) content type is
+		// still analyzed best-effort as YAML for backward compatibility.
+		if (!ContractContentTypes.isYaml(contentType)) {
+			log.debug("Analyzing content of type '{}' as YAML (best-effort)", contentType);
+		}
 		try {
 			Path tempFile = Files.createTempFile("contract-analysis-", ".yaml");
 			try {

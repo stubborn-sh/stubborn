@@ -89,6 +89,35 @@ class ContractControllerTest {
 	}
 
 	@Test
+	void should_publish_contract_with_stubborn_native_content_type_and_return_201() throws Exception {
+		// given
+		Contract contract = Contract.create(UUID.randomUUID(), "1.0.0", "create-order", "request: {}",
+				"application/x-stubborn+yaml");
+		given(this.contractService.publish("order-service", "1.0.0", "create-order", "request: {}",
+				"application/x-stubborn+yaml", null))
+			.willReturn(contract);
+
+		// when/then
+		this.mockMvc
+			.perform(post("/api/v1/applications/order-service/versions/1.0.0/contracts")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content("""
+						{
+						  "contractName": "create-order",
+						  "content": "request: {}",
+						  "contentType": "application/x-stubborn+yaml"
+						}
+						"""))
+			.andExpect(status().isCreated())
+			.andExpect(header().string("Location",
+					"/api/v1/applications/order-service/versions/1.0.0/contracts/create-order"))
+			.andExpect(jsonPath("$.contractName").value("create-order"))
+			.andExpect(jsonPath("$.version").value("1.0.0"))
+			.andExpect(jsonPath("$.content").value("request: {}"))
+			.andExpect(jsonPath("$.contentType").value("application/x-stubborn+yaml"));
+	}
+
+	@Test
 	void should_return_404_when_application_not_found() throws Exception {
 		// given
 		given(this.contractService.publish("unknown", "1.0.0", "test", "content", "application/json", null))
