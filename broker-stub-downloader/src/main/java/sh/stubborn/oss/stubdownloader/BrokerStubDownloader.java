@@ -140,6 +140,14 @@ class BrokerStubDownloader implements StubDownloader {
 					String yamlFileName = name.endsWith(".yaml") || name.endsWith(".yml") || name.endsWith(".groovy")
 							? name : name + ".yaml";
 					Path contractFile = contractsDir.resolve(yamlFileName);
+					// contractName may carry a subdirectory (e.g.
+					// "order/shouldCreateOrder"), so
+					// create the parent directory before writing the nested contract
+					// file.
+					Path contractParent = contractFile.getParent();
+					if (contractParent != null) {
+						Files.createDirectories(contractParent);
+					}
 					Files.writeString(contractFile, content, StandardCharsets.UTF_8);
 					convertToWireMockMapping(contractFile, name, mappingsDir);
 				}
@@ -170,7 +178,14 @@ class BrokerStubDownloader implements StubDownloader {
 				if (mapping != null) {
 					String jsonFileName = parsed.size() == 1 ? contractName + ".json"
 							: contractName + "_" + index + ".json";
-					Files.writeString(mappingsDir.resolve(jsonFileName), Json.write(mapping), StandardCharsets.UTF_8);
+					Path mappingFile = mappingsDir.resolve(jsonFileName);
+					// contractName may carry a subdirectory, so create parent dirs before
+					// writing.
+					Path mappingParent = mappingFile.getParent();
+					if (mappingParent != null) {
+						Files.createDirectories(mappingParent);
+					}
+					Files.writeString(mappingFile, Json.write(mapping), StandardCharsets.UTF_8);
 				}
 				index++;
 			}
