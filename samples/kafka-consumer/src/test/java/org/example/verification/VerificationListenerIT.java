@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import sh.stubborn.contract.stubrunner.spring.AutoConfigureStubRunner;
+import sh.stubborn.contract.stubrunner.StubFinder;
 import sh.stubborn.contract.stubrunner.StubsMode;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -47,9 +48,16 @@ class VerificationListenerIT {
 	@Autowired
 	VerificationListener verificationListener;
 
+	@Autowired
+	StubFinder stubFinder;
+
 	@Test
 	void should_process_verification_message_from_contract() {
-		// given — StubRunner sends the contract-defined message to Kafka at startup
+		// given — trigger the messaging contract's labelled message so StubRunner sends
+		// the outputMessage to the "verifications" Kafka topic (messaging stubs are not
+		// auto-sent; they are triggered by label).
+		boolean triggered = this.stubFinder.trigger("accepted_verification");
+		assertThat(triggered).as("trigger 'accepted_verification'").isTrue();
 
 		// then — the @KafkaListener consumes asynchronously (send -> Kafka -> consumer
 		// group assignment -> deliver), so poll until the message has been processed
