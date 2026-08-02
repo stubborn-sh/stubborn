@@ -33,6 +33,10 @@ dependencyManagement {
 
 dependencies {
     implementation libs.spring.boot.starter.web
+    // RestClient.Builder autoconfiguration lives in spring-boot-restclient, which
+    // spring-boot-starter-web does NOT pull in on Spring Boot 4.0. InventoryService injects
+    // RestClient.Builder, so the starter is required for the context to load.
+    implementation libs.spring.boot.starter.restclient
 
     testImplementation libs.spring.boot.starter.test
     testImplementation libs.stubborn.contract.stub.runner

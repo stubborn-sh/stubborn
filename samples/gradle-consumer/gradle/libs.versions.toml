@@ -5,6 +5,7 @@ broker-plugin = "0.2.0-SNAPSHOT"
 
 [libraries]
 spring-boot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web" }
+spring-boot-starter-restclient = { module = "org.springframework.boot:spring-boot-starter-restclient" }
 spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test" }
 stubborn-contract-stub-runner = { module = "sh.stubborn:stubborn-contract-stub-runner-spring-boot" }
 broker-stub-downloader = { module = "sh.stubborn:stubborn-stub-downloader" }
