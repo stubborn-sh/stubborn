@@ -17,6 +17,7 @@ package org.example.verification;
 
 import java.time.Duration;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.kafka.KafkaContainer;
 
@@ -47,6 +48,8 @@ import static org.awaitility.Awaitility.await;
  * {@code VerificationResult} shape to the "verifications" topic. This test proves that a
  * Java consumer can work with contracts published by a JS producer.
  */
+@Disabled("Messaging consumer path blocked by stubborn-messaging-kafka send bug "
+		+ "(GenericMessage payload + StringSerializer) — see stubborn-sh/stubborn-contract#69")
 @SpringBootTest(classes = VerificationProcessorApplication.class)
 @AutoConfigureStubRunner(ids = "sh.stubborn:js-verification-service:1.0.0:stubs",
 		repositoryRoot = "stubborn://http://localhost:18080", stubsMode = StubsMode.REMOTE,

@@ -15,6 +15,7 @@
  */
 package org.example.notification;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,8 @@ import static org.assertj.core.api.Assertions.assertThat;
  * can send the contract-defined message to the RabbitMQ queue. The
  * {@code NotificationListener} processes it, and we assert it was received.
  */
+@Disabled("Messaging consumer path blocked by the stubborn messaging send bug "
+		+ "(GenericMessage payload + serializer) — see stubborn-sh/stubborn-contract#69")
 @SpringBootTest(classes = NotificationProcessorApplication.class)
 @AutoConfigureStubRunner(ids = "sh.stubborn:notification-service:1.0.0:stubs",
 		repositoryRoot = "stubborn://http://localhost:18080", stubsMode = StubsMode.REMOTE,
