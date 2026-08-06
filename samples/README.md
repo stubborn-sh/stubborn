@@ -36,10 +36,10 @@ docker compose down
 
 **Flow:**
 1. `maven-producer` defines YAML contracts in `src/test/resources/contracts/`
-2. Spring Cloud Contract Maven plugin generates tests from contracts
+2. Stubborn Contract Maven plugin generates tests from contracts
 3. Generated tests verify `OrderController` against contracts
 4. `BrokerPublishIT` publishes contracts to the broker REST API
-5. `maven-consumer` uses `@AutoConfigureStubRunner` with `sccbroker://` protocol
+5. `maven-consumer` uses `@AutoConfigureStubRunner` with the `stubborn://` protocol (legacy `sccbroker://` still works)
 6. `BrokerStubDownloader` fetches contracts from broker, configures WireMock stubs
 7. `BrokerUsageReportIT` reports verification results back to broker
 
@@ -172,8 +172,8 @@ response:
 ```java
 @AutoConfigureStubRunner(
     ids = "org.example:order-service:1.0.0:stubs",
-    repositoryRoot = "sccbroker://http://localhost:18080",
-    stubsMode = StubRunnerProperties.StubsMode.REMOTE,
+    repositoryRoot = "stubborn://http://localhost:18080",
+    stubsMode = StubsMode.REMOTE,
     properties = {
         "stubrunner.username=reader",
         "stubrunner.password=reader"

@@ -17,17 +17,20 @@ package sh.stubborn.oss.stubdownloader;
 
 import org.jspecify.annotations.Nullable;
 
-import org.springframework.cloud.contract.stubrunner.StubDownloader;
-import org.springframework.cloud.contract.stubrunner.StubDownloaderBuilder;
-import org.springframework.cloud.contract.stubrunner.StubRunnerOptions;
-import org.springframework.cloud.contract.stubrunner.spring.StubRunnerProperties;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
-import org.springframework.util.StringUtils;
+import sh.stubborn.contract.stubrunner.StubDownloader;
+import sh.stubborn.contract.stubrunner.StubDownloaderBuilder;
+import sh.stubborn.contract.stubrunner.StubResource;
+import sh.stubborn.contract.stubrunner.StubRunnerOptions;
+import sh.stubborn.contract.stubrunner.StubsMode;
 
 /**
- * {@link StubDownloaderBuilder} that handles the {@code sccbroker://} protocol. Resolves
- * stubs by fetching contracts from the broker REST API.
+ * Stubborn Contract {@link StubDownloaderBuilder} that handles the {@code stubborn://}
+ * protocol (and the legacy {@code sccbroker://} alias). Resolves stubs by fetching
+ * contracts from the broker REST API.
+ *
+ * <p>
+ * This builder is discovered through {@link java.util.ServiceLoader} via
+ * {@code META-INF/services/sh.stubborn.contract.stubrunner.StubDownloaderBuilder}.
  *
  * <p>
  * Usage in consumer tests:
@@ -35,16 +38,19 @@ import org.springframework.util.StringUtils;
  * <pre>
  * &#64;AutoConfigureStubRunner(
  *     ids = "org.example:order-service:1.0.0:stubs",
- *     repositoryRoot = "sccbroker://http://localhost:18080",
- *     stubsMode = StubRunnerProperties.StubsMode.REMOTE
+ *     repositoryRoot = "stubborn://http://localhost:18080",
+ *     stubsMode = StubsMode.REMOTE
  * )
  * </pre>
+ *
+ * @see sh.stubborn.oss.stubdownloader.scc.SccBrokerStubDownloaderBuilder for the Spring
+ * Cloud Contract 5.x compatibility variant
  */
 public class BrokerStubDownloaderBuilder implements StubDownloaderBuilder {
 
 	@Override
-	public @Nullable Resource resolve(String location, ResourceLoader resourceLoader) {
-		if (!StringUtils.hasText(location) || !location.startsWith(BrokerResource.PROTOCOL + "://")) {
+	public @Nullable StubResource resolve(String location) {
+		if (location == null || location.isBlank() || !BrokerResource.isBrokerLocation(location)) {
 			return null;
 		}
 		return new BrokerResource(location);
@@ -52,14 +58,14 @@ public class BrokerStubDownloaderBuilder implements StubDownloaderBuilder {
 
 	@Override
 	public @Nullable StubDownloader build(StubRunnerOptions stubRunnerOptions) {
-		if (stubRunnerOptions.getStubsMode() == StubRunnerProperties.StubsMode.CLASSPATH) {
+		if (stubRunnerOptions.getStubsMode() == StubsMode.CLASSPATH) {
 			return null;
 		}
-		Resource root = stubRunnerOptions.getStubRepositoryRoot();
-		if (!(root instanceof BrokerResource)) {
+		StubResource root = stubRunnerOptions.getStubRepositoryRoot();
+		if (!(root instanceof BrokerResource brokerResource)) {
 			return null;
 		}
-		return new BrokerStubDownloader(stubRunnerOptions, (BrokerResource) root);
+		return new BrokerStubDownloader(stubRunnerOptions, brokerResource);
 	}
 
 }
