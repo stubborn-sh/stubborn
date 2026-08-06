@@ -31,6 +31,12 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<!-- Provides jakarta.inject.Inject used by the generated messaging test (@Inject ContractVerifierMessaging) -->
+		<dependency>
+			<groupId>jakarta.inject</groupId>
+			<artifactId>jakarta.inject-api</artifactId>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>sh.stubborn</groupId>
 			<artifactId>stubborn-contract-verifier-spring-boot</artifactId>
