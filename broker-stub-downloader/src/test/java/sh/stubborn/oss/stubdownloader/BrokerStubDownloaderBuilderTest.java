@@ -20,22 +20,18 @@ import java.util.Objects;
 import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
+import sh.stubborn.contract.stubrunner.StubResource;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
 
 class BrokerStubDownloaderBuilderTest {
 
 	private final BrokerStubDownloaderBuilder builder = new BrokerStubDownloaderBuilder();
 
-	private final ResourceLoader resourceLoader = mock(ResourceLoader.class);
-
 	@Test
-	void should_resolve_sccbroker_protocol() {
+	void should_resolve_stubborn_protocol() {
 		// when
-		@Nullable Resource resource = this.builder.resolve("sccbroker://http://localhost:18080", this.resourceLoader);
+		@Nullable StubResource resource = this.builder.resolve("stubborn://http://localhost:18080");
 
 		// then
 		assertThat(resource).isNotNull().isInstanceOf(BrokerResource.class);
@@ -44,9 +40,20 @@ class BrokerStubDownloaderBuilderTest {
 	}
 
 	@Test
-	void should_return_null_for_non_sccbroker_protocol() {
+	void should_resolve_legacy_sccbroker_protocol() {
 		// when
-		@Nullable Resource resource = this.builder.resolve("https://repo.example.com/stubs", this.resourceLoader);
+		@Nullable StubResource resource = this.builder.resolve("sccbroker://http://localhost:18080");
+
+		// then
+		assertThat(resource).isNotNull().isInstanceOf(BrokerResource.class);
+		BrokerResource brokerResource = (BrokerResource) Objects.requireNonNull(resource);
+		assertThat(brokerResource.getBrokerUrl()).isEqualTo("http://localhost:18080");
+	}
+
+	@Test
+	void should_return_null_for_non_broker_protocol() {
+		// when
+		@Nullable StubResource resource = this.builder.resolve("https://repo.example.com/stubs");
 
 		// then
 		assertThat(resource).isNull();
@@ -55,7 +62,7 @@ class BrokerStubDownloaderBuilderTest {
 	@Test
 	void should_return_null_for_empty_location() {
 		// when
-		@Nullable Resource resource = this.builder.resolve("", this.resourceLoader);
+		@Nullable StubResource resource = this.builder.resolve("");
 
 		// then
 		assertThat(resource).isNull();

@@ -67,9 +67,16 @@ class PlaywrightE2ETest extends BaseE2ETest {
 		// when
 		navigateTo("/applications");
 
-		// then
+		// then — search first so the app row lands on the visible page. The list is
+		// server-paginated and shared across all E2E classes, so the app can otherwise
+		// sit
+		// beyond the first page.
 		waitForTable();
-		Locator appName = waitForText(APP_NAME);
+		Locator searchInput = this.page.locator("input[placeholder*='Search']").first();
+		searchInput.waitFor(new Locator.WaitForOptions().setTimeout(30000));
+		searchInput.fill(APP_NAME);
+		Locator appName = this.page.locator("td:has-text('" + APP_NAME + "')");
+		appName.first().waitFor(new Locator.WaitForOptions().setTimeout(30000));
 		assertThat(appName.count()).isGreaterThan(0);
 
 		screenshot("legacy-02-applications");

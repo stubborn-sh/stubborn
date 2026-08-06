@@ -25,10 +25,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import org.springframework.cloud.contract.stubrunner.StubConfiguration;
-import org.springframework.cloud.contract.stubrunner.StubRunnerOptions;
-import org.springframework.cloud.contract.stubrunner.StubRunnerOptionsBuilder;
-import org.springframework.cloud.contract.stubrunner.spring.StubRunnerProperties;
+import sh.stubborn.contract.stubrunner.StubConfiguration;
+import sh.stubborn.contract.stubrunner.StubRunnerOptions;
+import sh.stubborn.contract.stubrunner.StubRunnerOptionsBuilder;
+import sh.stubborn.contract.stubrunner.StubsMode;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
@@ -94,9 +94,9 @@ class BrokerStubDownloaderTest {
 				.withBody(CONTRACTS_PAGE_RESPONSE)));
 		StubRunnerOptions options = new StubRunnerOptionsBuilder().withUsername("admin")
 			.withPassword("admin")
-			.withStubsMode(StubRunnerProperties.StubsMode.REMOTE)
+			.withStubsMode(StubsMode.REMOTE)
 			.build();
-		BrokerResource resource = new BrokerResource("sccbroker://http://localhost:" + this.wireMock.port());
+		BrokerResource resource = new BrokerResource("stubborn://http://localhost:" + this.wireMock.port());
 		BrokerStubDownloader downloader = new BrokerStubDownloader(options, resource);
 		StubConfiguration config = new StubConfiguration("com.example", "order-service", "1.0.0", "stubs");
 
@@ -128,9 +128,9 @@ class BrokerStubDownloaderTest {
 				.withBody(CONTRACTS_PAGE_RESPONSE)));
 		StubRunnerOptions options = new StubRunnerOptionsBuilder().withUsername("admin")
 			.withPassword("admin")
-			.withStubsMode(StubRunnerProperties.StubsMode.REMOTE)
+			.withStubsMode(StubsMode.REMOTE)
 			.build();
-		BrokerResource resource = new BrokerResource("sccbroker://http://localhost:" + this.wireMock.port());
+		BrokerResource resource = new BrokerResource("stubborn://http://localhost:" + this.wireMock.port());
 		BrokerStubDownloader downloader = new BrokerStubDownloader(options, resource);
 		StubConfiguration config = new StubConfiguration("com.example", "order-service", "+", "stubs");
 
@@ -152,9 +152,35 @@ class BrokerStubDownloaderTest {
 				.withBody(EMPTY_CONTRACTS_PAGE)));
 		StubRunnerOptions options = new StubRunnerOptionsBuilder().withUsername("admin")
 			.withPassword("admin")
-			.withStubsMode(StubRunnerProperties.StubsMode.REMOTE)
+			.withStubsMode(StubsMode.REMOTE)
 			.build();
-		BrokerResource resource = new BrokerResource("sccbroker://http://localhost:" + this.wireMock.port());
+		BrokerResource resource = new BrokerResource("stubborn://http://localhost:" + this.wireMock.port());
+		BrokerStubDownloader downloader = new BrokerStubDownloader(options, resource);
+		StubConfiguration config = new StubConfiguration("com.example", "order-service", "1.0.0", "stubs");
+
+		// when
+		Map.@Nullable Entry<StubConfiguration, File> result = downloader.downloadAndUnpackStubJar(config);
+
+		// then
+		assertThat(result).isNull();
+	}
+
+	@Test
+	void should_return_null_when_application_not_found() {
+		// given — the broker replies 404 with its structured error body when the
+		// application (or version) is unknown; this must be treated as "no stubs
+		// available" rather than a malformed success response.
+		this.wireMock.stubFor(get(urlPathEqualTo("/api/v1/applications/order-service/versions/1.0.0/contracts"))
+			.willReturn(aResponse().withStatus(404).withHeader("Content-Type", "application/json").withBody("""
+					{
+					  "code": "APPLICATION_NOT_FOUND",
+					  "message": "Application not found: order-service"
+					}""")));
+		StubRunnerOptions options = new StubRunnerOptionsBuilder().withUsername("admin")
+			.withPassword("admin")
+			.withStubsMode(StubsMode.REMOTE)
+			.build();
+		BrokerResource resource = new BrokerResource("stubborn://http://localhost:" + this.wireMock.port());
 		BrokerStubDownloader downloader = new BrokerStubDownloader(options, resource);
 		StubConfiguration config = new StubConfiguration("com.example", "order-service", "1.0.0", "stubs");
 
@@ -174,9 +200,9 @@ class BrokerStubDownloaderTest {
 				.withBody(CONTRACTS_PAGE_RESPONSE)));
 		StubRunnerOptions options = new StubRunnerOptionsBuilder().withUsername("admin")
 			.withPassword("admin")
-			.withStubsMode(StubRunnerProperties.StubsMode.REMOTE)
+			.withStubsMode(StubsMode.REMOTE)
 			.build();
-		BrokerResource resource = new BrokerResource("sccbroker://http://localhost:" + this.wireMock.port());
+		BrokerResource resource = new BrokerResource("stubborn://http://localhost:" + this.wireMock.port());
 		BrokerStubDownloader downloader = new BrokerStubDownloader(options, resource);
 		StubConfiguration config = new StubConfiguration("com.example", "order-service", "1.0.0", "stubs");
 
