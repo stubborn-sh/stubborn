@@ -14,7 +14,7 @@
 	<artifactId>stubborn-maven-plugin</artifactId>
 	<packaging>maven-plugin</packaging>
 	<name>Stubborn Maven Plugin</name>
-	<description>Maven plugin for publishing contracts to the SCC Broker</description>
+	<description>Maven plugin for publishing contracts to the Stubborn Broker</description>
 
 	<dependencies>
 		<!-- Core publisher library -->

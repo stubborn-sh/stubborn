@@ -13,13 +13,13 @@
 
 	<artifactId>stubborn-messaging-kafka</artifactId>
 	<name>Stubborn Messaging Kafka</name>
-	<description>Auto-configuration for Kafka messaging contract tests with Stubborn and Spring Cloud Contract</description>
+	<description>Auto-configuration for Kafka messaging contract tests with Stubborn Contract</description>
 
 	<dependencies>
-		<!-- SCC Verifier (provided — consumer brings it via stub-runner) -->
+		<!-- Stubborn Contract verifier messaging (provided — consumer brings it via stub-runner) -->
 		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-contract-verifier</artifactId>
+			<groupId>sh.stubborn</groupId>
+			<artifactId>stubborn-contract-verifier-spring-boot</artifactId>
 			<scope>provided</scope>
 		</dependency>
 

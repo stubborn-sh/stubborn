@@ -49,9 +49,16 @@ class MatrixTagCleanupE2ETest extends BaseE2ETest {
 		navigateTo("/matrix");
 		waitForHeading("Matrix");
 
-		// then — table shows provider/consumer/status
+		// then — table shows provider/consumer/status. The matrix is paginated and shared
+		// across all E2E classes, so filter for the provider first (the client-side
+		// filter
+		// box labelled "Filter results...") to bring its row onto the visible page.
 		waitForTable();
-		Locator providerText = waitForText(PROVIDER);
+		Locator filterInput = this.page.locator("input[placeholder*='Filter']").first();
+		filterInput.fill(PROVIDER);
+		this.page.waitForLoadState(LoadState.NETWORKIDLE);
+		Locator providerText = this.page.locator("td:has-text('" + PROVIDER + "')");
+		providerText.first().waitFor(new Locator.WaitForOptions().setTimeout(30000));
 		assertThat(providerText.count()).isGreaterThan(0);
 		Locator successBadge = waitForText("SUCCESS");
 		assertThat(successBadge.count()).isGreaterThan(0);
@@ -108,6 +115,14 @@ class MatrixTagCleanupE2ETest extends BaseE2ETest {
 		navigateTo("/matrix");
 		waitForHeading("Matrix");
 		waitForTable();
+
+		// filter for the provider (client-side "Filter results..." box) so its row stays
+		// on
+		// the visible page after sorting; the matrix is paginated and shared across
+		// classes
+		Locator filterInput = this.page.locator("input[placeholder*='Filter']").first();
+		filterInput.fill(PROVIDER);
+		this.page.waitForLoadState(LoadState.NETWORKIDLE);
 
 		// when — click Provider column header to sort
 		Locator providerHeader = this.page.locator("th:has-text('Provider')");

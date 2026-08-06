@@ -1,0 +1,71 @@
+# AI Traffic-to-Contract Proxy
+
+::: info ⭐ PRO Feature
+The AI Traffic-to-Contract Proxy is available in [Stubborn Pro](https://stubborn.sh/pro).
+:::
+
+Automatically generate Stubborn Contract definitions from live HTTP traffic.
+
+## Overview
+
+The proxy sits between a consumer and producer, capturing request/response pairs and
+using an LLM (via Spring AI) to generate contract YAML definitions.
+
+```mermaid
+sequenceDiagram
+    participant C as Consumer
+    participant P as Proxy (port 8080)
+    participant Prod as Producer
+    participant LLM as LLM (OpenAI)
+    participant B as Broker
+
+    C->>P: HTTP request (X-Target-Url: http://producer)
+    P->>Prod: forward request
+    Prod-->>P: response
+    P->>P: redact sensitive headers
+    P->>LLM: request + response pair
+    LLM-->>P: contract YAML
+    P->>B: publish contract
+    P-->>C: original response
+```
+
+## Usage
+
+Send requests through the proxy by setting the `X-Target-Url` header:
+
+```bash
+curl -X GET http://proxy:8080/api/v1/proxy/api/orders \
+  -H "X-Target-Url: http://producer:8080" \
+  -u admin:admin
+```
+
+The proxy will:
+
+1. Forward the request to `http://producer:8080/api/orders`
+2. Capture the request/response pair
+3. Redact sensitive headers (Authorization, Cookie, API keys)
+4. Send to LLM for contract generation
+5. Return the proxy response with generated contract YAML
+
+## Security
+
+Sensitive headers are automatically redacted before being sent to the LLM:
+
+* `Authorization`
+* `Cookie` / `Set-Cookie`
+* `X-API-Key`
+* `X-Auth-Token`
+* `Proxy-Authorization`
+
+## Configuration
+
+```yaml
+spring.ai:
+  openai:
+    api-key: ${OPENAI_API_KEY}
+    chat.options:
+      model: gpt-4o-mini
+      temperature: 0.2
+```
+
+See specification: [docs/specs/007-ai-traffic-proxy.md](https://github.com/stubborn-sh/stubborn/blob/main/docs/specs/007-ai-traffic-proxy.md)

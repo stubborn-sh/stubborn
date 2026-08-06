@@ -19,6 +19,25 @@ export async function verifyContracts(
 ): Promise<boolean> {
   const client = new BrokerClient({ baseUrl: broker, username: user, password: pass });
 
+  // The verifier reports its result to the broker against the consumer application
+  // (see reportToBroker below). That application must exist first, otherwise the
+  // broker rejects the verification record with a 404. Register it up front and
+  // tolerate a 409 if a previous run already created it.
+  try {
+    await client.registerApplication({
+      name: consumerName,
+      owner: "js-samples",
+      description: "JS Product API self-verification consumer",
+    });
+    console.log(`Registered application: ${consumerName}`);
+  } catch (err: unknown) {
+    if (err !== null && typeof err === "object" && "status" in err && err.status === 409) {
+      console.log(`Application already registered: ${consumerName}`);
+    } else {
+      throw err;
+    }
+  }
+
   if (import.meta.dirname === undefined) {
     throw new Error("import.meta.dirname is not available — Node.js 21+ required");
   }

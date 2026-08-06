@@ -26,9 +26,9 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.springframework.cloud.contract.spec.internal.DslProperty;
-import org.springframework.cloud.contract.spec.internal.OutputMessage;
-import org.springframework.cloud.contract.verifier.converter.YamlContractConverter;
+import sh.stubborn.contract.spec.internal.DslProperty;
+import sh.stubborn.contract.spec.internal.OutputMessage;
+import sh.stubborn.contract.verifier.converter.YamlContractConverter;
 import org.springframework.stereotype.Component;
 
 /**
@@ -44,11 +44,18 @@ class ContractContentAnalyzer {
 		if (content == null || content.isBlank()) {
 			return ContractAnalysis.HTTP_DEFAULT;
 		}
+		// The Spring Cloud Contract and Stubborn-native YAML content types
+		// (see ContractContentTypes.YAML) describe the same underlying YAML contract
+		// format and are analyzed identically. Any other (or absent) content type is
+		// still analyzed best-effort as YAML for backward compatibility.
+		if (!ContractContentTypes.isYaml(contentType)) {
+			log.debug("Analyzing content of type '{}' as YAML (best-effort)", contentType);
+		}
 		try {
 			Path tempFile = Files.createTempFile("contract-analysis-", ".yaml");
 			try {
 				Files.writeString(tempFile, content, StandardCharsets.UTF_8);
-				Collection<org.springframework.cloud.contract.spec.Contract> contracts = YamlContractConverter.INSTANCE
+				Collection<sh.stubborn.contract.spec.Contract> contracts = YamlContractConverter.INSTANCE
 					.convertFrom(tempFile.toFile());
 				return analyzeContracts(contracts);
 			}
@@ -66,10 +73,10 @@ class ContractContentAnalyzer {
 		}
 	}
 
-	private ContractAnalysis analyzeContracts(Collection<org.springframework.cloud.contract.spec.Contract> contracts) {
+	private ContractAnalysis analyzeContracts(Collection<sh.stubborn.contract.spec.Contract> contracts) {
 		List<TopicReference> topics = new ArrayList<>();
 		boolean hasMessaging = false;
-		for (org.springframework.cloud.contract.spec.Contract contract : contracts) {
+		for (sh.stubborn.contract.spec.Contract contract : contracts) {
 			OutputMessage outputMessage = contract.getOutputMessage();
 			if (outputMessage != null) {
 				DslProperty<String> sentTo = outputMessage.getSentTo();

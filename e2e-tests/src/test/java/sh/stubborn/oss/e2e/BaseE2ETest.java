@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import com.microsoft.playwright.APIRequest;
 import com.microsoft.playwright.APIRequestContext;
@@ -29,6 +30,7 @@ import com.microsoft.playwright.BrowserType;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
+import com.microsoft.playwright.PlaywrightException;
 import com.microsoft.playwright.options.LoadState;
 import com.microsoft.playwright.options.RequestOptions;
 import com.microsoft.playwright.options.WaitForSelectorState;
@@ -57,6 +59,8 @@ abstract class BaseE2ETest {
 
 	private static final String AUTH_HEADER = "Basic "
 			+ java.util.Base64.getEncoder().encodeToString("admin:admin".getBytes());
+
+	private static final int SEED_MAX_ATTEMPTS = 3;
 
 	private boolean previousTestFailed = false;
 
@@ -149,66 +153,131 @@ abstract class BaseE2ETest {
 	}
 
 	void seedApp(String name, String owner) {
-		APIResponse response = this.apiContext.post("/api/v1/applications",
+		APIResponse response = seedWithRetry(() -> this.apiContext.post("/api/v1/applications",
 				RequestOptions.create()
 					.setHeader("Content-Type", "application/json")
-					.setData(Map.of("name", name, "description", "E2E test application: " + name, "owner", owner)));
+					.setData(Map.of("name", name, "description", "E2E test application: " + name, "owner", owner))));
 		assertThat(response.status()).as("Seed app %s", name).isIn(200, 201, 409);
 	}
 
 	void seedContract(String app, String version, String contractName, String content) {
-		APIResponse response = this.apiContext.post(
-				"/api/v1/applications/" + app + "/versions/" + version + "/contracts",
-				RequestOptions.create()
-					.setHeader("Content-Type", "application/json")
-					.setData(Map.of("contractName", contractName, "content", content, "contentType",
-							"application/x-spring-cloud-contract+yaml")));
-		assertThat(response.status()).as("Seed contract %s for %s@%s", contractName, app, version).isIn(200, 201);
+		APIResponse response = seedWithRetry(
+				() -> this.apiContext.post("/api/v1/applications/" + app + "/versions/" + version + "/contracts",
+						RequestOptions.create()
+							.setHeader("Content-Type", "application/json")
+							.setData(Map.of("contractName", contractName, "content", content, "contentType",
+									"application/x-spring-cloud-contract+yaml"))));
+		// 409 tolerated so re-seeding the same contract (on a surefire/CI rerun) is
+		// idempotent.
+		assertThat(response.status()).as("Seed contract %s for %s@%s", contractName, app, version).isIn(200, 201, 409);
 	}
 
 	void seedVerification(String provider, String pVersion, String consumer, String cVersion, String status) {
-		APIResponse response = this.apiContext.post("/api/v1/verifications",
+		APIResponse response = seedWithRetry(() -> this.apiContext.post("/api/v1/verifications",
 				RequestOptions.create()
 					.setHeader("Content-Type", "application/json")
 					.setData(Map.of("providerName", provider, "providerVersion", pVersion, "consumerName", consumer,
-							"consumerVersion", cVersion, "status", status)));
-		assertThat(response.status()).as("Seed verification %s->%s %s", provider, consumer, status).isIn(200, 201);
+							"consumerVersion", cVersion, "status", status))));
+		// 409 tolerated so re-seeding the same verification (on a rerun) is idempotent.
+		assertThat(response.status()).as("Seed verification %s->%s %s", provider, consumer, status).isIn(200, 201, 409);
 	}
 
 	void seedEnvironment(String name, String description, int displayOrder, boolean production) {
-		APIResponse response = this.apiContext.post("/api/v1/environments",
+		APIResponse response = seedWithRetry(() -> this.apiContext.post("/api/v1/environments",
 				RequestOptions.create()
 					.setHeader("Content-Type", "application/json")
 					.setData(Map.of("name", name, "description", description, "displayOrder", displayOrder,
-							"production", production)));
+							"production", production))));
 		assertThat(response.status()).as("Seed environment %s", name).isIn(200, 201, 409);
 	}
 
 	void seedDeployment(String app, String version, String environment) {
-		APIResponse response = this.apiContext.post("/api/v1/environments/" + environment + "/deployments",
-				RequestOptions.create()
-					.setHeader("Content-Type", "application/json")
-					.setData(Map.of("applicationName", app, "version", version)));
-		assertThat(response.status()).as("Seed deployment %s@%s to %s", app, version, environment).isIn(200, 201);
+		APIResponse response = seedWithRetry(
+				() -> this.apiContext.post("/api/v1/environments/" + environment + "/deployments",
+						RequestOptions.create()
+							.setHeader("Content-Type", "application/json")
+							.setData(Map.of("applicationName", app, "version", version))));
+		// 409 tolerated so re-seeding the same deployment (on a rerun) is idempotent.
+		assertThat(response.status()).as("Seed deployment %s@%s to %s", app, version, environment).isIn(200, 201, 409);
 	}
 
 	void seedTag(String app, String version, String tag) {
-		APIResponse response = this.apiContext.put(
-				"/api/v1/applications/" + app + "/versions/" + version + "/tags/" + tag,
-				RequestOptions.create().setHeader("Content-Type", "application/json"));
-		assertThat(response.status()).as("Seed tag %s for %s@%s", tag, app, version).isIn(200, 201);
+		APIResponse response = seedWithRetry(
+				() -> this.apiContext.put("/api/v1/applications/" + app + "/versions/" + version + "/tags/" + tag,
+						RequestOptions.create().setHeader("Content-Type", "application/json")));
+		assertThat(response.status()).as("Seed tag %s for %s@%s", tag, app, version).isIn(200, 201, 409);
+	}
+
+	/**
+	 * Runs a seed request, retrying on a transient failure — a thrown Playwright error or
+	 * a {@code 5xx} response — with a short linear backoff. The broker/DB can be slow to
+	 * accept writes right after the containers come up, which surfaced as flaky seed
+	 * failures. Non-{@code 5xx} responses (including the {@code 409} that idempotent
+	 * re-seeds return) are handed straight back to the caller's own status assertion.
+	 * @param call the seed request to run
+	 * @return the last response received (for the caller to assert on)
+	 */
+	private APIResponse seedWithRetry(Supplier<APIResponse> call) {
+		APIResponse response = null;
+		RuntimeException lastError = null;
+		for (int attempt = 1; attempt <= SEED_MAX_ATTEMPTS; attempt++) {
+			try {
+				response = call.get();
+				if (response.status() < 500) {
+					return response;
+				}
+			}
+			catch (PlaywrightException ex) {
+				lastError = ex;
+			}
+			if (attempt < SEED_MAX_ATTEMPTS) {
+				sleepQuietly(1000L * attempt);
+			}
+		}
+		if (response != null) {
+			return response;
+		}
+		throw (lastError != null) ? lastError : new IllegalStateException("Seed request failed with no response");
+	}
+
+	private static void sleepQuietly(long millis) {
+		try {
+			Thread.sleep(millis);
+		}
+		catch (InterruptedException ex) {
+			Thread.currentThread().interrupt();
+		}
 	}
 
 	Locator waitForHeading(String text) {
 		Locator heading = this.page.locator("[data-testid='page-heading']:has-text('" + text + "')");
-		heading.first().waitFor(new Locator.WaitForOptions().setTimeout(120_000));
+		waitForFirstWithReload(heading);
 		return heading;
 	}
 
 	Locator waitForTable() {
-		Locator table = this.page.locator("[data-testid='data-table']").first();
-		table.waitFor(new Locator.WaitForOptions().setTimeout(120_000));
-		return table;
+		Locator table = this.page.locator("[data-testid='data-table']");
+		waitForFirstWithReload(table);
+		return table.first();
+	}
+
+	/**
+	 * Waits for the first matching element; on the first timeout, reloads the page once
+	 * and waits again. The SPA occasionally renders its shell before the data behind a
+	 * view has loaded (especially right after seeding), which surfaced as flaky 120s
+	 * timeouts. The total wait budget is unchanged (2 x 60s), but a reload recovers a
+	 * stuck first render instead of blocking the whole budget on it.
+	 * @param locator the target locator (its {@code first()} is awaited)
+	 */
+	private void waitForFirstWithReload(Locator locator) {
+		try {
+			locator.first().waitFor(new Locator.WaitForOptions().setTimeout(60_000));
+		}
+		catch (PlaywrightException ex) {
+			this.page.reload();
+			this.page.waitForLoadState(LoadState.NETWORKIDLE);
+			locator.first().waitFor(new Locator.WaitForOptions().setTimeout(60_000));
+		}
 	}
 
 	Locator waitForText(String text) {

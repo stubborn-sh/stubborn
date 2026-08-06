@@ -41,10 +41,17 @@ class ApplicationFlowE2ETest extends BaseE2ETest {
 		// when
 		navigateTo("/applications");
 
-		// then
+		// then — filter to this suite's apps first (both name and owner "app-team" match
+		// "app-") so the server-paginated, shared list shows them on the visible page
 		waitForTable();
-		waitForText(APP_ORDER);
-		Locator paymentApp = waitForText(APP_PAYMENT);
+		Locator searchInput = this.page.locator("input[placeholder*='Search']").first();
+		searchInput.waitFor(new Locator.WaitForOptions().setTimeout(30000));
+		searchInput.fill("app-");
+		Locator orderApp = this.page.locator("td:has-text('" + APP_ORDER + "')");
+		orderApp.first().waitFor(new Locator.WaitForOptions().setTimeout(30000));
+		assertThat(orderApp.count()).isGreaterThan(0);
+		Locator paymentApp = this.page.locator("td:has-text('" + APP_PAYMENT + "')");
+		paymentApp.first().waitFor(new Locator.WaitForOptions().setTimeout(30000));
 		assertThat(paymentApp.count()).isGreaterThan(0);
 
 		screenshot("app-01-list");
@@ -79,6 +86,12 @@ class ApplicationFlowE2ETest extends BaseE2ETest {
 		navigateTo("/applications");
 		waitForTable();
 
+		// search first so the app's name button is on the visible (server-paginated,
+		// shared) page
+		Locator searchInput = this.page.locator("input[placeholder*='Search']").first();
+		searchInput.waitFor(new Locator.WaitForOptions().setTimeout(30000));
+		searchInput.fill(APP_ORDER);
+
 		// when — click app name button to expand details
 		Locator appNameButton = this.page.locator("button:has-text('" + APP_ORDER + "')");
 		appNameButton.first().waitFor(new Locator.WaitForOptions().setTimeout(30000));
@@ -103,6 +116,11 @@ class ApplicationFlowE2ETest extends BaseE2ETest {
 		// when
 		navigateTo("/applications");
 		waitForTable();
+		// search first so the app's name button is on the visible (server-paginated,
+		// shared) page
+		Locator searchInput = this.page.locator("input[placeholder*='Search']").first();
+		searchInput.waitFor(new Locator.WaitForOptions().setTimeout(30000));
+		searchInput.fill(APP_ORDER);
 		Locator appNameButton = this.page.locator("button:has-text('" + APP_ORDER + "')");
 		appNameButton.first().waitFor(new Locator.WaitForOptions().setTimeout(30000));
 		appNameButton.first().click();
@@ -122,6 +140,11 @@ class ApplicationFlowE2ETest extends BaseE2ETest {
 		// given
 		navigateTo("/applications");
 		waitForTable();
+		// search first so the app's name button is on the visible (server-paginated,
+		// shared) page
+		Locator searchInput = this.page.locator("input[placeholder*='Search']").first();
+		searchInput.waitFor(new Locator.WaitForOptions().setTimeout(30000));
+		searchInput.fill(APP_ORDER);
 		Locator appNameButton = this.page.locator("button:has-text('" + APP_ORDER + "')");
 		appNameButton.first().waitFor(new Locator.WaitForOptions().setTimeout(30000));
 		appNameButton.first().click();
