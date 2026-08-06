@@ -31,8 +31,8 @@ When the provider test suite finishes:
 
 ```xml
 <plugin>
-  <groupId>io.stubborn</groupId>
-  <artifactId>stubborn-contract-verifier-maven-plugin</artifactId>
+  <groupId>sh.stubborn</groupId>
+  <artifactId>stubborn-contract-maven-plugin</artifactId>
   <configuration>
     <brokerUrl>http://localhost:8080</brokerUrl>
     <!-- provider name and version are auto-detected from the generated test classes -->

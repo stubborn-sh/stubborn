@@ -33,6 +33,12 @@
 		</dependency>
 
 		<!-- Test -->
+		<!-- Provides jakarta.inject.Inject used by the generated messaging test (@Inject ContractVerifierMessaging) -->
+		<dependency>
+			<groupId>jakarta.inject</groupId>
+			<artifactId>jakarta.inject-api</artifactId>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
