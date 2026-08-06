@@ -30,9 +30,9 @@ import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.springframework.cloud.contract.verifier.converter.YamlContract;
-import org.springframework.cloud.contract.verifier.messaging.MessageVerifierReceiver;
-import org.springframework.cloud.contract.verifier.messaging.MessageVerifierSender;
+import sh.stubborn.contract.verifier.converter.YamlContract;
+import sh.stubborn.contract.verifier.messaging.MessageVerifierReceiver;
+import sh.stubborn.contract.verifier.messaging.MessageVerifierSender;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
@@ -61,7 +61,8 @@ class StubbornKafkaMessageVerifier implements MessageVerifierSender<Message<?>>,
 	}
 
 	@Override
-	public <T> void send(T payload, Map<String, Object> headers, String destination, @Nullable YamlContract contract) {
+	public <T> void send(T payload, @Nullable Map<String, Object> headers, String destination,
+			@Nullable YamlContract contract) {
 		Message<T> message = MessageBuilder.withPayload(payload).copyHeaders(headers).build();
 		log.info("Sending message to Kafka topic '{}': {}", destination, payload);
 		var unused = this.kafkaTemplate.send(destination, message);

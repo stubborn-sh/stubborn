@@ -22,9 +22,9 @@ import org.junit.jupiter.api.Test;
 
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
-import org.springframework.cloud.contract.verifier.converter.YamlContract;
-import org.springframework.cloud.contract.verifier.messaging.MessageVerifierReceiver;
-import org.springframework.cloud.contract.verifier.messaging.MessageVerifierSender;
+import sh.stubborn.contract.verifier.converter.YamlContract;
+import sh.stubborn.contract.verifier.messaging.MessageVerifierReceiver;
+import sh.stubborn.contract.verifier.messaging.MessageVerifierSender;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.messaging.Message;
 
@@ -100,7 +100,7 @@ class StubbornKafkaAutoConfigurationTest {
 		}
 
 		@Override
-		public <T> void send(T payload, Map<String, Object> headers, String destination,
+		public <T> void send(T payload, @Nullable Map<String, Object> headers, String destination,
 				@Nullable YamlContract contract) {
 		}
 

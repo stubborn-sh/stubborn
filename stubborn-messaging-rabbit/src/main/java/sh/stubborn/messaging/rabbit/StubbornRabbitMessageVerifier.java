@@ -24,9 +24,9 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.cloud.contract.verifier.converter.YamlContract;
-import org.springframework.cloud.contract.verifier.messaging.MessageVerifierReceiver;
-import org.springframework.cloud.contract.verifier.messaging.MessageVerifierSender;
+import sh.stubborn.contract.verifier.converter.YamlContract;
+import sh.stubborn.contract.verifier.messaging.MessageVerifierReceiver;
+import sh.stubborn.contract.verifier.messaging.MessageVerifierSender;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 
@@ -57,7 +57,8 @@ class StubbornRabbitMessageVerifier implements MessageVerifierSender<Message<?>>
 	}
 
 	@Override
-	public <T> void send(T payload, Map<String, Object> headers, String destination, @Nullable YamlContract contract) {
+	public <T> void send(T payload, @Nullable Map<String, Object> headers, String destination,
+			@Nullable YamlContract contract) {
 		log.info("Sending message to RabbitMQ destination '{}': {}", destination, payload);
 		this.rabbitTemplate.convertAndSend(destination, payload, (m) -> {
 			copyHeaders(headers, m.getMessageProperties());
@@ -94,7 +95,10 @@ class StubbornRabbitMessageVerifier implements MessageVerifierSender<Message<?>>
 		return receive(destination, this.properties.getReceiveTimeout().toMillis(), TimeUnit.MILLISECONDS, contract);
 	}
 
-	private static void copyHeaders(Map<String, Object> headers, MessageProperties props) {
+	private static void copyHeaders(@Nullable Map<String, Object> headers, MessageProperties props) {
+		if (headers == null) {
+			return;
+		}
 		headers.forEach((key, value) -> {
 			if ("contentType".equals(key) && value instanceof String s) {
 				props.setContentType(s);

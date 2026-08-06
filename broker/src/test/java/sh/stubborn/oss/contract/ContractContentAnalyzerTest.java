@@ -143,4 +143,31 @@ class ContractContentAnalyzerTest {
 		assertThat(result.topics()).isEmpty();
 	}
 
+	@Test
+	void should_analyze_stubborn_native_yaml_content_type_identically_to_scc() {
+		// given
+		String content = """
+				label: accepted_verification
+				input:
+				    triggeredBy: clientIsOldEnough()
+				outputMessage:
+				    sentTo: verifications
+				    body:
+				      eligible: true
+				    headers:
+				        contentType: application/json
+				""";
+		// when
+		ContractAnalysis scc = this.analyzer.analyze(content, ContractContentTypes.SPRING_CLOUD_CONTRACT_YAML);
+		ContractAnalysis stubborn = this.analyzer.analyze(content, ContractContentTypes.STUBBORN_YAML);
+		// then
+		assertThat(stubborn.interactionType()).isEqualTo(InteractionType.MESSAGING);
+		assertThat(stubborn.topics()).hasSize(1);
+		assertThat(stubborn.topics().getFirst().topicName()).isEqualTo("verifications");
+		assertThat(stubborn.topics().getFirst().direction()).isEqualTo(TopicDirection.PUBLISH);
+		// the Stubborn-native alias is analyzed identically to the SCC content type
+		assertThat(stubborn.interactionType()).isEqualTo(scc.interactionType());
+		assertThat(stubborn.topics()).usingRecursiveComparison().isEqualTo(scc.topics());
+	}
+
 }

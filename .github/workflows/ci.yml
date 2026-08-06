@@ -67,7 +67,7 @@ jobs:
 
 
       - name: Build & test samples
-        run: ./mvnw verify -Psamples -pl samples -also-make-dependents -B
+        run: ./mvnw verify -Psamples -pl samples -also-make-dependents -Dcompose.skip=false -B
 
       - name: Run E2E tests
         uses: nick-fields/retry@ad984534de44a9489a53aefd81eb77f87c70dc60 # v4.0.0

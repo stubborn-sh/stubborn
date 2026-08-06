@@ -45,7 +45,8 @@
 
 		<!-- Spring ecosystem -->
 		<spring-cloud.version>2025.1.1</spring-cloud.version>
-		<spring-cloud-contract.version>5.0.2</spring-cloud-contract.version>
+		<!-- Stubborn Contract (continuation of Spring Cloud Contract). -->
+		<stubborn-contract.version>0.1.0-SNAPSHOT</stubborn-contract.version>
 		<spring-ai.version>2.0.0-M3</spring-ai.version>
 
 		<!-- Static analysis -->
@@ -115,6 +116,14 @@
 
 	<dependencyManagement>
 		<dependencies>
+			<!-- Stubborn Contract BOM: pins stubborn-contract-* artifact versions. -->
+			<dependency>
+				<groupId>sh.stubborn</groupId>
+				<artifactId>stubborn-contract-dependencies</artifactId>
+				<version>${stubborn-contract.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
 			<dependency>
 				<groupId>org.springframework.cloud</groupId>
 				<artifactId>spring-cloud-dependencies</artifactId>
@@ -423,7 +432,41 @@
 			<name>Spring Milestones</name>
 			<url>https://repo.spring.io/milestone</url>
 		</repository>
+		<!-- Stubborn Contract is published to Maven Central snapshots until its first release. -->
+		<repository>
+			<id>central-snapshots</id>
+			<name>Central Portal Snapshots</name>
+			<url>https://central.sonatype.com/repository/maven-snapshots/</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
 	</repositories>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>central</id>
+			<url>https://repo.maven.apache.org/maven2</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</pluginRepository>
+		<!-- Needed to resolve the stubborn-contract-maven-plugin snapshot. -->
+		<pluginRepository>
+			<id>central-snapshots</id>
+			<name>Central Portal Snapshots</name>
+			<url>https://central.sonatype.com/repository/maven-snapshots/</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</pluginRepository>
+	</pluginRepositories>
 
 	<profiles>
 		<!-- Snapshot publishing: ./mvnw deploy -Ppublish -->

@@ -3,6 +3,7 @@ pluginManagement {
         mavenLocal()
         mavenCentral()
         maven { url 'https://repo.spring.io/milestone' }
+        maven { url 'https://central.sonatype.com/repository/maven-snapshots/' }
         gradlePluginPortal()
     }
 }

@@ -16,12 +16,19 @@
 		<!-- Gradle sample executions and Docker Compose only when compose.skip=false (e.g. CI with Docker) -->
 	</properties>
 	<name>Sample Maven Consumer (Payment Service)</name>
-	<description>Consumer using @AutoConfigureStubRunner with sccbroker:// protocol</description>
+	<description>Consumer using @AutoConfigureStubRunner with stubborn:// protocol</description>
 
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<!-- RestClient.Builder autoconfiguration lives in spring-boot-restclient, which
+		     spring-boot-starter-web does NOT pull in on Spring Boot 4.0. OrderClient injects
+		     RestClient.Builder, so the starter is required for the context to load. -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-restclient</artifactId>
 		</dependency>
 
 		<!-- Test -->
@@ -38,8 +45,8 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-contract-stub-runner</artifactId>
+			<groupId>sh.stubborn</groupId>
+			<artifactId>stubborn-contract-stub-runner-spring-boot</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
