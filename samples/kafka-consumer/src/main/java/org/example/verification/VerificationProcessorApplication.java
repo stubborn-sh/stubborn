@@ -15,14 +15,29 @@
  */
 package org.example.verification;
 
+import org.apache.kafka.clients.admin.NewTopic;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.kafka.config.TopicBuilder;
 
 @SpringBootApplication
 public class VerificationProcessorApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(VerificationProcessorApplication.class, args);
+	}
+
+	/**
+	 * Declare the "verifications" topic so KafkaAdmin creates it at startup. Without
+	 * this, StubRunner's producer can send the contract message before the listener's
+	 * subscription has auto-created the topic, failing with "Topic verifications not
+	 * present in metadata".
+	 */
+	@Bean
+	NewTopic verificationsTopic() {
+		return TopicBuilder.name("verifications").partitions(1).replicas(1).build();
 	}
 
 }

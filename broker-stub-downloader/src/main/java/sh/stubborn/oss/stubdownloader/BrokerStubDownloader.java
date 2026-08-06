@@ -33,20 +33,23 @@ import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.springframework.cloud.contract.spec.Contract;
-import org.springframework.cloud.contract.stubrunner.StubConfiguration;
-import org.springframework.cloud.contract.stubrunner.StubDownloader;
-import org.springframework.cloud.contract.stubrunner.StubRunnerOptions;
-import org.springframework.cloud.contract.verifier.converter.YamlContractConverter;
-import org.springframework.cloud.contract.verifier.dsl.wiremock.WireMockStubStrategy;
-import org.springframework.cloud.contract.verifier.file.ContractMetadata;
+import sh.stubborn.contract.spec.Contract;
+import sh.stubborn.contract.stubrunner.StubConfiguration;
+import sh.stubborn.contract.stubrunner.StubDownloader;
+import sh.stubborn.contract.stubrunner.StubRunnerOptions;
+import sh.stubborn.contract.verifier.converter.YamlContractConverter;
+import sh.stubborn.contract.verifier.dsl.wiremock.WireMockStubStrategy;
+import sh.stubborn.contract.verifier.file.ContractMetadata;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClient;
 
 /**
- * Downloads contracts from the SCC Broker REST API and writes them to a temp directory
- * structured as the SCC stub runner expects ({@code contracts/} and {@code mappings/}
- * subdirectories).
+ * Downloads contracts from the Stubborn Broker REST API and writes them to a temp
+ * directory structured as the stub runner expects ({@code contracts/} and
+ * {@code mappings/} subdirectories).
  */
 class BrokerStubDownloader implements StubDownloader {
 
@@ -84,10 +87,24 @@ class BrokerStubDownloader implements StubDownloader {
 			return null;
 		}
 		log.info("Downloading contracts from broker for {}:{}", appName, version);
-		String json = this.restClient.get()
+		ResponseEntity<String> response = this.restClient.get()
 			.uri("/api/v1/applications/{app}/versions/{ver}/contracts", appName, version)
 			.retrieve()
-			.body(String.class);
+			.toEntity(String.class);
+		HttpStatusCode status = response.getStatusCode();
+		if (status.value() == HttpStatus.NOT_FOUND.value()) {
+			// The broker returns 404 (e.g. {"code":"APPLICATION_NOT_FOUND"}) when the app
+			// or version is unknown. Treat it as "no stubs available" so the stub runner
+			// can decide (fail fast per stubs-mode, or skip) instead of failing context
+			// loading with a misleading "unexpected response format" error.
+			log.warn("Broker has no stubs for {}:{} (application or version not found)", appName, version);
+			return null;
+		}
+		if (status.isError()) {
+			throw new IllegalStateException("Broker returned " + status.value() + " for " + appName + ":" + version
+					+ ": " + response.getBody());
+		}
+		String json = response.getBody();
 		if (json == null || json.isBlank()) {
 			log.warn("No contracts found for {}:{}", appName, version);
 			return null;
@@ -123,6 +140,14 @@ class BrokerStubDownloader implements StubDownloader {
 					String yamlFileName = name.endsWith(".yaml") || name.endsWith(".yml") || name.endsWith(".groovy")
 							? name : name + ".yaml";
 					Path contractFile = contractsDir.resolve(yamlFileName);
+					// contractName may carry a subdirectory (e.g.
+					// "order/shouldCreateOrder"), so
+					// create the parent directory before writing the nested contract
+					// file.
+					Path contractParent = contractFile.getParent();
+					if (contractParent != null) {
+						Files.createDirectories(contractParent);
+					}
 					Files.writeString(contractFile, content, StandardCharsets.UTF_8);
 					convertToWireMockMapping(contractFile, name, mappingsDir);
 				}
@@ -139,7 +164,7 @@ class BrokerStubDownloader implements StubDownloader {
 
 	/**
 	 * Converts a YAML contract file to a WireMock JSON mapping and writes it to the
-	 * mappings directory. Uses SCC's {@link YamlContractConverter} and
+	 * mappings directory. Uses Stubborn Contract's {@link YamlContractConverter} and
 	 * {@link WireMockStubStrategy} for the conversion.
 	 */
 	private static void convertToWireMockMapping(Path contractFile, String contractName, Path mappingsDir) {
@@ -153,12 +178,21 @@ class BrokerStubDownloader implements StubDownloader {
 				if (mapping != null) {
 					String jsonFileName = parsed.size() == 1 ? contractName + ".json"
 							: contractName + "_" + index + ".json";
-					Files.writeString(mappingsDir.resolve(jsonFileName), Json.write(mapping), StandardCharsets.UTF_8);
+					Path mappingFile = mappingsDir.resolve(jsonFileName);
+					// contractName may carry a subdirectory, so create parent dirs before
+					// writing.
+					Path mappingParent = mappingFile.getParent();
+					if (mappingParent != null) {
+						Files.createDirectories(mappingParent);
+					}
+					Files.writeString(mappingFile, Json.write(mapping), StandardCharsets.UTF_8);
 				}
 				index++;
 			}
 		}
-		catch (Exception ex) {
+		catch (Exception | LinkageError ex) {
+			// Best-effort conversion: contracts are still delivered even if the WireMock
+			// mapping step fails or the converter is not classpath-compatible.
 			log.warn("Failed to convert contract {} to WireMock mapping", contractName, ex);
 		}
 	}

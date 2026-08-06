@@ -2,6 +2,7 @@ import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { setupStubs, teardownStubs } from "@stubborn-sh/jest";
 import { BrokerClient } from "@stubborn-sh/broker-client";
 import { OrderServiceClient } from "../../src/client.js";
+import { seedBroker } from "../../src/seed-broker.js";
 
 const BROKER_URL = process.env["BROKER_URL"] ?? "http://localhost:18080";
 const BROKER_USERNAME = process.env["BROKER_USERNAME"] ?? "admin";
@@ -11,6 +12,11 @@ describe("JS Consumer contract flow", () => {
   let stubPort: number;
 
   beforeAll(async () => {
+    // The samples aggregator runs this test BEFORE the Java maven-producer builds
+    // and publishes order-service to the broker, so seed the provider app,
+    // contracts, and this consumer app ourselves (idempotently).
+    await seedBroker(BROKER_URL, BROKER_USERNAME, BROKER_PASSWORD);
+
     // Fetch order-service stubs from the broker and start a stub server
     stubPort = await setupStubs({
       brokerUrl: BROKER_URL,

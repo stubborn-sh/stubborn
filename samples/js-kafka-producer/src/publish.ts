@@ -47,13 +47,31 @@ export async function publishContracts(
   for (const c of result.published) {
     console.log(`  - ${c.contractName}`);
   }
-  if (result.errors.length > 0) {
-    console.error(`Failed to publish ${result.errors.length} contracts:`);
-    for (const e of result.errors) {
+
+  // A per-contract 409 means the contract was already published (e.g. a re-publish
+  // of the same version) — that is a benign, idempotent outcome, not a failure.
+  const skipped = result.errors.filter((e) => isAlreadyExists(e.error));
+  const failures = result.errors.filter((e) => !isAlreadyExists(e.error));
+
+  if (skipped.length > 0) {
+    console.log(`Skipped ${skipped.length} already-published contracts for ${name}@${version}:`);
+    for (const s of skipped) {
+      console.log(`  - ${s.contractName}: already exists`);
+    }
+  }
+
+  if (failures.length > 0) {
+    console.error(`Failed to publish ${failures.length} contracts:`);
+    for (const e of failures) {
       console.error(`  - ${e.contractName}: ${e.error.message}`);
     }
     process.exit(1);
   }
+}
+
+/** True when the error is a broker 409 (resource already exists). */
+function isAlreadyExists(err: unknown): boolean {
+  return err !== null && typeof err === "object" && "status" in err && err.status === 409;
 }
 
 if (

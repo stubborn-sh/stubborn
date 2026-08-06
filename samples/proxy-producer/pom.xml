@@ -23,6 +23,13 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+		<!-- RestClient.Builder autoconfiguration lives in spring-boot-restclient, which
+		     spring-boot-starter-web does NOT pull in on Spring Boot 4.0. ShippingController
+		     injects RestClient.Builder, so the starter is required for the context to load. -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-restclient</artifactId>
+		</dependency>
 
 		<!-- Test -->
 		<dependency>

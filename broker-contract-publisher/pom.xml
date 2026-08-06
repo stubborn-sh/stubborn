@@ -13,7 +13,7 @@
 
 	<artifactId>stubborn-contract-publisher</artifactId>
 	<name>Stubborn Contract Publisher</name>
-	<description>Core library for publishing contracts to the SCC Broker REST API</description>
+	<description>Core library for publishing contracts to the Stubborn Broker REST API</description>
 
 	<dependencies>
 		<!-- RestClient (provided — consumer brings Spring Web) -->
@@ -45,8 +45,8 @@
 
 		<!-- Stub Runner for testing with broker-generated stubs -->
 		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-contract-stub-runner</artifactId>
+			<groupId>sh.stubborn</groupId>
+			<artifactId>stubborn-contract-stub-runner-spring-boot</artifactId>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

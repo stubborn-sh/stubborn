@@ -21,10 +21,10 @@ import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.cloud.contract.verifier.messaging.MessageVerifierReceiver;
-import org.springframework.cloud.contract.verifier.messaging.MessageVerifierSender;
-import org.springframework.cloud.contract.verifier.messaging.integration.ContractVerifierIntegrationConfiguration;
-import org.springframework.cloud.contract.verifier.messaging.noop.NoOpContractVerifierAutoConfiguration;
+import sh.stubborn.contract.verifier.messaging.MessageVerifierReceiver;
+import sh.stubborn.contract.verifier.messaging.MessageVerifierSender;
+import sh.stubborn.contract.verifier.messaging.integration.ContractVerifierIntegrationConfiguration;
+import sh.stubborn.contract.verifier.messaging.noop.NoOpContractVerifierAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 
 /**
