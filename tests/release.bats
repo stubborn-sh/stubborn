@@ -130,14 +130,18 @@ validate_semver() {
 # Helm chart version automation
 # ──────────────────────────────────────────────
 
+# The Chart.yaml / Gradle version rewriting now lives in scripts/release/set-project-versions.sh
+# (extracted from the inline "Set release version" step). These assert the logic still exists
+# there; set-project-versions.bats exercises its actual behavior against fixtures.
+
 @test "release workflow updates Chart.yaml version" {
-  local wf="$BATS_TEST_DIRNAME/../.github/workflows/release.yml"
-  grep -q 'sed.*version.*Chart.yaml' "$wf"
+  local script="$BATS_TEST_DIRNAME/../scripts/release/set-project-versions.sh"
+  grep -q 'sed.*version.*Chart.yaml' "$script"
 }
 
 @test "release workflow updates Chart.yaml appVersion" {
-  local wf="$BATS_TEST_DIRNAME/../.github/workflows/release.yml"
-  grep -q 'sed.*appVersion.*Chart.yaml' "$wf"
+  local script="$BATS_TEST_DIRNAME/../scripts/release/set-project-versions.sh"
+  grep -q 'sed.*appVersion.*Chart.yaml' "$script"
 }
 
 @test "Chart.yaml version sed produces correct output" {
@@ -190,8 +194,8 @@ CHART
 }
 
 @test "release workflow updates Gradle plugin version" {
-  local wf="$BATS_TEST_DIRNAME/../.github/workflows/release.yml"
-  grep -q 'broker-gradle-plugin/build.gradle' "$wf"
+  local script="$BATS_TEST_DIRNAME/../scripts/release/set-project-versions.sh"
+  grep -q 'broker-gradle-plugin/build.gradle' "$script"
 }
 
 @test "Chart.yaml has required fields" {

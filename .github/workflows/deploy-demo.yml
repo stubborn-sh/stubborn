@@ -30,12 +30,7 @@ jobs:
       - uses: superfly/flyctl-actions/setup-flyctl@ed8efb33836e8b2096c7fd3ba1c8afe303ebbff1 # v1.6
 
       - name: Tag and push image to Fly.io registry
-        run: |
-          flyctl auth docker
-          IMAGE_NAME=$(docker images --format '{{.Repository}}:{{.Tag}}' | grep 'stubborn' | head -1)
-          echo "Built image: $IMAGE_NAME"
-          docker tag "$IMAGE_NAME" registry.fly.io/stubborn-demo:latest
-          docker push registry.fly.io/stubborn-demo:latest
+        run: scripts/demo/push-fly-image.sh
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 
@@ -58,17 +53,9 @@ jobs:
         run: npx playwright install chromium --with-deps
 
       - name: Wait for app to be ready
-        run: |
-          for i in $(seq 1 30); do
-            if curl -sf "${{ env.DEMO_URL }}/actuator/health" | grep -q "UP"; then
-              echo "App is ready"
-              exit 0
-            fi
-            echo "Waiting for app... attempt $i"
-            sleep 10
-          done
-          echo "App did not become ready in time"
-          exit 1
+        run: scripts/demo/wait-for-app.sh
+        env:
+          DEMO_URL: ${{ env.DEMO_URL }}
 
       - name: Run Playwright smoke test
         run: npx playwright test tests/demo-smoke.spec.ts --reporter=list
