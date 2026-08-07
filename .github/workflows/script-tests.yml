@@ -1,0 +1,43 @@
+name: Script Tests
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'scripts/**'
+      - 'test/bats/**'
+      - 'tests/*.bats'
+      - '.github/workflows/script-tests.yml'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'scripts/**'
+      - 'test/bats/**'
+      - 'tests/*.bats'
+      - '.github/workflows/script-tests.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  bats:
+    name: Shell Script BATS Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
+        with:
+          node-version: '22'
+
+      - name: Install bats
+        run: sudo apt-get update && sudo apt-get install -y bats
+
+      - name: Syntax-check all shell scripts
+        run: |
+          find scripts -name '*.sh' -print0 | xargs -0 -r -n1 bash -n
+
+      - name: Run BATS suite
+        run: bats tests test/bats

@@ -40,20 +40,12 @@ jobs:
           gpg-passphrase: GPG_PASSPHRASE
 
       - name: Validate version format
-        run: |
-          VERSION="${{ inputs.version }}"
-          if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9.]+)?$ ]]; then
-            echo "::error::Invalid version format: $VERSION (expected semver, e.g. 0.0.1 or 0.1.0-RC1)"
-            exit 1
-          fi
+        run: scripts/release/validate-version.sh "${{ inputs.version }}"
 
       - name: Set release version
         run: |
           ./mvnw versions:set -DnewVersion=${{ inputs.version }} -DprocessAllModules=true -DgenerateBackupPoms=false
-          sed -i "s/^version:.*/version: ${{ inputs.version }}/" charts/stubborn-broker/Chart.yaml
-          sed -i "s/^appVersion:.*/appVersion: \"${{ inputs.version }}\"/" charts/stubborn-broker/Chart.yaml
-          sed -i "s/^version = .*/version = '${{ inputs.version }}'/" broker-gradle-plugin/build.gradle
-          sed -i "s/^broker-publisher = .*/broker-publisher = \"${{ inputs.version }}\"/" broker-gradle-plugin/gradle/libs.versions.toml
+          scripts/release/set-project-versions.sh "${{ inputs.version }}"
 
       - name: Build and test
         run: ./mvnw install -pl !e2e-tests
@@ -77,12 +69,7 @@ jobs:
       - name: Set next SNAPSHOT version
         run: |
           ./mvnw versions:set -DnewVersion=${{ inputs.next-snapshot }} -DprocessAllModules=true -DgenerateBackupPoms=false
-          NEXT_DEV="${{ inputs.next-snapshot }}"
-          NEXT_DEV="${NEXT_DEV//-SNAPSHOT/}"
-          sed -i "s/^version:.*/version: ${NEXT_DEV}/" charts/stubborn-broker/Chart.yaml
-          sed -i "s/^appVersion:.*/appVersion: \"${{ inputs.next-snapshot }}\"/" charts/stubborn-broker/Chart.yaml
-          sed -i "s/^version = .*/version = '${{ inputs.next-snapshot }}'/" broker-gradle-plugin/build.gradle
-          sed -i "s/^broker-publisher = .*/broker-publisher = \"${{ inputs.next-snapshot }}\"/" broker-gradle-plugin/gradle/libs.versions.toml
+          scripts/release/set-project-versions.sh "${{ inputs.next-snapshot }}"
           git add -A
           git commit -m "Back to ${{ inputs.next-snapshot }}"
           git push
@@ -116,17 +103,7 @@ jobs:
         run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
 
       - name: Tag and push Docker images
-        run: |
-          VERSION="${{ inputs.version }}"
-          # The Spring Boot build-image produces mgrzejszczak/stubborn:<version> (or stubborn-broker:<version>)
-          # Determine the image name from the build output
-          IMAGE="mgrzejszczak/stubborn:${VERSION}"
-
-          # Tag as latest as well
-          docker tag "${IMAGE}" "mgrzejszczak/stubborn:latest"
-
-          docker push "mgrzejszczak/stubborn:${VERSION}"
-          docker push "mgrzejszczak/stubborn:latest"
+        run: scripts/release/push-docker-images.sh "${{ inputs.version }}"
 
   # ──────────────────────────────────────────────
   # Step 3: Publish NPM packages
@@ -156,22 +133,7 @@ jobs:
 
       - name: Update inter-package dependencies
         working-directory: js
-        run: |
-          VERSION=${{ inputs.version }}
-          for pkg in packages/*/package.json; do
-            node -e "
-              const fs = require('fs');
-              const p = JSON.parse(fs.readFileSync('$pkg', 'utf8'));
-              for (const depType of ['dependencies', 'devDependencies', 'peerDependencies']) {
-                if (p[depType]) {
-                  for (const [name, ver] of Object.entries(p[depType])) {
-                    if (name.startsWith('@stubborn-sh/')) p[depType][name] = '$VERSION';
-                  }
-                }
-              }
-              fs.writeFileSync('$pkg', JSON.stringify(p, null, 2) + '\n');
-            "
-          done
+        run: ../scripts/publish/update-package-deps.sh "${{ inputs.version }}"
 
       - name: Install dependencies
         working-directory: js
