@@ -149,13 +149,9 @@ jobs:
 
       - name: Helm template — verify key resources present
         run: |
-          OUTPUT=$(helm template broker charts/stubborn-broker \
-            -f charts/stubborn-broker/ci/test-values.yaml)
-          echo "$OUTPUT" | grep -q "kind: Deployment" || { echo "Missing Deployment"; exit 1; }
-          echo "$OUTPUT" | grep -q "kind: Service" || { echo "Missing Service"; exit 1; }
-          echo "$OUTPUT" | grep -q "kind: ConfigMap" || { echo "Missing ConfigMap"; exit 1; }
-          echo "$OUTPUT" | grep -q "kind: ServiceAccount" || { echo "Missing ServiceAccount"; exit 1; }
-          echo "All key resources present"
+          helm template broker charts/stubborn-broker \
+            -f charts/stubborn-broker/ci/test-values.yaml \
+            | scripts/ci/verify-helm-resources.sh
 
       - name: Install helm-unittest plugin
         run: helm plugin install https://github.com/helm-unittest/helm-unittest.git --version v0.7.2
@@ -181,8 +177,15 @@ jobs:
       - name: Install BATS
         run: sudo apt-get update && sudo apt-get install -y bats
 
+      - name: Syntax-check all shell scripts
+        run: |
+          for s in $(find scripts -name '*.sh'); do
+            echo "bash -n $s"
+            bash -n "$s"
+          done
+
       - name: Run BATS tests
-        run: bats tests/*.bats
+        run: bats tests test/bats
 
   sbom:
     name: Generate SBOM
