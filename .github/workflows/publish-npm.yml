@@ -19,61 +19,15 @@ jobs:
           node-version: 22
           registry-url: https://registry.npmjs.org
       - name: Check packages exist on npm (first publish must be manual)
-        run: |
-          MISSING=0
-          for pkg in broker-client publisher stub-server verifier cli jest stubs-packager; do
-            if ! npm view "@stubborn-sh/${pkg}" name >/dev/null 2>&1; then
-              echo "::error::@stubborn-sh/${pkg} does not exist on npm yet"
-              MISSING=$((MISSING + 1))
-            fi
-          done
-          if [ "$MISSING" -gt 0 ]; then
-            echo ""
-            echo "::error::${MISSING} package(s) not found on npm. First publish of new scoped packages requires interactive 2FA."
-            echo "::error::Run manually: cd js && npm login && npm publish --workspaces --access public"
-            exit 1
-          fi
-          echo "All packages exist on npm — automation token can publish new versions"
+        run: scripts/publish/check-packages-exist.sh
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Set versions
         working-directory: js
-        run: |
-          VERSION=${{ inputs.version }}
-          # Set version directly in package.json files to avoid npm registry lookups
-          # (npm version fails with E404 if the package was never published before)
-          node -e "
-            const fs = require('fs');
-            const root = JSON.parse(fs.readFileSync('package.json', 'utf8'));
-            root.version = '${VERSION}';
-            fs.writeFileSync('package.json', JSON.stringify(root, null, 2) + '\n');
-          "
-          for pkg in packages/*/package.json; do
-            node -e "
-              const fs = require('fs');
-              const p = JSON.parse(fs.readFileSync('$pkg', 'utf8'));
-              p.version = '${VERSION}';
-              fs.writeFileSync('$pkg', JSON.stringify(p, null, 2) + '\n');
-            "
-          done
+        run: ../scripts/publish/set-npm-versions.sh "${{ inputs.version }}"
       - name: Update inter-package dependencies
         working-directory: js
-        run: |
-          VERSION=${{ inputs.version }}
-          for pkg in packages/*/package.json; do
-            node -e "
-              const fs = require('fs');
-              const p = JSON.parse(fs.readFileSync('$pkg', 'utf8'));
-              for (const depType of ['dependencies', 'devDependencies', 'peerDependencies']) {
-                if (p[depType]) {
-                  for (const [name, ver] of Object.entries(p[depType])) {
-                    if (name.startsWith('@stubborn-sh/')) p[depType][name] = '$VERSION';
-                  }
-                }
-              }
-              fs.writeFileSync('$pkg', JSON.stringify(p, null, 2) + '\n');
-            "
-          done
+        run: ../scripts/publish/update-package-deps.sh "${{ inputs.version }}"
       - name: Install dependencies
         working-directory: js
         run: npm ci

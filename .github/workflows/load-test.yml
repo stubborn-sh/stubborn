@@ -49,25 +49,7 @@ jobs:
         run: ./mvnw -pl broker -am package -DskipTests -q
 
       - name: Start broker
-        run: |
-          java -jar broker/target/stubborn-broker-*-exec.jar \
-            --spring.datasource.url=jdbc:postgresql://localhost:5432/broker \
-            --spring.datasource.username=broker \
-            --spring.datasource.password=broker \
-            --spring.docker.compose.enabled=false \
-            --server.port=8642 &
-          echo "Waiting for broker to start..."
-          for i in $(seq 1 60); do
-            if curl -sf http://localhost:8642/actuator/health > /dev/null 2>&1; then
-              echo "Broker is ready"
-              break
-            fi
-            if [ "$i" -eq 60 ]; then
-              echo "Broker failed to start within 60 seconds"
-              exit 1
-            fi
-            sleep 1
-          done
+        run: scripts/load/start-broker.sh
 
       - name: Install k6
         run: |
