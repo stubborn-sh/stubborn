@@ -37,10 +37,7 @@ jobs:
 
       - name: Syntax-check all shell scripts
         run: |
-          for s in $(find scripts -name '*.sh'); do
-            echo "bash -n $s"
-            bash -n "$s"
-          done
+          find scripts -name '*.sh' -print0 | xargs -0 -r -n1 bash -n
 
       - name: Run BATS suite
         run: bats tests test/bats
