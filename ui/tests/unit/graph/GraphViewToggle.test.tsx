@@ -26,11 +26,7 @@ vi.mock("@xyflow/react", () => ({
   }) => (
     <div data-testid="mock-react-flow">
       {nodes?.map((n) => (
-        <button
-          key={n.id}
-          data-testid={`flow-node-${n.id}`}
-          onClick={(e) => onNodeClick?.(e as unknown as React.MouseEvent, n as { id: string })}
-        >
+        <button key={n.id} data-testid={`flow-node-${n.id}`} onClick={(e) => onNodeClick?.(e, n)}>
           {String(n.data.label)}
         </button>
       ))}
