@@ -22,9 +22,9 @@
   },
   "homepage": "https://github.com/stubborn-sh/stubborn#readme",
   "dependencies": {
-    "playwright": "^1.58.2"
+    "playwright": "^1.59.1"
   },
   "devDependencies": {
-    "@playwright/test": "^1.58.2"
+    "@playwright/test": "^1.59.1"
   }
 }
