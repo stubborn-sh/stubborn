@@ -7,3 +7,8 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
         spring.json.trusted.packages: "org.example.verification"
+        # Contract/stub messages are transport-neutral plain JSON — they carry no
+        # Spring-Kafka __TypeId__ header — so deserialize by a fixed default type and
+        # ignore any type headers rather than requiring them.
+        spring.json.value.default.type: "org.example.verification.VerificationResult"
+        spring.json.use.type.headers: false
