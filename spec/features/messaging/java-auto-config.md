@@ -1,3 +1,9 @@
+> **Note (0.1.0 consolidation):** the Kafka `MessageVerifier` building block now lives in the
+> **stubborn-contract** repository as `sh.stubborn:stubborn-contract-messaging-kafka` (Spring-free),
+> with its Spring auto-configuration in `stubborn-contract-verifier-spring-boot`. The duplicate
+> `stubborn-messaging-kafka` module was removed from this repo; the samples consume the library
+> module. This document is retained for reference and may need a fuller rewrite.
+
 ---
 feature: java-messaging-auto-config
 status: implemented
@@ -16,7 +22,7 @@ tests:
 
 Provide drop-in Spring Boot auto-configuration modules that eliminate
 boilerplate when writing messaging contract tests with Stubborn.
-Adding a single dependency (`stubborn-messaging-kafka` or
+Adding a single dependency (`stubborn-contract-messaging-kafka` or
 `stubborn-messaging-rabbit`) should auto-configure:
 
 1. A `MessageVerifierSender` and `MessageVerifierReceiver` bean
@@ -32,21 +38,21 @@ per project. Stubborn should eliminate this.
 
 ## Acceptance Criteria
 
-### AC-1: `stubborn-messaging-kafka` auto-configuration
+### AC-1: `stubborn-contract-messaging-kafka` auto-configuration
 
 - `StubbornKafkaAutoConfiguration` activates when `KafkaTemplate` is on classpath
 - Provides `MessageVerifierSender<Message<?>>` that sends via `KafkaTemplate`
 - Provides `MessageVerifierReceiver<Message<?>>` that consumes via `KafkaConsumer`
 - Beans are conditional: not created if user defines their own
 
-### AC-2: `stubborn-messaging-kafka` Testcontainers support
+### AC-2: `stubborn-contract-messaging-kafka` Testcontainers support
 
 - `StubbornKafkaContainerConfiguration` provides a `KafkaContainer` bean
 - Container uses `@ServiceConnection` for auto-wired `bootstrap-servers`
 - Container image configurable via `stubborn.messaging.kafka.image`
 - Configuration is conditional on Testcontainers being on classpath
 
-### AC-3: `stubborn-messaging-kafka` properties
+### AC-3: `stubborn-contract-messaging-kafka` properties
 
 - `stubborn.messaging.kafka.receive-timeout` (default: 10s)
 - `stubborn.messaging.kafka.image` (default: `apache/kafka`)
@@ -76,7 +82,7 @@ per project. Stubborn should eliminate this.
 
 ```java
 // build.gradle.kts
-testImplementation("sh.stubborn:stubborn-messaging-kafka")
+testImplementation("sh.stubborn:stubborn-contract-messaging-kafka")
 
 // Test class — no manual setup needed
 @SpringBootTest

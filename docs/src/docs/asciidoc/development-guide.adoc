@@ -65,7 +65,7 @@ All 6 tools run during the build and fail on any violation:
 Multi-module project with 15 Maven modules including `broker`, `broker-api-client`,
 `ui`, `js`, `broker-stub-downloader`, `broker-contract-publisher`,
 `broker-maven-plugin`, `broker-gradle-plugin`, `stub-runner`,
-`stubborn-messaging-kafka`, `stubborn-messaging-rabbit`, and `e2e-tests`.
+`stubborn-contract-messaging-kafka`, `stubborn-messaging-rabbit`, and `e2e-tests`.
 
 The broker module uses vertical slice architecture -- each feature is a self-contained package:
 

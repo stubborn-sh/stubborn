@@ -1,3 +1,9 @@
+> **Note (0.1.0 consolidation):** the Kafka `MessageVerifier` building block now lives in the
+> **stubborn-contract** repository as `sh.stubborn:stubborn-contract-messaging-kafka` (Spring-free),
+> with its Spring auto-configuration in `stubborn-contract-verifier-spring-boot`. The duplicate
+> `stubborn-messaging-kafka` module was removed from this repo; the samples consume the library
+> module. This document is retained for reference and may need a fuller rewrite.
+
 ---
 feature: messaging-samples
 status: in-progress
@@ -13,7 +19,7 @@ tests:
 ## Overview
 
 Sample applications demonstrating messaging contract testing with Kafka and RabbitMQ
-using the `stubborn-messaging-kafka` and `stubborn-messaging-rabbit` auto-configuration
+using the `stubborn-contract-messaging-kafka` and `stubborn-messaging-rabbit` auto-configuration
 modules.
 
 ## Kafka Samples
@@ -31,7 +37,7 @@ Kafka topic via `KafkaTemplate`.
 **Testing:**
 - SCC generates a test from the messaging contract
 - Base class (`VerificationContractBase`) triggers message sending
-- `stubborn-messaging-kafka` auto-configures `MessageVerifierSender` and `MessageVerifierReceiver`
+- `stubborn-contract-messaging-kafka` auto-configures `MessageVerifierSender` and `MessageVerifierReceiver`
 - Testcontainers Kafka via `@ServiceConnection` in test `@Configuration`
 
 ### kafka-consumer (Verification Processor)
@@ -41,7 +47,7 @@ from the `verifications` topic.
 
 **Testing:**
 - Uses `@AutoConfigureStubRunner` with `sccbroker://` protocol
-- `stubborn-messaging-kafka` auto-configures messaging verifier beans
+- `stubborn-contract-messaging-kafka` auto-configures messaging verifier beans
 - StubRunner sends the contract-defined message to Kafka
 - Test verifies the listener processed the message correctly
 - Requires broker + Docker Compose (integration test, runs in CI)
@@ -71,7 +77,7 @@ from the `notifications` queue.
 ```xml
 <dependency>
     <groupId>sh.stubborn</groupId>
-    <artifactId>stubborn-messaging-kafka</artifactId>
+    <artifactId>stubborn-contract-messaging-kafka</artifactId>
     <scope>test</scope>
 </dependency>
 ```
@@ -81,7 +87,7 @@ from the `notifications` queue.
 ```xml
 <dependency>
     <groupId>sh.stubborn</groupId>
-    <artifactId>stubborn-messaging-kafka</artifactId>
+    <artifactId>stubborn-contract-messaging-kafka</artifactId>
     <scope>test</scope>
 </dependency>
 ```
