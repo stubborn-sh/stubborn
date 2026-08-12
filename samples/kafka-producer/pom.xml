@@ -44,8 +44,7 @@
 		</dependency>
 		<dependency>
 			<groupId>sh.stubborn</groupId>
-			<artifactId>stubborn-messaging-kafka</artifactId>
-			<version>${project.version}</version>
+			<artifactId>stubborn-contract-messaging-kafka</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

@@ -14,7 +14,7 @@ Key modules:
 * **broker-contract-publisher** — Java library for scanning and publishing contracts
 * **broker-maven-plugin** / **broker-gradle-plugin** — build tool plugins wrapping the publisher
 * **stub-runner** — Stub Runner Boot for consumer testing
-* **stubborn-messaging-kafka** — Kafka messaging support
+* **stubborn-contract-messaging-kafka** — Kafka messaging support
 * **stubborn-messaging-rabbit** — RabbitMQ messaging support
 * **e2e-tests** — Playwright browser-based E2E tests
 * **js/** — Node.js packages (CLI, stub-server, stubs-packager, Jest integration)

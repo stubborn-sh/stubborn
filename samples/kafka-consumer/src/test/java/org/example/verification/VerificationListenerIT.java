@@ -17,7 +17,6 @@ package org.example.verification;
 
 import java.time.Duration;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.kafka.KafkaContainer;
 
@@ -39,13 +38,13 @@ import static org.awaitility.Awaitility.await;
  * fetch messaging contracts from the broker and send them to Kafka.
  *
  * <p>
- * The {@code stubborn-messaging-kafka} auto-configuration provides the
- * {@code MessageVerifierSender} and {@code MessageVerifierReceiver} beans, so StubRunner
- * can send the contract-defined message to the Kafka topic. The
- * {@code VerificationListener} processes it, and we assert it was received.
+ * The Spring-free {@code stubborn-contract-messaging-kafka} building block supplies the
+ * {@code StubbornKafkaMessageVerifier}, which {@code @AutoConfigureStubRunner} wires (via
+ * {@code @AutoConfigureMessageVerifier}) as the {@code MessageVerifierSender} /
+ * {@code MessageVerifierReceiver} beans, so StubRunner can send the contract-defined
+ * message to the Kafka topic. The {@code VerificationListener} processes it, and we assert
+ * it was received.
  */
-@Disabled("Messaging consumer path blocked by stubborn-messaging-kafka send bug "
-		+ "(GenericMessage payload + StringSerializer) — see stubborn-sh/stubborn-contract#69")
 @SpringBootTest(classes = VerificationProcessorApplication.class)
 @AutoConfigureStubRunner(ids = "sh.stubborn:verification-service:1.0.0:stubs",
 		repositoryRoot = "stubborn://http://localhost:18080", stubsMode = StubsMode.REMOTE,
