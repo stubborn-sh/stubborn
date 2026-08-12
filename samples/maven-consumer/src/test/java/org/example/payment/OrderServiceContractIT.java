@@ -34,8 +34,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @AutoConfigureStubRunner(ids = "sh.stubborn:order-service:1.0.0:stubs",
 		repositoryRoot = "stubborn://http://localhost:18080", stubsMode = StubsMode.REMOTE,
-		properties = { "spring.cloud.contract.stubrunner.username=reader",
-				"spring.cloud.contract.stubrunner.password=reader" })
+		properties = { "stubborn.contract.stubrunner.username=reader",
+				"stubborn.contract.stubrunner.password=reader" })
 class OrderServiceContractIT {
 
 	@StubRunnerPort("order-service")
