@@ -53,8 +53,8 @@ import static org.awaitility.Awaitility.await;
 @SpringBootTest(classes = VerificationProcessorApplication.class)
 @AutoConfigureStubRunner(ids = "sh.stubborn:js-verification-service:1.0.0:stubs",
 		repositoryRoot = "stubborn://http://localhost:18080", stubsMode = StubsMode.REMOTE,
-		properties = { "spring.cloud.contract.stubrunner.username=reader",
-				"spring.cloud.contract.stubrunner.password=reader" })
+		properties = { "stubborn.contract.stubrunner.username=reader",
+				"stubborn.contract.stubrunner.password=reader" })
 @Import(VerificationListenerJsStubsIT.KafkaContainerConfig.class)
 class VerificationListenerJsStubsIT {
 

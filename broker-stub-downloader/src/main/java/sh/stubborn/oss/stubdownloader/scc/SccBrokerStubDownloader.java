@@ -184,8 +184,8 @@ class SccBrokerStubDownloader implements StubDownloader {
 	/**
 	 * Resolves a credential (username or password) from StubRunnerOptions. Checks
 	 * options.getUsername()/getPassword() first, then falls back to the properties map
-	 * with keys like {@code spring.cloud.contract.stubrunner.username} or
-	 * {@code stubrunner.username}.
+	 * with keys like {@code stubborn.contract.stubrunner.username} (or the legacy
+	 * {@code spring.cloud.contract.stubrunner.username}) or {@code stubrunner.username}.
 	 */
 	private static @Nullable String resolveCredential(StubRunnerOptions options, String key) {
 		String value = "username".equals(key) ? options.getUsername() : options.getPassword();
@@ -196,6 +196,11 @@ class SccBrokerStubDownloader implements StubDownloader {
 		if (props == null) {
 			return null;
 		}
+		value = props.get("stubborn.contract.stubrunner." + key);
+		if (value != null) {
+			return value;
+		}
+		// Legacy Spring Cloud Contract prefix, still accepted for backward compatibility.
 		value = props.get("spring.cloud.contract.stubrunner." + key);
 		if (value != null) {
 			return value;
