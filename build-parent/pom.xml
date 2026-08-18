@@ -442,6 +442,9 @@
 			</releases>
 			<snapshots>
 				<enabled>true</enabled>
+				<!-- Stubborn Contract is pre-release; always resolve the latest snapshot so
+				     samples/tests build against the current library, not a day-old cache. -->
+				<updatePolicy>always</updatePolicy>
 			</snapshots>
 		</repository>
 	</repositories>
@@ -464,6 +467,9 @@
 			</releases>
 			<snapshots>
 				<enabled>true</enabled>
+				<!-- Stubborn Contract is pre-release; always resolve the latest snapshot so
+				     samples/tests build against the current library, not a day-old cache. -->
+				<updatePolicy>always</updatePolicy>
 			</snapshots>
 		</pluginRepository>
 	</pluginRepositories>
