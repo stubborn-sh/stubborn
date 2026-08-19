@@ -31,7 +31,7 @@ public class ArtemisConfig {
 
 	@Bean
 	ArtemisConfigurationCustomizer securityDisabledCustomizer() {
-		return (configuration) -> configuration.setSecurityEnabled(false);
+		return (configuration) -> configuration.setSecurityEnabled(false).setJMXManagementEnabled(false);
 	}
 
 }
