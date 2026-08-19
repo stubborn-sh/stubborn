@@ -32,11 +32,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-artemis</artifactId>
 		</dependency>
-		<!-- Embedded, in-VM ActiveMQ Artemis broker (spring.artemis.mode=embedded) — no Docker. -->
-		<dependency>
-			<groupId>org.apache.activemq</groupId>
-			<artifactId>artemis-jakarta-server</artifactId>
-		</dependency>
 
 		<!-- Test -->
 		<!-- Provides jakarta.inject.Inject used by the generated messaging test (@Inject ContractVerifierMessaging) -->

@@ -24,13 +24,22 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-artemis</artifactId>
 		</dependency>
-		<!-- Embedded, in-VM ActiveMQ Artemis broker (spring.artemis.mode=embedded) — no Docker. -->
-		<dependency>
-			<groupId>org.apache.activemq</groupId>
-			<artifactId>artemis-jakarta-server</artifactId>
-		</dependency>
 
 		<!-- Test -->
+		<!-- A real ActiveMQ Artemis broker via Testcontainers + @ServiceConnection, like the
+		     kafka/rabbit consumer samples. (Embedded Artemis is not used: its startup builds a
+		     JMX server-control MBean whose introspection calls Subject.getSubject, unsupported
+		     on JDK 18+.) -->
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>testcontainers-activemq</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-testcontainers</artifactId>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>

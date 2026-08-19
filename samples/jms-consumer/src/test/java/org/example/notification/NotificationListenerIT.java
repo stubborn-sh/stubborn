@@ -18,9 +18,15 @@ package org.example.notification;
 import java.time.Duration;
 
 import org.junit.jupiter.api.Test;
+import org.testcontainers.activemq.ArtemisContainer;
+import org.testcontainers.utility.DockerImageName;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import sh.stubborn.contract.stubrunner.StubFinder;
 import sh.stubborn.contract.stubrunner.StubsMode;
 import sh.stubborn.contract.stubrunner.spring.AutoConfigureStubRunner;
@@ -36,17 +42,28 @@ import static org.awaitility.Awaitility.await;
  * The Spring-free {@code stubborn-contract-messaging-jms} building block supplies the
  * {@code StubbornJmsMessageVerifierSender}, which {@code @AutoConfigureStubRunner} wires
  * (via {@code @AutoConfigureMessageVerifier}) so StubRunner can send the contract-defined
- * message to the {@code notifications} queue on the embedded, in-VM Artemis broker
- * (configured in {@code application.yml}, no Docker). The {@code NotificationListener}
- * binds it to the typed {@code NotificationEvent} record with <strong>no</strong>
- * hand-configured {@code MessageConverter} — the out-of-the-box JSON conversion does that
- * — and we assert it was received.
+ * message to the {@code notifications} queue on a Testcontainers-managed Artemis broker.
+ * The {@code NotificationListener} binds it to the typed {@code NotificationEvent} record
+ * with <strong>no</strong> hand-configured {@code MessageConverter} — the out-of-the-box
+ * JSON conversion does that — and we assert it was received.
  */
 @SpringBootTest(classes = NotificationProcessorApplication.class)
 @AutoConfigureStubRunner(ids = "sh.stubborn:notification-jms-service:1.0.0:stubs",
 		repositoryRoot = "stubborn://http://localhost:18080", stubsMode = StubsMode.REMOTE,
 		properties = { "stubborn.contract.stubrunner.username=reader", "stubborn.contract.stubrunner.password=reader" })
+@Import(NotificationListenerIT.ArtemisContainerConfig.class)
 class NotificationListenerIT {
+
+	@Configuration(proxyBeanMethods = false)
+	static class ArtemisContainerConfig {
+
+		@Bean
+		@ServiceConnection
+		ArtemisContainer artemisContainer() {
+			return new ArtemisContainer(DockerImageName.parse("apache/activemq-artemis:2.43.0"));
+		}
+
+	}
 
 	@Autowired
 	NotificationListener notificationListener;

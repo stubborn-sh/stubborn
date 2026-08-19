@@ -31,9 +31,10 @@ import sh.stubborn.contract.verifier.messaging.boot.AutoConfigureMessageVerifier
  * {@code @AutoConfigureMessageVerifier} activates the
  * {@code stubborn-contract-messaging-jms} building block's auto-configuration, which
  * provides {@code MessageVerifierSender} / {@code MessageVerifierReceiver} beans over the
- * application's JMS {@code ConnectionFactory}. The broker is the embedded, in-VM ActiveMQ
- * Artemis instance configured in {@code application.yml}
- * ({@code spring.artemis.mode=embedded}) — no Docker.
+ * application's JMS {@code ConnectionFactory}. This producer's own contract-verification
+ * test is not executed in the sample build (see {@code skipTests} in the POM); its role
+ * is to publish the contract to the broker so the {@code jms-consumer} can fetch and
+ * trigger it.
  */
 @SpringBootTest
 @AutoConfigureMessageVerifier
