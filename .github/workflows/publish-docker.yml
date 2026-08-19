@@ -29,13 +29,13 @@ jobs:
           distribution: ${{ env.JAVA_DISTRIBUTION }}
           cache: maven
 
-      - name: Build & install broker JAR
-        # `install` (not `package`) so stubborn-ui and stubborn-broker land in the local
-        # ~/.m2 repository, which the separate build-image invocation below resolves from.
-        run: ./mvnw install -pl broker -am -DskipTests
-
-      - name: Build Docker image with Spring Boot
-        run: ./mvnw spring-boot:build-image -pl broker -DskipTests
+      - name: Build broker image
+        # The broker binds spring-boot's `build-image-no-fork` goal to the
+        # pre-integration-test phase, so an `install` build through that phase produces
+        # docker.io/<user>/stubborn:<version> directly. `-DskipStubs=true` skips the
+        # RestDocs `stubs-jar` assembly (also on pre-integration-test), which fails with
+        # "archive cannot be empty" when snippets are absent under `-DskipTests`.
+        run: ./mvnw install -pl broker -am -DskipTests -DskipStubs=true
 
       - name: Log in to Docker Hub
         run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin

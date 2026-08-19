@@ -12,6 +12,17 @@
 # Usage: check-packages-exist.sh
 set -euo pipefail
 
+# Preflight: confirm the token can authenticate at all. `npm view` below is an
+# unauthenticated public read and passes even with a missing/expired token, so without
+# this check a bad NPM_TOKEN only surfaces late as a confusing "404 Not Found - PUT ...
+# is not in this registry" at publish time.
+if ! npm whoami >/dev/null 2>&1; then
+	echo "::error::npm authentication failed — NPM_TOKEN is missing, expired, or invalid."
+	echo "::error::Set a valid npm automation token (publish rights on the @stubborn-sh scope) as the NPM_TOKEN secret."
+	exit 1
+fi
+echo "Authenticated to npm as $(npm whoami)"
+
 MISSING=0
 for pkg in broker-client publisher stub-server verifier cli jest stubs-packager; do
 	if ! npm view "@stubborn-sh/${pkg}" name >/dev/null 2>&1; then
