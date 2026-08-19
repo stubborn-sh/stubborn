@@ -45,9 +45,17 @@ java -jar stubborn-broker-${VERSION}-exec.jar
 Maven artifacts: [Maven Central](https://central.sonatype.com/namespace/sh.stubborn) &middot; NPM packages: [@stubborn-sh](https://www.npmjs.com/org/stubborn-sh)
 EOF
 
-gh release create "v${VERSION}" \
-	--title "v${VERSION}" \
-	--notes-file "$NOTES_FILE" \
-	--generate-notes \
-	"$JAR" \
-	"$CHECKSUMS"
+# Idempotent: this script is also dispatchable on its own (publish-github-release.yml),
+# so a re-run after a partial release must not fail on an existing release. Create it if
+# absent; otherwise refresh the attached assets in place.
+if gh release view "v${VERSION}" >/dev/null 2>&1; then
+	echo "Release v${VERSION} already exists — refreshing assets."
+	gh release upload "v${VERSION}" "$JAR" "$CHECKSUMS" --clobber
+else
+	gh release create "v${VERSION}" \
+		--title "v${VERSION}" \
+		--notes-file "$NOTES_FILE" \
+		--generate-notes \
+		"$JAR" \
+		"$CHECKSUMS"
+fi
