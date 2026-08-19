@@ -66,6 +66,14 @@ jobs:
         run: cd js && npm run test:ci
 
 
+      - name: Refresh Stubborn Contract snapshots
+        # Stubborn Contract is consumed as a moving 0.1.0-SNAPSHOT. The setup-java Maven
+        # cache is restored across runs, and updatePolicy=always does not reliably
+        # re-download a snapshot that a restored cache already holds — so drop the cached
+        # stubborn-contract-* snapshot artifacts here to force the samples to resolve the
+        # latest just-published snapshot rather than a stale copy.
+        run: rm -rf ~/.m2/repository/sh/stubborn/stubborn-contract-* || true
+
       - name: Build & test samples
         run: ./mvnw verify -Psamples -pl samples -also-make-dependents -Dcompose.skip=false -B
 
