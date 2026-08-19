@@ -93,16 +93,14 @@ jobs:
           distribution: ${{ env.JAVA_DISTRIBUTION }}
           cache: maven
 
-      - name: Build & install broker JAR
-        # `install` (not `package`) so stubborn-ui and stubborn-broker land in the local
-        # ~/.m2 repository. The separate `spring-boot:build-image` invocation below is a
-        # fresh reactor that resolves `sh.stubborn:stubborn-ui:jar:<version>` — at release
-        # time that artifact is only staged on the Central Portal (not yet resolvable from
-        # Central), so it must come from the local repository the `-am` build populated.
-        run: ./mvnw install -pl broker -am -DskipTests
-
-      - name: Build Docker image with Spring Boot
-        run: ./mvnw spring-boot:build-image -pl broker -DskipTests
+      - name: Build broker image
+        # The broker binds spring-boot's `build-image-no-fork` goal to the
+        # pre-integration-test phase, so an `install` build through that phase produces
+        # docker.io/<user>/stubborn:<version> directly (and installs stubborn-ui/broker to
+        # ~/.m2). `-DskipStubs=true` skips the RestDocs `stubs-jar` assembly, which is also
+        # bound to pre-integration-test and fails with "archive cannot be empty" when the
+        # snippets are absent under `-DskipTests`; that jar is irrelevant to the image.
+        run: ./mvnw install -pl broker -am -DskipTests -DskipStubs=true
 
       - name: Log in to Docker Hub
         run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
@@ -174,10 +172,17 @@ jobs:
         with:
           ref: "v${{ inputs.version }}"
 
-      - name: Create GitHub Release
+      - name: Set up JDK
+        uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5.7.0
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
+          cache: maven
+
+      - name: Build broker exec JAR
+        run: ./mvnw package -pl broker -am -DskipTests -DskipStubs=true
+
+      - name: Create GitHub Release with assets
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh release create "v${{ inputs.version }}" \
-            --title "v${{ inputs.version }}" \
-            --generate-notes
+        run: scripts/release/create-github-release.sh "${{ inputs.version }}"
