@@ -40,7 +40,7 @@ import static org.awaitility.Awaitility.await;
  *
  * <p>
  * The Spring-free {@code stubborn-contract-messaging-rabbit} building block supplies the
- * {@code StubbornRabbitMessageVerifier}, which {@code @AutoConfigureStubRunner} wires (via
+ * {@code StubbornRabbitMessageVerifierSender}, which {@code @AutoConfigureStubRunner} wires (via
  * {@code @AutoConfigureMessageVerifier}) as the {@code MessageVerifierSender} /
  * {@code MessageVerifierReceiver} beans, so StubRunner can send the contract-defined
  * message to the RabbitMQ queue. The {@code NotificationListener} binds it to the typed
