@@ -15,13 +15,6 @@
 	<name>Sample Rabbit Producer (Notification Service)</name>
 	<description>Messaging contract testing — producer publishes notification events to RabbitMQ</description>
 
-	<!-- Descoped: the generated messaging contract test exercises the stubborn messaging
-	     path (RabbitMQ send/verify) currently tracked in stubborn-sh/stubborn-contract#69.
-	     Skip this module's tests until #69 is fixed so the broker-migration PR can land. -->
-	<properties>
-		<skipTests>true</skipTests>
-	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
