@@ -52,7 +52,12 @@ public abstract class NotificationContractBase {
 		@Bean
 		@ServiceConnection
 		RabbitMQContainer rabbitMQContainer() {
-			return new RabbitMQContainer("rabbitmq:4-management-alpine");
+			// RabbitMQ 3.13, matching the rabbit-consumer IT and the building block's
+			// conformance suite. RabbitMQ 4.x bans transient (non-durable) non-exclusive
+			// queues by default (reply-code 541, transient_nonexcl_queues deprecated), and
+			// both this queue and the Spring-free building block's sender declare the
+			// "notifications" queue as transient.
+			return new RabbitMQContainer("rabbitmq:3.13-management-alpine");
 		}
 
 	}
