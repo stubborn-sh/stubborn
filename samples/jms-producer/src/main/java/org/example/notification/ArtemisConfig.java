@@ -1,0 +1,37 @@
+/*
+ * Copyright 2026-present the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.example.notification;
+
+import org.springframework.boot.artemis.autoconfigure.ArtemisConfigurationCustomizer;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+/**
+ * Disables broker security on the embedded, in-VM ActiveMQ Artemis instance. Artemis's
+ * security manager calls
+ * {@code javax.security.auth.Subject.getSubject(AccessControlContext)}, which throws
+ * {@code UnsupportedOperationException} on JDK 18+ when no Security Manager is installed;
+ * this sample has no auth requirements, so security is simply turned off.
+ */
+@Configuration(proxyBeanMethods = false)
+public class ArtemisConfig {
+
+	@Bean
+	ArtemisConfigurationCustomizer securityDisabledCustomizer() {
+		return (configuration) -> configuration.setSecurityEnabled(false);
+	}
+
+}
