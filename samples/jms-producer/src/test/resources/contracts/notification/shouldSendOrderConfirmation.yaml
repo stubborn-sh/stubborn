@@ -1,0 +1,12 @@
+description: When an order is confirmed, a notification is sent to the notifications queue
+label: order_confirmation
+input:
+  triggeredBy: triggerNotification()
+outputMessage:
+  sentTo: notifications
+  headers:
+    contentType: application/json
+  body:
+    type: "ORDER_CONFIRMED"
+    recipient: "user@example.com"
+    message: "Your order has been confirmed"
