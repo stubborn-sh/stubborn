@@ -33,6 +33,48 @@ jobs:
         run: ./mvnw package -pl broker -am -DskipTests -DskipStubs=true
 
       - name: Create GitHub Release with assets
+        # Inlined (rather than calling scripts/release/create-github-release.sh) so this
+        # standalone workflow works for any tag, including ones cut before that script
+        # existed. Idempotent: create the release if absent, else refresh the assets.
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: scripts/release/create-github-release.sh "${{ inputs.version }}"
+          VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          JAR="broker/target/stubborn-broker-${VERSION}-exec.jar"
+          if [ ! -f "$JAR" ]; then echo "::error::exec jar not found: $JAR"; exit 1; fi
+
+          CHECKSUMS="stubborn-${VERSION}-checksums.txt"
+          ( cd "$(dirname "$JAR")" && sha256sum "$(basename "$JAR")" ) > "$CHECKSUMS"
+
+          NOTES_FILE="$(mktemp)"
+          cat > "$NOTES_FILE" <<EOF
+          ## Run the broker
+
+          Docker:
+
+          \`\`\`bash
+          docker pull mgrzejszczak/stubborn:${VERSION}
+          docker run -p 8080:8080 mgrzejszczak/stubborn:${VERSION}
+          \`\`\`
+
+          Standalone JAR (attached below):
+
+          \`\`\`bash
+          java -jar stubborn-broker-${VERSION}-exec.jar
+          \`\`\`
+
+          Maven artifacts: [Maven Central](https://central.sonatype.com/namespace/sh.stubborn) &middot; NPM packages: [@stubborn-sh](https://www.npmjs.com/org/stubborn-sh)
+          EOF
+
+          if gh release view "v${VERSION}" >/dev/null 2>&1; then
+            echo "Release v${VERSION} exists — refreshing assets."
+            gh release upload "v${VERSION}" "$JAR" "$CHECKSUMS" --clobber
+          else
+            gh release create "v${VERSION}" \
+              --title "v${VERSION}" \
+              --notes-file "$NOTES_FILE" \
+              --generate-notes \
+              --verify-tag \
+              "$JAR" "$CHECKSUMS"
+          fi
