@@ -32,6 +32,14 @@ jobs:
       - name: Build broker exec JAR
         run: ./mvnw package -pl broker -am -DskipTests -DskipStubs=true
 
+      - name: Restore release script from main
+        # This workflow checks out the release tag to build the exec JAR, but older tags
+        # predate scripts/release/create-github-release.sh. Pull the current script from
+        # main so the standalone workflow can also backfill releases for earlier tags.
+        run: |
+          git fetch origin main --depth 1
+          git checkout origin/main -- scripts/release/create-github-release.sh
+
       - name: Create GitHub Release with assets
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
