@@ -15,14 +15,28 @@
  */
 package org.example.notification;
 
+import org.springframework.amqp.core.Queue;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class NotificationProcessorApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(NotificationProcessorApplication.class, args);
+	}
+
+	/**
+	 * Declares the queue the {@code @RabbitListener} consumes from. RabbitMQ does not
+	 * auto-create queues, so the consumer owns its declaration; the parameters
+	 * (non-durable, non-exclusive, non-auto-delete) match those the stub-runner Rabbit
+	 * sender uses when it publishes the contract message, so the idempotent redeclare
+	 * never conflicts.
+	 */
+	@Bean
+	Queue notificationsQueue() {
+		return new Queue("notifications", false, false, false);
 	}
 
 }
