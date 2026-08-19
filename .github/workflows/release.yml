@@ -93,8 +93,13 @@ jobs:
           distribution: ${{ env.JAVA_DISTRIBUTION }}
           cache: maven
 
-      - name: Build broker JAR
-        run: ./mvnw package -pl broker -am -DskipTests
+      - name: Build & install broker JAR
+        # `install` (not `package`) so stubborn-ui and stubborn-broker land in the local
+        # ~/.m2 repository. The separate `spring-boot:build-image` invocation below is a
+        # fresh reactor that resolves `sh.stubborn:stubborn-ui:jar:<version>` — at release
+        # time that artifact is only staged on the Central Portal (not yet resolvable from
+        # Central), so it must come from the local repository the `-am` build populated.
+        run: ./mvnw install -pl broker -am -DskipTests
 
       - name: Build Docker image with Spring Boot
         run: ./mvnw spring-boot:build-image -pl broker -DskipTests
@@ -126,10 +131,14 @@ jobs:
           registry-url: https://registry.npmjs.org
 
       - name: Set NPM versions
+        # Use set-npm-versions.sh (direct package.json writes), NOT `npm version
+        # --workspaces`. `npm version` reifies the workspace, and once each package's own
+        # version is bumped but its internal @stubborn-sh/* deps still pin the previous
+        # (unpublished) version, npm falls back to the registry and fails with ETARGET.
+        # Writing the version field directly avoids that lookup — this mirrors the proven
+        # publish-npm.yml flow.
         working-directory: js
-        run: |
-          npm version ${{ inputs.version }} --workspaces --no-git-tag-version
-          npm version ${{ inputs.version }} --no-git-tag-version
+        run: ../scripts/publish/set-npm-versions.sh "${{ inputs.version }}"
 
       - name: Update inter-package dependencies
         working-directory: js

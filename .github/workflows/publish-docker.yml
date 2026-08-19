@@ -1,0 +1,44 @@
+name: Publish Docker Image
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to build and push (e.g., 0.2.0) — must be an existing git tag v<version>'
+        required: true
+
+permissions:
+  contents: read
+
+env:
+  JAVA_VERSION: '25'
+  JAVA_DISTRIBUTION: 'liberica'
+
+jobs:
+  docker:
+    name: Docker image
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: "v${{ inputs.version }}"
+
+      - name: Set up JDK
+        uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5.7.0
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
+          cache: maven
+
+      - name: Build & install broker JAR
+        # `install` (not `package`) so stubborn-ui and stubborn-broker land in the local
+        # ~/.m2 repository, which the separate build-image invocation below resolves from.
+        run: ./mvnw install -pl broker -am -DskipTests
+
+      - name: Build Docker image with Spring Boot
+        run: ./mvnw spring-boot:build-image -pl broker -DskipTests
+
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+
+      - name: Tag and push Docker images
+        run: scripts/release/push-docker-images.sh "${{ inputs.version }}"
