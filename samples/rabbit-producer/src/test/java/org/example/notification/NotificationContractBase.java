@@ -36,8 +36,8 @@ import org.springframework.context.annotation.Import;
  * asserts the output message matches the contract.
  *
  * <p>
- * {@code @AutoConfigureMessageVerifier} activates the {@code stubborn-messaging-rabbit}
- * auto-configuration, which provides {@code MessageVerifierSender} and
+ * {@code @AutoConfigureMessageVerifier} activates the {@code stubborn-contract-messaging-rabbit}
+ * building block's auto-configuration, which provides {@code MessageVerifierSender} and
  * {@code MessageVerifierReceiver} beans. The inner {@code Configuration} provides a
  * Testcontainers-managed RabbitMQ instance via {@code @ServiceConnection}.
  */
