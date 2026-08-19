@@ -26,6 +26,8 @@
 		<module>kafka-consumer-js-stubs</module>
 		<module>rabbit-producer</module>
 		<module>rabbit-consumer</module>
+		<module>jms-producer</module>
+		<module>jms-consumer</module>
 	</modules>
 
 	<properties>

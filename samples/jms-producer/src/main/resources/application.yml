@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: notification-jms-service
+  artemis:
+    mode: embedded
+    embedded:
+      enabled: true
+      queues: notifications

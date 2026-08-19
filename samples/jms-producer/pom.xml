@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>sh.stubborn</groupId>
+		<artifactId>stubborn-samples</artifactId>
+		<version>0.2.0-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>sample-jms-producer</artifactId>
+
+	<name>Sample JMS Producer (Notification Service)</name>
+	<description>Messaging contract testing — producer publishes notification events to JMS (ActiveMQ Artemis)</description>
+
+	<!-- The producer's role in this sample is to publish its contracts to the broker (via
+	     the stubborn-maven-plugin below) so the jms-consumer can fetch and trigger them.
+	     Its own generated contract-verification test is not run here — mirrors the
+	     rabbit-producer sample. -->
+	<properties>
+		<skipTests>true</skipTests>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-artemis</artifactId>
+		</dependency>
+		<!-- Embedded, in-VM ActiveMQ Artemis broker (spring.artemis.mode=embedded) — no Docker. -->
+		<dependency>
+			<groupId>org.apache.activemq</groupId>
+			<artifactId>artemis-jakarta-server</artifactId>
+		</dependency>
+
+		<!-- Test -->
+		<!-- Provides jakarta.inject.Inject used by the generated messaging test (@Inject ContractVerifierMessaging) -->
+		<dependency>
+			<groupId>jakarta.inject</groupId>
+			<artifactId>jakarta.inject-api</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>sh.stubborn</groupId>
+			<artifactId>stubborn-contract-verifier-spring-boot</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>sh.stubborn</groupId>
+			<artifactId>stubborn-contract-messaging-jms</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<!-- Spring Cloud Contract Maven Plugin — generates tests from messaging contracts -->
+			<plugin>
+				<groupId>sh.stubborn</groupId>
+				<artifactId>stubborn-contract-maven-plugin</artifactId>
+				<version>${stubborn-contract.version}</version>
+				<extensions>true</extensions>
+				<configuration>
+					<baseClassForTests>org.example.notification.NotificationContractBase</baseClassForTests>
+					<testMode>EXPLICIT</testMode>
+				</configuration>
+			</plugin>
+
+			<!-- Broker Maven Plugin — publishes contracts to the broker -->
+			<plugin>
+				<groupId>sh.stubborn</groupId>
+				<artifactId>stubborn-maven-plugin</artifactId>
+				<version>${project.version}</version>
+				<executions>
+					<execution>
+						<id>publish-contracts</id>
+						<phase>pre-integration-test</phase>
+						<goals>
+							<goal>publish</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<brokerUrl>http://localhost:18080</brokerUrl>
+					<applicationName>notification-jms-service</applicationName>
+					<applicationVersion>1.0.0</applicationVersion>
+					<description>Sample Notification Service (JMS / ActiveMQ Artemis)</description>
+					<owner>sample-team</owner>
+					<skip>${compose.skip}</skip>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<includes>
+						<include>**/*Test.java</include>
+					</includes>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
