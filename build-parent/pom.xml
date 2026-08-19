@@ -46,7 +46,7 @@
 		<!-- Spring ecosystem -->
 		<spring-cloud.version>2025.1.1</spring-cloud.version>
 		<!-- Stubborn Contract (continuation of Spring Cloud Contract). -->
-		<stubborn-contract.version>0.1.0-SNAPSHOT</stubborn-contract.version>
+		<stubborn-contract.version>0.1.0</stubborn-contract.version>
 		<spring-ai.version>2.0.0-M3</spring-ai.version>
 
 		<!-- Static analysis -->
