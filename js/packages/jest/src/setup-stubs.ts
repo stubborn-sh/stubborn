@@ -64,11 +64,7 @@ export interface LocalJarConfig {
  * - Local JAR: extract a local stubs JAR file (`jarPath`)
  */
 export type SetupStubsConfig =
-  | BrokerStubsConfig
-  | LocalContractsConfig
-  | LocalMappingsConfig
-  | JarStubsConfig
-  | LocalJarConfig;
+  BrokerStubsConfig | LocalContractsConfig | LocalMappingsConfig | JarStubsConfig | LocalJarConfig;
 
 let stubServer: StubServer | null = null;
 let assignedPort = 0;
