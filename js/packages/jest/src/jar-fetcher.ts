@@ -199,23 +199,15 @@ async function findNamedDir(baseDir: string, targetName: string): Promise<string
 
 async function loadJsonMappings(dir: string, filesDir: string): Promise<ParsedContract[]> {
   const contracts: ParsedContract[] = [];
-  try {
-    await walkAndParse(dir, dir, contracts, ".json", (name, content) =>
-      parseWireMockMapping(name, content, { filesDir }),
-    );
-  } catch {
-    // Directory doesn't exist — return empty
-  }
+  await walkAndParse(dir, dir, contracts, ".json", (name, content) =>
+    parseWireMockMapping(name, content, { filesDir }),
+  );
   return contracts;
 }
 
 async function loadYamlContracts(dir: string): Promise<ParsedContract[]> {
   const contracts: ParsedContract[] = [];
-  try {
-    await walkAndParse(dir, dir, contracts, null, (name, content) => parseContract(name, content));
-  } catch {
-    // Directory doesn't exist — return empty
-  }
+  await walkAndParse(dir, dir, contracts, null, (name, content) => parseContract(name, content));
   return contracts;
 }
 
@@ -226,7 +218,13 @@ async function walkAndParse(
   extFilter: string | null,
   parser: (name: string, content: string) => ParsedContract,
 ): Promise<void> {
-  const entries = await readdir(currentDir, { withFileTypes: true });
+  let entries;
+  try {
+    entries = await readdir(currentDir, { withFileTypes: true });
+  } catch (cause) {
+    if ((cause as NodeJS.ErrnoException).code === "ENOENT") return;
+    throw cause;
+  }
 
   for (const entry of entries) {
     const fullPath = join(currentDir, entry.name);
@@ -246,6 +244,15 @@ async function walkAndParse(
 
     const name = fullPath.slice(rootDir.length + 1).replace(/\\/g, "/");
     const content = await readFile(fullPath, "utf-8");
-    contracts.push(parser(name, content));
+    // A stub the loader cannot read is not one stub short — it is a consumer suite
+    // going green against a stub server that never held the contract under test.
+    // Say which file, and stop.
+    try {
+      contracts.push(parser(name, content));
+    } catch (cause) {
+      throw new Error(`Cannot read stub ${name} in ${rootDir}: ${(cause as Error).message}`, {
+        cause,
+      });
+    }
   }
 }
