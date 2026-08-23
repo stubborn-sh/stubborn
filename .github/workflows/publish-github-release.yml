@@ -78,3 +78,10 @@ jobs:
               --verify-tag \
               "$JAR" "$CHECKSUMS"
           fi
+
+      - name: Announce the release on stubborn.sh
+        # Turns the release notes into a blog post. Best effort: the website
+        # also sweeps published releases on a schedule.
+        env:
+          GH_TOKEN: ${{ secrets.WEBSITE_DISPATCH_TOKEN }}
+        run: scripts/release/announce-website.sh stubborn "${{ inputs.version }}"
