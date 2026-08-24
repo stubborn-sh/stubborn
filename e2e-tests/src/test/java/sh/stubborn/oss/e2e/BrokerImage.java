@@ -23,7 +23,7 @@ package sh.stubborn.oss.e2e;
  * property (configured to {@code mgrzejszczak/stubborn:${project.version}} in
  * {@code e2e-tests/pom.xml}), so the E2E suite always exercises the image the current
  * build produced rather than a stale published tag. Hard-coding a version here is exactly
- * the drift that {@code scripts/ci/check-image-version-drift.sh} guards against.
+ * the drift that {@code scripts/ci/check-version-drift.sh} guards against.
  */
 final class BrokerImage {
 

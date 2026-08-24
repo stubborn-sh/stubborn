@@ -13,7 +13,7 @@
 #
 # The samples compose default is only the fallback for a bare `docker compose up`; CI
 # passes STUBBORN_VERSION=${project.version} explicitly. Keeping the default in lockstep
-# stops it drifting behind the reactor (and check-image-version-drift.sh enforces that).
+# stops it drifting behind the reactor (and check-version-drift.sh enforces that).
 #
 # The only per-field difference is the Helm chart `version:`, which must be a plain
 # SemVer with no build metadata, so -SNAPSHOT is stripped there. That derivation is
@@ -38,3 +38,9 @@ sed -i "s/^broker-publisher = .*/broker-publisher = \"${VERSION}\"/" broker-grad
 
 # Samples compose default: mgrzejszczak/stubborn[-proxy]:${STUBBORN_VERSION:-<v>} (both images).
 sed -i "s/\(STUBBORN_VERSION:-\)[^}]*/\1${VERSION}/g" samples/compose.yaml
+
+# Samples gradle-consumer pins the sh.stubborn.broker Gradle plugin by version.
+sed -i "s/^broker-plugin = .*/broker-plugin = \"${VERSION}\"/" samples/gradle-consumer/gradle/libs.versions.toml
+
+# Samples jar-consumer test: STUBS_JAR_VERSION fallback when the env var is not passed.
+sed -i "s/\(STUBS_JAR_VERSION\"\] ?? \"\)[^\"]*/\1${VERSION}/" samples/jar-consumer/tests/jar-stubs.test.ts
