@@ -106,6 +106,11 @@
 				<configuration>
 					<rerunFailingTestsCount>2</rerunFailingTestsCount>
 					<excludedGroups>${e2e.excludedGroups}</excludedGroups>
+					<!-- Pin the broker image under test to the reactor version so E2E always
+					     exercises the image this build produced, never a stale published tag. -->
+					<systemPropertyVariables>
+						<stubborn.broker.image>mgrzejszczak/stubborn:${project.version}</stubborn.broker.image>
+					</systemPropertyVariables>
 				</configuration>
 				<executions>
 					<execution>

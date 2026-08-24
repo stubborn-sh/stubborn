@@ -59,7 +59,7 @@ final class SharedContainers {
 			.waitingFor(Wait.forHttp("/__admin/mappings").forPort(8080).forStatusCode(200));
 		WIREMOCK.start();
 
-		BROKER = new GenericContainer<>("mgrzejszczak/stubborn:0.1.0-SNAPSHOT").withNetwork(NETWORK)
+		BROKER = new GenericContainer<>(BrokerImage.IMAGE).withNetwork(NETWORK)
 			.withExposedPorts(8642)
 			.withEnv("DATABASE_URL", "jdbc:postgresql://postgres:5432/broker")
 			.withEnv("DATABASE_USERNAME", "broker")

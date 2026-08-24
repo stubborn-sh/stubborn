@@ -103,7 +103,7 @@ class ChaosWebhookE2ETest {
 
 		this.wiremockInternalUrl = "http://wiremock:8080";
 
-		this.broker = new GenericContainer<>("mgrzejszczak/stubborn:0.1.0-SNAPSHOT").withNetwork(this.network)
+		this.broker = new GenericContainer<>(BrokerImage.IMAGE).withNetwork(this.network)
 			.withExposedPorts(8642)
 			.withEnv("DATABASE_URL", "jdbc:postgresql://postgres:5432/broker")
 			.withEnv("DATABASE_USERNAME", "broker")

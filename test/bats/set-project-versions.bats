@@ -1,7 +1,7 @@
 #!/usr/bin/env bats
 # Tests for scripts/release/set-project-versions.sh
 #
-# The script rewrites the four non-Maven version references. These tests build a throwaway
+# The script rewrites the non-Maven version references. These tests build a throwaway
 # repo layout with just those files and assert the exact rewritten content for both the
 # release bump and the next-snapshot bump.
 
@@ -9,7 +9,7 @@ setup() {
 	REPO_ROOT="$(cd "$BATS_TEST_DIRNAME/../.." && pwd)"
 	SCRIPT="$REPO_ROOT/scripts/release/set-project-versions.sh"
 	TMP="$(mktemp -d)"
-	mkdir -p "$TMP/charts/stubborn-broker" "$TMP/broker-gradle-plugin/gradle"
+	mkdir -p "$TMP/charts/stubborn-broker" "$TMP/broker-gradle-plugin/gradle" "$TMP/samples"
 	cat > "$TMP/charts/stubborn-broker/Chart.yaml" <<'CHART'
 apiVersion: v2
 name: stubborn-broker
@@ -18,6 +18,13 @@ appVersion: "0.1.0-SNAPSHOT"
 CHART
 	echo "version = '0.1.0-SNAPSHOT'" > "$TMP/broker-gradle-plugin/build.gradle"
 	echo 'broker-publisher = "0.1.0-SNAPSHOT"' > "$TMP/broker-gradle-plugin/gradle/libs.versions.toml"
+	cat > "$TMP/samples/compose.yaml" <<'COMPOSE'
+services:
+  broker:
+    image: mgrzejszczak/stubborn:${STUBBORN_VERSION:-0.1.0-SNAPSHOT}
+  proxy:
+    image: mgrzejszczak/stubborn-proxy:${STUBBORN_VERSION:-0.1.0-SNAPSHOT}
+COMPOSE
 }
 
 teardown() {
@@ -32,6 +39,8 @@ teardown() {
 	grep -q '^appVersion: "0.0.1"$' charts/stubborn-broker/Chart.yaml
 	grep -q "^version = '0.0.1'$" broker-gradle-plugin/build.gradle
 	grep -q '^broker-publisher = "0.0.1"$' broker-gradle-plugin/gradle/libs.versions.toml
+	grep -q 'image: mgrzejszczak/stubborn:${STUBBORN_VERSION:-0.0.1}$' samples/compose.yaml
+	grep -q 'image: mgrzejszczak/stubborn-proxy:${STUBBORN_VERSION:-0.0.1}$' samples/compose.yaml
 }
 
 @test "set-project-versions: snapshot bump strips -SNAPSHOT only from chart version" {
@@ -44,6 +53,9 @@ teardown() {
 	grep -q '^appVersion: "0.2.0-SNAPSHOT"$' charts/stubborn-broker/Chart.yaml
 	grep -q "^version = '0.2.0-SNAPSHOT'$" broker-gradle-plugin/build.gradle
 	grep -q '^broker-publisher = "0.2.0-SNAPSHOT"$' broker-gradle-plugin/gradle/libs.versions.toml
+	# Compose defaults keep the full -SNAPSHOT value for both images
+	grep -q 'image: mgrzejszczak/stubborn:${STUBBORN_VERSION:-0.2.0-SNAPSHOT}$' samples/compose.yaml
+	grep -q 'image: mgrzejszczak/stubborn-proxy:${STUBBORN_VERSION:-0.2.0-SNAPSHOT}$' samples/compose.yaml
 }
 
 @test "set-project-versions: pre-release (RC) is kept verbatim in chart version" {
