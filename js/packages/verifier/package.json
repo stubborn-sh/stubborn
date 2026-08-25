@@ -9,6 +9,11 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
+    },
+    "./supertest": {
+      "types": "./dist/supertest.d.ts",
+      "import": "./dist/supertest.js",
+      "require": "./dist/supertest.cjs"
     }
   },
   "files": [
@@ -27,5 +32,13 @@
   },
   "devDependencies": {
     "tsup": "^8.4.0"
+  },
+  "peerDependencies": {
+    "supertest": ">=6"
+  },
+  "peerDependenciesMeta": {
+    "supertest": {
+      "optional": true
+    }
   }
 }

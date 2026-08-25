@@ -62,8 +62,20 @@ jobs:
       - name: Build, test & install (core modules)
         run: ./mvnw clean install -B
 
+      - name: Install JS SDK dependencies
+        run: npm ci
+        working-directory: js
+
+      - name: Build JS SDK
+        # The workspace packages import each other by name, which resolves to
+        # dist/ — so the cli, jest and stubs-packager tests cannot even import
+        # their subjects until every package has been built.
+        run: npm run build
+        working-directory: js
+
       - name: Test JS SDK
-        run: cd js && npm run test:ci
+        run: npm run test:ci
+        working-directory: js
 
 
       - name: Refresh Stubborn Contract snapshots

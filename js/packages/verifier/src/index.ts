@@ -7,3 +7,5 @@ export { validateResponse } from "./response-validator.js";
 export type { ValidationResult, ValidationFailure } from "./response-validator.js";
 export { reportResults } from "./reporter.js";
 export { byRegex, byType, byEquality } from "./matchers.js";
+export { fetchFromHandler } from "./fetch-adapters.js";
+export type { RequestHandler } from "./fetch-adapters.js";

@@ -33,6 +33,44 @@ npm install --save-dev @stubborn-sh/stub-server
 npm install -g @stubborn-sh/cli
 ```
 
+## Verifying a Node producer in process
+
+`ContractVerifier` fires each contract through an injectable `fetch`, so a
+Node producer does not need a booted server on a real port — the app can be
+driven directly, with its dependencies mocked at the boundary, in a plain unit
+test. That mirrors the consumer side, where `setupStubs` already runs in
+process.
+
+For a handler that speaks WHATWG `Request`/`Response` — Hono, Elysia, Next
+route handlers, `Bun.serve`, `Deno.serve` — no extra dependency is needed:
+
+```js
+import { ContractVerifier, fetchFromHandler } from "@stubborn-sh/verifier";
+
+await new ContractVerifier({
+  contractsDir,
+  providerBaseUrl: "http://sut",
+  fetch: fetchFromHandler(app.fetch),
+}).verify();
+```
+
+For an Express-style app, drive it through supertest. It lives on its own entry
+point because `supertest` is an optional peer dependency — install it yourself:
+
+```js
+import { ContractVerifier } from "@stubborn-sh/verifier";
+import { fetchFromSupertest } from "@stubborn-sh/verifier/supertest";
+
+await new ContractVerifier({
+  contractsDir,
+  providerBaseUrl: "http://sut",
+  fetch: fetchFromSupertest(app),
+}).verify();
+```
+
+`providerBaseUrl` is only used to build the URL the contract is fired at; with
+either adapter nothing goes over the wire, so its host is arbitrary.
+
 ## Development
 
 ```bash
