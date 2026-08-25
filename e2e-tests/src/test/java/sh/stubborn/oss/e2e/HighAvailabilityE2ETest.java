@@ -289,7 +289,7 @@ class HighAvailabilityE2ETest {
 	}
 
 	private GenericContainer<?> createBrokerContainer(String alias) {
-		return new GenericContainer<>("mgrzejszczak/stubborn:0.1.0-SNAPSHOT").withNetwork(this.network)
+		return new GenericContainer<>(BrokerImage.IMAGE).withNetwork(this.network)
 			.withNetworkAliases(alias)
 			.withExposedPorts(8642)
 			.withEnv("DATABASE_URL", "jdbc:postgresql://postgres:5432/broker")

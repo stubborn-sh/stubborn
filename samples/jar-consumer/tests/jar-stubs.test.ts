@@ -17,7 +17,7 @@ import { homedir } from "node:os";
 // (sh.stubborn:sample-maven-producer). The version can be overridden via
 // STUBS_JAR_VERSION (the jar-consumer-test exec passes the reactor ${project.version});
 // STUBS_JAR_PATH overrides the whole path.
-const STUBS_JAR_VERSION = process.env["STUBS_JAR_VERSION"] ?? "0.2.0-SNAPSHOT";
+const STUBS_JAR_VERSION = process.env["STUBS_JAR_VERSION"] ?? "0.3.0-SNAPSHOT";
 const DEFAULT_JAR_PATH = join(
   homedir(),
   ".m2",

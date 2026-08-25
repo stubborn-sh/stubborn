@@ -121,7 +121,7 @@
 							<executable>bash</executable>
 							<arguments>
 								<argument>-c</argument>
-								<argument>docker compose -f ${project.basedir}/compose.yaml up -d &amp;&amp; echo "Waiting for broker at http://localhost:18080/actuator/health ..." &amp;&amp; for i in $(seq 1 60); do if curl -sf http://localhost:18080/actuator/health > /dev/null 2>&amp;1; then echo "Broker is ready"; exit 0; fi; sleep 2; done; echo "Broker did not start in time"; docker compose -f ${project.basedir}/compose.yaml logs broker; exit 1</argument>
+								<argument>STUBBORN_VERSION=${project.version} docker compose -f ${project.basedir}/compose.yaml up -d &amp;&amp; echo "Waiting for broker at http://localhost:18080/actuator/health ..." &amp;&amp; for i in $(seq 1 60); do if curl -sf http://localhost:18080/actuator/health > /dev/null 2>&amp;1; then echo "Broker is ready"; exit 0; fi; sleep 2; done; echo "Broker did not start in time"; STUBBORN_VERSION=${project.version} docker compose -f ${project.basedir}/compose.yaml logs broker; exit 1</argument>
 							</arguments>
 						</configuration>
 					</execution>
@@ -213,7 +213,7 @@
 							<executable>bash</executable>
 							<arguments>
 								<argument>-c</argument>
-								<argument>docker compose -f ${project.basedir}/compose.yaml down || true</argument>
+								<argument>STUBBORN_VERSION=${project.version} docker compose -f ${project.basedir}/compose.yaml down || true</argument>
 							</arguments>
 						</configuration>
 					</execution>

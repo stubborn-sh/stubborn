@@ -1,7 +1,7 @@
 [versions]
 spring-boot = "4.0.3"
 springCloudBom = "2025.1.1"
-broker-plugin = "0.2.0-SNAPSHOT"
+broker-plugin = "0.3.0-SNAPSHOT"
 
 [libraries]
 spring-boot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web" }
