@@ -8,8 +8,9 @@ name: Dependabot Auto-Merge
 #   * Major updates               -> left for a human. Never auto-merged.
 #
 # Runs on pull_request_target so the GITHUB_TOKEN can act on Dependabot PRs. It
-# never checks out or executes PR code — only reads Dependabot metadata and runs
-# gh CLI commands — so the elevated context is safe.
+# checks out and runs the repo's OWN scripts/ci/ (the base ref, not the PR head)
+# and never executes PR code, so the elevated context is safe. The labelling
+# logic lives in scripts/ci/dependabot-label.sh (BATS-tested via script-tests.yml).
 
 on:
   pull_request_target:
@@ -23,6 +24,8 @@ jobs:
     if: ${{ github.actor == 'dependabot[bot]' }}
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
+
       - name: Fetch Dependabot metadata
         id: meta
         uses: dependabot/fetch-metadata@25dd0e34f4fe68f24cc83900b1fe3fe149efef98 # v2
@@ -30,18 +33,11 @@ jobs:
       - name: Label the update (semver level + security)
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PR_URL: ${{ github.event.pull_request.html_url }}
-          UPDATE_TYPE: ${{ steps.meta.outputs.update-type }}
-          GHSA_ID: ${{ steps.meta.outputs.ghsa-id }}
-        run: |
-          set -euo pipefail
-          level="${UPDATE_TYPE#version-update:semver-}"   # patch | minor | major
-          gh label create "dependabot:${level}" --color ededed --force >/dev/null 2>&1 || true
-          gh pr edit "$PR_URL" --add-label "dependabot:${level}" || true
-          if [ -n "${GHSA_ID}" ]; then
-            gh label create "dependabot:security" --color b60205 --force >/dev/null 2>&1 || true
-            gh pr edit "$PR_URL" --add-label "dependabot:security" || true
-          fi
+        run: >-
+          bash scripts/ci/dependabot-label.sh
+          "${{ github.event.pull_request.html_url }}"
+          "${{ steps.meta.outputs.update-type }}"
+          "${{ steps.meta.outputs.ghsa-id }}"
 
       # Security fix at any semver level: merge as soon as required checks pass.
       - name: Enable auto-merge for security updates
