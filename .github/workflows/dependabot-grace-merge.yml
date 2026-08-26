@@ -1,0 +1,61 @@
+name: Dependabot Grace Merge
+
+# Backstop / grace-period companion to dependabot-auto-merge.yml.
+#
+#   * Non-security patch / minor Dependabot PRs merge once they are green AND
+#     older than the grace period (2 days) — the window a human has to object.
+#   * Security PRs merge as soon as they are green, with no age gate (a backstop
+#     for dependabot-auto-merge.yml, in case repo-level auto-merge is off).
+#   * Major updates are never merged here.
+#
+# Merges are green-gated: `gh pr checks` must pass before we merge, so a red or
+# still-running PR is left alone.
+
+on:
+  schedule:
+    - cron: '0 6 * * *'   # daily, 06:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  grace-merge:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      REPO: ${{ github.repository }}
+      GRACE_DAYS: '2'
+    steps:
+      - name: Merge eligible Dependabot PRs
+        run: |
+          set -euo pipefail
+          cutoff=$(date -u -d "-${GRACE_DAYS} days" +%s)
+          gh pr list --repo "$REPO" --author "app/dependabot" --state open \
+            --json number,createdAt,labels --limit 100 > prs.json
+
+          count=$(jq 'length' prs.json)
+          echo "open Dependabot PRs: ${count}"
+          for i in $(seq 0 $((count - 1))); do
+            number=$(jq -r ".[$i].number" prs.json)
+            created=$(jq -r ".[$i].createdAt" prs.json)
+            labels=$(jq -r ".[$i].labels[].name" prs.json | tr '\n' ' ')
+            created_ts=$(date -u -d "$created" +%s)
+
+            is_security=false;  case " $labels " in *" dependabot:security "*) is_security=true;; esac
+            is_patchminor=false
+            case " $labels " in *" dependabot:patch "*|*" dependabot:minor "*) is_patchminor=true;; esac
+
+            if [ "$is_security" != true ] && [ "$is_patchminor" != true ]; then
+              echo "PR #${number}: not security and not patch/minor -> skip"; continue
+            fi
+            if [ "$is_security" != true ] && [ "$created_ts" -gt "$cutoff" ]; then
+              echo "PR #${number}: within ${GRACE_DAYS}-day grace -> skip"; continue
+            fi
+            if ! gh pr checks "$number" --repo "$REPO" >/dev/null 2>&1; then
+              echo "PR #${number}: checks not all green -> skip"; continue
+            fi
+            echo "PR #${number}: eligible -> merging (squash)"
+            gh pr merge --squash --repo "$REPO" "$number" || echo "PR #${number}: merge failed (will retry next run)"
+          done
