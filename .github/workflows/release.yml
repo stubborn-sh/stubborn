@@ -9,6 +9,11 @@ on:
         description: 'Next SNAPSHOT version (e.g., 0.1.0-SNAPSHOT)'
         required: true
         default: '0.1.0-SNAPSHOT'
+      publish-npm:
+        description: 'Also publish the npm packages in this release. Turn off to publish them separately via the "Publish NPM Packages" workflow.'
+        type: boolean
+        required: false
+        default: true
 
 permissions:
   contents: write
@@ -114,6 +119,7 @@ jobs:
   npm:
     name: NPM publish
     needs: deploy
+    if: ${{ inputs.publish-npm }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -166,6 +172,10 @@ jobs:
   github-release:
     name: GitHub Release
     needs: [deploy, docker, npm]
+    # Runs whether or not npm was published: the npm job is skipped when
+    # `publish-npm` is false, so gate on deploy+docker succeeding and npm not
+    # having failed/been cancelled (skipped and success both qualify).
+    if: ${{ always() && needs.deploy.result == 'success' && needs.docker.result == 'success' && needs.npm.result != 'failure' && needs.npm.result != 'cancelled' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
