@@ -29,6 +29,27 @@ jobs:
   deploy:
     name: Deploy to Maven Central
     runs-on: ubuntu-latest
+
+    # The reactor build below runs the broker module's integration tests, which
+    # boot a Spring context backed by PostgreSQL. This mirrors the CI "Build &
+    # Test" job: the service provides a database at localhost:5432 and pre-pulls
+    # the postgres:16-alpine image (the same tag the broker's Testcontainers
+    # config uses), so the broker tests start instead of hanging on DB startup.
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: broker
+          POSTGRES_USER: broker
+          POSTGRES_PASSWORD: broker
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
