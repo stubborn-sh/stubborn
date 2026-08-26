@@ -62,17 +62,9 @@ jobs:
       - name: Build, test & install (core modules)
         run: ./mvnw clean install -B
 
-      - name: Install JS SDK dependencies
-        run: npm ci
-        working-directory: js
-
-      - name: Build JS SDK
-        # The workspace packages import each other by name, which resolves to
-        # dist/ — so the cli, jest and stubs-packager tests cannot even import
-        # their subjects until every package has been built.
-        run: npm run build
-        working-directory: js
-
+      # ./mvnw clean install above already runs npm install, npm run build and
+      # npm run test:ci in the js module (frontend-maven-plugin, js/pom.xml), so
+      # the workspace is installed and built by the time this step runs.
       - name: Test JS SDK
         run: npm run test:ci
         working-directory: js
