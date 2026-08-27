@@ -305,4 +305,43 @@ describe("loadLocalJar", () => {
     expect(contracts).toHaveLength(1);
     expect(contracts[0]!.request.method).toBe("GET");
   });
+
+  it("should_name_the_unreadable_mapping_instead_of_serving_nothing", async () => {
+    // given — a JAR whose mappings directory holds one good file and one that is
+    // not JSON at all. Serving the good one and dropping the other would be worse
+    // than failing: the consumer's suite goes green against a stub server that
+    // never had the contract it was testing.
+    const jarPath = join(tempDir, "stubs.jar");
+    const mappingsDir = join(tempDir, "jar-content", "mappings");
+    await mkdir(mappingsDir, { recursive: true });
+    await writeFile(
+      join(mappingsDir, "get-order.json"),
+      JSON.stringify({
+        request: { method: "GET", urlPath: "/api/orders/1" },
+        response: { status: 200, jsonBody: { id: "1" } },
+      }),
+    );
+    await writeFile(join(mappingsDir, "half-written.json"), '{ "request": { "method": ');
+
+    await packJar(jarPath, join(tempDir, "jar-content"));
+
+    // when / then
+    await expect(loadLocalJar(jarPath)).rejects.toThrow("half-written.json");
+  });
 });
+
+/**
+ * Packs a directory into a JAR. Throws rather than skipping when neither tool is
+ * present: a test that quietly passes because it never ran is the same defect
+ * this file is about.
+ */
+async function packJar(jarPath: string, contentDir: string): Promise<void> {
+  const { exec: execCb } = await import("node:child_process");
+  const { promisify } = await import("node:util");
+  const execAsync = promisify(execCb);
+  try {
+    await execAsync(`jar cf "${jarPath}" -C "${contentDir}" .`);
+  } catch {
+    await execAsync(`cd "${contentDir}" && zip -r "${jarPath}" .`);
+  }
+}
