@@ -1,5 +1,19 @@
 name: Dependabot Auto-Merge
-on: pull_request
+
+# Auto-merge policy for Dependabot PRs (see also dependabot-grace-merge.yml):
+#
+#   * Security (CVE) updates      -> auto-merge as soon as CI is green, any semver level.
+#   * Non-security patch / minor  -> labelled here; merged by dependabot-grace-merge.yml
+#                                    once green AND older than a 2-day grace period.
+#   * Major updates               -> left for a human. Never auto-merged.
+#
+# Runs on pull_request_target so the GITHUB_TOKEN can act on Dependabot PRs. It
+# checks out and runs the repo's OWN scripts/ci/ (the base ref, not the PR head)
+# and never executes PR code, so the elevated context is safe. The labelling
+# logic lives in scripts/ci/dependabot-label.sh (BATS-tested via script-tests.yml).
+
+on:
+  pull_request_target:
 
 permissions:
   contents: write
@@ -7,20 +21,28 @@ permissions:
 
 jobs:
   auto-merge:
+    if: ${{ github.actor == 'dependabot[bot]' }}
     runs-on: ubuntu-latest
-    if: github.actor == 'dependabot[bot]'
     steps:
-      - uses: dependabot/fetch-metadata@25dd0e34f4fe68f24cc83900b1fe3fe149efef98 # v3.1.0
-        id: metadata
-      - name: Approve patch updates
-        if: steps.metadata.outputs.update-type == 'version-update:semver-patch'
-        run: gh pr review --approve "$PR_URL"
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
+
+      - name: Fetch Dependabot metadata
+        id: meta
+        uses: dependabot/fetch-metadata@25dd0e34f4fe68f24cc83900b1fe3fe149efef98 # v2
+
+      - name: Label the update (semver level + security)
         env:
-          PR_URL: ${{ github.event.pull_request.html_url }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Merge patch updates
-        if: steps.metadata.outputs.update-type == 'version-update:semver-patch'
-        run: gh pr merge --squash "$PR_URL"
+        run: >-
+          bash scripts/ci/dependabot-label.sh
+          "${{ github.event.pull_request.html_url }}"
+          "${{ steps.meta.outputs.update-type }}"
+          "${{ steps.meta.outputs.ghsa-id }}"
+
+      # Security fix at any semver level: merge as soon as required checks pass.
+      - name: Enable auto-merge for security updates
+        if: ${{ steps.meta.outputs.ghsa-id != '' }}
         env:
-          PR_URL: ${{ github.event.pull_request.html_url }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+        run: gh pr merge --auto --squash "$PR_URL"
