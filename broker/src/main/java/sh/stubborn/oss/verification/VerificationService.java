@@ -16,6 +16,7 @@
 package sh.stubborn.oss.verification;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
@@ -133,6 +134,20 @@ public class VerificationService {
 
 	public List<VerificationInfo> findInfoByProviderId(UUID providerId) {
 		return this.verificationRepository.findByProviderId(providerId).stream().map(VerificationInfo::from).toList();
+	}
+
+	/**
+	 * Return the applications that are known consumers of the given provider, that is
+	 * every application that has ever been recorded as the consumer side of a
+	 * verification against it, regardless of version or verification status. Used by
+	 * can-i-deploy to tell an actual consumer apart from an unrelated application that
+	 * merely happens to be deployed to the same environment.
+	 * @param providerId the provider application ID
+	 * @return the IDs of applications that have a consumer relationship with the provider
+	 */
+	@Cacheable(cacheNames = "verifications", key = "'consumerIds:' + #providerId")
+	public Set<UUID> findConsumerIdsByProviderId(UUID providerId) {
+		return Set.copyOf(this.verificationRepository.findDistinctConsumerIdsByProviderId(providerId));
 	}
 
 	public List<VerificationInfo> findInfoByConsumerId(UUID consumerId) {

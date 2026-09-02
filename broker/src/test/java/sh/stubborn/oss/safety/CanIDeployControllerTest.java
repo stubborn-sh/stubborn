@@ -103,7 +103,7 @@ class CanIDeployControllerTest {
 	void should_check_with_branch_parameter() throws Exception {
 		// given
 		var response = new CanIDeployResponse("order-service", "1.0.0", "staging", "feature/payments", true,
-				"No consumers deployed to this environment", List.of());
+				"No consumers of this application deployed to this environment", List.of());
 		given(this.canIDeployService.check("order-service", "1.0.0", "staging", "feature/payments"))
 			.willReturn(response);
 

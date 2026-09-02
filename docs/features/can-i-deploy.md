@@ -9,13 +9,19 @@ will all consumers in that environment have verified compatibility with version 
 
 It examines:
 
-1. All applications deployed in the target environment
-2. For each consumer deployed there, whether a successful verification exists against the
-   provider version being deployed
+1. The applications deployed in the target environment that are **known consumers** of the
+   application being checked — an application that has been recorded as the consumer side of
+   a verification against it, at any version and with any status
+2. For each of those consumers, whether a successful verification exists against the provider
+   version being deployed
+
+Applications that merely happen to be deployed to the same environment, with no contract
+verification history against the provider, are not consumers. They are left out of
+`consumerResults` entirely and never make a check unsafe.
 
 ```mermaid
 flowchart TD
-    A["Can I Deploy?\napp=X, version=Y, env=E"] --> B{Any consumers\ndeployed in env E?}
+    A["Can I Deploy?\napp=X, version=Y, env=E"] --> B{Any known consumers of X\ndeployed in env E?}
     B -->|No consumers| C[✅ Safe — no consumers\nto verify against]
     B -->|Consumers exist| D{All consumers verified\nagainst version Y?}
     D -->|All verified| E[✅ Safe to deploy]
@@ -116,12 +122,16 @@ have a passing contract verification against the provider version being checked.
 
 **Rules that govern the result:**
 
-- Every consumer deployed to the target environment must have a `SUCCESS` verification against
-  the exact provider version being deployed. One failing or missing verification makes the whole
-  check unsafe.
+- Every **known consumer** deployed to the target environment must have a `SUCCESS` verification
+  against the exact provider version being deployed. One failing or missing verification makes
+  the whole check unsafe.
+- Only applications with a consumer relationship to the provider are evaluated. An application
+  that has never been recorded as a consumer of the provider is ignored, however it is deployed.
+  Once a consumer has verified against the provider even once, it is evaluated on every
+  subsequent check, so a consumer that stops verifying still makes the check unsafe.
 - A missing verification counts as a failure. There is no "unknown" or "skipped" state —
   absence of a verification record is treated the same as a failed one.
-- **Vacuous-truth case:** if zero consumers are currently deployed to the target environment,
+- **Vacuous-truth case:** if zero known consumers are currently deployed to the target environment,
   the result is `safe=true`. There is nothing that could be broken, so the deployment is
   unconditionally safe.
 - **Pending contracts (first-time publishers):** when a provider publishes contracts for the

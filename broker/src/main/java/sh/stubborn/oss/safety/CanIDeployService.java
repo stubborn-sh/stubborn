@@ -57,7 +57,7 @@ public class CanIDeployService {
 
 	private String buildSummary(List<ConsumerResult> results, boolean safe) {
 		if (results.isEmpty()) {
-			return "No consumers deployed to this environment";
+			return "No consumers of this application deployed to this environment";
 		}
 		if (safe) {
 			return "All " + results.size() + " consumer(s) verified successfully";
