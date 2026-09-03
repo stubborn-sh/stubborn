@@ -28,8 +28,10 @@ import org.jspecify.annotations.Nullable;
 public interface DeploymentSafetyChecker {
 
 	/**
-	 * Evaluate all consumers deployed to the given environment and determine whether each
-	 * has a successful verification against the provider version.
+	 * Evaluate the provider's known consumers that are deployed to the given environment
+	 * and determine whether each has a successful verification against the provider
+	 * version. Applications deployed to the environment that have no consumer
+	 * relationship with the provider are not evaluated and must not be returned.
 	 * @param providerId the provider application ID
 	 * @param providerVersion the provider version to check
 	 * @param environment the target deployment environment

@@ -15,7 +15,11 @@
  */
 package sh.stubborn.oss.safety;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+
+import org.jspecify.annotations.Nullable;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -79,10 +83,12 @@ class CanIDeployE2ETest {
 	@Test
 	@SuppressWarnings("rawtypes")
 	void should_return_unsafe_when_consumer_not_verified() {
-		// given — deploy consumer but no verification
+		// given — a known consumer (it verified an earlier provider version) is deployed
+		// at a version that was never verified against the provider version being checked
 		registerApplication("e2e-cid-unsafe-provider");
 		registerApplication("e2e-cid-unsafe-consumer");
 
+		recordVerification("e2e-cid-unsafe-provider", "0.9.0", "e2e-cid-unsafe-consumer", "0.9.0", "SUCCESS");
 		recordDeployment("cid-unsafe-env", "e2e-cid-unsafe-consumer", "1.0.0");
 
 		// when
@@ -111,6 +117,32 @@ class CanIDeployE2ETest {
 		// then
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 		assertThat(response.getBody()).containsEntry("safe", true);
+	}
+
+	@Test
+	@SuppressWarnings("rawtypes")
+	void should_ignore_applications_that_are_not_consumers_of_the_provider() {
+		// given — a real consumer and an unrelated application share an environment;
+		// the unrelated one has never published a contract against, or verified against,
+		// the provider (gh-102)
+		registerApplication("e2e-cid-rel-provider");
+		registerApplication("e2e-cid-rel-consumer");
+		registerApplication("e2e-cid-rel-unrelated");
+
+		recordVerification("e2e-cid-rel-provider", "1.0.0", "e2e-cid-rel-consumer", "2.0.0", "SUCCESS");
+		recordDeployment("cid-rel-env", "e2e-cid-rel-consumer", "2.0.0");
+		recordDeployment("cid-rel-env", "e2e-cid-rel-unrelated", "9.9.9");
+
+		// when
+		ResponseEntity<Map> response = this.restClient.get()
+			.uri("/api/v1/can-i-deploy?application=e2e-cid-rel-provider&version=1.0.0&environment=cid-rel-env")
+			.retrieve()
+			.toEntity(Map.class);
+
+		// then — the unrelated application does not appear and does not make it unsafe
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+		assertThat(response.getBody()).containsEntry("safe", true);
+		assertThat(consumerNames(response.getBody())).containsExactly("e2e-cid-rel-consumer");
 	}
 
 	@Test
@@ -145,6 +177,14 @@ class CanIDeployE2ETest {
 		// then
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 		assertThat(response.getBody()).containsEntry("safe", false);
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private static List<String> consumerNames(@Nullable Map body) {
+		Object results = Objects.requireNonNull(body).get("consumerResults");
+		return ((List<Map<String, Object>>) Objects.requireNonNull(results)).stream()
+			.map(result -> (String) result.get("consumer"))
+			.toList();
 	}
 
 	private void registerApplication(String name) {

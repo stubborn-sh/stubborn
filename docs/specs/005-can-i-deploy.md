@@ -11,13 +11,18 @@ unsafe deployments by ensuring all contract verifications pass before allowing d
 
 ## How (High Level)
 1. Find all verifications where the application is the provider with the given version
-2. Find all consumers currently deployed to the target environment
-3. For each deployed consumer, check if a successful verification exists between the
+2. Find the applications currently deployed to the target environment
+3. Keep only the known consumers of the provider — applications recorded as the consumer
+   side of a verification against it, at any version and with any status
+4. For each of those consumers, check if a successful verification exists between the
    provider version and the consumer's deployed version
-4. Return safe=true only if ALL deployed consumers have successful verifications
+5. Return safe=true only if ALL of them have successful verifications
 
 ## Business Rules
-- If no consumers are deployed to the environment, deployment is safe (vacuously true)
+- Only known consumers of the provider are evaluated. An application deployed to the same
+  environment that has never been recorded as a consumer of the provider is not part of the
+  check and never appears in `consumerResults`
+- If no known consumers are deployed to the environment, deployment is safe (vacuously true)
 - If a consumer is deployed but no verification exists for the provider version + consumer version, it is NOT safe
 - If a verification exists but its status is FAILED, it is NOT safe
 - Only SUCCESS verifications count

@@ -16,18 +16,22 @@
 package sh.stubborn.oss.safety;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.jspecify.annotations.Nullable;
 
 import sh.stubborn.oss.application.ApplicationService;
+import sh.stubborn.oss.environment.DeploymentInfo;
 import sh.stubborn.oss.environment.DeploymentService;
 import sh.stubborn.oss.verification.VerificationService;
 
 /**
  * OSS default implementation of {@link DeploymentSafetyChecker}. Evaluates consumers by
- * direct version-to-version verification matching. The {@code branch} parameter is
- * accepted but ignored.
+ * direct version-to-version verification matching. Only applications that are known
+ * consumers of the provider are considered — an application that merely happens to be
+ * deployed to the same environment is not treated as a consumer. The {@code branch}
+ * parameter is accepted but ignored.
  */
 class OssDeploymentSafetyChecker implements DeploymentSafetyChecker {
 
@@ -47,9 +51,14 @@ class OssDeploymentSafetyChecker implements DeploymentSafetyChecker {
 	@Override
 	public List<ConsumerResult> evaluateConsumers(UUID providerId, String providerVersion, String environment,
 			@Nullable String branch) {
-		return this.deploymentService.findDeploymentInfoByEnvironment(environment)
-			.stream()
+		List<DeploymentInfo> deployed = this.deploymentService.findDeploymentInfoByEnvironment(environment);
+		if (deployed.isEmpty()) {
+			return List.of();
+		}
+		Set<UUID> knownConsumerIds = this.verificationService.findConsumerIdsByProviderId(providerId);
+		return deployed.stream()
 			.filter(info -> !info.applicationId().equals(providerId))
+			.filter(info -> knownConsumerIds.contains(info.applicationId()))
 			.map(info -> {
 				String consumerName = this.applicationService.findNameById(info.applicationId());
 				boolean verified = this.verificationService.hasSuccessfulVerification(providerId, providerVersion,

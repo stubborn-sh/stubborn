@@ -16,6 +16,7 @@
 package sh.stubborn.oss.safety;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -72,7 +73,7 @@ class CanIDeployServiceTest {
 
 		// then
 		assertThat(result.safe()).isTrue();
-		assertThat(result.summary()).isEqualTo("No consumers deployed to this environment");
+		assertThat(result.summary()).isEqualTo("No consumers of this application deployed to this environment");
 		assertThat(result.consumerResults()).isEmpty();
 	}
 
@@ -82,6 +83,8 @@ class CanIDeployServiceTest {
 		given(this.applicationService.findIdByName("order-service")).willReturn(this.providerId);
 		given(this.deploymentService.findDeploymentInfoByEnvironment("staging"))
 			.willReturn(List.of(new DeploymentInfo(this.consumerId, "2.0.0")));
+		given(this.verificationService.findConsumerIdsByProviderId(this.providerId))
+			.willReturn(Set.of(this.consumerId));
 		given(this.applicationService.findNameById(this.consumerId)).willReturn("payment-service");
 		given(this.verificationService.hasSuccessfulVerification(this.providerId, "1.0.0", this.consumerId, "2.0.0"))
 			.willReturn(true);
@@ -102,6 +105,8 @@ class CanIDeployServiceTest {
 		given(this.applicationService.findIdByName("order-service")).willReturn(this.providerId);
 		given(this.deploymentService.findDeploymentInfoByEnvironment("staging"))
 			.willReturn(List.of(new DeploymentInfo(this.consumerId, "2.0.0")));
+		given(this.verificationService.findConsumerIdsByProviderId(this.providerId))
+			.willReturn(Set.of(this.consumerId));
 		given(this.applicationService.findNameById(this.consumerId)).willReturn("payment-service");
 		given(this.verificationService.hasSuccessfulVerification(this.providerId, "1.0.0", this.consumerId, "2.0.0"))
 			.willReturn(false);
@@ -154,6 +159,8 @@ class CanIDeployServiceTest {
 		given(this.applicationService.findIdByName("order-service")).willReturn(this.providerId);
 		given(this.deploymentService.findDeploymentInfoByEnvironment("staging")).willReturn(
 				List.of(new DeploymentInfo(this.consumerId, "2.0.0"), new DeploymentInfo(consumer2Id, "3.0.0")));
+		given(this.verificationService.findConsumerIdsByProviderId(this.providerId))
+			.willReturn(Set.of(this.consumerId, consumer2Id));
 		given(this.applicationService.findNameById(this.consumerId)).willReturn("payment-service");
 		given(this.applicationService.findNameById(consumer2Id)).willReturn("shipping-service");
 		given(this.verificationService.hasSuccessfulVerification(this.providerId, "1.0.0", this.consumerId, "2.0.0"))
@@ -168,6 +175,49 @@ class CanIDeployServiceTest {
 		assertThat(result.safe()).isFalse();
 		assertThat(result.consumerResults()).hasSize(2);
 		assertThat(result.summary()).contains("1 of 2");
+	}
+
+	@Test
+	void should_ignore_applications_that_were_never_consumers_of_the_provider() {
+		// given — an unrelated app is deployed to the same environment but has never
+		// verified against, nor published a contract against, the provider
+		UUID unrelatedId = UUID.randomUUID();
+		given(this.applicationService.findIdByName("provider-a")).willReturn(this.providerId);
+		given(this.deploymentService.findDeploymentInfoByEnvironment("staging")).willReturn(
+				List.of(new DeploymentInfo(this.consumerId, "2.0.0"), new DeploymentInfo(unrelatedId, "9.9.9")));
+		given(this.verificationService.findConsumerIdsByProviderId(this.providerId))
+			.willReturn(Set.of(this.consumerId));
+		given(this.applicationService.findNameById(this.consumerId)).willReturn("real-consumer");
+		given(this.verificationService.hasSuccessfulVerification(this.providerId, "1.0.0", this.consumerId, "2.0.0"))
+			.willReturn(true);
+
+		// when
+		CanIDeployResponse result = this.canIDeployService.check("provider-a", "1.0.0", "staging");
+
+		// then — only the real consumer is evaluated
+		assertThat(result.consumerResults()).extracting(ConsumerResult::consumer).containsExactly("real-consumer");
+		assertThat(result.safe()).isTrue();
+	}
+
+	@Test
+	void should_evaluate_known_consumer_deployed_at_an_unverified_version() {
+		// given — a historical relationship exists, but the deployed version was never
+		// verified against this provider version
+		given(this.applicationService.findIdByName("provider-a")).willReturn(this.providerId);
+		given(this.deploymentService.findDeploymentInfoByEnvironment("staging"))
+			.willReturn(List.of(new DeploymentInfo(this.consumerId, "3.0.0")));
+		given(this.verificationService.findConsumerIdsByProviderId(this.providerId))
+			.willReturn(Set.of(this.consumerId));
+		given(this.applicationService.findNameById(this.consumerId)).willReturn("real-consumer");
+		given(this.verificationService.hasSuccessfulVerification(this.providerId, "1.0.0", this.consumerId, "3.0.0"))
+			.willReturn(false);
+
+		// when
+		CanIDeployResponse result = this.canIDeployService.check("provider-a", "1.0.0", "staging");
+
+		// then
+		assertThat(result.safe()).isFalse();
+		assertThat(result.consumerResults()).hasSize(1);
 	}
 
 }
