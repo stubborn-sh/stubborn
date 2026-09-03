@@ -17,6 +17,7 @@ package sh.stubborn.oss.safety;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import sh.stubborn.oss.application.ApplicationService;
+import sh.stubborn.oss.dependency.DependencyService;
 import sh.stubborn.oss.environment.DeploymentService;
 import sh.stubborn.oss.verification.VerificationService;
 import org.springframework.context.annotation.Bean;
@@ -28,8 +29,10 @@ class SafetyConfiguration {
 	@Bean
 	@ConditionalOnMissingBean
 	DeploymentSafetyChecker deploymentSafetyChecker(ApplicationService applicationService,
-			DeploymentService deploymentService, VerificationService verificationService) {
-		return new OssDeploymentSafetyChecker(applicationService, deploymentService, verificationService);
+			DeploymentService deploymentService, VerificationService verificationService,
+			DependencyService dependencyService) {
+		return new OssDeploymentSafetyChecker(applicationService, deploymentService, verificationService,
+				dependencyService);
 	}
 
 }

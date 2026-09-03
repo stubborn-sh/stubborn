@@ -42,6 +42,7 @@ import sh.stubborn.contract.verifier.dsl.wiremock.WireMockStubStrategy;
 import sh.stubborn.contract.verifier.file.ContractMetadata;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClient;
@@ -59,6 +60,10 @@ class BrokerStubDownloader implements StubDownloader {
 
 	private final ObjectMapper objectMapper;
 
+	private final @Nullable String consumerName;
+
+	private final @Nullable String consumerVersion;
+
 	BrokerStubDownloader(StubRunnerOptions options, BrokerResource resource) {
 		RestClient.Builder builder = RestClient.builder().baseUrl(resource.getBrokerUrl());
 		String username = resolveCredential(options, "username");
@@ -75,6 +80,12 @@ class BrokerStubDownloader implements StubDownloader {
 		});
 		this.restClient = builder.build();
 		this.objectMapper = new ObjectMapper();
+		this.consumerName = resolveProperty(options, "consumer.name");
+		this.consumerVersion = resolveProperty(options, "consumer.version");
+		if (this.consumerName == null || this.consumerVersion == null) {
+			log.debug("No consumer identity configured — dependencies on resolved providers will not be recorded. "
+					+ "Set stubborn.contract.stubrunner.consumer.name and .consumer.version to enable it.");
+		}
 	}
 
 	@Override
@@ -109,6 +120,7 @@ class BrokerStubDownloader implements StubDownloader {
 			log.warn("No contracts found for {}:{}", appName, version);
 			return null;
 		}
+		recordDependencyOn(appName);
 		List<Map<String, Object>> contracts;
 		try {
 			Map<String, Object> page = this.objectMapper.readValue(json, Map.class);
@@ -195,6 +207,55 @@ class BrokerStubDownloader implements StubDownloader {
 			// mapping step fails or the converter is not classpath-compatible.
 			log.warn("Failed to convert contract {} to WireMock mapping", contractName, ex);
 		}
+	}
+
+	/**
+	 * Tells the broker that this consumer depends on the provider whose stubs it just
+	 * resolved, so can-i-deploy knows about the relationship before any verification has
+	 * been recorded. Requires the consumer's identity to be configured; without it there
+	 * is nothing to attribute the dependency to and the call is skipped.
+	 * <p>
+	 * Strictly best effort. Resolving stubs is what the caller asked for, and it must not
+	 * fail because the broker rejected, or never received, a bookkeeping call.
+	 */
+	private void recordDependencyOn(String providerName) {
+		if (this.consumerName == null || this.consumerVersion == null) {
+			return;
+		}
+		try {
+			this.restClient.post()
+				.uri("/api/v1/applications/{app}/versions/{ver}/dependencies", this.consumerName, this.consumerVersion)
+				.contentType(MediaType.APPLICATION_JSON)
+				.body(Map.of("provider", providerName))
+				.retrieve()
+				.toBodilessEntity();
+			log.debug("Recorded dependency {}:{} -> {}", this.consumerName, this.consumerVersion, providerName);
+		}
+		catch (RuntimeException ex) {
+			log.debug("Could not record dependency {}:{} -> {}: {}", this.consumerName, this.consumerVersion,
+					providerName, ex.getMessage());
+		}
+	}
+
+	/**
+	 * Resolves an arbitrary stub runner property, checking the Stubborn prefix first,
+	 * then the legacy Spring Cloud Contract prefix, then the bare {@code stubrunner.} one
+	 * — the same order {@link #resolveCredential} uses.
+	 */
+	private static @Nullable String resolveProperty(StubRunnerOptions options, String key) {
+		Map<String, String> props = options.getProperties();
+		if (props == null) {
+			return null;
+		}
+		String value = props.get("stubborn.contract.stubrunner." + key);
+		if (value != null) {
+			return value;
+		}
+		value = props.get("spring.cloud.contract.stubrunner." + key);
+		if (value != null) {
+			return value;
+		}
+		return props.get("stubrunner." + key);
 	}
 
 	/**

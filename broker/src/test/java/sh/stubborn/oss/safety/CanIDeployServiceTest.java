@@ -27,6 +27,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import sh.stubborn.oss.application.ApplicationNotFoundException;
 import sh.stubborn.oss.application.ApplicationService;
+import sh.stubborn.oss.dependency.DependencyService;
 import sh.stubborn.oss.environment.DeploymentInfo;
 import sh.stubborn.oss.environment.DeploymentService;
 import sh.stubborn.oss.verification.VerificationService;
@@ -47,6 +48,9 @@ class CanIDeployServiceTest {
 	@Mock
 	VerificationService verificationService;
 
+	@Mock
+	DependencyService dependencyService;
+
 	CanIDeployService canIDeployService;
 
 	UUID providerId;
@@ -56,7 +60,7 @@ class CanIDeployServiceTest {
 	@BeforeEach
 	void setUp() {
 		DeploymentSafetyChecker safetyChecker = new OssDeploymentSafetyChecker(this.applicationService,
-				this.deploymentService, this.verificationService);
+				this.deploymentService, this.verificationService, this.dependencyService);
 		this.canIDeployService = new CanIDeployService(this.applicationService, safetyChecker);
 		this.providerId = UUID.randomUUID();
 		this.consumerId = UUID.randomUUID();
@@ -218,6 +222,53 @@ class CanIDeployServiceTest {
 		// then
 		assertThat(result.safe()).isFalse();
 		assertThat(result.consumerResults()).hasSize(1);
+	}
+
+	@Test
+	void should_evaluate_a_consumer_that_declared_a_dependency_but_never_verified() {
+		// given — the consumer has declared it depends on the provider but has no
+		// verification against it at all, the case verification history alone cannot see
+		given(this.applicationService.findIdByName("provider-a")).willReturn(this.providerId);
+		given(this.deploymentService.findDeploymentInfoByEnvironment("staging"))
+			.willReturn(List.of(new DeploymentInfo(this.consumerId, "2.0.0")));
+		given(this.dependencyService.findConsumerIdsByProviderId(this.providerId)).willReturn(Set.of(this.consumerId));
+		given(this.verificationService.findConsumerIdsByProviderId(this.providerId)).willReturn(Set.of());
+		given(this.applicationService.findNameById(this.consumerId)).willReturn("declared-consumer");
+		given(this.verificationService.hasSuccessfulVerification(this.providerId, "1.0.0", this.consumerId, "2.0.0"))
+			.willReturn(false);
+
+		// when
+		CanIDeployResponse result = this.canIDeployService.check("provider-a", "1.0.0", "staging");
+
+		// then — the declaration alone makes it a known consumer, so it blocks
+		assertThat(result.consumerResults()).extracting(ConsumerResult::consumer).containsExactly("declared-consumer");
+		assertThat(result.safe()).isFalse();
+	}
+
+	@Test
+	void should_evaluate_consumers_known_only_by_declaration_and_only_by_verification_together() {
+		// given — one consumer known through a declaration, another only through history
+		UUID declaredOnlyId = UUID.randomUUID();
+		given(this.applicationService.findIdByName("provider-a")).willReturn(this.providerId);
+		given(this.deploymentService.findDeploymentInfoByEnvironment("staging")).willReturn(
+				List.of(new DeploymentInfo(this.consumerId, "2.0.0"), new DeploymentInfo(declaredOnlyId, "3.0.0")));
+		given(this.dependencyService.findConsumerIdsByProviderId(this.providerId)).willReturn(Set.of(declaredOnlyId));
+		given(this.verificationService.findConsumerIdsByProviderId(this.providerId))
+			.willReturn(Set.of(this.consumerId));
+		given(this.applicationService.findNameById(this.consumerId)).willReturn("verified-consumer");
+		given(this.applicationService.findNameById(declaredOnlyId)).willReturn("declared-consumer");
+		given(this.verificationService.hasSuccessfulVerification(this.providerId, "1.0.0", this.consumerId, "2.0.0"))
+			.willReturn(true);
+		given(this.verificationService.hasSuccessfulVerification(this.providerId, "1.0.0", declaredOnlyId, "3.0.0"))
+			.willReturn(true);
+
+		// when
+		CanIDeployResponse result = this.canIDeployService.check("provider-a", "1.0.0", "staging");
+
+		// then — the union covers both
+		assertThat(result.consumerResults()).extracting(ConsumerResult::consumer)
+			.containsExactlyInAnyOrder("verified-consumer", "declared-consumer");
+		assertThat(result.safe()).isTrue();
 	}
 
 }

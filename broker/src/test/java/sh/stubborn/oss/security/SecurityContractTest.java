@@ -29,6 +29,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import sh.stubborn.oss.application.ApplicationService;
 import sh.stubborn.oss.contract.ContractService;
+import sh.stubborn.oss.dependency.DependencyService;
 import sh.stubborn.oss.environment.DeploymentService;
 import sh.stubborn.oss.environment.EnvironmentService;
 import sh.stubborn.oss.graph.DependencyGraphService;
@@ -82,6 +83,10 @@ class SecurityContractTest {
 	@SuppressWarnings("unused")
 	@MockitoBean
 	VerificationService verificationService;
+
+	@SuppressWarnings("unused")
+	@MockitoBean
+	DependencyService dependencyService;
 
 	@SuppressWarnings("unused")
 	@MockitoBean

@@ -32,8 +32,11 @@ import sh.stubborn.contract.stubrunner.StubsMode;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
@@ -212,6 +215,88 @@ class BrokerStubDownloaderTest {
 		// then
 		this.wireMock.verify(getRequestedFor(urlEqualTo("/api/v1/applications/order-service/versions/1.0.0/contracts"))
 			.withHeader("Authorization", equalTo("Basic YWRtaW46YWRtaW4=")));
+	}
+
+	@Test
+	void should_record_a_dependency_on_the_provider_whose_stubs_it_resolved() {
+		// given — the consumer identifies itself, so the broker can attribute the
+		// dependency it is about to learn about
+		this.wireMock.stubFor(get(urlPathEqualTo("/api/v1/applications/order-service/versions/1.0.0/contracts"))
+			.willReturn(aResponse().withStatus(200)
+				.withHeader("Content-Type", "application/json")
+				.withBody(CONTRACTS_PAGE_RESPONSE)));
+		this.wireMock.stubFor(post(urlPathEqualTo("/api/v1/applications/payment-service/versions/2.0.0/dependencies"))
+			.willReturn(aResponse().withStatus(201)));
+		StubRunnerOptions options = new StubRunnerOptionsBuilder().withUsername("admin")
+			.withPassword("admin")
+			.withStubsMode(StubsMode.REMOTE)
+			.withProperties(Map.of("stubborn.contract.stubrunner.consumer.name", "payment-service",
+					"stubborn.contract.stubrunner.consumer.version", "2.0.0"))
+			.build();
+		BrokerResource resource = new BrokerResource("stubborn://http://localhost:" + this.wireMock.port());
+		BrokerStubDownloader downloader = new BrokerStubDownloader(options, resource);
+		StubConfiguration config = new StubConfiguration("com.example", "order-service", "1.0.0", "stubs");
+
+		// when
+		Map.@Nullable Entry<StubConfiguration, File> result = downloader.downloadAndUnpackStubJar(config);
+
+		// then
+		assertThat(result).isNotNull();
+		this.wireMock
+			.verify(postRequestedFor(urlPathEqualTo("/api/v1/applications/payment-service/versions/2.0.0/dependencies"))
+				.withRequestBody(equalToJson("{\"provider\":\"order-service\"}")));
+	}
+
+	@Test
+	void should_not_record_a_dependency_when_the_consumer_is_not_identified() {
+		// given — no consumer identity configured, so there is nothing to attribute it to
+		this.wireMock.stubFor(get(urlPathEqualTo("/api/v1/applications/order-service/versions/1.0.0/contracts"))
+			.willReturn(aResponse().withStatus(200)
+				.withHeader("Content-Type", "application/json")
+				.withBody(CONTRACTS_PAGE_RESPONSE)));
+		StubRunnerOptions options = new StubRunnerOptionsBuilder().withUsername("admin")
+			.withPassword("admin")
+			.withStubsMode(StubsMode.REMOTE)
+			.build();
+		BrokerResource resource = new BrokerResource("stubborn://http://localhost:" + this.wireMock.port());
+		BrokerStubDownloader downloader = new BrokerStubDownloader(options, resource);
+		StubConfiguration config = new StubConfiguration("com.example", "order-service", "1.0.0", "stubs");
+
+		// when
+		Map.@Nullable Entry<StubConfiguration, File> result = downloader.downloadAndUnpackStubJar(config);
+
+		// then — stubs still resolve, and nothing is posted
+		assertThat(result).isNotNull();
+		this.wireMock.verify(0,
+				postRequestedFor(urlPathEqualTo("/api/v1/applications/payment-service/versions/2.0.0/dependencies")));
+	}
+
+	@Test
+	void should_still_resolve_stubs_when_recording_the_dependency_fails() {
+		// given — the broker rejects the bookkeeping call; resolving stubs is what the
+		// caller asked for and must not fail because of it
+		this.wireMock.stubFor(get(urlPathEqualTo("/api/v1/applications/order-service/versions/1.0.0/contracts"))
+			.willReturn(aResponse().withStatus(200)
+				.withHeader("Content-Type", "application/json")
+				.withBody(CONTRACTS_PAGE_RESPONSE)));
+		this.wireMock.stubFor(post(urlPathEqualTo("/api/v1/applications/payment-service/versions/2.0.0/dependencies"))
+			.willReturn(aResponse().withStatus(500)));
+		StubRunnerOptions options = new StubRunnerOptionsBuilder().withUsername("admin")
+			.withPassword("admin")
+			.withStubsMode(StubsMode.REMOTE)
+			.withProperties(Map.of("stubborn.contract.stubrunner.consumer.name", "payment-service",
+					"stubborn.contract.stubrunner.consumer.version", "2.0.0"))
+			.build();
+		BrokerResource resource = new BrokerResource("stubborn://http://localhost:" + this.wireMock.port());
+		BrokerStubDownloader downloader = new BrokerStubDownloader(options, resource);
+		StubConfiguration config = new StubConfiguration("com.example", "order-service", "1.0.0", "stubs");
+
+		// when
+		Map.@Nullable Entry<StubConfiguration, File> result = downloader.downloadAndUnpackStubJar(config);
+
+		// then
+		assertThat(result).isNotNull();
+		assertThat(Objects.requireNonNull(result).getValue()).isDirectory();
 	}
 
 }
