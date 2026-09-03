@@ -127,8 +127,11 @@ have a passing contract verification against the provider version being checked.
   the whole check unsafe.
 - Only applications with a consumer relationship to the provider are evaluated. An application
   that has never been recorded as a consumer of the provider is ignored, however it is deployed.
-  Once a consumer has verified against the provider even once, it is evaluated on every
-  subsequent check, so a consumer that stops verifying still makes the check unsafe.
+  A consumer relationship exists if the consumer has **declared a dependency** on the provider
+  (see [Dependencies](./dependencies.md)) **or** has verified against it at least once. A
+  declaration is enough on its own, so a consumer that has not verified yet is still evaluated
+  rather than overlooked. Equally, once a consumer has verified even once it is evaluated on
+  every subsequent check, so a consumer that stops verifying still makes the check unsafe.
 - A missing verification counts as a failure. There is no "unknown" or "skipped" state —
   absence of a verification record is treated the same as a failed one.
 - **Vacuous-truth case:** if zero known consumers are currently deployed to the target environment,
