@@ -150,6 +150,19 @@ public class VerificationService {
 		return Set.copyOf(this.verificationRepository.findDistinctConsumerIdsByProviderId(providerId));
 	}
 
+	/**
+	 * Return the applications the given consumer is known to consume, that is every
+	 * application that has ever been recorded as the provider side of a verification by
+	 * it, regardless of version or verification status. Used by can-i-deploy to find the
+	 * providers a candidate deployment talks to.
+	 * @param consumerId the consumer application ID
+	 * @return the IDs of applications the consumer has a provider relationship with
+	 */
+	@Cacheable(cacheNames = "verifications", key = "'providerIds:' + #consumerId")
+	public Set<UUID> findProviderIdsByConsumerId(UUID consumerId) {
+		return Set.copyOf(this.verificationRepository.findDistinctProviderIdsByConsumerId(consumerId));
+	}
+
 	public List<VerificationInfo> findInfoByConsumerId(UUID consumerId) {
 		return this.verificationRepository.findByConsumerId(consumerId).stream().map(VerificationInfo::from).toList();
 	}

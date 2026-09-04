@@ -91,6 +91,20 @@ class DependencyCacheDisabledTests {
 	}
 
 	@Test
+	void should_still_return_the_right_providers_without_a_cache() {
+		// given
+		given(this.dependencyRepository.findDistinctProviderIdsByConsumerId(this.consumerId))
+			.willReturn(List.of(this.providerId));
+
+		// when / then — both calls read through, both answer correctly
+		assertThat(this.dependencyService.findProviderIdsByConsumerId(this.consumerId))
+			.containsExactly(this.providerId);
+		assertThat(this.dependencyService.findProviderIdsByConsumerId(this.consumerId))
+			.containsExactly(this.providerId);
+		verify(this.dependencyRepository, times(2)).findDistinctProviderIdsByConsumerId(this.consumerId);
+	}
+
+	@Test
 	void should_declare_a_dependency_without_a_cache_to_evict() {
 		// given — @CacheEvict against a no-op manager must not blow up
 		given(this.applicationService.findIdByName("consumer-a")).willReturn(this.consumerId);

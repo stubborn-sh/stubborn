@@ -179,6 +179,61 @@ class CanIDeployE2ETest {
 		assertThat(response.getBody()).containsEntry("safe", false);
 	}
 
+	@Test
+	@SuppressWarnings("rawtypes")
+	void should_return_unsafe_when_the_application_never_verified_against_a_deployed_provider() {
+		// given — the candidate declared it calls a provider that already runs 5.0.0 in
+		// the environment, and has never verified against that version (gh-102)
+		registerApplication("e2e-cid-prov-side-consumer");
+		registerApplication("e2e-cid-prov-side-provider");
+
+		declareDependency("e2e-cid-prov-side-consumer", "1.0.0", "e2e-cid-prov-side-provider");
+		recordDeployment("cid-prov-side-env", "e2e-cid-prov-side-provider", "5.0.0");
+
+		// when
+		ResponseEntity<Map> response = this.restClient.get()
+			.uri("/api/v1/can-i-deploy?application=e2e-cid-prov-side-consumer&version=1.0.0"
+					+ "&environment=cid-prov-side-env")
+			.retrieve()
+			.toEntity(Map.class);
+
+		// then — deploying would break the candidate against the provider it calls
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+		assertThat(response.getBody()).containsEntry("safe", false);
+		assertThat(providerNames(response.getBody())).containsExactly("e2e-cid-prov-side-provider");
+	}
+
+	@Test
+	@SuppressWarnings("rawtypes")
+	void should_return_safe_when_the_application_verified_against_the_deployed_provider() {
+		// given — same shape, but the candidate verified against the deployed version
+		registerApplication("e2e-cid-prov-ok-consumer");
+		registerApplication("e2e-cid-prov-ok-provider");
+
+		recordVerification("e2e-cid-prov-ok-provider", "5.0.0", "e2e-cid-prov-ok-consumer", "1.0.0", "SUCCESS");
+		recordDeployment("cid-prov-ok-env", "e2e-cid-prov-ok-provider", "5.0.0");
+
+		// when
+		ResponseEntity<Map> response = this.restClient.get()
+			.uri("/api/v1/can-i-deploy?application=e2e-cid-prov-ok-consumer&version=1.0.0"
+					+ "&environment=cid-prov-ok-env")
+			.retrieve()
+			.toEntity(Map.class);
+
+		// then
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+		assertThat(response.getBody()).containsEntry("safe", true);
+		assertThat(providerNames(response.getBody())).containsExactly("e2e-cid-prov-ok-provider");
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private static List<String> providerNames(@Nullable Map body) {
+		Object results = Objects.requireNonNull(body).get("providerResults");
+		return ((List<Map<String, Object>>) Objects.requireNonNull(results)).stream()
+			.map(result -> (String) result.get("provider"))
+			.toList();
+	}
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private static List<String> consumerNames(@Nullable Map body) {
 		Object results = Objects.requireNonNull(body).get("consumerResults");
@@ -203,6 +258,15 @@ class CanIDeployE2ETest {
 			.contentType(MediaType.APPLICATION_JSON)
 			.body(Map.of("providerName", providerName, "providerVersion", providerVersion, "consumerName", consumerName,
 					"consumerVersion", consumerVersion, "status", status))
+			.retrieve()
+			.toEntity(Map.class);
+	}
+
+	private void declareDependency(String consumerName, String consumerVersion, String providerName) {
+		this.restClient.post()
+			.uri("/api/v1/applications/" + consumerName + "/versions/" + consumerVersion + "/dependencies")
+			.contentType(MediaType.APPLICATION_JSON)
+			.body(Map.of("provider", providerName))
 			.retrieve()
 			.toEntity(Map.class);
 	}

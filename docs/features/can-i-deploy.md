@@ -5,27 +5,35 @@ Safety gate: determine if it is safe to deploy a specific version to an environm
 ## Overview
 
 The Can I Deploy check answers: "If I deploy version X of application A to environment E,
-will all consumers in that environment have verified compatibility with version X?"
+will A and everything already running in E still talk to each other?"
 
-It examines:
+That question has two halves, and the check answers both:
 
-1. The applications deployed in the target environment that are **known consumers** of the
-   application being checked — an application that has been recorded as the consumer side of
-   a verification against it, at any version and with any status
-2. For each of those consumers, whether a successful verification exists against the provider
-   version being deployed
+**A as a provider** — the applications deployed in the target environment that are **known
+consumers** of A:
 
-Applications that merely happen to be deployed to the same environment, with no contract
-verification history against the provider, are not consumers. They are left out of
-`consumerResults` entirely and never make a check unsafe.
+1. Find the applications deployed in E that are known consumers of A
+2. For each, check that a successful verification exists against version X
+
+**A as a consumer** — the applications deployed in the target environment that A itself calls:
+
+1. Find the applications deployed in E that are known providers of A
+2. For each, check that version X has a successful verification against the version of that
+   provider currently deployed to E
+
+Both halves must pass for `safe` to be `true`. Applications that merely happen to be deployed
+to the same environment, with no relationship to A in either direction, are left out of
+`consumerResults` and `providerResults` entirely and never make a check unsafe.
 
 ```mermaid
 flowchart TD
-    A["Can I Deploy?\napp=X, version=Y, env=E"] --> B{Any known consumers of X\ndeployed in env E?}
-    B -->|No consumers| C[✅ Safe — no consumers\nto verify against]
-    B -->|Consumers exist| D{All consumers verified\nagainst version Y?}
-    D -->|All verified| E[✅ Safe to deploy]
+    A["Can I Deploy?\napp=X, version=Y, env=E"] --> B{Any known consumers or\nproviders of X in env E?}
+    B -->|Neither| C[✅ Safe — nothing\nto verify against]
+    B -->|Some exist| D{Consumers in E verified\nagainst X@Y?}
     D -->|Missing verifications| F[❌ Not safe\n— list of missing verifications]
+    D -->|All verified| G{X@Y verified against\nthe providers in E?}
+    G -->|Missing verifications| F
+    G -->|All verified| E[✅ Safe to deploy]
 
     style C fill:#2d5a27,color:#fff
     style E fill:#2d5a27,color:#fff
@@ -43,6 +51,7 @@ curl -s \
 ```
 
 The optional `branch` query parameter scopes the check to a specific branch of the provider.
+It is accepted but ignored by the OSS broker.
 
 ### Success response (safe to deploy)
 
@@ -57,20 +66,13 @@ Content-Type: application/json
   "version": "1.2.3",
   "environment": "production",
   "safe": true,
-  "summary": "All 2 consumer(s) verified successfully",
+  "summary": "All 2 consumer(s) and 1 provider(s) verified successfully",
   "consumerResults": [
-    {
-      "consumerName": "payment-service",
-      "providerName": "my-service",
-      "success": true,
-      "contractUrl": "https://stubborn.example.com/api/v1/contracts/payment-service/my-service/1.2.3"
-    },
-    {
-      "consumerName": "shipping-service",
-      "providerName": "my-service",
-      "success": true,
-      "contractUrl": "https://stubborn.example.com/api/v1/contracts/shipping-service/my-service/1.2.3"
-    }
+    { "consumer": "payment-service", "consumerVersion": "4.1.0", "verified": true },
+    { "consumer": "shipping-service", "consumerVersion": "2.0.0", "verified": true }
+  ],
+  "providerResults": [
+    { "provider": "stock-service", "providerVersion": "5.0.0", "verified": true }
   ]
 }
 ```
@@ -88,20 +90,13 @@ Content-Type: application/json
   "version": "1.2.3",
   "environment": "production",
   "safe": false,
-  "summary": "1 of 2 consumer(s) failed verification",
+  "summary": "1 of 2 consumer(s) and 1 of 1 provider(s) missing successful verification",
   "consumerResults": [
-    {
-      "consumerName": "payment-service",
-      "providerName": "my-service",
-      "success": true,
-      "contractUrl": "https://stubborn.example.com/api/v1/contracts/payment-service/my-service/1.2.3"
-    },
-    {
-      "consumerName": "shipping-service",
-      "providerName": "my-service",
-      "success": false,
-      "contractUrl": "https://stubborn.example.com/api/v1/contracts/shipping-service/my-service/1.2.3"
-    }
+    { "consumer": "payment-service", "consumerVersion": "4.1.0", "verified": true },
+    { "consumer": "shipping-service", "consumerVersion": "2.0.0", "verified": false }
+  ],
+  "providerResults": [
+    { "provider": "stock-service", "providerVersion": "5.0.0", "verified": false }
   ]
 }
 ```
@@ -117,26 +112,33 @@ Content-Type: application/json
 
 ## What does safe=false mean?
 
-`safe=false` means at least one consumer currently deployed to the target environment does not
-have a passing contract verification against the provider version being checked.
+`safe=false` means at least one relationship in the target environment is unverified: either a
+consumer deployed there has no passing verification against the version being checked, or the
+version being checked has no passing verification against a provider deployed there.
 
 **Rules that govern the result:**
 
 - Every **known consumer** deployed to the target environment must have a `SUCCESS` verification
   against the exact provider version being deployed. One failing or missing verification makes
   the whole check unsafe.
-- Only applications with a consumer relationship to the provider are evaluated. An application
-  that has never been recorded as a consumer of the provider is ignored, however it is deployed.
-  A consumer relationship exists if the consumer has **declared a dependency** on the provider
-  (see [Dependencies](./dependencies.md)) **or** has verified against it at least once. A
-  declaration is enough on its own, so a consumer that has not verified yet is still evaluated
-  rather than overlooked. Equally, once a consumer has verified even once it is evaluated on
-  every subsequent check, so a consumer that stops verifying still makes the check unsafe.
+- Every **known provider** deployed to the target environment must have a `SUCCESS` verification
+  recorded for the exact pair (that provider's deployed version, the version being deployed).
+  Deploying a consumer against a provider version it has never verified against is unsafe even
+  when every consumer of the deployed application is happy.
+- Only applications related to the one being checked are evaluated, in either direction. An
+  application with no recorded relationship is ignored, however it is deployed. A relationship
+  exists if a **dependency was declared** (see [Dependencies](./dependencies.md)) **or** the two
+  have verified against each other at least once. A declaration is enough on its own, so a
+  relationship that has not been verified yet is still evaluated rather than overlooked.
+  Equally, once a pair has verified even once it is evaluated on every subsequent check, so a
+  consumer that stops verifying still makes the check unsafe.
+- An application is never its own consumer or provider, so its own deployment in the target
+  environment is skipped in both directions.
 - A missing verification counts as a failure. There is no "unknown" or "skipped" state —
   absence of a verification record is treated the same as a failed one.
-- **Vacuous-truth case:** if zero known consumers are currently deployed to the target environment,
-  the result is `safe=true`. There is nothing that could be broken, so the deployment is
-  unconditionally safe.
+- **Vacuous-truth case:** if neither known consumers nor known providers are currently deployed
+  to the target environment, the result is `safe=true`. There is nothing that could be broken,
+  so the deployment is unconditionally safe.
 - **Pending contracts (first-time publishers):** when a provider publishes contracts for the
   very first time and no consumer has yet verified against them, those contracts are treated as
   safe to allow the initial deployment to proceed. Once consumers begin verifying, the normal

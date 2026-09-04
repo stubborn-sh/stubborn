@@ -15,10 +15,14 @@
  */
 package sh.stubborn.oss.safety;
 
-import java.util.List;
-
-import org.jspecify.annotations.Nullable;
-
-record CanIDeployResponse(String application, String version, String environment, @Nullable String branch, boolean safe,
-		String summary, List<ConsumerResult> consumerResults, List<ProviderResult> providerResults) {
+/**
+ * The outcome of checking a candidate deployment against one of the providers it calls,
+ * as that provider is currently deployed to the target environment.
+ *
+ * @param provider the provider application name
+ * @param providerVersion the version of the provider deployed to the environment
+ * @param verified whether the candidate version has a successful verification against
+ * that provider version
+ */
+public record ProviderResult(String provider, String providerVersion, boolean verified) {
 }

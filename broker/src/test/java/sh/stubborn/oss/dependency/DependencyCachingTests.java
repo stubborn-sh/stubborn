@@ -110,6 +110,57 @@ class DependencyCachingTests {
 	}
 
 	@Test
+	void should_read_through_to_the_repository_only_once_for_the_same_consumer() {
+		// given — can-i-deploy asks for the providers of the candidate on every check
+		given(this.dependencyRepository.findDistinctProviderIdsByConsumerId(this.consumerId))
+			.willReturn(List.of(this.providerId));
+
+		// when
+		this.dependencyService.findProviderIdsByConsumerId(this.consumerId);
+		this.dependencyService.findProviderIdsByConsumerId(this.consumerId);
+
+		// then
+		verify(this.dependencyRepository, times(1)).findDistinctProviderIdsByConsumerId(this.consumerId);
+	}
+
+	@Test
+	void should_keep_the_two_directions_on_separate_cache_keys() {
+		// given — the same application id is both a provider and a consumer, so a shared
+		// key would answer one direction with the other direction's edges
+		UUID middleId = UUID.randomUUID();
+		given(this.dependencyRepository.findDistinctConsumerIdsByProviderId(middleId))
+			.willReturn(List.of(this.consumerId));
+		given(this.dependencyRepository.findDistinctProviderIdsByConsumerId(middleId))
+			.willReturn(List.of(this.providerId));
+
+		// when
+		Set<UUID> consumers = this.dependencyService.findConsumerIdsByProviderId(middleId);
+		Set<UUID> providers = this.dependencyService.findProviderIdsByConsumerId(middleId);
+
+		// then
+		assertThat(consumers).containsExactly(this.consumerId);
+		assertThat(providers).containsExactly(this.providerId);
+	}
+
+	@Test
+	void should_evict_the_cached_providers_when_a_dependency_is_declared() {
+		// given — a cached answer that predates the new declaration
+		given(this.dependencyRepository.findDistinctProviderIdsByConsumerId(this.consumerId)).willReturn(List.of());
+		assertThat(this.dependencyService.findProviderIdsByConsumerId(this.consumerId)).isEmpty();
+		givenDeclarationSucceeds();
+
+		// when
+		this.dependencyService.declare("consumer-a", "1.0.0", "provider-a", DependencySource.DECLARED);
+		given(this.dependencyRepository.findDistinctProviderIdsByConsumerId(this.consumerId))
+			.willReturn(List.of(this.providerId));
+
+		// then — the next check sees the new provider rather than the stale empty answer
+		assertThat(this.dependencyService.findProviderIdsByConsumerId(this.consumerId))
+			.containsExactly(this.providerId);
+		verify(this.dependencyRepository, times(2)).findDistinctProviderIdsByConsumerId(this.consumerId);
+	}
+
+	@Test
 	void should_evict_the_cached_consumers_when_a_dependency_is_declared() {
 		// given — a cached answer that predates the new declaration
 		given(this.dependencyRepository.findDistinctConsumerIdsByProviderId(this.providerId)).willReturn(List.of());

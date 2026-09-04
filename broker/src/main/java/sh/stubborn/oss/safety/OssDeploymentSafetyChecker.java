@@ -29,14 +29,16 @@ import sh.stubborn.oss.environment.DeploymentService;
 import sh.stubborn.oss.verification.VerificationService;
 
 /**
- * OSS default implementation of {@link DeploymentSafetyChecker}. Evaluates consumers by
- * direct version-to-version verification matching. Only applications that are known
- * consumers of the provider are considered — an application that merely happens to be
- * deployed to the same environment is not treated as a consumer. A consumer is known
- * either because it declared a dependency on the provider or because it has verified
- * against it before; a declaration alone is enough, so a consumer that has never verified
- * is evaluated rather than overlooked. The {@code branch} parameter is accepted but
- * ignored.
+ * OSS default implementation of {@link DeploymentSafetyChecker}. Evaluates both
+ * directions by direct version-to-version verification matching: the consumers deployed
+ * to the environment that call the candidate application, and the providers deployed
+ * there that the candidate application calls. Only applications that are known consumers
+ * of the provider are considered — an application that merely happens to be deployed to
+ * the same environment is not treated as a consumer. A consumer is known either because
+ * it declared a dependency on the provider or because it has verified against it before;
+ * a declaration alone is enough, so a consumer that has never verified is evaluated
+ * rather than overlooked. The same rule decides which deployed applications count as
+ * providers of the candidate. The {@code branch} parameter is accepted but ignored.
  */
 class OssDeploymentSafetyChecker implements DeploymentSafetyChecker {
 
@@ -76,6 +78,26 @@ class OssDeploymentSafetyChecker implements DeploymentSafetyChecker {
 			.toList();
 	}
 
+	@Override
+	public List<ProviderResult> evaluateProviders(UUID consumerId, String consumerVersion, String environment,
+			@Nullable String branch) {
+		List<DeploymentInfo> deployed = this.deploymentService.findDeploymentInfoByEnvironment(environment);
+		if (deployed.isEmpty()) {
+			return List.of();
+		}
+		Set<UUID> knownProviderIds = knownProviderIds(consumerId);
+		return deployed.stream()
+			.filter(info -> !info.applicationId().equals(consumerId))
+			.filter(info -> knownProviderIds.contains(info.applicationId()))
+			.map(info -> {
+				String providerName = this.applicationService.findNameById(info.applicationId());
+				boolean verified = this.verificationService.hasSuccessfulVerification(info.applicationId(),
+						info.version(), consumerId, consumerVersion);
+				return new ProviderResult(providerName, info.version(), verified);
+			})
+			.toList();
+	}
+
 	/**
 	 * Applications that declared a dependency on the provider, plus those that have
 	 * verified against it at least once. The union matters in both directions: a
@@ -83,8 +105,20 @@ class OssDeploymentSafetyChecker implements DeploymentSafetyChecker {
 	 * keeps evaluating consumers that predate declarations or never adopted them.
 	 */
 	private Set<UUID> knownConsumerIds(UUID providerId) {
-		Set<UUID> declared = this.dependencyService.findConsumerIdsByProviderId(providerId);
-		Set<UUID> verified = this.verificationService.findConsumerIdsByProviderId(providerId);
+		return union(this.dependencyService.findConsumerIdsByProviderId(providerId),
+				this.verificationService.findConsumerIdsByProviderId(providerId));
+	}
+
+	/**
+	 * The mirror image of {@link #knownConsumerIds(UUID)}: applications the consumer
+	 * declared a dependency on, plus those it has verified against at least once.
+	 */
+	private Set<UUID> knownProviderIds(UUID consumerId) {
+		return union(this.dependencyService.findProviderIdsByConsumerId(consumerId),
+				this.verificationService.findProviderIdsByConsumerId(consumerId));
+	}
+
+	private static Set<UUID> union(Set<UUID> declared, Set<UUID> verified) {
 		if (declared.isEmpty()) {
 			return verified;
 		}

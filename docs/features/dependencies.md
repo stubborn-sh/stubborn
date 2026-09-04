@@ -76,5 +76,8 @@ for, and it does not fail because a bookkeeping call did.
 ## Effect on Can I Deploy
 
 `can-i-deploy` treats an application as a known consumer of a provider if it has declared a
-dependency on it **or** has verified against it at least once. See
-[Can I Deploy](./can-i-deploy.md) for the full rules.
+dependency on it **or** has verified against it at least once. The same edge is read in the
+other direction: when the declaring consumer is itself the application being deployed,
+`can-i-deploy` uses its declarations to find the providers it calls, and checks the version
+being deployed against the versions of those providers currently running in the target
+environment. See [Can I Deploy](./can-i-deploy.md) for the full rules.

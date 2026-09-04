@@ -153,7 +153,8 @@ describe("CanIDeployPage", () => {
     expect(await screen.findByText("Consumer Results:")).toBeInTheDocument();
     const paymentElements = await screen.findAllByText("payment-service");
     expect(paymentElements.length).toBeGreaterThanOrEqual(1);
-    expect(await screen.findByText("VERIFIED")).toBeInTheDocument();
+    const verifiedBadges = await screen.findAllByText("VERIFIED");
+    expect(verifiedBadges.length).toBeGreaterThanOrEqual(1);
   });
 
   it("should show UNSAFE result with failed consumers", async () => {
@@ -186,6 +187,21 @@ describe("CanIDeployPage", () => {
       const badges = screen.getAllByText("NOT VERIFIED");
       expect(badges.length).toBeGreaterThanOrEqual(1);
     });
+  });
+
+  it("should show provider results alongside consumer results", async () => {
+    // arrange
+    server.use(http.get("/api/v1/can-i-deploy", () => HttpResponse.json(mockCanIDeployUnsafe)));
+    const user = userEvent.setup();
+    renderWithProviders(<CanIDeployPage />);
+
+    // act
+    await fillForm(user, { version: "2.0.0", env: "production" });
+    await user.click(screen.getByRole("button", { name: "Check" }));
+
+    // assert - the providers the application calls are reported too
+    expect(await screen.findByText("Provider Results:")).toBeInTheDocument();
+    expect(await screen.findByText("stock-service")).toBeInTheDocument();
   });
 
   it("should handle API error during check", async () => {

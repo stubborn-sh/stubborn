@@ -43,6 +43,9 @@ interface VerificationRepository extends JpaRepository<Verification, UUID> {
 	@Query("SELECT DISTINCT v.consumerId FROM Verification v WHERE v.providerId = :providerId")
 	List<UUID> findDistinctConsumerIdsByProviderId(@Param("providerId") UUID providerId);
 
+	@Query("SELECT DISTINCT v.providerId FROM Verification v WHERE v.consumerId = :consumerId")
+	List<UUID> findDistinctProviderIdsByConsumerId(@Param("consumerId") UUID consumerId);
+
 	@Query("SELECT v FROM Verification v WHERE" + " LOWER(v.providerVersion) LIKE LOWER(CONCAT('%', :search, '%'))"
 			+ " OR LOWER(v.consumerVersion) LIKE LOWER(CONCAT('%', :search, '%'))"
 			+ " OR LOWER(CAST(v.status AS string)) LIKE LOWER(CONCAT('%', :search, '%'))"

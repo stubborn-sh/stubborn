@@ -43,27 +43,52 @@ public class CanIDeployService {
 			key = "'check:' + #applicationName + ':' + #version + ':' + #environment + ':' + (#branch != null ? #branch : '')")
 	CanIDeployResponse check(String applicationName, String version, String environment, @Nullable String branch) {
 		ContractVersion.of(version);
-		UUID providerId = this.applicationService.findIdByName(applicationName);
-		List<ConsumerResult> consumerResults = this.deploymentSafetyChecker.evaluateConsumers(providerId, version,
+		UUID applicationId = this.applicationService.findIdByName(applicationName);
+		List<ConsumerResult> consumerResults = this.deploymentSafetyChecker.evaluateConsumers(applicationId, version,
 				environment, branch);
-		boolean safe = consumerResults.stream().allMatch(ConsumerResult::verified);
-		String summary = buildSummary(consumerResults, safe);
-		return new CanIDeployResponse(applicationName, version, environment, branch, safe, summary, consumerResults);
+		List<ProviderResult> providerResults = this.deploymentSafetyChecker.evaluateProviders(applicationId, version,
+				environment, branch);
+		boolean safe = consumerResults.stream().allMatch(ConsumerResult::verified)
+				&& providerResults.stream().allMatch(ProviderResult::verified);
+		String summary = buildSummary(consumerResults, providerResults, safe);
+		return new CanIDeployResponse(applicationName, version, environment, branch, safe, summary, consumerResults,
+				providerResults);
 	}
 
 	CanIDeployResponse check(String applicationName, String version, String environment) {
 		return check(applicationName, version, environment, null);
 	}
 
-	private String buildSummary(List<ConsumerResult> results, boolean safe) {
-		if (results.isEmpty()) {
-			return "No consumers of this application deployed to this environment";
+	private String buildSummary(List<ConsumerResult> consumers, List<ProviderResult> providers, boolean safe) {
+		if (consumers.isEmpty() && providers.isEmpty()) {
+			return "No consumers or providers of this application deployed to this environment";
 		}
+		long failedConsumers = consumers.stream().filter(r -> !r.verified()).count();
+		long failedProviders = providers.stream().filter(r -> !r.verified()).count();
 		if (safe) {
-			return "All " + results.size() + " consumer(s) verified successfully";
+			return "All " + join(count(consumers.size(), "consumer"), count(providers.size(), "provider"))
+					+ " verified successfully";
 		}
-		long failed = results.stream().filter(r -> !r.verified()).count();
-		return failed + " of " + results.size() + " consumer(s) missing successful verification";
+		return join(ratio(failedConsumers, consumers.size(), "consumer"),
+				ratio(failedProviders, providers.size(), "provider")) + " missing successful verification";
+	}
+
+	private static String count(int total, String noun) {
+		return (total == 0) ? "" : total + " " + noun + "(s)";
+	}
+
+	private static String ratio(long failed, int total, String noun) {
+		return (failed == 0) ? "" : failed + " of " + total + " " + noun + "(s)";
+	}
+
+	private static String join(String consumerPart, String providerPart) {
+		if (consumerPart.isEmpty()) {
+			return providerPart;
+		}
+		if (providerPart.isEmpty()) {
+			return consumerPart;
+		}
+		return consumerPart + " and " + providerPart;
 	}
 
 }
