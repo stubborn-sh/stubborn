@@ -150,6 +150,20 @@ export default function CanIDeployPage() {
                 ))}
               </div>
             )}
+            {result.providerResults.length > 0 && (
+              <div className="space-y-2 mt-4">
+                <p className="text-sm font-medium text-foreground">Provider Results:</p>
+                {result.providerResults.map((p) => (
+                  <div key={p.provider} className="flex items-center gap-3 text-sm">
+                    <Badge variant={p.verified ? "success" : "failed"}>
+                      {p.verified ? "VERIFIED" : "NOT VERIFIED"}
+                    </Badge>
+                    <span className="text-foreground">{p.provider}</span>
+                    <span className="text-muted-foreground">v{p.providerVersion}</span>
+                  </div>
+                ))}
+              </div>
+            )}
           </CardContent>
         </Card>
       )}

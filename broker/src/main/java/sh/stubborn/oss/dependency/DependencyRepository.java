@@ -35,4 +35,7 @@ interface DependencyRepository extends JpaRepository<Dependency, UUID> {
 	@Query("SELECT DISTINCT d.consumerId FROM Dependency d WHERE d.providerId = :providerId")
 	List<UUID> findDistinctConsumerIdsByProviderId(@Param("providerId") UUID providerId);
 
+	@Query("SELECT DISTINCT d.providerId FROM Dependency d WHERE d.consumerId = :consumerId")
+	List<UUID> findDistinctProviderIdsByConsumerId(@Param("consumerId") UUID consumerId);
+
 }

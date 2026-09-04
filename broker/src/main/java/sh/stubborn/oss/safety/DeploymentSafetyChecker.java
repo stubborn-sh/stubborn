@@ -41,4 +41,24 @@ public interface DeploymentSafetyChecker {
 	List<ConsumerResult> evaluateConsumers(UUID providerId, String providerVersion, String environment,
 			@Nullable String branch);
 
+	/**
+	 * Evaluate the other half of the question: the providers the candidate application
+	 * calls that are already deployed to the given environment, and whether the candidate
+	 * version has verified against the versions actually running there. Applications
+	 * deployed to the environment that the candidate is not known to consume are not
+	 * evaluated and must not be returned.
+	 * <p>
+	 * The default implementation evaluates nothing, so an implementation that does not
+	 * override it keeps checking consumers only.
+	 * @param consumerId the application ID of the candidate deployment
+	 * @param consumerVersion the version about to be deployed
+	 * @param environment the target deployment environment
+	 * @param branch optional branch filter (ignored in OSS)
+	 * @return list of provider evaluation results
+	 */
+	default List<ProviderResult> evaluateProviders(UUID consumerId, String consumerVersion, String environment,
+			@Nullable String branch) {
+		return List.of();
+	}
+
 }

@@ -77,7 +77,8 @@ class CanIDeployServiceTest {
 
 		// then
 		assertThat(result.safe()).isTrue();
-		assertThat(result.summary()).isEqualTo("No consumers of this application deployed to this environment");
+		assertThat(result.summary())
+			.isEqualTo("No consumers or providers of this application deployed to this environment");
 		assertThat(result.consumerResults()).isEmpty();
 	}
 
@@ -269,6 +270,188 @@ class CanIDeployServiceTest {
 		assertThat(result.consumerResults()).extracting(ConsumerResult::consumer)
 			.containsExactlyInAnyOrder("verified-consumer", "declared-consumer");
 		assertThat(result.safe()).isTrue();
+	}
+
+	@Test
+	void should_return_unsafe_when_the_application_never_verified_against_a_deployed_provider() {
+		// given — order-service is about to be deployed and depends on payment-service,
+		// which already runs 5.0.0 in staging, but never verified against that version
+		UUID paymentId = UUID.randomUUID();
+		given(this.applicationService.findIdByName("order-service")).willReturn(this.providerId);
+		given(this.deploymentService.findDeploymentInfoByEnvironment("staging"))
+			.willReturn(List.of(new DeploymentInfo(paymentId, "5.0.0")));
+		given(this.dependencyService.findProviderIdsByConsumerId(this.providerId)).willReturn(Set.of(paymentId));
+		given(this.applicationService.findNameById(paymentId)).willReturn("payment-service");
+		given(this.verificationService.hasSuccessfulVerification(paymentId, "5.0.0", this.providerId, "1.0.0"))
+			.willReturn(false);
+
+		// when
+		CanIDeployResponse result = this.canIDeployService.check("order-service", "1.0.0", "staging");
+
+		// then — deploying would break order-service against the provider it calls
+		assertThat(result.safe()).isFalse();
+		assertThat(result.providerResults()).extracting(ProviderResult::provider).containsExactly("payment-service");
+		assertThat(result.providerResults().get(0).providerVersion()).isEqualTo("5.0.0");
+		assertThat(result.providerResults().get(0).verified()).isFalse();
+		assertThat(result.summary()).isEqualTo("1 of 1 provider(s) missing successful verification");
+	}
+
+	@Test
+	void should_return_safe_when_the_application_verified_against_every_deployed_provider() {
+		// given
+		UUID paymentId = UUID.randomUUID();
+		given(this.applicationService.findIdByName("order-service")).willReturn(this.providerId);
+		given(this.deploymentService.findDeploymentInfoByEnvironment("staging"))
+			.willReturn(List.of(new DeploymentInfo(paymentId, "5.0.0")));
+		given(this.verificationService.findProviderIdsByConsumerId(this.providerId)).willReturn(Set.of(paymentId));
+		given(this.applicationService.findNameById(paymentId)).willReturn("payment-service");
+		given(this.verificationService.hasSuccessfulVerification(paymentId, "5.0.0", this.providerId, "1.0.0"))
+			.willReturn(true);
+
+		// when
+		CanIDeployResponse result = this.canIDeployService.check("order-service", "1.0.0", "staging");
+
+		// then
+		assertThat(result.safe()).isTrue();
+		assertThat(result.summary()).isEqualTo("All 1 provider(s) verified successfully");
+	}
+
+	@Test
+	void should_ignore_deployed_applications_the_candidate_does_not_consume() {
+		// given — an unrelated app runs in staging, the candidate neither declared nor
+		// ever verified against it
+		UUID unrelatedId = UUID.randomUUID();
+		given(this.applicationService.findIdByName("order-service")).willReturn(this.providerId);
+		given(this.deploymentService.findDeploymentInfoByEnvironment("staging"))
+			.willReturn(List.of(new DeploymentInfo(unrelatedId, "9.9.9")));
+
+		// when
+		CanIDeployResponse result = this.canIDeployService.check("order-service", "1.0.0", "staging");
+
+		// then
+		assertThat(result.providerResults()).isEmpty();
+		assertThat(result.safe()).isTrue();
+	}
+
+	@Test
+	void should_exclude_the_application_itself_from_the_provider_list() {
+		// given — the candidate is already deployed to the environment
+		given(this.applicationService.findIdByName("order-service")).willReturn(this.providerId);
+		given(this.deploymentService.findDeploymentInfoByEnvironment("staging"))
+			.willReturn(List.of(new DeploymentInfo(this.providerId, "0.9.0")));
+		given(this.dependencyService.findProviderIdsByConsumerId(this.providerId)).willReturn(Set.of(this.providerId));
+
+		// when
+		CanIDeployResponse result = this.canIDeployService.check("order-service", "1.0.0", "staging");
+
+		// then — an application is never its own provider
+		assertThat(result.providerResults()).isEmpty();
+		assertThat(result.safe()).isTrue();
+	}
+
+	@Test
+	void should_evaluate_providers_known_only_by_declaration_and_only_by_verification_together() {
+		// given — one provider known through a declaration, another only through history
+		UUID declaredOnlyId = UUID.randomUUID();
+		UUID verifiedOnlyId = UUID.randomUUID();
+		given(this.applicationService.findIdByName("order-service")).willReturn(this.providerId);
+		given(this.deploymentService.findDeploymentInfoByEnvironment("staging")).willReturn(
+				List.of(new DeploymentInfo(declaredOnlyId, "5.0.0"), new DeploymentInfo(verifiedOnlyId, "6.0.0")));
+		given(this.dependencyService.findProviderIdsByConsumerId(this.providerId)).willReturn(Set.of(declaredOnlyId));
+		given(this.verificationService.findProviderIdsByConsumerId(this.providerId)).willReturn(Set.of(verifiedOnlyId));
+		given(this.applicationService.findNameById(declaredOnlyId)).willReturn("declared-provider");
+		given(this.applicationService.findNameById(verifiedOnlyId)).willReturn("verified-provider");
+		given(this.verificationService.hasSuccessfulVerification(declaredOnlyId, "5.0.0", this.providerId, "1.0.0"))
+			.willReturn(true);
+		given(this.verificationService.hasSuccessfulVerification(verifiedOnlyId, "6.0.0", this.providerId, "1.0.0"))
+			.willReturn(true);
+
+		// when
+		CanIDeployResponse result = this.canIDeployService.check("order-service", "1.0.0", "staging");
+
+		// then — the union covers both
+		assertThat(result.providerResults()).extracting(ProviderResult::provider)
+			.containsExactlyInAnyOrder("declared-provider", "verified-provider");
+		assertThat(result.safe()).isTrue();
+	}
+
+	@Test
+	void should_report_both_directions_when_consumers_and_providers_are_deployed() {
+		// given — order-service is called by payment-service and calls stock-service,
+		// both already deployed to staging
+		UUID stockId = UUID.randomUUID();
+		given(this.applicationService.findIdByName("order-service")).willReturn(this.providerId);
+		given(this.deploymentService.findDeploymentInfoByEnvironment("staging"))
+			.willReturn(List.of(new DeploymentInfo(this.consumerId, "2.0.0"), new DeploymentInfo(stockId, "5.0.0")));
+		given(this.verificationService.findConsumerIdsByProviderId(this.providerId))
+			.willReturn(Set.of(this.consumerId));
+		given(this.verificationService.findProviderIdsByConsumerId(this.providerId)).willReturn(Set.of(stockId));
+		given(this.applicationService.findNameById(this.consumerId)).willReturn("payment-service");
+		given(this.applicationService.findNameById(stockId)).willReturn("stock-service");
+		given(this.verificationService.hasSuccessfulVerification(this.providerId, "1.0.0", this.consumerId, "2.0.0"))
+			.willReturn(true);
+		given(this.verificationService.hasSuccessfulVerification(stockId, "5.0.0", this.providerId, "1.0.0"))
+			.willReturn(true);
+
+		// when
+		CanIDeployResponse result = this.canIDeployService.check("order-service", "1.0.0", "staging");
+
+		// then
+		assertThat(result.safe()).isTrue();
+		assertThat(result.consumerResults()).extracting(ConsumerResult::consumer).containsExactly("payment-service");
+		assertThat(result.providerResults()).extracting(ProviderResult::provider).containsExactly("stock-service");
+		assertThat(result.summary()).isEqualTo("All 1 consumer(s) and 1 provider(s) verified successfully");
+	}
+
+	@Test
+	void should_report_failures_on_both_sides_in_the_summary() {
+		// given
+		UUID stockId = UUID.randomUUID();
+		given(this.applicationService.findIdByName("order-service")).willReturn(this.providerId);
+		given(this.deploymentService.findDeploymentInfoByEnvironment("staging"))
+			.willReturn(List.of(new DeploymentInfo(this.consumerId, "2.0.0"), new DeploymentInfo(stockId, "5.0.0")));
+		given(this.verificationService.findConsumerIdsByProviderId(this.providerId))
+			.willReturn(Set.of(this.consumerId));
+		given(this.verificationService.findProviderIdsByConsumerId(this.providerId)).willReturn(Set.of(stockId));
+		given(this.applicationService.findNameById(this.consumerId)).willReturn("payment-service");
+		given(this.applicationService.findNameById(stockId)).willReturn("stock-service");
+		given(this.verificationService.hasSuccessfulVerification(this.providerId, "1.0.0", this.consumerId, "2.0.0"))
+			.willReturn(false);
+		given(this.verificationService.hasSuccessfulVerification(stockId, "5.0.0", this.providerId, "1.0.0"))
+			.willReturn(false);
+
+		// when
+		CanIDeployResponse result = this.canIDeployService.check("order-service", "1.0.0", "staging");
+
+		// then
+		assertThat(result.safe()).isFalse();
+		assertThat(result.summary())
+			.isEqualTo("1 of 1 consumer(s) and 1 of 1 provider(s) missing successful verification");
+	}
+
+	@Test
+	void should_name_only_the_failing_side_when_the_other_side_is_fully_verified() {
+		// given — the consumer side is fine, the provider side is not
+		UUID stockId = UUID.randomUUID();
+		given(this.applicationService.findIdByName("order-service")).willReturn(this.providerId);
+		given(this.deploymentService.findDeploymentInfoByEnvironment("staging"))
+			.willReturn(List.of(new DeploymentInfo(this.consumerId, "2.0.0"), new DeploymentInfo(stockId, "5.0.0")));
+		given(this.verificationService.findConsumerIdsByProviderId(this.providerId))
+			.willReturn(Set.of(this.consumerId));
+		given(this.verificationService.findProviderIdsByConsumerId(this.providerId)).willReturn(Set.of(stockId));
+		given(this.applicationService.findNameById(this.consumerId)).willReturn("payment-service");
+		given(this.applicationService.findNameById(stockId)).willReturn("stock-service");
+		given(this.verificationService.hasSuccessfulVerification(this.providerId, "1.0.0", this.consumerId, "2.0.0"))
+			.willReturn(true);
+		given(this.verificationService.hasSuccessfulVerification(stockId, "5.0.0", this.providerId, "1.0.0"))
+			.willReturn(false);
+
+		// when
+		CanIDeployResponse result = this.canIDeployService.check("order-service", "1.0.0", "staging");
+
+		// then
+		assertThat(result.safe()).isFalse();
+		assertThat(result.summary()).isEqualTo("1 of 1 provider(s) missing successful verification");
 	}
 
 }

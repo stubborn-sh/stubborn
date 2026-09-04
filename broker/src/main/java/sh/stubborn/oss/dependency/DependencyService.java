@@ -84,6 +84,18 @@ public class DependencyService {
 		return Set.copyOf(this.dependencyRepository.findDistinctConsumerIdsByProviderId(providerId));
 	}
 
+	/**
+	 * Return the applications the given consumer has declared a dependency on, at any
+	 * version. The mirror image of {@link #findConsumerIdsByProviderId(UUID)}, used by
+	 * can-i-deploy to find the providers a candidate deployment talks to.
+	 * @param consumerId the consumer application ID
+	 * @return the IDs of applications the consumer declared a dependency on
+	 */
+	@Cacheable(cacheNames = "dependencies", key = "'providerIds:' + #consumerId")
+	public Set<UUID> findProviderIdsByConsumerId(UUID consumerId) {
+		return Set.copyOf(this.dependencyRepository.findDistinctProviderIdsByConsumerId(consumerId));
+	}
+
 	List<DependencyInfo> findInfoByConsumer(String consumerName, @Nullable String consumerVersion) {
 		UUID consumerId = this.applicationService.findIdByName(consumerName);
 		List<Dependency> dependencies = (consumerVersion != null)

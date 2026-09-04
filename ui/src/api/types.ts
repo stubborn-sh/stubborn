@@ -54,11 +54,18 @@ export interface CanIDeployResponse {
   environment: string;
   summary: string;
   consumerResults: ConsumerResult[];
+  providerResults: ProviderResult[];
 }
 
 export interface ConsumerResult {
   consumer: string;
   consumerVersion: string;
+  verified: boolean;
+}
+
+export interface ProviderResult {
+  provider: string;
+  providerVersion: string;
   verified: boolean;
 }
 

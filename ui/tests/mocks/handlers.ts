@@ -263,6 +263,7 @@ export const mockCanIDeploySafe = {
   environment: "staging",
   summary: "All consumers verified",
   consumerResults: [{ consumer: "payment-service", consumerVersion: "2.0.0", verified: true }],
+  providerResults: [{ provider: "stock-service", providerVersion: "5.0.0", verified: true }],
 };
 
 export const mockCanIDeployUnsafe = {
@@ -270,11 +271,12 @@ export const mockCanIDeployUnsafe = {
   application: "order-service",
   version: "2.0.0",
   environment: "production",
-  summary: "1 of 2 consumer(s) missing successful verification",
+  summary: "1 of 2 consumer(s) and 1 of 1 provider(s) missing successful verification",
   consumerResults: [
     { consumer: "payment-service", consumerVersion: "2.0.0", verified: true },
     { consumer: "notification-service", consumerVersion: "1.0.0", verified: false },
   ],
+  providerResults: [{ provider: "stock-service", providerVersion: "5.0.0", verified: false }],
 };
 
 export const handlers = [
@@ -457,6 +459,7 @@ export const handlers = [
       environment,
       summary: "All consumers verified",
       consumerResults: [{ consumer: "payment-service", consumerVersion: "2.0.0", verified: true }],
+      providerResults: [{ provider: "stock-service", providerVersion: "5.0.0", verified: true }],
     });
   }),
 

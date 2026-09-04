@@ -59,7 +59,7 @@ class CanIDeployContractTest {
 		// given
 		var response = new CanIDeployResponse("order-service", "1.0.0", "staging", null, true,
 				"All 1 consumer(s) verified successfully",
-				List.of(new ConsumerResult("payment-service", "2.0.0", true)));
+				List.of(new ConsumerResult("payment-service", "2.0.0", true)), List.of());
 		given(this.canIDeployService.check("order-service", "1.0.0", "staging", null)).willReturn(response);
 
 		// when/then
@@ -78,7 +78,7 @@ class CanIDeployContractTest {
 		// given
 		var response = new CanIDeployResponse("order-service", "1.0.0", "staging", null, false,
 				"1 of 1 consumer(s) missing successful verification",
-				List.of(new ConsumerResult("payment-service", "2.0.0", false)));
+				List.of(new ConsumerResult("payment-service", "2.0.0", false)), List.of());
 		given(this.canIDeployService.check("order-service", "1.0.0", "staging", null)).willReturn(response);
 
 		// when/then

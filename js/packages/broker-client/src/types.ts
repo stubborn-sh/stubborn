@@ -113,12 +113,20 @@ export interface CanIDeployResponse {
   readonly safe: boolean;
   readonly summary: string;
   readonly consumerResults: readonly ConsumerResult[];
+  readonly providerResults: readonly ProviderResult[];
 }
 
 /** Individual consumer verification result in a can-i-deploy check. */
 export interface ConsumerResult {
   readonly consumer: string;
   readonly consumerVersion: string;
+  readonly verified: boolean;
+}
+
+/** Individual provider verification result in a can-i-deploy check. */
+export interface ProviderResult {
+  readonly provider: string;
+  readonly providerVersion: string;
   readonly verified: boolean;
 }
 
