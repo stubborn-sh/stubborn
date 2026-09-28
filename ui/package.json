@@ -26,7 +26,7 @@
     "@radix-ui/react-tabs": "^1.1.15",
     "@radix-ui/react-tooltip": "^1.2.10",
     "@tanstack/react-query": "^5.103.1",
-    "@xyflow/react": "^12.11.6",
+    "@xyflow/react": "^12.12.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.577.0",
