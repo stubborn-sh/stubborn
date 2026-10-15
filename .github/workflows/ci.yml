@@ -117,7 +117,7 @@ jobs:
       - name: Publish unit test results
         if: always()
         continue-on-error: true
-        uses: dorny/test-reporter@a43b3a5f7366b97d083190328d2c652e1a8b6aa2 # v3.0.0
+        uses: dorny/test-reporter@d1b5dff021aa968b288b02285a8bf47471c5928a # v3.2.0
         with:
           name: Unit Test Results
           path: '**/target/surefire-reports/TEST-*.xml'
@@ -127,7 +127,7 @@ jobs:
       - name: Publish E2E test results
         if: always()
         continue-on-error: true
-        uses: dorny/test-reporter@a43b3a5f7366b97d083190328d2c652e1a8b6aa2 # v3.0.0
+        uses: dorny/test-reporter@d1b5dff021aa968b288b02285a8bf47471c5928a # v3.2.0
         with:
           name: E2E Test Results
           path: 'e2e-tests/target/failsafe-reports/TEST-*.xml'
@@ -178,7 +178,7 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Lint workflows
-        uses: reviewdog/action-actionlint@13465d022aa41c282f730be17574b5ce692d0186 # v1.78.1
+        uses: reviewdog/action-actionlint@a8ac3eea598697a830f7d8e701fc9fcbfde88974 # v1.80.0
 
   bats-tests:
     name: BATS Release Tests
