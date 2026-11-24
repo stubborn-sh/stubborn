@@ -306,7 +306,7 @@ function parseDelayDistribution(
 ): DelayDistribution | undefined {
   if (raw === undefined) return undefined;
   const num = (key: string): number | undefined =>
-    typeof raw[key] === "number" ? (raw[key] as number) : undefined;
+    typeof raw[key] === "number" ? raw[key] : undefined;
   switch (raw["type"]) {
     case "lognormal": {
       const median = num("median");
