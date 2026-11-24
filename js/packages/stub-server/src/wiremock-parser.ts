@@ -58,6 +58,9 @@ export interface WireMockParseOptions {
 /** Spring Security CSRF parameter injected during RestDocs capture — not a real contract constraint. */
 const IGNORED_QUERY_PARAMS = new Set(["_csrf"]);
 
+/** WireMock's response templating transformer. */
+const RESPONSE_TEMPLATE_TRANSFORMER = "response-template";
+
 /**
  * Parse a WireMock JSON mapping string into a ParsedContract.
  * Throws if the mapping is malformed or missing required fields.
@@ -192,18 +195,20 @@ function buildResponse(mapping: WireMockMapping, options?: WireMockParseOptions)
   const headers = res.headers;
   const delayMs = res.fixedDelayMilliseconds;
 
+  const responseTemplating = res.transformers?.includes(RESPONSE_TEMPLATE_TRANSFORMER) === true;
+
   // jsonBody takes precedence, then body string, then bodyFileName
   let body: unknown;
   if (res.jsonBody !== undefined) {
-    body = res.jsonBody;
+    body = responseTemplating ? JSON.stringify(res.jsonBody) : res.jsonBody;
   } else if (res.body !== undefined) {
-    try {
-      body = JSON.parse(res.body);
-    } catch {
-      body = res.body;
-    }
+    // A template is rendered as text, so keep it exactly as written.
+    body = responseTemplating ? res.body : parseJsonOrText(res.body);
   } else if (res.bodyFileName !== undefined) {
     body = resolveBodyFileName(res.bodyFileName, options);
+    if (responseTemplating && typeof body !== "string") {
+      body = JSON.stringify(body);
+    }
   }
 
   return {
@@ -211,7 +216,16 @@ function buildResponse(mapping: WireMockMapping, options?: WireMockParseOptions)
     ...(headers !== undefined ? { headers } : {}),
     ...(body !== undefined ? { body } : {}),
     ...(delayMs !== undefined ? { delayMs } : {}),
+    ...(responseTemplating ? { responseTemplating } : {}),
   };
+}
+
+function parseJsonOrText(text: string): unknown {
+  try {
+    return JSON.parse(text);
+  } catch {
+    return text;
+  }
 }
 
 /**

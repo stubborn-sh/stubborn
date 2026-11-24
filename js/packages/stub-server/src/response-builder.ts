@@ -1,4 +1,5 @@
 import type { ContractResponse } from "./contract-parser.js";
+import { isTemplate, renderTemplate, type TemplateRequest } from "./response-template.js";
 
 /** Built HTTP response ready to send. */
 export interface BuiltResponse {
@@ -9,13 +10,26 @@ export interface BuiltResponse {
 
 /**
  * Build an HTTP response from a parsed contract response.
+ *
+ * When the response asks for templating ({@link ContractResponse.responseTemplating}) and the
+ * incoming `request` is given, the body and header values are rendered against it the way
+ * WireMock's `response-template` transformer does. Throws a `ResponseTemplateError` when a
+ * template uses syntax or helpers that are not supported.
  */
-export function buildResponse(contractResponse: ContractResponse): BuiltResponse {
+export function buildResponse(
+  contractResponse: ContractResponse,
+  request?: TemplateRequest,
+): BuiltResponse {
+  const render =
+    contractResponse.responseTemplating === true && request !== undefined
+      ? (text: string): string => (isTemplate(text) ? renderTemplate(text, request) : text)
+      : (text: string): string => text;
+
   const headers: Record<string, string> = {};
 
   if (contractResponse.headers !== undefined) {
     for (const [key, value] of Object.entries(contractResponse.headers)) {
-      headers[key] = value;
+      headers[key] = render(value);
     }
   }
 
@@ -23,9 +37,9 @@ export function buildResponse(contractResponse: ContractResponse): BuiltResponse
 
   if (contractResponse.body !== undefined) {
     if (typeof contractResponse.body === "string") {
-      body = contractResponse.body;
+      body = render(contractResponse.body);
     } else {
-      body = JSON.stringify(contractResponse.body);
+      body = render(JSON.stringify(contractResponse.body));
       if (headers["Content-Type"] === undefined) {
         headers["Content-Type"] = "application/json";
       }

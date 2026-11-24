@@ -30,6 +30,12 @@ export interface ContractResponse {
   readonly matchers?: ResponseMatchers;
   /** Simulated latency in milliseconds (from WireMock fixedDelayMilliseconds). */
   readonly delayMs?: number;
+  /**
+   * Render the body and header values as WireMock response templates against the incoming
+   * request (set when a WireMock mapping lists the `response-template` transformer). The body is
+   * then kept as the raw template text.
+   */
+  readonly responseTemplating?: boolean;
 }
 
 /** Response body matchers. */

@@ -1,7 +1,8 @@
 import { createServer, type Server, type IncomingMessage, type ServerResponse } from "node:http";
 import type { ParsedContract } from "./contract-parser.js";
 import { matchRequest } from "./request-matcher.js";
-import { buildResponse } from "./response-builder.js";
+import { buildResponse, type BuiltResponse } from "./response-builder.js";
+import { ResponseTemplateError } from "./response-template.js";
 
 /** Configuration for the stub server. */
 export interface StubServerConfig {
@@ -93,18 +94,18 @@ export class StubServer {
 
     let body: unknown = undefined;
     let rawBody: string | undefined;
-    if (method === "POST" || method === "PUT" || method === "PATCH" || method === "DELETE") {
-      try {
-        rawBody = await readBody(req);
-        if (rawBody !== "") {
-          const contentType = headers["content-type"] ?? "";
-          if (contentType.includes("json")) {
-            body = JSON.parse(rawBody);
-          }
+    // Read the body whatever the method: WireMock matches GET bodies too, and SCC generates
+    // body patterns for GET contracts that have one.
+    try {
+      rawBody = await readBody(req);
+      if (rawBody !== "") {
+        const contentType = headers["content-type"] ?? "";
+        if (contentType.includes("json")) {
+          body = JSON.parse(rawBody);
         }
-      } catch {
-        // ignore body parse errors
       }
+    } catch {
+      // ignore body parse errors
     }
 
     const result = matchRequest(method, url, headers, body, this.contracts, rawBody);
@@ -121,7 +122,27 @@ export class StubServer {
       await delay(delayMs);
     }
 
-    const response = buildResponse(result.contract.response);
+    let response: BuiltResponse;
+    try {
+      response = buildResponse(result.contract.response, {
+        method,
+        url,
+        headers: req.headersDistinct as Record<string, string[]>,
+        body: rawBody ?? "",
+      });
+    } catch (err: unknown) {
+      if (!(err instanceof ResponseTemplateError)) throw err;
+      // Like WireMock: a template that cannot be rendered is a server error, never served as text.
+      res.writeHead(500, { "Content-Type": "application/json" });
+      res.end(
+        JSON.stringify({
+          error: "Response template error",
+          contract: result.contract.name,
+          message: err.message,
+        }),
+      );
+      return;
+    }
     res.writeHead(response.status, response.headers);
     if (response.body !== null) {
       res.end(response.body);

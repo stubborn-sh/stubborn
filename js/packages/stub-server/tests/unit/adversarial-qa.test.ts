@@ -206,8 +206,6 @@ describe("bodyFileName -- binary and edge-case files", () => {
 
 describe("matchesJsonPath -- special characters in field names", () => {
   it("should_handle_field_name_with_spaces", () => {
-    // BUG: The regex uses [a-zA-Z_]\w* for dot notation -- spaces won't match.
-    // Bracket notation ['field name'] should work, but let's verify.
     const c = contract({
       bodyPatterns: [{ matchesJsonPath: "$[?(@.['field name'] == 'value')]" }],
     });
@@ -217,7 +215,6 @@ describe("matchesJsonPath -- special characters in field names", () => {
   });
 
   it("should_handle_field_name_with_dots", () => {
-    // BUG: Dot in field name -- bracket notation should handle this
     const c = contract({
       bodyPatterns: [{ matchesJsonPath: "$[?(@.['field.name'] == 'value')]" }],
     });
@@ -238,18 +235,15 @@ describe("matchesJsonPath -- special characters in field names", () => {
     expect(result.matched).toBe(false);
   });
 
-  it("should_handle_field_name_with_single_quotes", () => {
-    // BUG: The regex for bracket notation is ['([^']+)'] -- single quote in field name
-    // would break the regex: ['it's'] cannot be parsed
+  it("should_not_match_unescaped_single_quote_in_bracket_field_name", () => {
+    // ['it's'] is not valid JSONPath (the quote ends the name). Jayway, and so WireMock,
+    // rejects it; an invalid expression never matches.
     const c = contract({
       bodyPatterns: [{ matchesJsonPath: "$[?(@.['it's'] == 'value')]" }],
     });
     const body = { "it's": "value" };
     const result = matchRequest("POST", "/api/test", {}, body, [c]);
-    // EXPECTED: Should match (or gracefully fail)
-    // ACTUAL: Regex won't match because [^']+ stops at the apostrophe
-    // The unrecognized expression fallback returns true (conservative pass)
-    expect(result.matched).toBe(true);
+    expect(result.matched).toBe(false);
   });
 
   it("should_handle_field_name_with_brackets", () => {
@@ -265,24 +259,14 @@ describe("matchesJsonPath -- special characters in field names", () => {
 });
 
 describe("matchesJsonPath -- string values with special content", () => {
-  it("should_not_match_string_value_containing_escaped_single_quotes", () => {
-    // BUG: The bracket notation regex is ['([^']+)'] which uses [^']+ (no quotes allowed).
-    // When a value like "it\'s cool" appears in the expression, the regex pattern
-    // $[?(@.['msg'] == 'it\'s cool')] breaks because:
-    // 1. The JS string literal "it\\'s cool" becomes "it\'s cool" in the actual string
-    // 2. But the filter regex (.+)\)\]$ captures the value portion
-    // 3. The problem is actually that the field name regex [^']+ and the value parsing
-    //    interact poorly with embedded quotes.
-    // Result: The expression falls through to "unrecognized" -> returns true (wrong).
+  it("should_match_string_value_containing_escaped_single_quotes", () => {
+    // A backslash escapes the quote inside a JSONPath string literal (as in WireMock).
     const c = contract({
       bodyPatterns: [{ matchesJsonPath: "$[?(@.['msg'] == 'it\\'s cool')]" }],
     });
     const body = { msg: "it's cool" };
     const result = matchRequest("POST", "/api/test", {}, body, [c]);
-    // BUG CONFIRMED: Returns false because the expression is not properly parsed.
-    // The escaped backslash in JS results in the literal: $[?(@.['msg'] == 'it\'s cool')]
-    // The filter regex doesn't handle escaped quotes, causing a mismatch.
-    expect(result.matched).toBe(false);
+    expect(result.matched).toBe(true);
   });
 
   it("should_match_empty_string_value", () => {
@@ -291,127 +275,77 @@ describe("matchesJsonPath -- string values with special content", () => {
     });
     const body = { name: "" };
     const result = matchRequest("POST", "/api/test", {}, body, [c]);
-    // parseJsonPathValue("''") -> startsWith("'") && endsWith("'") -> slice(1,-1) = ""
     expect(result.matched).toBe(true);
   });
 
   it("should_match_string_value_that_looks_like_number", () => {
-    // BUG: If the value in the expression is '123', parseJsonPathValue should
-    // return the string "123", not the number 123. Let's verify.
     const c = contract({
       bodyPatterns: [{ matchesJsonPath: "$[?(@.['code'] == '123')]" }],
     });
     const body = { code: "123" };
     const result = matchRequest("POST", "/api/test", {}, body, [c]);
-    // '123' starts and ends with quotes -> returns string "123" -- correct
     expect(result.matched).toBe(true);
   });
 
-  it("should_not_match_number_when_value_is_quoted_string", () => {
-    // Quoted '123' should be string, not match numeric 123
+  it("should_match_number_against_numeric_string_literal", () => {
+    // Jayway (and so WireMock) compares a JSON number with a numeric string numerically.
     const c = contract({
       bodyPatterns: [{ matchesJsonPath: "$[?(@.['code'] == '123')]" }],
     });
     const body = { code: 123 };
     const result = matchRequest("POST", "/api/test", {}, body, [c]);
-    // '123' -> string "123", body has number 123 -> should NOT match (strict)
-    expect(result.matched).toBe(false);
+    expect(result.matched).toBe(true);
   });
 
   it("should_handle_string_value_with_parentheses", () => {
-    // BUG: The regex ends with \)\]$ -- a value containing ")" could confuse it
-    // Expression: $[?(@.['msg'] == 'hello (world)')]
-    // The regex (.+)\)\]$ would greedily match -- (.+) captures "'hello (world)'"
-    // and then needs )\] at end. The greedy (.+) would capture "'hello (world)'"
-    // leaving )\] -- but wait, the value itself contains ")" so regex could match
-    // at the wrong position.
     const c = contract({
       bodyPatterns: [{ matchesJsonPath: "$[?(@.['msg'] == 'hello (world)')]" }],
     });
     const body = { msg: "hello (world)" };
     const result = matchRequest("POST", "/api/test", {}, body, [c]);
-    // (.+) is greedy, so it will capture "'hello (world)'" leaving ")]" at end
-    // That matches \)\]$ -- so filterMatch[5] = "'hello (world)'"
-    // But wait: (.+) will capture as much as possible. The full string after == is:
-    // " 'hello (world)')]\n" (conceptually). Let me re-check:
-    // The full expression is: $[?(@.['msg'] == 'hello (world)')]
-    // After == we have: 'hello (world)')]
-    // (.+)\)\]$ needs to match: 'hello (world)')]
-    // Greedy (.+) tries to capture everything: 'hello (world)')] and then \)\]$
-    // fails. Backtracks: captures 'hello (world)' -- remaining )] -- \)\]$ needs
-    // ) then ] -- )] matches! So (.+) = "'hello (world)'" -- correct!
-    // parseJsonPathValue("'hello (world)'") = "hello (world)" -- correct!
     expect(result.matched).toBe(true);
   });
 
   it("should_handle_value_with_closing_bracket_and_paren", () => {
-    // Value containing ')]' which is the closing delimiter of the expression
     const c = contract({
       bodyPatterns: [{ matchesJsonPath: "$[?(@.['data'] == 'x)]y')]" }],
     });
     const body = { data: "x)]y" };
     const result = matchRequest("POST", "/api/test", {}, body, [c]);
-    // This is tricky: after == we have: 'x)]y')]
-    // (.+)\)\]$ : greedy (.+) tries 'x)]y')] -- remaining empty, \)\]$ fails
-    // Backtracks: (.+) = 'x)]y' -- remaining )] -- \)\]$ = ) then ] -- matches!
-    // But parseJsonPathValue("'x)]y'") = "x)]y" -- but body has "x)]y" -- match!
-    // Wait, the full expression is: $[?(@.['data'] == 'x)]y')]
-    // After == it's: 'x)]y')]
-    // (.+) greedily: captures "'x)]y'" (6 chars) -- remaining ")]" -- \)\]$ needs ")["
-    // Hmm, )] matches \)\]$ since ) matches \) and ] matches \] -- YES!
-    // So (.+) = "'x)]y'" and it works.
-    // Actually wait -- (.+) is greedy, it first captures "'x)]y')]" (8 chars),
-    // leaving "" -- \)\]$ doesn't match empty. Backtrack to "'x)]y')" (7 chars),
-    // remaining "]" -- \)\]$ needs 2 chars, fails. Backtrack to "'x)]y'" (6 chars),
-    // remaining ")]" -- \) matches ")" and \] matches "]" -- YES!
     expect(result.matched).toBe(true);
   });
 });
 
 describe("matchesJsonPath -- array and deeply nested bodies", () => {
-  it("should_reject_array_body_for_jsonpath_filter", () => {
-    // BUG: If body is an array, (body as Record<string, unknown>)[field] returns undefined
-    // because arrays don't have named properties (well, they do for "length" etc.)
+  it("should_filter_elements_of_array_body", () => {
+    // A filter on an array tests each element (Jayway / WireMock semantics).
     const c = contract({
       bodyPatterns: [{ matchesJsonPath: "$[?(@.['name'] == 'test')]" }],
     });
     const body = [{ name: "test" }, { name: "other" }];
     const result = matchRequest("POST", "/api/test", {}, body, [c]);
-    // body is an array (typeof === "object", not null) so it passes the initial check.
-    // Then (body as Record<string, unknown>)["name"] = undefined (arrays have numeric keys).
-    // So actual = undefined, expected = "test" -> not equal -> returns false.
-    expect(result.matched).toBe(false);
+    expect(result.matched).toBe(true);
   });
 
-  it("should_handle_existence_check_on_array_body", () => {
-    // $.0.name -- existence check on array element
+  it("should_not_index_arrays_with_dot_notation", () => {
+    // $.0.name is a member named "0", not an index: Jayway (and WireMock) do not match.
     const c = contract({
       bodyPatterns: [{ matchesJsonPath: "$.0.name" }],
     });
     const body = [{ name: "test" }];
     const result = matchRequest("POST", "/api/test", {}, body, [c]);
-    // parts = ["0", "name"]
-    // current = body (array), current["0"] = { name: "test" } (array index access works!)
-    // current["name"] = "test" -> not undefined -> true!
-    expect(result.matched).toBe(true);
+    expect(result.matched).toBe(false);
   });
 
   it("should_handle_three_level_nesting_with_bracket_notation", () => {
-    // BUG: The filter regex only supports 2 levels of nesting:
-    // @.['field1'].['field2'] but NOT @.['field1'].['field2'].['field3']
     const c = contract({
       bodyPatterns: [{ matchesJsonPath: "$[?(@.['a'].['b'].['c'] == 'deep')]" }],
     });
     const body = { a: { b: { c: "deep" } } };
     const result = matchRequest("POST", "/api/test", {}, body, [c]);
-    // The regex only captures 1 optional nested field (groups 3/4).
-    // Three levels won't match the filter regex.
-    // Falls through to existence check: $.a.b.c -- that would also fail since
-    // the expression starts with $[? not $.
-    // Falls through to "unrecognized expression" -> returns true (conservative pass)
-    // BUG: Should return false (the value at a.b.c may not equal "deep")
-    // but instead returns true because the expression is unrecognized.
     expect(result.matched).toBe(true);
+    const other = matchRequest("POST", "/api/test", {}, { a: { b: { c: "shallow" } } }, [c]);
+    expect(other.matched).toBe(false);
   });
 
   it("should_handle_field_with_undefined_value_for_existence_check", () => {
@@ -426,15 +360,14 @@ describe("matchesJsonPath -- array and deeply nested bodies", () => {
     expect(result.matched).toBe(false);
   });
 
-  it("should_handle_existence_check_for_null_valued_field", () => {
+  it("should_not_match_existence_check_for_null_valued_field", () => {
     const c = contract({
       bodyPatterns: [{ matchesJsonPath: "$.field" }],
     });
     const body = { field: null };
     const result = matchRequest("POST", "/api/test", {}, body, [c]);
-    // current = null -> null !== undefined -> returns TRUE
-    // This is correct: the field exists (just happens to be null)
-    expect(result.matched).toBe(true);
+    // WireMock: a definite path that selects null does not match.
+    expect(result.matched).toBe(false);
   });
 
   it("should_handle_existence_check_for_false_valued_field", () => {
@@ -468,43 +401,34 @@ describe("matchesJsonPath -- array and deeply nested bodies", () => {
   });
 });
 
-describe("matchesJsonPath -- unrecognized expressions silently pass", () => {
-  it("should_silently_pass_existence_without_equality_in_filter_syntax", () => {
-    // BUG: $[?(@.field)] is a valid JSONPath existence check in filter syntax
-    // but the code only recognizes $[?(@.field == value)] (with ==) and $.field
-    // The $[?(@.field)] form matches neither regex, so it falls through to
-    // "unrecognized expression -> return true"
+describe("matchesJsonPath -- filter operators beyond ==", () => {
+  it("should_not_match_existence_filter_for_missing_field", () => {
     const c = contract({
       bodyPatterns: [{ matchesJsonPath: "$[?(@.nonexistent)]" }],
     });
     const body = { other: "value" };
     const result = matchRequest("POST", "/api/test", {}, body, [c]);
-    // BUG: Returns true because expression is unrecognized, even though
-    // "nonexistent" field doesn't exist in body. Should return false.
-    expect(result.matched).toBe(true);
+    expect(result.matched).toBe(false);
   });
 
-  it("should_silently_pass_negation_filter", () => {
-    // $[?(@.field != 'value')] -- not-equal filter
+  it("should_evaluate_negation_filter", () => {
     const c = contract({
       bodyPatterns: [{ matchesJsonPath: "$[?(@.['field'] != 'wrong')]" }],
     });
     const body = { field: "correct" };
     const result = matchRequest("POST", "/api/test", {}, body, [c]);
-    // BUG: != is not recognized by the regex (only ==), so falls through
-    // to unrecognized -> returns true. Happens to be correct here, but
-    // would also return true if field == 'wrong'.
     expect(result.matched).toBe(true);
+    const wrong = matchRequest("POST", "/api/test", {}, { field: "wrong" }, [c]);
+    expect(wrong.matched).toBe(false);
   });
 
-  it("should_silently_pass_greater_than_filter", () => {
+  it("should_evaluate_greater_than_filter", () => {
     const c = contract({
       bodyPatterns: [{ matchesJsonPath: "$[?(@.['amount'] > 100)]" }],
     });
     const body = { amount: 50 };
     const result = matchRequest("POST", "/api/test", {}, body, [c]);
-    // BUG: > is not recognized, so returns true even though 50 < 100
-    expect(result.matched).toBe(true);
+    expect(result.matched).toBe(false);
   });
 
   it("should_evaluate_regex_match_in_jsonpath", () => {
@@ -525,7 +449,6 @@ describe("matchesJsonPath -- numeric edge cases", () => {
     });
     const body = { balance: -100 };
     const result = matchRequest("POST", "/api/test", {}, body, [c]);
-    // parseJsonPathValue("-100") -> Number("-100") = -100 -> not NaN -> returns -100
     expect(result.matched).toBe(true);
   });
 
@@ -538,40 +461,34 @@ describe("matchesJsonPath -- numeric edge cases", () => {
     expect(result.matched).toBe(true);
   });
 
-  it("should_handle_NaN_value_in_expression", () => {
-    // "NaN" is not 'true', 'false', 'null', and Number("NaN") is NaN
-    // So !Number.isNaN(NaN) is false, falls through to return "NaN" as string
+  it("should_not_match_invalid_NaN_literal", () => {
+    // NaN is not a JSONPath literal: the expression is invalid and never matches.
     const c = contract({
       bodyPatterns: [{ matchesJsonPath: "$[?(@.['value'] == NaN)]" }],
     });
     const body = { value: "NaN" };
     const result = matchRequest("POST", "/api/test", {}, body, [c]);
-    // parseJsonPathValue("NaN") -> Number("NaN") is NaN -> isNaN is true
-    // -> falls through to return "NaN" (string). body.value = "NaN" (string) -> match!
-    expect(result.matched).toBe(true);
+    expect(result.matched).toBe(false);
   });
 
-  it("should_handle_Infinity_in_expression", () => {
+  it("should_not_match_invalid_Infinity_literal", () => {
     const c = contract({
       bodyPatterns: [{ matchesJsonPath: "$[?(@.['value'] == Infinity)]" }],
     });
     const body = { value: Infinity };
     const result = matchRequest("POST", "/api/test", {}, body, [c]);
-    // parseJsonPathValue("Infinity") -> Number("Infinity") = Infinity, not NaN -> returns Infinity
-    // body.value = Infinity -> match!
-    // But JSON doesn't support Infinity, so this is a theoretical case
-    expect(result.matched).toBe(true);
+    // Infinity is not a JSONPath literal (nor JSON): invalid, so never matches.
+    expect(result.matched).toBe(false);
   });
 
-  it("should_not_match_string_zero_vs_number_zero", () => {
+  it("should_match_string_zero_vs_number_zero_literal", () => {
     const c = contract({
       bodyPatterns: [{ matchesJsonPath: "$[?(@.['count'] == 0)]" }],
     });
     const body = { count: "0" };
     const result = matchRequest("POST", "/api/test", {}, body, [c]);
-    // parseJsonPathValue("0") -> Number("0") = 0 (number)
-    // body.count = "0" (string) -> not equal -> false
-    expect(result.matched).toBe(false);
+    // Jayway compares a JSON string with a number literal as text: "0" equals 0.
+    expect(result.matched).toBe(true);
   });
 });
 

@@ -17,3 +17,12 @@ export { matchRequest } from "./request-matcher.js";
 export type { MatchResult } from "./request-matcher.js";
 export { buildResponse } from "./response-builder.js";
 export type { BuiltResponse } from "./response-builder.js";
+export {
+  matchesJsonPath,
+  readJsonPath,
+  evaluateJsonPath,
+  JsonPathSyntaxError,
+} from "./json-path.js";
+export type { JsonPathResult, JsonPathOptions } from "./json-path.js";
+export { renderTemplate, ResponseTemplateError } from "./response-template.js";
+export type { TemplateRequest } from "./response-template.js";

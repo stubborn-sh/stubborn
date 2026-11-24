@@ -1,5 +1,6 @@
 import { isDeepStrictEqual } from "node:util";
 import type { ParsedContract, RequestBodyPattern } from "./contract-parser.js";
+import { matchesJsonPath } from "./json-path.js";
 
 /** Result of matching a request against contracts. */
 export interface MatchResult {
@@ -209,6 +210,7 @@ function matchBodyPatterns(
   rawBody: string | undefined,
   patterns: readonly RequestBodyPattern[],
 ): boolean {
+  let jsonBody: unknown;
   for (const pattern of patterns) {
     if (pattern.equalToJson !== undefined) {
       let expected: unknown;
@@ -223,7 +225,9 @@ function matchBodyPatterns(
     }
 
     if (pattern.matchesJsonPath !== undefined) {
-      if (!evaluateJsonPathFilter(body, pattern.matchesJsonPath)) {
+      // WireMock reads the body as JSON for JSONPath whatever its Content-Type.
+      jsonBody ??= body !== undefined ? body : parseJson(rawBody);
+      if (!matchesJsonPath(jsonBody, pattern.matchesJsonPath)) {
         return false;
       }
     }
@@ -240,115 +244,11 @@ function matchBodyPatterns(
   return true;
 }
 
-/**
- * Evaluate a JSONPath filter expression against a JSON value.
- *
- * Supports the SCC-generated format:
- *   - `$[?(@.['field'] == 'string')]`  — string equality
- *   - `$[?(@.['field'] == 123)]`       — numeric equality
- *   - `$[?(@.['field'] == true)]`      — boolean equality
- *   - `$[?(@.['field'] == null)]`      — null check
- *   - `$[?(@.field == value)]`         — dot notation
- *   - `$.field.nested`                 — existence check (field must exist and be non-undefined)
- *
- * Returns true if the expression matches the body.
- */
-function evaluateJsonPathFilter(body: unknown, expression: string): boolean {
-  if (typeof body !== "object" || body === null) {
-    return false;
+function parseJson(raw: string | undefined): unknown {
+  if (raw === undefined || raw === "") return undefined;
+  try {
+    return JSON.parse(raw);
+  } catch {
+    return undefined;
   }
-
-  // Pattern 1: Filter expression — $[?(@.['field'] == value)] or $[?(@.field == value)]
-  const filterMatch = expression.match(
-    /^\$\[\?\(@\.(?:\['([^']+)'\]|([a-zA-Z_]\w*))(?:\.(?:\['([^']+)'\]|([a-zA-Z_]\w*)))?\s*==\s*(.+)\)\]$/,
-  );
-  if (filterMatch !== null) {
-    const field = filterMatch[1] ?? filterMatch[2] ?? "";
-    const nestedField = filterMatch[3] ?? filterMatch[4];
-    const expectedStr = (filterMatch[5] ?? "").trim();
-    const expected = parseJsonPathValue(expectedStr);
-
-    let actual: unknown = (body as Record<string, unknown>)[field];
-    if (nestedField !== undefined && typeof actual === "object" && actual !== null) {
-      actual = (actual as Record<string, unknown>)[nestedField];
-    }
-
-    return isDeepStrictEqual(actual, expected);
-  }
-
-  // Pattern 1b: Regex filter — $[?(@.field =~ /regex/)] (SCC-generated pattern)
-  const regexFilterMatch = expression.match(
-    /^\$\[\?\(@\.(?:\['([^']+)'\]|([a-zA-Z_]\w*))\s*=~\s*\/(.+)\/\)\]$/,
-  );
-  if (regexFilterMatch !== null) {
-    const field = regexFilterMatch[1] ?? regexFilterMatch[2] ?? "";
-    const pattern = regexFilterMatch[3] ?? "";
-    const actual = (body as Record<string, unknown>)[field];
-    if (typeof actual !== "string" && typeof actual !== "number") return false;
-    try {
-      return new RegExp(pattern).test(String(actual));
-    } catch {
-      return false;
-    }
-  }
-
-  // Pattern 1c: Size constraint — $[?(@.field.size() >= N)] or <= N
-  const sizeMatch = expression.match(
-    /^\$\[\?\(@\.(?:\['([^']+)'\]|([a-zA-Z_]\w*))\.size\(\)\s*(>=|<=|==)\s*(\d+)/,
-  );
-  if (sizeMatch !== null) {
-    const field = sizeMatch[1] ?? sizeMatch[2] ?? "";
-    const op = sizeMatch[3];
-    const expected = Number(sizeMatch[4]);
-    const actual = (body as Record<string, unknown>)[field];
-    if (!Array.isArray(actual)) return false;
-    const size = actual.length;
-    if (op === ">=") return size >= expected;
-    if (op === "<=") return size <= expected;
-    if (op === "==") return size === expected;
-    return false;
-  }
-
-  // Pattern 2: Existence check — $.field or $.field.nested
-  const pathMatch = expression.match(/^\$\.(.+)$/);
-  if (pathMatch !== null) {
-    const parts = (pathMatch[1] ?? "").split(".");
-    let current: unknown = body;
-    for (const part of parts) {
-      if (typeof current !== "object" || current === null) {
-        return false;
-      }
-      const cleanPart = part.startsWith("['") && part.endsWith("']") ? part.slice(2, -2) : part;
-      current = (current as Record<string, unknown>)[cleanPart];
-    }
-    return current !== undefined;
-  }
-
-  // Unrecognized expression — conservative pass (don't block matching)
-  return true;
-}
-
-/**
- * Parse a value from a JSONPath filter expression.
- * Handles: 'string', 123, 123.45, true, false, null
- */
-function parseJsonPathValue(value: string): unknown {
-  // String literal: 'value'
-  if (value.startsWith("'") && value.endsWith("'")) {
-    return value.slice(1, -1);
-  }
-
-  // Boolean
-  if (value === "true") return true;
-  if (value === "false") return false;
-
-  // Null
-  if (value === "null") return null;
-
-  // Number
-  const num = Number(value);
-  if (!Number.isNaN(num)) return num;
-
-  // Fallback: treat as string
-  return value;
 }
