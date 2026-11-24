@@ -39,8 +39,8 @@ type FetchInit = Parameters<typeof globalThis.fetch>[1];
  * ```
  */
 export function fetchFromHandler(handler: RequestHandler): typeof globalThis.fetch {
-  return (async (input: FetchInput, init: FetchInit): Promise<Response> => {
+  return async (input: FetchInput, init: FetchInit): Promise<Response> => {
     const request = new Request(input, init);
     return await handler(request);
-  }) as typeof globalThis.fetch;
+  };
 }
