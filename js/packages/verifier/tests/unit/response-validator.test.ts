@@ -100,3 +100,59 @@ describe("validateResponse", () => {
     expect(result.valid).toBe(true);
   });
 });
+
+describe("validateResponse body matchers with full JSONPath", () => {
+  const items = { items: [{ id: "1" }, { id: "22" }] };
+  const contractWith = (matcher: {
+    path: string;
+    type: "by_regex" | "by_type" | "by_equality";
+    value?: string;
+  }): ParsedContract => makeContract({ body: items, matchers: { body: [matcher] } });
+
+  it("should_apply_by_regex_to_every_element_of_a_wildcard_path", () => {
+    const contract = contractWith({ path: "$.items[*].id", type: "by_regex", value: "[0-9]+" });
+    expect(validateResponse(contract, makeResult({ body: items })).valid).toBe(true);
+    const bad = { items: [{ id: "1" }, { id: "x" }] };
+    expect(validateResponse(contract, makeResult({ body: bad })).valid).toBe(false);
+  });
+
+  it("should_fail_a_wildcard_matcher_that_selects_nothing", () => {
+    const contract = contractWith({ path: "$.items[*].id", type: "by_regex", value: "[0-9]+" });
+    expect(validateResponse(contract, makeResult({ body: { items: [] } })).valid).toBe(false);
+  });
+
+  it("should_resolve_bracket_and_index_paths", () => {
+    const contract = contractWith({
+      path: "$['items'][1].id",
+      type: "by_regex",
+      value: "[0-9]{2}",
+    });
+    expect(validateResponse(contract, makeResult({ body: items })).valid).toBe(true);
+    const bad = { items: [{ id: "1" }, { id: "2" }] };
+    expect(validateResponse(contract, makeResult({ body: bad })).valid).toBe(false);
+  });
+
+  it("should_check_by_type_on_each_element_against_the_contract", () => {
+    const contract = contractWith({ path: "$.items[*].id", type: "by_type" });
+    expect(validateResponse(contract, makeResult({ body: { items: [{ id: "a" }] } })).valid).toBe(
+      true,
+    );
+    expect(validateResponse(contract, makeResult({ body: { items: [{ id: 1 }] } })).valid).toBe(
+      false,
+    );
+  });
+
+  it("should_compare_by_equality_on_a_wildcard_path_as_a_list", () => {
+    const contract = contractWith({ path: "$.items[*].id", type: "by_equality" });
+    expect(validateResponse(contract, makeResult({ body: items })).valid).toBe(true);
+    const reordered = { items: [{ id: "22" }, { id: "1" }] };
+    expect(validateResponse(contract, makeResult({ body: reordered })).valid).toBe(false);
+  });
+
+  it("should_report_an_invalid_path_as_a_failure", () => {
+    const contract = contractWith({ path: "$.items[", type: "by_regex", value: ".*" });
+    const result = validateResponse(contract, makeResult({ body: items }));
+    expect(result.valid).toBe(false);
+    expect(result.failures[0]?.actual).toContain("invalid JSONPath");
+  });
+});

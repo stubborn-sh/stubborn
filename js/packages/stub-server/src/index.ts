@@ -26,3 +26,6 @@ export {
 export type { JsonPathResult, JsonPathOptions } from "./json-path.js";
 export { renderTemplate, ResponseTemplateError } from "./response-template.js";
 export type { TemplateRequest } from "./response-template.js";
+export type { RequestHeaders } from "./request-matcher.js";
+export { compileRequestPattern } from "./wiremock-request-matcher.js";
+export type { CompiledRequestPattern, IncomingRequest } from "./wiremock-request-matcher.js";

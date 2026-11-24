@@ -108,11 +108,22 @@ export class StubServer {
       // ignore body parse errors
     }
 
-    const result = matchRequest(method, url, headers, body, this.contracts, rawBody);
+    const result = matchRequest(method, url, req.headersDistinct, body, this.contracts, rawBody);
 
     if (!result.matched || result.contract === null) {
       res.writeHead(404, { "Content-Type": "application/json" });
-      res.end(JSON.stringify({ error: "No matching contract found", method, url }));
+      const skipped = this.contracts
+        .filter((c) => c.unsupportedMatchers !== undefined)
+        .map((c) => ({ contract: c.name, unsupportedMatchers: c.unsupportedMatchers }));
+      res.end(
+        JSON.stringify({
+          error: "No matching contract found",
+          method,
+          url,
+          // Stubs that can never match here because they use matchers stub-server cannot evaluate.
+          ...(skipped.length > 0 ? { skippedStubs: skipped } : {}),
+        }),
+      );
       return;
     }
 

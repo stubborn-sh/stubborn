@@ -20,6 +20,12 @@ export interface ContractRequest {
   readonly queryParameters?: Readonly<Record<string, string>>;
   /** WireMock body patterns — all must match (AND logic). */
   readonly bodyPatterns?: readonly RequestBodyPattern[];
+  /**
+   * The WireMock `request` pattern this contract was parsed from. When present, requests are
+   * matched with WireMock's semantics against it (the other fields are kept for callers that
+   * read them, e.g. to build a request).
+   */
+  readonly wireMock?: Readonly<Record<string, unknown>>;
 }
 
 /** Parsed response portion of a contract. */
@@ -57,6 +63,11 @@ export interface ParsedContract {
   readonly response: ContractResponse;
   /** WireMock priority (lower = higher priority). */
   readonly priority?: number;
+  /**
+   * WireMock matchers in this contract's request that stub-server cannot evaluate (e.g. XPath).
+   * Such a contract never matches, rather than matching requests WireMock would reject.
+   */
+  readonly unsupportedMatchers?: readonly string[];
 }
 
 interface RawContract {

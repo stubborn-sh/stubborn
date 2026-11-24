@@ -367,9 +367,13 @@ describe("parseWireMockMapping", () => {
     ).toThrow('missing "method"');
   });
 
-  it("should_throw_when_url_and_urlPath_are_missing", () => {
-    expect(() =>
-      parseWireMockMapping("bad.json", '{"request":{"method":"GET"},"response":{"status":200}}'),
-    ).toThrow('must have "url" or "urlPath"');
+  it("should_accept_a_mapping_without_url_like_wiremock", () => {
+    // WireMock treats a request pattern without any URL as matching every URL.
+    const contract = parseWireMockMapping(
+      "any-url.json",
+      '{"request":{"method":"GET"},"response":{"status":200}}',
+    );
+    expect(contract.request.url).toBeUndefined();
+    expect(contract.request.urlPath).toBeUndefined();
   });
 });

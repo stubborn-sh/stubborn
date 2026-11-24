@@ -1,5 +1,6 @@
 import { readFileSync, existsSync } from "node:fs";
 import { resolve, sep } from "node:path";
+import { compiledRequestPattern } from "./wiremock-request-matcher.js";
 import type {
   ParsedContract,
   ContractRequest,
@@ -96,12 +97,14 @@ export function parseWireMockMapping(
   const request = buildRequest(name, mapping);
   const response = buildResponse(mapping, options);
   const priority = mapping.priority;
+  const { unsupported } = compiledRequestPattern(request.wireMock ?? {});
 
   return {
     name,
     request,
     response,
     ...(priority !== undefined ? { priority } : {}),
+    ...(unsupported.length > 0 ? { unsupportedMatchers: unsupported } : {}),
   };
 }
 
@@ -118,9 +121,7 @@ function buildRequest(name: string, mapping: WireMockMapping): ContractRequest {
   const urlPath = req.urlPath ?? req.urlPathPattern;
   const url = req.url ?? req.urlPattern;
 
-  if (url === undefined && urlPath === undefined) {
-    throw new Error(`WireMock mapping "${name}" request must have "url" or "urlPath"`);
-  }
+  // No URL at all is valid WireMock: the mapping matches any URL.
 
   // Extract headers: WireMock uses { "Header": { "equalTo": "value" } }
   let headers: Record<string, string> | undefined;
@@ -183,6 +184,7 @@ function buildRequest(name: string, mapping: WireMockMapping): ContractRequest {
     ...(queryParameters !== undefined ? { queryParameters } : {}),
     ...(body !== undefined ? { body } : {}),
     ...(bodyPatterns.length > 0 ? { bodyPatterns } : {}),
+    wireMock: req,
   };
 }
 

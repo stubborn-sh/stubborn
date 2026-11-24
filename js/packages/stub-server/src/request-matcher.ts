@@ -1,6 +1,10 @@
 import { isDeepStrictEqual } from "node:util";
 import type { ParsedContract, RequestBodyPattern } from "./contract-parser.js";
 import { matchesJsonPath } from "./json-path.js";
+import { compiledRequestPattern } from "./wiremock-request-matcher.js";
+
+/** Request headers: one value, or every value of a repeated header. */
+export type RequestHeaders = Readonly<Record<string, string | readonly string[] | undefined>>;
 
 /** Result of matching a request against contracts. */
 export interface MatchResult {
@@ -12,12 +16,15 @@ export interface MatchResult {
  * Match an incoming HTTP request against a list of parsed contracts.
  * Returns the first matching contract, or null if none match.
  *
+ * Contracts parsed from WireMock mappings are matched with WireMock's semantics; other contracts
+ * (YAML) use the lenient contract rules (trailing slashes, header prefixes, regex-looking URLs).
+ *
  * @param rawBody - The raw request body string (needed for regex `matches` patterns).
  */
 export function matchRequest(
   method: string,
   url: string,
-  headers: Readonly<Record<string, string>>,
+  headers: RequestHeaders,
   body: unknown,
   contracts: readonly ParsedContract[],
   rawBody?: string,
@@ -33,11 +40,21 @@ export function matchRequest(
 function matchesSingle(
   method: string,
   url: string,
-  headers: Readonly<Record<string, string>>,
+  requestHeaders: RequestHeaders,
   body: unknown,
   rawBody: string | undefined,
   contract: ParsedContract,
 ): boolean {
+  if (contract.request.wireMock !== undefined) {
+    return compiledRequestPattern(contract.request.wireMock).matches({
+      method,
+      url,
+      headers: requestHeaders,
+      body: rawBody ?? (body === undefined ? "" : JSON.stringify(body)),
+    });
+  }
+  const headers = singleValued(requestHeaders);
+
   // Match method
   if (method.toUpperCase() !== contract.request.method) {
     return false;
@@ -251,4 +268,13 @@ function parseJson(raw: string | undefined): unknown {
   } catch {
     return undefined;
   }
+}
+
+function singleValued(headers: RequestHeaders): Record<string, string> {
+  const result: Record<string, string> = {};
+  for (const [key, value] of Object.entries(headers)) {
+    if (value === undefined) continue;
+    result[key] = typeof value === "string" ? value : value.join(", ");
+  }
+  return result;
 }

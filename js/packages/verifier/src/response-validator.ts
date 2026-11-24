@@ -1,4 +1,4 @@
-import type { ParsedContract } from "@stubborn-sh/stub-server";
+import { evaluateJsonPath, type BodyMatcher, type ParsedContract } from "@stubborn-sh/stub-server";
 import type { ExecutionResult } from "./request-executor.js";
 import { byRegex, byType, byEquality } from "./matchers.js";
 
@@ -73,34 +73,8 @@ export function validateResponse(
   // Validate body with matchers
   if (contract.response.matchers?.body !== undefined) {
     for (const matcher of contract.response.matchers.body) {
-      const actualValue = getJsonPathValue(actual.body, matcher.path);
-
-      let valid: boolean;
-      switch (matcher.type) {
-        case "by_regex":
-          valid = byRegex(actualValue, matcher.value ?? ".*");
-          break;
-        case "by_type": {
-          const expectedValue = getJsonPathValue(contract.response.body, matcher.path);
-          valid = byType(actualValue, expectedValue);
-          break;
-        }
-        case "by_equality": {
-          const expectedValue = getJsonPathValue(contract.response.body, matcher.path);
-          valid = byEquality(actualValue, expectedValue);
-          break;
-        }
-        default:
-          valid = false;
-      }
-
-      if (!valid) {
-        failures.push({
-          field: `body${matcher.path}`,
-          expected: `${matcher.type}(${matcher.value ?? ""})`,
-          actual: JSON.stringify(actualValue),
-        });
-      }
+      const failure = validateMatcher(matcher, actual.body, contract.response.body);
+      if (failure !== undefined) failures.push(failure);
     }
   }
 
@@ -112,24 +86,47 @@ export function validateResponse(
 }
 
 /**
- * Simple JSONPath-like value extractor. Supports `$.field.nested` syntax.
+ * Check one body matcher. The path is full JSONPath; a path selecting several values (`[*]`,
+ * filters, deep scan) must select at least one, and every selected value must satisfy the
+ * matcher — as the Java verifier's `allElementsMatch`.
  */
-function getJsonPathValue(obj: unknown, path: string): unknown {
-  if (typeof obj !== "object" || obj === null) {
-    return undefined;
+function validateMatcher(
+  matcher: BodyMatcher,
+  actualBody: unknown,
+  contractBody: unknown,
+): ValidationFailure | undefined {
+  const expected = `${matcher.type}(${matcher.value ?? ""})`;
+  let actual: ReturnType<typeof evaluateJsonPath>;
+  let reference: ReturnType<typeof evaluateJsonPath>;
+  try {
+    actual = evaluateJsonPath(actualBody, matcher.path);
+    reference = evaluateJsonPath(contractBody, matcher.path);
+  } catch (err: unknown) {
+    return {
+      field: `body${matcher.path}`,
+      expected,
+      actual: `invalid JSONPath: ${err instanceof Error ? err.message : String(err)}`,
+    };
   }
 
-  // Strip leading "$." prefix
-  const cleanPath = path.startsWith("$.") ? path.slice(2) : path;
-  const parts = cleanPath.split(".");
+  const describe = (): string =>
+    JSON.stringify(actual.definite ? actual.values[0] : actual.values) ?? "undefined";
+  const fail: ValidationFailure = { field: `body${matcher.path}`, expected, actual: describe() };
 
-  let current: unknown = obj;
-  for (const part of parts) {
-    if (typeof current !== "object" || current === null) {
-      return undefined;
+  if (matcher.type === "by_equality") {
+    const want = reference.definite ? reference.values[0] : reference.values;
+    const got = actual.definite ? actual.values[0] : actual.values;
+    return byEquality(got, want) ? undefined : fail;
+  }
+
+  if (actual.values.length === 0) return fail;
+  const ok = actual.values.every((value, i) => {
+    if (matcher.type === "by_regex") return byRegex(value, matcher.value ?? ".*");
+    if (matcher.type === "by_type") {
+      // Each selected value must have the type of the contract's value at that position.
+      return byType(value, reference.values[Math.min(i, reference.values.length - 1)]);
     }
-    current = (current as Record<string, unknown>)[part];
-  }
-
-  return current;
+    return false;
+  });
+  return ok ? undefined : fail;
 }
