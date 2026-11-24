@@ -42,6 +42,51 @@ export interface ContractResponse {
    * then kept as the raw template text.
    */
   readonly responseTemplating?: boolean;
+  /**
+   * The body exactly as it is served — text, or bytes for a binary or file body — taking
+   * precedence over {@link body} (kept as parsed JSON for callers that read it). Nothing is
+   * added: a response with a raw body gets no Content-Type it does not declare.
+   */
+  readonly rawBody?: string | Uint8Array;
+  /** A WireMock fault served instead of a response. */
+  readonly fault?: ResponseFault;
+  /** A random delay added to {@link delayMs} (WireMock `delayDistribution`). */
+  readonly delayDistribution?: DelayDistribution;
+  /** Send the body in chunks spread over a duration (WireMock `chunkedDribbleDelay`). */
+  readonly chunkedDribbleDelay?: {
+    readonly numberOfChunks: number;
+    readonly totalDuration: number;
+  };
+  /** Forward the request and serve the upstream response (WireMock `proxyBaseUrl`). */
+  readonly proxy?: ResponseProxy;
+  /** The stub, for WireMock's `Matched-Stub-Id` / `Matched-Stub-Name` response headers. */
+  readonly matchedStub?: { readonly id: string; readonly name?: string };
+}
+
+/** WireMock's fault types. */
+export type ResponseFault =
+  | "CONNECTION_RESET_BY_PEER"
+  | "EMPTY_RESPONSE"
+  | "MALFORMED_RESPONSE_CHUNK"
+  | "RANDOM_DATA_THEN_CLOSE";
+
+/** WireMock's delay distributions (milliseconds). */
+export type DelayDistribution =
+  | {
+      readonly type: "lognormal";
+      readonly median: number;
+      readonly sigma: number;
+      readonly maxValue?: number;
+    }
+  | { readonly type: "uniform"; readonly lower: number; readonly upper: number }
+  | { readonly type: "fixed"; readonly milliseconds: number };
+
+/** WireMock proxy settings of a response. */
+export interface ResponseProxy {
+  readonly baseUrl: string;
+  readonly urlPrefixToRemove?: string;
+  readonly additionalRequestHeaders?: Readonly<Record<string, string>>;
+  readonly removeRequestHeaders?: readonly string[];
 }
 
 /** Response body matchers. */

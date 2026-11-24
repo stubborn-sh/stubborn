@@ -1,17 +1,22 @@
 import { readFileSync, existsSync } from "node:fs";
 import { resolve, sep } from "node:path";
+import { randomUUID } from "node:crypto";
 import { compiledRequestPattern } from "./wiremock-request-matcher.js";
+import { jacksonJsonAt } from "./jackson-json.js";
 import type {
   ParsedContract,
   ContractRequest,
   ContractResponse,
   RequestBodyPattern,
+  ResponseFault,
+  DelayDistribution,
 } from "./contract-parser.js";
 
 /** Raw WireMock mapping JSON structure. */
 interface WireMockMapping {
   readonly id?: string;
   readonly uuid?: string;
+  readonly name?: string;
   readonly priority?: number;
   readonly request?: {
     readonly method?: string;
@@ -31,6 +36,17 @@ interface WireMockMapping {
     readonly headers?: Readonly<Record<string, string>>;
     readonly fixedDelayMilliseconds?: number;
     readonly transformers?: readonly string[];
+    readonly base64Body?: string;
+    readonly fault?: string;
+    readonly delayDistribution?: Readonly<Record<string, unknown>>;
+    readonly chunkedDribbleDelay?: {
+      readonly numberOfChunks?: number;
+      readonly totalDuration?: number;
+    };
+    readonly proxyBaseUrl?: string;
+    readonly proxyUrlPrefixToRemove?: string;
+    readonly additionalProxyRequestHeaders?: Readonly<Record<string, string>>;
+    readonly removeProxyRequestHeaders?: readonly string[];
   };
 }
 
@@ -95,7 +111,7 @@ export function parseWireMockMapping(
   }
 
   const request = buildRequest(name, mapping);
-  const response = buildResponse(mapping, options);
+  const response = buildResponse(mapping, json, options);
   const priority = mapping.priority;
   const { unsupported } = compiledRequestPattern(request.wireMock ?? {});
 
@@ -188,7 +204,18 @@ function buildRequest(name: string, mapping: WireMockMapping): ContractRequest {
   };
 }
 
-function buildResponse(mapping: WireMockMapping, options?: WireMockParseOptions): ContractResponse {
+const FAULTS = new Set<ResponseFault>([
+  "CONNECTION_RESET_BY_PEER",
+  "EMPTY_RESPONSE",
+  "MALFORMED_RESPONSE_CHUNK",
+  "RANDOM_DATA_THEN_CLOSE",
+]);
+
+function buildResponse(
+  mapping: WireMockMapping,
+  json: string,
+  options?: WireMockParseOptions,
+): ContractResponse {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- validated in parseWireMockMapping
   const res = mapping.response!;
   const status = res.status ?? 200;
@@ -199,27 +226,121 @@ function buildResponse(mapping: WireMockMapping, options?: WireMockParseOptions)
 
   const responseTemplating = res.transformers?.includes(RESPONSE_TEMPLATE_TRANSFORMER) === true;
 
-  // jsonBody takes precedence, then body string, then bodyFileName
+  // WireMock serves the first of body, jsonBody (unless null) and base64Body
+  // (ResponseDefinition: Body.fromOneOf), and a body file only without any of them
+  // (specifiesBodyFile). `body` keeps the parsed JSON for callers that read it; `rawBody` is what
+  // is served.
   let body: unknown;
-  if (res.jsonBody !== undefined) {
-    body = responseTemplating ? JSON.stringify(res.jsonBody) : res.jsonBody;
-  } else if (res.body !== undefined) {
+  let rawBody: string | Uint8Array | undefined;
+  if (res.body !== undefined) {
+    rawBody = res.body;
     // A template is rendered as text, so keep it exactly as written.
     body = responseTemplating ? res.body : parseJsonOrText(res.body);
+  } else if (res.jsonBody !== undefined && res.jsonBody !== null) {
+    rawBody = jacksonJsonAt(json, ["response", "jsonBody"]) ?? JSON.stringify(res.jsonBody);
+    body = responseTemplating ? rawBody : res.jsonBody;
+  } else if (res.base64Body !== undefined) {
+    rawBody = new Uint8Array(Buffer.from(res.base64Body, "base64"));
+    body = Buffer.from(rawBody).toString("utf-8");
   } else if (res.bodyFileName !== undefined) {
-    body = resolveBodyFileName(res.bodyFileName, options);
-    if (responseTemplating && typeof body !== "string") {
-      body = JSON.stringify(body);
+    const file = readBodyFile(res.bodyFileName, options);
+    if (file !== undefined) {
+      const text = Buffer.from(file).toString("utf-8");
+      rawBody = responseTemplating ? text : file;
+      body = parseJsonOrText(text.replace(/^\uFEFF/, ""));
+    } else {
+      body = resolveBodyFileName(res.bodyFileName, options);
     }
   }
+
+  const fault =
+    res.fault !== undefined && FAULTS.has(res.fault as ResponseFault)
+      ? (res.fault as ResponseFault)
+      : undefined;
+  const delayDistribution = parseDelayDistribution(res.delayDistribution);
+  const dribble = res.chunkedDribbleDelay;
+  const proxy =
+    res.proxyBaseUrl !== undefined
+      ? {
+          baseUrl: res.proxyBaseUrl,
+          ...(res.proxyUrlPrefixToRemove !== undefined
+            ? { urlPrefixToRemove: res.proxyUrlPrefixToRemove }
+            : {}),
+          ...(res.additionalProxyRequestHeaders !== undefined
+            ? { additionalRequestHeaders: res.additionalProxyRequestHeaders }
+            : {}),
+          ...(res.removeProxyRequestHeaders !== undefined
+            ? { removeRequestHeaders: res.removeProxyRequestHeaders }
+            : {}),
+        }
+      : undefined;
 
   return {
     status,
     ...(headers !== undefined ? { headers } : {}),
     ...(body !== undefined ? { body } : {}),
+    ...(rawBody !== undefined ? { rawBody } : {}),
     ...(delayMs !== undefined ? { delayMs } : {}),
     ...(responseTemplating ? { responseTemplating } : {}),
+    ...(fault !== undefined ? { fault } : {}),
+    ...(delayDistribution !== undefined ? { delayDistribution } : {}),
+    ...(dribble?.numberOfChunks !== undefined && dribble.totalDuration !== undefined
+      ? {
+          chunkedDribbleDelay: {
+            numberOfChunks: dribble.numberOfChunks,
+            totalDuration: dribble.totalDuration,
+          },
+        }
+      : {}),
+    ...(proxy !== undefined ? { proxy } : {}),
+    matchedStub: {
+      // WireMock gives a mapping without an id a random one.
+      id: mapping.id ?? mapping.uuid ?? randomUUID(),
+      ...(mapping.name !== undefined ? { name: mapping.name } : {}),
+    },
   };
+}
+
+function parseDelayDistribution(
+  raw: Readonly<Record<string, unknown>> | undefined,
+): DelayDistribution | undefined {
+  if (raw === undefined) return undefined;
+  const num = (key: string): number | undefined =>
+    typeof raw[key] === "number" ? (raw[key] as number) : undefined;
+  switch (raw["type"]) {
+    case "lognormal": {
+      const median = num("median");
+      const sigma = num("sigma");
+      const maxValue = num("maxValue");
+      if (median === undefined || sigma === undefined) return undefined;
+      return { type: "lognormal", median, sigma, ...(maxValue !== undefined ? { maxValue } : {}) };
+    }
+    case "uniform": {
+      const lower = num("lower");
+      const upper = num("upper");
+      return lower === undefined || upper === undefined
+        ? undefined
+        : { type: "uniform", lower, upper };
+    }
+    case "fixed": {
+      const milliseconds = num("milliseconds");
+      return milliseconds === undefined ? undefined : { type: "fixed", milliseconds };
+    }
+    default:
+      return undefined;
+  }
+}
+
+/** The bytes of a `bodyFileName` under `filesDir`, or undefined when it cannot be read. */
+function readBodyFile(
+  bodyFileName: string,
+  options?: WireMockParseOptions,
+): Uint8Array | undefined {
+  if (options?.filesDir === undefined) return undefined;
+  const resolvedFilesDir = resolve(options.filesDir);
+  const filePath = resolve(resolvedFilesDir, bodyFileName);
+  if (!filePath.startsWith(resolvedFilesDir + sep) || !existsSync(filePath)) return undefined;
+  return new Uint8Array(readFileSync(filePath));
 }
 
 function parseJsonOrText(text: string): unknown {

@@ -9,6 +9,9 @@ export type {
   ResponseMatchers,
   BodyMatcher,
   ParseContractOptions,
+  ResponseFault,
+  DelayDistribution,
+  ResponseProxy,
 } from "./contract-parser.js";
 export { parseWireMockMapping } from "./wiremock-parser.js";
 export type { WireMockParseOptions } from "./wiremock-parser.js";

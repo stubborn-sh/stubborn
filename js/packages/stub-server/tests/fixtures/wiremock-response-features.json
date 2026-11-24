@@ -1,0 +1,198 @@
+{
+ "source": "WireMock 3.13.2 responses (content-encoding dropped: WireMock gzips for clients that accept it)",
+ "cases": [
+  {
+   "name": "body string verbatim",
+   "mapping": "{\"id\":\"8b3f2a4e-0000-4000-8000-000000000001\",\"name\":\"stub café😀\",\"request\":{\"method\":\"ANY\",\"urlPathPattern\":\"/.*\"},\"response\":{\"status\":200,\"body\":\"{\\\"a\\\":1.0, \\\"b\\\" : 9007199254740993}\"}}",
+   "request": {
+    "method": "GET",
+    "path": "/x"
+   },
+   "wiremock": {
+    "status": 200,
+    "headers": {
+     "matched-stub-id": "8b3f2a4e-0000-4000-8000-000000000001",
+     "matched-stub-name": "stub caf??"
+    },
+    "bodyHex": "7b2261223a312e302c20226222203a20393030373139393235343734303939337d"
+   }
+  },
+  {
+   "name": "jsonBody numbers+order",
+   "mapping": "{\"id\":\"8b3f2a4e-0000-4000-8000-000000000001\",\"name\":\"stub café😀\",\"request\":{\"method\":\"ANY\",\"urlPathPattern\":\"/.*\"},\"response\":{\"status\":200,\"jsonBody\":{\"b\":1,\"1\":2,\"a\":[1.0,1e2,1.50,-0,-0.0,12345678901234567890123,{\"2\":3,\"10\":4}],\"b\":5,\"s\":\"\\u00e9\\n\"}}}",
+   "request": {
+    "method": "GET",
+    "path": "/x"
+   },
+   "wiremock": {
+    "status": 200,
+    "headers": {
+     "matched-stub-id": "8b3f2a4e-0000-4000-8000-000000000001",
+     "matched-stub-name": "stub caf??"
+    },
+    "bodyHex": "7b2262223a352c2231223a322c2261223a5b312e302c3130302c312e35302c302c302e302c31323334353637383930313233343536373839303132332c7b2232223a332c223130223a347d5d2c2273223a22c3a95c6e227d"
+   }
+  },
+  {
+   "name": "base64Body",
+   "mapping": "{\"id\":\"8b3f2a4e-0000-4000-8000-000000000001\",\"name\":\"stub café😀\",\"request\":{\"method\":\"ANY\",\"urlPathPattern\":\"/.*\"},\"response\":{\"status\":200,\"base64Body\":\"/wBB\"}}",
+   "request": {
+    "method": "GET",
+    "path": "/x"
+   },
+   "wiremock": {
+    "status": 200,
+    "headers": {
+     "matched-stub-id": "8b3f2a4e-0000-4000-8000-000000000001",
+     "matched-stub-name": "stub caf??"
+    },
+    "bodyHex": "ff0041"
+   }
+  },
+  {
+   "name": "body over jsonBody",
+   "mapping": "{\"id\":\"8b3f2a4e-0000-4000-8000-000000000001\",\"name\":\"stub café😀\",\"request\":{\"method\":\"ANY\",\"urlPathPattern\":\"/.*\"},\"response\":{\"status\":200,\"body\":\"text\",\"jsonBody\":{\"a\":1}}}",
+   "request": {
+    "method": "GET",
+    "path": "/x"
+   },
+   "wiremock": {
+    "status": 200,
+    "headers": {
+     "matched-stub-id": "8b3f2a4e-0000-4000-8000-000000000001",
+     "matched-stub-name": "stub caf??"
+    },
+    "bodyHex": "74657874"
+   }
+  },
+  {
+   "name": "jsonBody over file",
+   "mapping": "{\"id\":\"8b3f2a4e-0000-4000-8000-000000000001\",\"name\":\"stub café😀\",\"request\":{\"method\":\"ANY\",\"urlPathPattern\":\"/.*\"},\"response\":{\"status\":200,\"jsonBody\":{\"a\":1},\"bodyFileName\":\"doc.json\"}}",
+   "request": {
+    "method": "GET",
+    "path": "/x"
+   },
+   "wiremock": {
+    "status": 200,
+    "headers": {
+     "matched-stub-id": "8b3f2a4e-0000-4000-8000-000000000001",
+     "matched-stub-name": "stub caf??"
+    },
+    "bodyHex": "7b2261223a317d"
+   }
+  },
+  {
+   "name": "binary file",
+   "mapping": "{\"id\":\"8b3f2a4e-0000-4000-8000-000000000001\",\"name\":\"stub café😀\",\"request\":{\"method\":\"ANY\",\"urlPathPattern\":\"/.*\"},\"response\":{\"status\":200,\"bodyFileName\":\"bin.dat\"}}",
+   "request": {
+    "method": "GET",
+    "path": "/x"
+   },
+   "wiremock": {
+    "status": 200,
+    "headers": {
+     "matched-stub-id": "8b3f2a4e-0000-4000-8000-000000000001",
+     "matched-stub-name": "stub caf??"
+    },
+    "bodyHex": "ff0062696e61727901"
+   }
+  },
+  {
+   "name": "json file verbatim",
+   "mapping": "{\"id\":\"8b3f2a4e-0000-4000-8000-000000000001\",\"name\":\"stub café😀\",\"request\":{\"method\":\"ANY\",\"urlPathPattern\":\"/.*\"},\"response\":{\"status\":200,\"bodyFileName\":\"doc.json\"}}",
+   "request": {
+    "method": "GET",
+    "path": "/x"
+   },
+   "wiremock": {
+    "status": 200,
+    "headers": {
+     "matched-stub-id": "8b3f2a4e-0000-4000-8000-000000000001",
+     "matched-stub-name": "stub caf??"
+    },
+    "bodyHex": "7b2266726f6d22203a202266696c65222c20226e223a20312e307d"
+   }
+  },
+  {
+   "name": "null jsonBody then base64",
+   "mapping": "{\"id\":\"8b3f2a4e-0000-4000-8000-000000000001\",\"name\":\"stub café😀\",\"request\":{\"method\":\"ANY\",\"urlPathPattern\":\"/.*\"},\"response\":{\"status\":200,\"jsonBody\":null,\"base64Body\":\"aGk=\"}}",
+   "request": {
+    "method": "GET",
+    "path": "/x"
+   },
+   "wiremock": {
+    "status": 200,
+    "headers": {
+     "matched-stub-id": "8b3f2a4e-0000-4000-8000-000000000001",
+     "matched-stub-name": "stub caf??"
+    },
+    "bodyHex": "6869"
+   }
+  },
+  {
+   "name": "lowercase content-type + jsonBody",
+   "mapping": "{\"id\":\"8b3f2a4e-0000-4000-8000-000000000001\",\"name\":\"stub café😀\",\"request\":{\"method\":\"ANY\",\"urlPathPattern\":\"/.*\"},\"response\":{\"status\":200,\"headers\":{\"content-type\":\"text/plain\"},\"jsonBody\":{\"a\":1}}}",
+   "request": {
+    "method": "GET",
+    "path": "/x"
+   },
+   "wiremock": {
+    "status": 200,
+    "headers": {
+     "content-type": "text/plain",
+     "matched-stub-id": "8b3f2a4e-0000-4000-8000-000000000001",
+     "matched-stub-name": "stub caf??"
+    },
+    "bodyHex": "7b2261223a317d"
+   }
+  },
+  {
+   "name": "matched stub name",
+   "mapping": "{\"id\":\"8b3f2a4e-0000-4000-8000-000000000001\",\"name\":\"stub café😀\",\"request\":{\"method\":\"ANY\",\"urlPathPattern\":\"/.*\"},\"response\":{\"status\":200,\"body\":\"x\"}}",
+   "request": {
+    "method": "GET",
+    "path": "/x"
+   },
+   "wiremock": {
+    "status": 200,
+    "headers": {
+     "matched-stub-id": "8b3f2a4e-0000-4000-8000-000000000001",
+     "matched-stub-name": "stub caf??"
+    },
+    "bodyHex": "78"
+   }
+  },
+  {
+   "name": "dribble",
+   "mapping": "{\"id\":\"8b3f2a4e-0000-4000-8000-000000000001\",\"name\":\"stub café😀\",\"request\":{\"method\":\"ANY\",\"urlPathPattern\":\"/.*\"},\"response\":{\"status\":200,\"body\":\"abcdefghij\",\"chunkedDribbleDelay\":{\"numberOfChunks\":3,\"totalDuration\":60}}}",
+   "request": {
+    "method": "GET",
+    "path": "/x"
+   },
+   "wiremock": {
+    "status": 200,
+    "headers": {
+     "matched-stub-id": "8b3f2a4e-0000-4000-8000-000000000001",
+     "matched-stub-name": "stub caf??"
+    },
+    "bodyHex": "6162636465666768696a"
+   }
+  },
+  {
+   "name": "fixed distribution",
+   "mapping": "{\"id\":\"8b3f2a4e-0000-4000-8000-000000000001\",\"name\":\"stub café😀\",\"request\":{\"method\":\"ANY\",\"urlPathPattern\":\"/.*\"},\"response\":{\"status\":200,\"body\":\"d\",\"delayDistribution\":{\"type\":\"fixed\",\"milliseconds\":40}}}",
+   "request": {
+    "method": "GET",
+    "path": "/x"
+   },
+   "wiremock": {
+    "status": 200,
+    "headers": {
+     "matched-stub-id": "8b3f2a4e-0000-4000-8000-000000000001",
+     "matched-stub-name": "stub caf??"
+    },
+    "bodyHex": "64"
+   }
+  }
+ ]
+}

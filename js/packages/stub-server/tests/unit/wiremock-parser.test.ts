@@ -74,7 +74,8 @@ describe("parseWireMockMapping", () => {
     expect(contract.response.body).toEqual({ status: "UP", version: "1.0.0" });
   });
 
-  it("should_prefer_jsonBody_over_body_string", () => {
+  it("should_prefer_body_string_over_jsonBody_like_wiremock", () => {
+    // WireMock's ResponseDefinition: Body.fromOneOf(null, body, jsonBody, base64Body).
     const json = JSON.stringify({
       request: { method: "GET", urlPath: "/api" },
       response: {
@@ -86,7 +87,8 @@ describe("parseWireMockMapping", () => {
 
     const contract = parseWireMockMapping("test.json", json);
 
-    expect(contract.response.body).toEqual({ new: "value" });
+    expect(contract.response.body).toEqual({ old: "value" });
+    expect(contract.response.rawBody).toBe('{"old":"value"}');
   });
 
   it("should_filter_out_csrf_query_parameters", () => {

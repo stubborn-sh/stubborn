@@ -5,7 +5,7 @@ import { isTemplate, renderTemplate, type TemplateRequest } from "./response-tem
 export interface BuiltResponse {
   readonly status: number;
   readonly headers: Readonly<Record<string, string>>;
-  readonly body: string | null;
+  readonly body: string | Uint8Array | null;
 }
 
 /**
@@ -33,14 +33,18 @@ export function buildResponse(
     }
   }
 
-  let body: string | null = null;
+  let body: string | Uint8Array | null = null;
 
-  if (contractResponse.body !== undefined) {
+  if (contractResponse.rawBody !== undefined) {
+    // Served as is, like WireMock: no re-serialization and no Content-Type added.
+    const raw = contractResponse.rawBody;
+    body = typeof raw === "string" ? render(raw) : raw;
+  } else if (contractResponse.body !== undefined) {
     if (typeof contractResponse.body === "string") {
       body = render(contractResponse.body);
     } else {
       body = render(JSON.stringify(contractResponse.body));
-      if (headers["Content-Type"] === undefined) {
+      if (!Object.keys(headers).some((key) => key.toLowerCase() === "content-type")) {
         headers["Content-Type"] = "application/json";
       }
     }
