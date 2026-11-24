@@ -1,4 +1,5 @@
 import { isDeepStrictEqual } from "node:util";
+import { javaFullMatchRegex } from "./java-regex.js";
 
 /**
  * A small JSONPath implementation that follows the Jayway JsonPath semantics WireMock
@@ -789,13 +790,9 @@ class Parser {
     const javaFlags = flagsMatch?.[0] ?? "";
     this.pos += javaFlags.length;
     const flags = [...javaFlags].filter((f) => f === "i" || f === "m" || f === "s").join("");
-    let regex: RegExp | null;
-    try {
-      regex = new RegExp(`^(?:${pattern})$`, flags);
-    } catch {
-      // A Java-only construct JavaScript cannot compile: the filter can never match.
-      regex = null;
-    }
+    // Jayway compiles the regex with Java's Pattern (no DOTALL); a Java-only construct JavaScript
+    // cannot reproduce yields null, and the filter never matches.
+    const regex = javaFullMatchRegex(pattern, { dotAll: false, flags });
     return { kind: "regex", regex };
   }
 

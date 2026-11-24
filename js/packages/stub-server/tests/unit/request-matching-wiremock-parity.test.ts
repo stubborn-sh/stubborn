@@ -1152,19 +1152,19 @@ describe("request matching parity with WireMock 3.13.2", () => {
     expect(verdict({ method: "get", urlPath: "/lower" }, "GET", "/lower", {}, "")).toBe(true);
   });
 
-  it("should_never_match_xml_matchers_it_cannot_evaluate", () => {
-    // WireMock evaluates XPath/XML; stub-server cannot, so the stub never matches (and reports
-    // why) instead of matching every body as it used to.
+  it("should_match_xml_matchers_like_wiremock", () => {
+    // Full XML parity is pinned in xml-matching-wiremock-parity.test.ts.
     const mapping = {
       method: "POST",
       urlPath: "/x",
       bodyPatterns: [{ matchesXPath: { expression: "/root/name/text()", equalTo: "a" } }],
     };
-    expect(verdict(mapping, "POST", "/x", {}, "<root><name>a</name></root>")).toBe(false);
+    expect(verdict(mapping, "POST", "/x", {}, "<root><name>a</name></root>")).toBe(true);
+    expect(verdict(mapping, "POST", "/x", {}, "<root><name>b</name></root>")).toBe(false);
     const contract = parseWireMockMapping(
       "x.json",
       JSON.stringify({ request: mapping, response: { status: 200 } }),
     );
-    expect(contract.unsupportedMatchers).toEqual(["bodyPatterns[0].matchesXPath"]);
+    expect(contract.unsupportedMatchers).toBeUndefined();
   });
 });

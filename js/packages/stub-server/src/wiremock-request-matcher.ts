@@ -1,5 +1,15 @@
 import { isDeepStrictEqual } from "node:util";
+import type { Document } from "@xmldom/xmldom";
+import { javaFullMatchRegex } from "./java-regex.js";
 import { evaluateJsonPath, matchesJsonPath } from "./json-path.js";
+import {
+  compileXmlEquality,
+  evaluateXPath,
+  nodeText,
+  parseXml,
+  stripNamespaces,
+  valueText,
+} from "./xml-matcher.js";
 
 /**
  * Request matching with WireMock 3 semantics for mappings loaded from WireMock JSON.
@@ -8,12 +18,15 @@ import { evaluateJsonPath, matchesJsonPath } from "./json-path.js";
  * `headers`, `queryParameters`, `cookies`, `basicAuthCredentials` and `bodyPatterns`, with the
  * matchers `equalTo` (+ `caseInsensitive`), `contains`, `doesNotContain`, `matches`,
  * `doesNotMatch`, `absent`, `and`, `or`, `equalToJson` (+ `ignoreArrayOrder`,
- * `ignoreExtraElements`, `${json-unit.*}` placeholders) and `matchesJsonPath` (string or
- * `{ expression, <matcher> }`).
+ * `ignoreExtraElements`, `${json-unit.*}` placeholders), `matchesJsonPath` (string or
+ * `{ expression, <matcher> }`), `matchesXPath` (string or `{ expression, <matcher> }`, with
+ * `xPathNamespaces`) and `equalToXml` (+ `enablePlaceholders`, custom placeholder delimiters,
+ * `ignoreOrderOfSameNode`).
  *
- * Anything else (XML/XPath, binary, date-time, multi-value and multipart patterns, custom
- * matchers…) is reported by {@link compileRequestPattern} as unsupported, and a mapping that uses
- * it never matches: silently ignoring a matcher would serve the stub to requests WireMock rejects.
+ * Anything else (binary, date-time, multi-value and multipart patterns, `exemptedComparisons`,
+ * custom matchers…) is reported by {@link compileRequestPattern} as unsupported, and a mapping that
+ * uses it never matches: silently ignoring a matcher would serve the stub to requests WireMock
+ * rejects.
  */
 
 /** The incoming request, as WireMock sees it. */
@@ -46,6 +59,8 @@ interface ParsedRequest {
   readonly cookies: ReadonlyMap<string, readonly string[]>;
   readonly body: string;
   json(): unknown;
+  /** The body as XML: namespace-aware, or with namespaces stripped (WireMock's default). */
+  xml(namespaceAware: boolean): Document | null;
 }
 
 const NOT_JSON: unique symbol = Symbol("not-json");
@@ -190,7 +205,9 @@ function compileValueMatcher(spec: unknown, where: string, unsupported: string[]
   }
 
   const caseInsensitive = spec["caseInsensitive"] === true;
-  const key = Object.keys(spec).find((k) => k !== "caseInsensitive" && !JSON_OPTION_KEYS.has(k));
+  const key = Object.keys(spec).find(
+    (k) => k !== "caseInsensitive" && !JSON_OPTION_KEYS.has(k) && !XML_OPTION_KEYS.has(k),
+  );
   const operand = key === undefined ? undefined : spec[key];
   const onMissing = key !== undefined && NEGATIVE_KEYS.has(key);
   const present = (test: (value: string) => boolean): ValueMatcher => {
@@ -228,6 +245,28 @@ function compileValueMatcher(spec: unknown, where: string, unsupported: string[]
         return actual !== NOT_JSON && jsonEquals(expected, actual, options);
       });
     }
+    case "equalToXml": {
+      if (typeof operand !== "string") break;
+      const exempted = spec["exemptedComparisons"];
+      if (exempted !== undefined && !(Array.isArray(exempted) && exempted.length === 0)) {
+        unsupported.push(`${where}.equalToXml.exemptedComparisons`);
+        return () => false;
+      }
+      const compiled = compileXmlEquality(operand, {
+        enablePlaceholders: spec["enablePlaceholders"] === true,
+        placeholderOpeningDelimiterRegex: stringOr(
+          spec["placeholderOpeningDelimiterRegex"],
+          "\\$\\{",
+        ),
+        placeholderClosingDelimiterRegex: stringOr(spec["placeholderClosingDelimiterRegex"], "\\}"),
+        ignoreOrderOfSameNode: spec["ignoreOrderOfSameNode"] === true,
+      });
+      if (typeof compiled !== "function") {
+        unsupported.push(`${where}.equalToXml (${compiled.unsupported})`);
+        return () => false;
+      }
+      return present(compiled);
+    }
     case "matchesJsonPath": {
       const matcher = compileJsonPathMatcher(spec, where, unsupported);
       return present((v) => matcher(parseJson(v)));
@@ -242,6 +281,9 @@ function compileValueMatcher(spec: unknown, where: string, unsupported: string[]
 function compileBodyMatcher(spec: unknown, where: string, unsupported: string[]): RequestMatcher {
   if (isRecord(spec) && "absent" in spec) {
     return (r) => r.body === "";
+  }
+  if (isRecord(spec) && "matchesXPath" in spec) {
+    return compileXPathMatcher(spec, where, unsupported);
   }
   if (isRecord(spec) && "matchesJsonPath" in spec) {
     const matcher = compileJsonPathMatcher(spec, where, unsupported);
@@ -294,6 +336,88 @@ function jsonPathValueText(value: unknown): string {
 // --- equalToJson -------------------------------------------------------------------------------
 
 const JSON_OPTION_KEYS = new Set(["ignoreArrayOrder", "ignoreExtraElements", "serializeAsString"]);
+
+const XML_OPTION_KEYS = new Set([
+  "enablePlaceholders",
+  "placeholderOpeningDelimiterRegex",
+  "placeholderClosingDelimiterRegex",
+  "ignoreOrderOfSameNode",
+  "exemptedComparisons",
+  "xPathNamespaces",
+]);
+
+function stringOr(value: unknown, fallback: string): string {
+  return typeof value === "string" ? value : fallback;
+}
+
+/**
+ * `matchesXPath`: a bare expression (matches when it selects a node; an expression that yields a
+ * string, number or boolean always matches, as in WireMock), or `{ expression, <matcher> }`
+ * applied to each selected node (any may match; none selected never matches).
+ */
+function compileXPathMatcher(
+  spec: Readonly<Record<string, unknown>>,
+  where: string,
+  unsupported: string[],
+): RequestMatcher {
+  const operand = spec["matchesXPath"];
+  const fail = (reason: string): RequestMatcher => {
+    unsupported.push(`${where}.matchesXPath (${reason})`);
+    return () => false;
+  };
+  let expression: string;
+  let valueMatcher: ValueMatcher | undefined;
+  let namespacesSpec: unknown = spec["xPathNamespaces"];
+  if (typeof operand === "string") {
+    expression = operand;
+  } else if (isRecord(operand) && typeof operand["expression"] === "string") {
+    expression = operand["expression"];
+    namespacesSpec = operand["xPathNamespaces"] ?? namespacesSpec;
+    const rest = Object.fromEntries(
+      Object.entries(operand).filter(([k]) => k !== "expression" && k !== "xPathNamespaces"),
+    );
+    if (Object.keys(rest).length > 0) {
+      valueMatcher = compileValueMatcher(rest, `${where}.matchesXPath`, unsupported);
+    }
+  } else {
+    return fail("expected an expression string or { expression, … }");
+  }
+
+  let namespaces: Record<string, string> | undefined;
+  if (namespacesSpec !== undefined) {
+    if (
+      !isRecord(namespacesSpec) ||
+      !Object.values(namespacesSpec).every((v) => typeof v === "string")
+    ) {
+      return fail("xPathNamespaces must map prefixes to URIs");
+    }
+    namespaces = namespacesSpec as Record<string, string>;
+  }
+
+  const probe = parseXml("<_/>");
+  try {
+    if (probe !== null) evaluateXPath(probe, expression, namespaces);
+  } catch (err: unknown) {
+    return fail(`invalid XPath: ${err instanceof Error ? err.message : String(err)}`);
+  }
+
+  return (r) => {
+    const doc = r.xml(namespaces !== undefined);
+    if (doc === null) return false;
+    let outcome: ReturnType<typeof evaluateXPath>;
+    try {
+      outcome = evaluateXPath(doc, expression, namespaces);
+    } catch {
+      return false;
+    }
+    if (outcome.kind === "value") {
+      return valueMatcher === undefined ? true : valueMatcher(valueText(outcome.value));
+    }
+    if (valueMatcher === undefined) return outcome.nodes.length > 0;
+    const matcher = valueMatcher;
+    return outcome.nodes.some((node) => matcher(nodeText(node)));
+  };
+}
 
 interface JsonOptions {
   readonly ignoreArrayOrder: boolean;
@@ -412,6 +536,8 @@ function parseRequest(request: IncomingRequest): ParsedRequest {
 
   let json: unknown;
   let parsed = false;
+  let xml: Document | null | undefined;
+  let stripped: Document | undefined;
   return {
     method: request.method.toUpperCase(),
     url,
@@ -426,6 +552,12 @@ function parseRequest(request: IncomingRequest): ParsedRequest {
         parsed = true;
       }
       return json;
+    },
+    xml(namespaceAware: boolean): Document | null {
+      if (xml === undefined) xml = parseXml(request.body);
+      if (namespaceAware || xml === null) return xml;
+      stripped ??= stripNamespaces(xml);
+      return stripped;
     },
   };
 }
@@ -450,11 +582,7 @@ function parseExpectedJson(operand: unknown): unknown {
 
 /** Java `Pattern.compile(regex, DOTALL).matcher(value).matches()`, as WireMock uses. */
 function fullMatchRegex(pattern: string): RegExp | null {
-  try {
-    return new RegExp(`^(?:${pattern})$`, "s");
-  } catch {
-    return null;
-  }
+  return javaFullMatchRegex(pattern);
 }
 
 function isRecord(value: unknown): value is Readonly<Record<string, unknown>> {
