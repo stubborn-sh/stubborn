@@ -443,6 +443,12 @@ function prepareView(state: ViewState, namespaceAware: boolean): boolean {
       break;
     }
   }
+  // Xerces keeps no text outside the root element (xmldom keeps the whitespace around it).
+  for (let child = doc.firstChild; child !== null;) {
+    const next = child.nextSibling;
+    if (child.nodeType === TEXT_NODE) doc.removeChild(child);
+    child = next;
+  }
   tag(doc);
   define(doc, "getElementById", () => null);
   const stack: { readonly node: Node; readonly depth: number }[] = [{ node: doc, depth: 0 }];
@@ -769,7 +775,7 @@ function renderElement(view: XPathDocument, state: ViewState, root: Element): st
     buffer = [];
   };
   const open = (element: Element, level: number, scope: ReadonlyMap<string, string>): Frame => {
-    const start = startTag(view, state, element, scope);
+    const start = startTag(view, state, element, scope, level === 0);
     out += start.tag;
     previousWasText = false;
     return {
@@ -848,9 +854,21 @@ function startTag(
   state: ViewState,
   element: Element,
   scope: ReadonlyMap<string, string>,
+  renderRoot: boolean,
 ): { readonly tag: string; readonly scope: ReadonlyMap<string, string> } {
-  const own = (state.declarations.get(element) ?? []).filter(
+  // Declarations come in name order, except that the rendered element itself, when prefixed,
+  // declares its own prefix first.
+  const colon = element.nodeName.indexOf(":");
+  const ownPrefix = colon === -1 ? "" : element.nodeName.slice(0, colon);
+  const declarations = (state.declarations.get(element) ?? []).filter(
     (a) => !a.value.startsWith(UNBOUND_PREFIX_URI),
+  );
+  const ownFirst =
+    ownPrefix !== "" && renderRoot && declarations.some((d) => declaredPrefix(d) === ownPrefix);
+  const own = [...declarations].sort((a, b) =>
+    ownFirst
+      ? Number(declaredPrefix(b) === ownPrefix) - Number(declaredPrefix(a) === ownPrefix)
+      : 0,
   );
   const regular = attributesOfView(element);
   const attribute = (name: string, value: string): string => ` ${name}="${escapeAttribute(value)}"`;
@@ -859,9 +877,9 @@ function startTag(
     const declared = new Map(scope);
     const written: Attr[] = [];
     for (const decl of own) {
-      const prefix = decl.nodeName === "xmlns" ? "" : decl.nodeName.slice(6);
-      // xmlns="" with no default namespace in effect is redundant, and not written.
-      if (prefix === "" && decl.value === "" && (declared.get("") ?? "") === "") continue;
+      const prefix = declaredPrefix(decl);
+      // A binding already in effect in the rendered output (xmlns="" at its root) is not repeated.
+      if ((declared.get(prefix) ?? (prefix === "" ? "" : undefined)) === decl.value) continue;
       declared.set(prefix, decl.value);
       written.push(decl);
     }
@@ -883,11 +901,33 @@ function startTag(
     tag += attribute(prefix === "" ? "xmlns" : `xmlns:${prefix}`, uri);
     inner.set(prefix, uri);
   };
-  for (const decl of own) {
-    const prefix = decl.nodeName === "xmlns" ? "" : decl.nodeName.slice(6);
-    // A declaration already in effect (e.g. xmlns="" at the rendering root) is not repeated.
-    if ((inner.get(prefix) ?? (prefix === "" ? "" : undefined)) !== decl.value)
-      bind(prefix, decl.value);
+  // A declaration already in effect, in the output or from the element's ancestors in the
+  // document, is not repeated; the element's own namespace is bound again if the output needs it
+  // — after the attributes, or first when there are none.
+  const kept = own.filter((decl) => {
+    const prefix = declaredPrefix(decl);
+    if ((inner.get(prefix) ?? (prefix === "" ? "" : undefined)) === decl.value) return false;
+    return inheritedBinding(state, element, prefix) !== decl.value;
+  });
+  const elementPrefix = element.prefix ?? "";
+  const elementUri = element.namespaceURI ?? "";
+  const boundAfterDeclarations = (): string =>
+    kept.find((d) => declaredPrefix(d) === elementPrefix)?.value ?? inner.get(elementPrefix) ?? "";
+  // A declaration of the element's own prefix that its ancestors already make is dropped like
+  // the others, unless one of its attributes uses that prefix too.
+  const ownDeclaration = declarations.find((d) => declaredPrefix(d) === ownPrefix);
+  const declaresFirst =
+    ownFirst &&
+    (inheritedBinding(state, element, ownPrefix) !== ownDeclaration?.value ||
+      regular.some((a) => (a.prefix ?? "") === ownPrefix));
+  if (
+    (declaresFirst || regular.length === 0) &&
+    (declaresFirst ? inner.get(elementPrefix) : boundAfterDeclarations()) !== elementUri
+  ) {
+    bind(elementPrefix, elementUri);
+  }
+  for (const decl of kept) {
+    if (inner.get(declaredPrefix(decl)) !== decl.value) bind(declaredPrefix(decl), decl.value);
   }
   for (const attr of regular) {
     const prefix = attr.prefix ?? "";
@@ -896,10 +936,24 @@ function startTag(
       bind(prefix, uri);
   }
   for (const attr of regular) tag += attribute(attr.nodeName, attr.value);
-  const prefix = element.prefix ?? "";
-  const uri = element.namespaceURI ?? "";
-  if ((inner.get(prefix) ?? "") !== uri) bind(prefix, uri);
+  if ((inner.get(elementPrefix) ?? "") !== elementUri) bind(elementPrefix, elementUri);
   return { tag, scope: inner };
+}
+
+function declaredPrefix(decl: Attr): string {
+  return decl.nodeName === "xmlns" ? "" : decl.nodeName.slice(6);
+}
+
+/** The URI a prefix is bound to by the element's ancestors in the document. */
+function inheritedBinding(state: ViewState, element: Element, prefix: string): string | undefined {
+  for (let node = element.parentNode; node !== null; node = node.parentNode) {
+    if (node.nodeType !== ELEMENT_NODE) break;
+    const decl = state.declarations
+      .get(node as Element)
+      ?.find((a) => declaredPrefix(a) === prefix && !a.value.startsWith(UNBOUND_PREFIX_URI));
+    if (decl !== undefined) return decl.value;
+  }
+  return prefix === "" ? "" : undefined;
 }
 
 function processingInstruction(node: Node): string {

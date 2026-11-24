@@ -165,6 +165,16 @@ describe("documented differences from WireMock 3.13.2", () => {
     expect(node("<a><![CDATA[😀]]>x</a>", "/*", "<a><![CDATA[😀]]>x</a>\n")).toBe(true);
   });
 
+  it("should_ignore_whitespace_around_the_root_element", () => {
+    // Xerces keeps no text nodes outside the root element: pretty-printed bodies often start
+    // with a newline.
+    expect(verdict([{ matchesXPath: "/text()" }], "\n<a/>")).toBe(false);
+    expect(
+      verdict([{ matchesXPath: { expression: "(//text())[1]", equalTo: "x" } }], "\n<a>x</a>\n"),
+    ).toBe(true);
+    expect(verdict([{ matchesXPath: "/a[count(/node())=1]" }], " <a/>\n")).toBe(true);
+  });
+
   it("should_not_support_the_namespace_axis", () => {
     const patterns = [{ matchesXPath: "/a/namespace::q", xPathNamespaces: { p: "urn:p" } }];
     expect(verdict(patterns, '<a xmlns:q="urn:x"/>')).toBe(false);
