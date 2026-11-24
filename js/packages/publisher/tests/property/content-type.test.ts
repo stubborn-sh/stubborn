@@ -17,7 +17,7 @@ describe("content-type property tests", () => {
       fc.property(
         fc.string({ minLength: 1 }).map((name) => `${name}.yaml`),
         (filename) => {
-          expect(detectContentType(filename)).toBe("application/x-yaml");
+          expect(detectContentType(filename)).toBe("application/x-spring-cloud-contract+yaml");
         },
       ),
     );

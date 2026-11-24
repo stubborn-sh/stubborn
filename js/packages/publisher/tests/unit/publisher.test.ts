@@ -13,7 +13,7 @@ function mockClient(
         contractName: "test.yaml",
         version: "1.0.0",
         content: "",
-        contentType: "application/x-yaml",
+        contentType: "application/x-spring-cloud-contract+yaml",
         createdAt: "2026-01-01",
       }),
   } as unknown as BrokerClient;
@@ -34,7 +34,7 @@ describe("ContractPublisher", () => {
       contractName: "test.yaml",
       version: "1.0.0",
       content: "content",
-      contentType: "application/x-yaml",
+      contentType: "application/x-spring-cloud-contract+yaml",
       createdAt: "2026-01-01",
     });
     const client = mockClient(publishFn);
@@ -44,7 +44,7 @@ describe("ContractPublisher", () => {
       {
         contractName: "test.yaml",
         content: "request:\n  method: GET",
-        contentType: "application/x-yaml",
+        contentType: "application/x-spring-cloud-contract+yaml",
       },
     ]);
 
@@ -57,9 +57,9 @@ describe("ContractPublisher", () => {
     expect(result.published).toHaveLength(1);
     expect(result.errors).toHaveLength(0);
     expect(publishFn).toHaveBeenCalledWith("my-app", "1.0.0", {
-      contractName: "test.yaml",
+      contractName: "test",
       content: "request:\n  method: GET",
-      contentType: "application/x-yaml",
+      contentType: "application/x-spring-cloud-contract+yaml",
     });
   });
 
@@ -85,7 +85,7 @@ describe("ContractPublisher", () => {
         contractName: "good.yaml",
         version: "1.0.0",
         content: "",
-        contentType: "application/x-yaml",
+        contentType: "application/x-spring-cloud-contract+yaml",
         createdAt: "2026-01-01",
       })
       .mockRejectedValueOnce(new Error("Conflict"));
@@ -93,8 +93,16 @@ describe("ContractPublisher", () => {
     const publisher = new ContractPublisher(client);
 
     mockScan.mockResolvedValueOnce([
-      { contractName: "good.yaml", content: "c1", contentType: "application/x-yaml" },
-      { contractName: "bad.yaml", content: "c2", contentType: "application/x-yaml" },
+      {
+        contractName: "good.yaml",
+        content: "c1",
+        contentType: "application/x-spring-cloud-contract+yaml",
+      },
+      {
+        contractName: "bad.yaml",
+        content: "c2",
+        contentType: "application/x-spring-cloud-contract+yaml",
+      },
     ]);
 
     const result = await publisher.publish({
@@ -105,7 +113,7 @@ describe("ContractPublisher", () => {
 
     expect(result.published).toHaveLength(1);
     expect(result.errors).toHaveLength(1);
-    expect(result.errors[0]?.contractName).toBe("bad.yaml");
+    expect(result.errors[0]?.contractName).toBe("bad");
     expect(result.errors[0]?.error.message).toBe("Conflict");
   });
 
@@ -115,7 +123,7 @@ describe("ContractPublisher", () => {
       contractName: "single.yaml",
       version: "1.0.0",
       content: "c",
-      contentType: "application/x-yaml",
+      contentType: "application/x-spring-cloud-contract+yaml",
       createdAt: "2026-01-01",
     });
     const client = mockClient(publishFn);
@@ -124,9 +132,39 @@ describe("ContractPublisher", () => {
     const result = await publisher.publishOne("my-app", "1.0.0", {
       contractName: "single.yaml",
       content: "content",
-      contentType: "application/x-yaml",
+      contentType: "application/x-spring-cloud-contract+yaml",
     });
 
     expect(result.contractName).toBe("single.yaml");
+  });
+
+  it("should_publish_contracts_under_their_path_without_extension_as_the_jvm", async () => {
+    const publishFn = vi.fn().mockResolvedValue({});
+    const publisher = new ContractPublisher(mockClient(publishFn));
+    mockScan.mockResolvedValueOnce([
+      {
+        contractName: "orders/get.v2.yml",
+        content: "c1",
+        contentType: "application/x-spring-cloud-contract+yaml",
+      },
+      {
+        contractName: "orders/Create.groovy",
+        content: "c2",
+        contentType: "application/x-spring-cloud-contract+groovy",
+      },
+    ]);
+
+    await publisher.publish({ applicationName: "my-app", version: "1.0.0", contractsDir: "/c" });
+
+    expect(publishFn).toHaveBeenNthCalledWith(1, "my-app", "1.0.0", {
+      contractName: "orders/get.v2",
+      content: "c1",
+      contentType: "application/x-spring-cloud-contract+yaml",
+    });
+    expect(publishFn).toHaveBeenNthCalledWith(2, "my-app", "1.0.0", {
+      contractName: "orders/Create",
+      content: "c2",
+      contentType: "application/x-spring-cloud-contract+groovy",
+    });
   });
 });

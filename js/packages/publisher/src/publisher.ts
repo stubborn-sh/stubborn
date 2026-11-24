@@ -1,6 +1,7 @@
 import type { BrokerClient, ContractResponse } from "@stubborn-sh/broker-client";
 import type { ScannedContract } from "./scanner.js";
 import { scanContracts } from "./scanner.js";
+import { brokerContractName } from "./content-type.js";
 
 /** Options for publishing contracts. */
 export interface PublishOptions {
@@ -48,15 +49,10 @@ export class ContractPublisher {
 
     for (const contract of scanned) {
       try {
-        const result = await this.client.publishContract(options.applicationName, options.version, {
-          contractName: contract.contractName,
-          content: contract.content,
-          contentType: contract.contentType,
-        });
-        published.push(result);
+        published.push(await this.publishOne(options.applicationName, options.version, contract));
       } catch (err: unknown) {
         errors.push({
-          contractName: contract.contractName,
+          contractName: brokerContractName(contract.contractName),
           error: err instanceof Error ? err : new Error(String(err)),
         });
       }
@@ -66,7 +62,8 @@ export class ContractPublisher {
   }
 
   /**
-   * Publish a single pre-scanned contract.
+   * Publish a single pre-scanned contract, under its path without the file extension (see
+   * {@link brokerContractName}), as the JVM publisher names it.
    */
   async publishOne(
     applicationName: string,
@@ -74,7 +71,7 @@ export class ContractPublisher {
     contract: ScannedContract,
   ): Promise<ContractResponse> {
     return this.client.publishContract(applicationName, version, {
-      contractName: contract.contractName,
+      contractName: brokerContractName(contract.contractName),
       content: contract.content,
       contentType: contract.contentType,
     });
