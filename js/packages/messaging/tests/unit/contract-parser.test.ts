@@ -124,7 +124,7 @@ outputMessage:
     });
   });
 
-  it("should parse consumer contract with input.messageFrom", () => {
+  it("should parse consumer contract with input.messageFrom (JS-only extension)", () => {
     // given
     const yaml = `
 description: Consume events from verifications topic

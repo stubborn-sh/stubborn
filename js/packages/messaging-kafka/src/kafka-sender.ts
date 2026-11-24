@@ -23,7 +23,17 @@ export class KafkaSender implements MessageSender {
       this.connected = true;
     }
 
-    const value = typeof payload === "string" ? payload : JSON.stringify(payload);
+    // As the JVM building block: bytes are sent verbatim (application/octet-stream unless the
+    // contract says otherwise), and a contract without a body sends a record with no value.
+    const binary = payload instanceof Uint8Array;
+    const value =
+      payload === null || payload === undefined
+        ? null
+        : binary
+          ? Buffer.from(payload.buffer, payload.byteOffset, payload.byteLength)
+          : typeof payload === "string"
+            ? payload
+            : JSON.stringify(payload);
 
     const kafkaHeaders: Record<string, string> = {};
     if (headers !== undefined) {
@@ -32,7 +42,7 @@ export class KafkaSender implements MessageSender {
       }
     }
     if (kafkaHeaders["contentType"] === undefined) {
-      kafkaHeaders["contentType"] = "application/json";
+      kafkaHeaders["contentType"] = binary ? "application/octet-stream" : "application/json";
     }
 
     await this.producer.send({

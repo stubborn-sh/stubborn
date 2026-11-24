@@ -37,8 +37,18 @@ export interface MessagingContract {
   readonly destination: string;
   readonly direction: MessageDirection;
   readonly headers: Readonly<Record<string, string>>;
+  /**
+   * The payload: `outputMessage.body`, the text of `outputMessage.bodyFromFile`, or the bytes
+   * (`Uint8Array`) of `outputMessage.bodyFromFileAsBytes`. Null when the contract has none, or
+   * when its file could not be read (see {@link unreadableFile}).
+   */
   readonly body: unknown;
   readonly triggeredBy?: string;
+  /**
+   * Set when the body comes from a file that could not be read, describing which file and why.
+   * Such a contract cannot be sent: `messageBody(contract)` throws.
+   */
+  readonly unreadableFile?: string;
 }
 
 /** Configuration for messaging stub setup. */
@@ -53,4 +63,15 @@ export interface MessagingStubConfig {
   readonly username?: string;
   readonly password?: string;
   readonly token?: string;
+  /**
+   * Reads a file that a contract from the broker references (`outputMessage.bodyFromFile`,
+   * `outputMessage.bodyFromFileAsBytes`): the broker stores contracts, not these files. Given
+   * the broker contract name and the path as written in the contract (relative to the contract
+   * file); returns undefined when the file does not exist. Without it, triggering such a
+   * contract fails with an error naming the missing file.
+   */
+  readonly readContractFile?: (
+    contractName: string,
+    relativePath: string,
+  ) => Uint8Array | undefined;
 }
