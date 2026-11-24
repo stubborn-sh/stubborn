@@ -73,14 +73,14 @@ describe("matchesJsonPath body patterns", () => {
     expect(result.matched).toBe(true);
   });
 
-  it("should_not_match_numeric_string_vs_number", () => {
+  it("should_match_numeric_string_vs_number_like_wiremock", () => {
+    // WireMock 3.13.2 (Jayway) compares a number and a numeric string by value.
     const c = contract({
       bodyPatterns: [{ matchesJsonPath: "$[?(@.['amount'] == 999.99)]" }],
     });
-    // String "999.99" should NOT match number 999.99 — strict typing
     const body = { amount: "999.99" };
     const result = matchRequest("POST", "/api/test", {}, body, [c]);
-    expect(result.matched).toBe(false);
+    expect(result.matched).toBe(true);
   });
 
   // --- Boolean and null ---

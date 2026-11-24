@@ -1,0 +1,35 @@
+{
+  "id": "045b6f82-5bfb-4e5b-9f20-336ff341545f",
+  "request": {
+    "url": "/items/ids",
+    "method": "POST",
+    "headers": {
+      "Content-Type": {
+        "matches": "application/json.*"
+      }
+    },
+    "bodyPatterns": [
+      {
+        "matchesJsonPath": "$.['items'][*][?(@.['id'] == '1')]"
+      },
+      {
+        "matchesJsonPath": "$.['items'][*][?(@.['name'] == 'First')]"
+      },
+      {
+        "matchesJsonPath": "$.['items'][*][?(@.['id'] == '2')]"
+      },
+      {
+        "matchesJsonPath": "$.['items'][*][?(@.['name'] == 'Second')]"
+      }
+    ]
+  },
+  "response": {
+    "status": 200,
+    "body": "{\"ids\":{{{jsonPath request.body '$.items[*].id'}}} }",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "transformers": ["response-template", "stubborn-contract"]
+  },
+  "uuid": "045b6f82-5bfb-4e5b-9f20-336ff341545f"
+}
