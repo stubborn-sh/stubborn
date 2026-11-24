@@ -1,7 +1,7 @@
 import { readdir, readFile } from "node:fs/promises";
 import { join } from "node:path";
 import type { BrokerClient } from "@stubborn-sh/broker-client";
-import { parseContract, type ParsedContract } from "@stubborn-sh/stub-server";
+import { contractFileReader, parseContracts, type ParsedContract } from "@stubborn-sh/stub-server";
 import { fetchAllPages, isYamlContract } from "@stubborn-sh/broker-client";
 
 /** Load contracts from a local directory. */
@@ -31,7 +31,7 @@ async function walkDir(
 
     const content = await readFile(fullPath, "utf-8");
     const name = fullPath.slice(rootDir.length + 1).replace(/\\/g, "/");
-    contracts.push(parseContract(name, content));
+    contracts.push(...parseContracts(name, content, { readFile: contractFileReader(fullPath) }));
   }
 }
 
@@ -45,5 +45,5 @@ export async function loadFromBroker(
     client.listContracts(applicationName, version, params),
   );
 
-  return contracts.filter(isYamlContract).map((c) => parseContract(c.contractName, c.content));
+  return contracts.filter(isYamlContract).flatMap((c) => parseContracts(c.contractName, c.content));
 }

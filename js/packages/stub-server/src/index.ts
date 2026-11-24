@@ -1,6 +1,6 @@
 export { StubServer } from "./stub-server.js";
 export type { StubServerConfig } from "./stub-server.js";
-export { parseContract } from "./contract-parser.js";
+export { parseContract, parseContracts } from "./contract-parser.js";
 export type {
   ParsedContract,
   ContractRequest,
@@ -8,10 +8,11 @@ export type {
   RequestBodyPattern,
   ResponseMatchers,
   BodyMatcher,
+  ParseContractOptions,
 } from "./contract-parser.js";
 export { parseWireMockMapping } from "./wiremock-parser.js";
 export type { WireMockParseOptions } from "./wiremock-parser.js";
-export { loadFromDirectory } from "./directory-loader.js";
+export { loadFromDirectory, contractFileReader } from "./directory-loader.js";
 export type { LoadFormat } from "./directory-loader.js";
 export { matchRequest } from "./request-matcher.js";
 export type { MatchResult } from "./request-matcher.js";

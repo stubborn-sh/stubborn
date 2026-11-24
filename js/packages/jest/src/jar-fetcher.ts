@@ -5,7 +5,12 @@ import { tmpdir } from "node:os";
 import { pipeline } from "node:stream/promises";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
-import { parseWireMockMapping, parseContract, type ParsedContract } from "@stubborn-sh/stub-server";
+import {
+  contractFileReader,
+  parseContracts,
+  parseWireMockMapping,
+  type ParsedContract,
+} from "@stubborn-sh/stub-server";
 
 const execFileAsync = promisify(execFile);
 
@@ -199,15 +204,17 @@ async function findNamedDir(baseDir: string, targetName: string): Promise<string
 
 async function loadJsonMappings(dir: string, filesDir: string): Promise<ParsedContract[]> {
   const contracts: ParsedContract[] = [];
-  await walkAndParse(dir, dir, contracts, ".json", (name, content) =>
+  await walkAndParse(dir, dir, contracts, ".json", (name, content) => [
     parseWireMockMapping(name, content, { filesDir }),
-  );
+  ]);
   return contracts;
 }
 
 async function loadYamlContracts(dir: string): Promise<ParsedContract[]> {
   const contracts: ParsedContract[] = [];
-  await walkAndParse(dir, dir, contracts, null, (name, content) => parseContract(name, content));
+  await walkAndParse(dir, dir, contracts, null, (name, content, path) =>
+    parseContracts(name, content, { readFile: contractFileReader(path) }),
+  );
   return contracts;
 }
 
@@ -216,7 +223,7 @@ async function walkAndParse(
   currentDir: string,
   contracts: ParsedContract[],
   extFilter: string | null,
-  parser: (name: string, content: string) => ParsedContract,
+  parser: (name: string, content: string, path: string) => readonly ParsedContract[],
 ): Promise<void> {
   let entries;
   try {
@@ -248,7 +255,7 @@ async function walkAndParse(
     // going green against a stub server that never held the contract under test.
     // Say which file, and stop.
     try {
-      contracts.push(parser(name, content));
+      contracts.push(...parser(name, content, fullPath));
     } catch (cause) {
       throw new Error(`Cannot read stub ${name} in ${rootDir}: ${(cause as Error).message}`, {
         cause,

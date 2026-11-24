@@ -9,11 +9,14 @@ vi.mock("node:fs/promises", () => ({
 }));
 
 vi.mock("@stubborn-sh/stub-server", () => ({
-  parseContract: vi.fn().mockImplementation((name: string) => ({
-    name,
-    request: { method: "GET", urlPath: "/api" },
-    response: { status: 200 },
-  })),
+  parseContracts: vi.fn().mockImplementation((name: string) => [
+    {
+      name,
+      request: { method: "GET", urlPath: "/api" },
+      response: { status: 200 },
+    },
+  ]),
+  contractFileReader: vi.fn().mockReturnValue(() => undefined),
 }));
 
 vi.mock("@stubborn-sh/broker-client", async () => ({

@@ -68,6 +68,23 @@ export interface ParsedContract {
    * Such a contract never matches, rather than matching requests WireMock would reject.
    */
   readonly unsupportedMatchers?: readonly string[];
+  /** The YAML document this contract was parsed from (absent for WireMock mappings). */
+  readonly source?: Readonly<Record<string, unknown>>;
+  /**
+   * Contents of the files the YAML document references (`bodyFromFile`,
+   * `bodyFromFileAsBytes`), keyed by the path as written in the contract.
+   */
+  readonly files?: ReadonlyMap<string, Uint8Array>;
+}
+
+/** Options for {@link parseContracts}. */
+export interface ParseContractOptions {
+  /**
+   * Reads a file a contract references (`bodyFromFile`…), given its path relative to the
+   * contract file; returns undefined when it does not exist. Without it, a contract with a file
+   * body is reported as unsupported.
+   */
+  readonly readFile?: (relativePath: string) => Uint8Array | undefined;
 }
 
 interface RawContract {
@@ -95,23 +112,81 @@ interface RawContract {
 
 /**
  * Parse a YAML contract string into a ParsedContract.
- * Throws if the contract is malformed or missing required fields.
+ * Throws if the contract is malformed or missing required fields, or if the file holds more
+ * than one contract (use {@link parseContracts} for those).
  */
 export function parseContract(name: string, yamlContent: string): ParsedContract {
-  let raw: unknown;
+  const contracts = parseContracts(name, yamlContent);
+  if (contracts.length !== 1) {
+    throw new Error(`Contract "${name}" holds ${contracts.length} HTTP contracts, not one`);
+  }
+  return contracts[0] as ParsedContract;
+}
+
+/**
+ * Parse every HTTP contract in a YAML contract file: like the JVM, a file can hold several
+ * documents (`---`), and a document can be a list of contracts. Messaging contracts (no
+ * `request`) are skipped. A file with several contracts names them as the JVM does: the
+ * contract's `name`, else the file name without its extension and `_<index>`.
+ */
+export function parseContracts(
+  name: string,
+  yamlContent: string,
+  options?: ParseContractOptions,
+): ParsedContract[] {
+  let documents: unknown[];
   try {
-    raw = yaml.load(yamlContent, { schema: yaml.JSON_SCHEMA });
+    documents = yaml.loadAll(yamlContent, undefined, { schema: yaml.JSON_SCHEMA });
   } catch (err: unknown) {
     throw new Error(
       `Failed to parse YAML for contract "${name}": ${err instanceof Error ? err.message : String(err)}`,
     );
   }
-
-  if (typeof raw !== "object" || raw === null) {
-    throw new Error(`Contract "${name}" is not a valid object`);
+  const entries: { readonly document: unknown; readonly index: number; readonly many: boolean }[] =
+    [];
+  documents
+    .filter((d) => d !== null && d !== undefined)
+    .forEach((document, index, all) => {
+      if (Array.isArray(document)) {
+        for (const item of document) entries.push({ document: item, index, many: true });
+      } else entries.push({ document, index, many: all.length > 1 });
+    });
+  if (entries.length === 0) throw new Error(`Contract "${name}" is not a valid object`);
+  const base = name.replace(/\.[^./]*$/, "");
+  const contracts: ParsedContract[] = [];
+  for (const { document, index, many } of entries) {
+    if (typeof document !== "object" || document === null || Array.isArray(document)) {
+      throw new Error(`Contract "${name}" is not a valid object`);
+    }
+    const source = document as Record<string, unknown>;
+    if (source["request"] === undefined && source["response"] === undefined) continue; // messaging
+    const ownName = typeof source["name"] === "string" ? source["name"].trim() : "";
+    const contractName = !many ? name : ownName !== "" ? ownName : `${base}_${index}`;
+    contracts.push(parseDocument(contractName, source, options));
   }
+  return contracts;
+}
 
-  const contract = raw as RawContract;
+const FILE_KEYS = ["bodyFromFile", "bodyFromFileAsBytes"] as const;
+
+function parseDocument(
+  name: string,
+  source: Record<string, unknown>,
+  options: ParseContractOptions | undefined,
+): ParsedContract {
+  const contract = source as RawContract;
+  const files = new Map<string, Uint8Array>();
+  const missing: string[] = [];
+  for (const part of [source["request"], source["response"]]) {
+    if (typeof part !== "object" || part === null) continue;
+    for (const key of FILE_KEYS) {
+      const path = (part as Record<string, unknown>)[key];
+      if (typeof path !== "string") continue;
+      const content = options?.readFile?.(path);
+      if (content === undefined) missing.push(`${key}: ${path}`);
+      else files.set(path, content);
+    }
+  }
 
   if (contract.request === undefined) {
     throw new Error(`Contract "${name}" is missing required "request" field`);
@@ -165,5 +240,14 @@ export function parseContract(name: string, yamlContent: string): ParsedContract
     ...(matchers !== undefined ? { matchers } : {}),
   };
 
-  return { name, request, response };
+  return {
+    name,
+    request,
+    response,
+    source,
+    ...(files.size > 0 ? { files } : {}),
+    ...(missing.length > 0
+      ? { unsupportedMatchers: missing.map((m) => `file not found next to the contract (${m})`) }
+      : {}),
+  };
 }

@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { parseContract } from "../../src/contract-parser.js";
+import { parseContract, parseContracts } from "../../src/contract-parser.js";
 
 describe("parseContract", () => {
   it("should_parse_valid_GET_contract", () => {
@@ -117,5 +117,68 @@ response:
     const contract = parseContract("test.yaml", yaml);
     expect(contract.request.queryParameters?.q).toBe("test");
     expect(contract.request.queryParameters?.page).toBe("1");
+  });
+});
+
+describe("parseContracts", () => {
+  const http = (path: string): string =>
+    `request:\n  method: GET\n  url: ${path}\nresponse:\n  status: 200\n`;
+
+  it("should_parse_every_document_and_name_them_like_the_jvm", () => {
+    const contracts = parseContracts("dir/users.yml", `${http("/a")}---\n${http("/b")}`);
+    expect(contracts.map((c) => c.name)).toEqual(["dir/users_0", "dir/users_1"]);
+    expect(contracts.map((c) => c.request.url)).toEqual(["/a", "/b"]);
+  });
+
+  it("should_prefer_the_contract_name_when_a_file_holds_several", () => {
+    const contracts = parseContracts("users.yml", `name: first\n${http("/a")}---\n${http("/b")}`);
+    expect(contracts.map((c) => c.name)).toEqual(["first", "users_1"]);
+  });
+
+  it("should_parse_a_list_of_contracts_in_one_document", () => {
+    const contracts = parseContracts(
+      "users.yml",
+      `- request: {method: GET, url: /a}\n  response: {status: 200}\n- request: {method: GET, url: /b}\n  response: {status: 201}\n`,
+    );
+    expect(contracts.map((c) => [c.name, c.response.status])).toEqual([
+      ["users_0", 200],
+      ["users_0", 201],
+    ]);
+  });
+
+  it("should_keep_a_single_contract_named_after_the_file", () => {
+    expect(parseContracts("users.yml", http("/a")).map((c) => c.name)).toEqual(["users.yml"]);
+  });
+
+  it("should_skip_messaging_contracts", () => {
+    const messaging = "label: sent\ninput:\n  triggeredBy: send()\noutputMessage:\n  sentTo: q\n";
+    expect(parseContracts("m.yml", `${messaging}---\n${http("/a")}`)).toHaveLength(1);
+  });
+
+  it("should_expose_the_yaml_document", () => {
+    const [contract] = parseContracts("c.yml", `priority: 3\n${http("/a")}`);
+    expect(contract?.source?.["priority"]).toBe(3);
+  });
+
+  it("should_read_file_bodies_relative_to_the_contract", () => {
+    const yaml =
+      "request:\n  method: POST\n  url: /a\n  bodyFromFile: req.json\nresponse:\n  status: 200\n";
+    const [contract] = parseContracts("c.yml", yaml, {
+      readFile: (path) => (path === "req.json" ? new TextEncoder().encode("{}") : undefined),
+    });
+    expect(new TextDecoder().decode(contract?.files?.get("req.json"))).toBe("{}");
+    expect(contract?.unsupportedMatchers).toBeUndefined();
+  });
+
+  it("should_report_a_file_body_it_cannot_read", () => {
+    const yaml =
+      "request:\n  method: GET\n  url: /a\nresponse:\n  status: 200\n  bodyFromFile: missing.json\n";
+    expect(parseContracts("c.yml", yaml)[0]?.unsupportedMatchers).toHaveLength(1);
+  });
+
+  it("should_refuse_several_contracts_in_parseContract", () => {
+    expect(() => parseContract("c.yml", `${http("/a")}---\n${http("/b")}`)).toThrow(
+      /2 HTTP contracts/,
+    );
   });
 });

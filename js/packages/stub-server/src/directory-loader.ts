@@ -1,7 +1,8 @@
+import { readFileSync } from "node:fs";
 import { readdir, readFile } from "node:fs/promises";
-import { join, extname } from "node:path";
+import { join, extname, dirname, resolve } from "node:path";
 import type { ParsedContract } from "./contract-parser.js";
-import { parseContract } from "./contract-parser.js";
+import { parseContracts } from "./contract-parser.js";
 import { parseWireMockMapping, type WireMockParseOptions } from "./wiremock-parser.js";
 
 /** How to interpret files in the directory. */
@@ -53,7 +54,7 @@ async function walkDir(
 
     if (isYamlFile(ext) && (format === "contracts" || format === "auto")) {
       const content = await readFile(fullPath, "utf-8");
-      contracts.push(parseContract(name, content));
+      contracts.push(...parseContracts(name, content, { readFile: contractFileReader(fullPath) }));
     } else if (ext === ".json" && (format === "wiremock" || format === "auto")) {
       const content = await readFile(fullPath, "utf-8");
       if (format === "wiremock") {
@@ -67,6 +68,23 @@ async function walkDir(
       }
     }
   }
+}
+
+/**
+ * Reads the files a YAML contract references (`bodyFromFile`…), relative to the contract file,
+ * as the JVM does.
+ */
+export function contractFileReader(
+  contractPath: string,
+): (relativePath: string) => Uint8Array | undefined {
+  const directory = dirname(contractPath);
+  return (relativePath) => {
+    try {
+      return readFileSync(resolve(directory, relativePath));
+    } catch {
+      return undefined;
+    }
+  };
 }
 
 function isYamlFile(ext: string): boolean {

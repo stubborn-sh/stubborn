@@ -38,11 +38,13 @@ vi.mock("@stubborn-sh/stub-server", () => ({
     stop = mockStop;
     running = false;
   },
-  parseContract: vi.fn().mockReturnValue({
-    name: "test.yaml",
-    request: { method: "GET", url: "/api" },
-    response: { status: 200 },
-  }),
+  parseContracts: vi.fn().mockReturnValue([
+    {
+      name: "test.yaml",
+      request: { method: "GET", url: "/api" },
+      response: { status: 200 },
+    },
+  ]),
   loadFromDirectory: vi.fn().mockResolvedValue([
     {
       name: "local.yaml",

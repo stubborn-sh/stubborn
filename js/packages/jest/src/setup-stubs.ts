@@ -1,6 +1,6 @@
 import {
   StubServer,
-  parseContract,
+  parseContracts,
   loadFromDirectory,
   type ParsedContract,
 } from "@stubborn-sh/stub-server";
@@ -137,7 +137,7 @@ async function loadFromBroker(config: BrokerStubsConfig): Promise<readonly Parse
 
   return contractResponses
     .filter(isYamlContract)
-    .map((c) => parseContract(c.contractName, c.content));
+    .flatMap((c) => parseContracts(c.contractName, c.content));
 }
 
 function isBrokerConfig(config: SetupStubsConfig): config is BrokerStubsConfig {
