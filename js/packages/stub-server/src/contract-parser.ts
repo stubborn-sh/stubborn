@@ -172,7 +172,8 @@ export function parseContract(name: string, yamlContent: string): ParsedContract
  * Parse every HTTP contract in a YAML contract file: like the JVM, a file can hold several
  * documents (`---`), and a document can be a list of contracts. Messaging contracts (no
  * `request`) are skipped. A file with several contracts names them as the JVM does: the
- * contract's `name`, else the file name without its extension and `_<index>`.
+ * contract's `name`, else the file name without its extension, plus `_<document index>` for a
+ * document after the first or one holding several contracts.
  */
 export function parseContracts(
   name: string,
@@ -187,26 +188,40 @@ export function parseContracts(
       `Failed to parse YAML for contract "${name}": ${err instanceof Error ? err.message : String(err)}`,
     );
   }
-  const entries: { readonly document: unknown; readonly index: number; readonly many: boolean }[] =
-    [];
+  // NamesUtil.defaultContractName: `_<document index>` when the index is above 0 or the document
+  // holds several contracts.
+  const entries: {
+    readonly document: unknown;
+    readonly index: number;
+    readonly suffix: boolean;
+  }[] = [];
   documents
     .filter((d) => d !== null && d !== undefined)
-    .forEach((document, index, all) => {
-      if (Array.isArray(document)) {
-        for (const item of document) entries.push({ document: item, index, many: true });
-      } else entries.push({ document, index, many: all.length > 1 });
+    .forEach((document, index) => {
+      const items: unknown[] = Array.isArray(document) ? document : [document];
+      for (const item of items) {
+        entries.push({ document: item, index, suffix: index > 0 || items.length > 1 });
+      }
     });
   if (entries.length === 0) throw new Error(`Contract "${name}" is not a valid object`);
   const base = name.replace(/\.[^./]*$/, "");
   const contracts: ParsedContract[] = [];
-  for (const { document, index, many } of entries) {
+  const several = entries.length > 1;
+  for (const { document, index, suffix } of entries) {
     if (typeof document !== "object" || document === null || Array.isArray(document)) {
       throw new Error(`Contract "${name}" is not a valid object`);
     }
     const source = document as Record<string, unknown>;
     if (source["request"] === undefined && source["response"] === undefined) continue; // messaging
     const ownName = typeof source["name"] === "string" ? source["name"].trim() : "";
-    const contractName = !many ? name : ownName !== "" ? ownName : `${base}_${index}`;
+    // A file with one contract keeps the name it was given; otherwise the JVM's names.
+    const contractName = !several
+      ? name
+      : ownName !== ""
+        ? ownName
+        : suffix
+          ? `${base}_${index}`
+          : base;
     contracts.push(parseDocument(contractName, source, options));
   }
   return contracts;

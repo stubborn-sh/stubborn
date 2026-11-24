@@ -126,7 +126,7 @@ describe("parseContracts", () => {
 
   it("should_parse_every_document_and_name_them_like_the_jvm", () => {
     const contracts = parseContracts("dir/users.yml", `${http("/a")}---\n${http("/b")}`);
-    expect(contracts.map((c) => c.name)).toEqual(["dir/users_0", "dir/users_1"]);
+    expect(contracts.map((c) => c.name)).toEqual(["dir/users", "dir/users_1"]);
     expect(contracts.map((c) => c.request.url)).toEqual(["/a", "/b"]);
   });
 
