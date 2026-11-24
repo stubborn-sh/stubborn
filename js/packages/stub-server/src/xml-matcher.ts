@@ -459,8 +459,19 @@ function prepareView(state: ViewState, namespaceAware: boolean): boolean {
     if (node.nodeType !== ELEMENT_NODE && node !== doc) continue;
 
     const children: Node[] = [];
-    for (let child = node.firstChild; child !== null; child = child.nextSibling)
-      children.push(child);
+    for (let child = node.firstChild; child !== null;) {
+      const next = child.nextSibling;
+      // Namespace-aware, WireMock re-parses a serialized copy, where an empty CDATA section left
+      // nothing behind.
+      if (
+        namespaceAware &&
+        child.nodeType === CDATA_SECTION_NODE &&
+        child.nodeValue === EMPTY_CDATA
+      ) {
+        node.removeChild(child);
+      } else children.push(child);
+      child = next;
+    }
     state.children.set(node, children);
     mergeTextRuns(node, children);
     for (let i = children.length - 1; i >= 0; i--)
@@ -844,10 +855,16 @@ function renderElement(view: XPathDocument, state: ViewState, root: Element): st
 }
 
 /**
- * Start tag. Namespace-unaware: the element's own declarations as written, then its attributes.
- * Namespace-aware: its own declarations and those its attributes' prefixes need, then the
- * attributes, then a declaration for the element's own namespace if not yet in scope — as the
- * JDK's DOM2SAX bridge writes them.
+ * Start tag, as the JDK identity transformer writes it: DOM2TO reports the element's
+ * declarations (in attribute order), then each attribute (a namespaced one after a mapping for
+ * its prefix), then — namespace-aware — a mapping for the element's own namespace; ToStream writes
+ * a mapping only when it changes the binding in effect. For the rendered element itself,
+ * ToUnknownStream holds the mappings back until the first attribute (or the end of the start
+ * tag), then declares the element's own prefix — bound by the first held mapping for it — before
+ * replaying them.
+ *
+ * Namespace-aware, WireMock evaluates on a serialized and re-parsed copy of the document, so a
+ * declaration the element's ancestors already make is not there at all.
  */
 function startTag(
   view: XPathDocument,
@@ -856,87 +873,70 @@ function startTag(
   scope: ReadonlyMap<string, string>,
   renderRoot: boolean,
 ): { readonly tag: string; readonly scope: ReadonlyMap<string, string> } {
-  // Declarations come in name order, except that the rendered element itself, when prefixed,
-  // declares its own prefix first.
-  const colon = element.nodeName.indexOf(":");
-  const ownPrefix = colon === -1 ? "" : element.nodeName.slice(0, colon);
-  const declarations = (state.declarations.get(element) ?? []).filter(
-    (a) => !a.value.startsWith(UNBOUND_PREFIX_URI),
-  );
-  const ownFirst =
-    ownPrefix !== "" && renderRoot && declarations.some((d) => declaredPrefix(d) === ownPrefix);
-  const own = [...declarations].sort((a, b) =>
-    ownFirst
-      ? Number(declaredPrefix(b) === ownPrefix) - Number(declaredPrefix(a) === ownPrefix)
-      : 0,
-  );
-  const regular = attributesOfView(element);
-  const attribute = (name: string, value: string): string => ` ${name}="${escapeAttribute(value)}"`;
-  let tag = `<${element.nodeName}`;
-  if (!view.namespaceAware) {
-    const declared = new Map(scope);
-    const written: Attr[] = [];
-    for (const decl of own) {
-      const prefix = declaredPrefix(decl);
-      // A binding already in effect in the rendered output (xmlns="" at its root) is not repeated.
-      if ((declared.get(prefix) ?? (prefix === "" ? "" : undefined)) === decl.value) continue;
-      declared.set(prefix, decl.value);
-      written.push(decl);
-    }
-    for (const attr of regular) {
-      const colon = attr.nodeName.indexOf(":");
-      const prefix = colon === -1 ? "" : attr.nodeName.slice(0, colon);
-      // The JDK transformer refuses an attribute prefix not declared within the rendered
-      // subtree, so WireMock's match fails.
-      if (prefix !== "" && prefix !== "xml" && !declared.has(prefix)) {
-        throw new Error(`Namespace for prefix '${prefix}' has not been declared.`);
-      }
-    }
-    for (const decl of written) tag += attribute(decl.nodeName, decl.value);
-    for (const attr of regular) tag += attribute(attr.nodeName, attr.value);
-    return { tag, scope: declared };
-  }
-  const inner = new Map(scope);
-  const bind = (prefix: string, uri: string): void => {
-    tag += attribute(prefix === "" ? "xmlns" : `xmlns:${prefix}`, uri);
-    inner.set(prefix, uri);
-  };
-  // A declaration already in effect, in the output or from the element's ancestors in the
-  // document, is not repeated; the element's own namespace is bound again if the output needs it
-  // — after the attributes, or first when there are none.
-  const kept = own.filter((decl) => {
+  type Call =
+    | { readonly kind: "map"; readonly prefix: string; readonly uri: string }
+    | { readonly kind: "attr"; readonly name: string; readonly value: string };
+  const calls: Call[] = [];
+  for (const decl of state.declarations.get(element) ?? []) {
+    if (decl.value.startsWith(UNBOUND_PREFIX_URI)) continue;
     const prefix = declaredPrefix(decl);
-    if ((inner.get(prefix) ?? (prefix === "" ? "" : undefined)) === decl.value) return false;
-    return inheritedBinding(state, element, prefix) !== decl.value;
-  });
-  const elementPrefix = element.prefix ?? "";
-  const elementUri = element.namespaceURI ?? "";
-  const boundAfterDeclarations = (): string =>
-    kept.find((d) => declaredPrefix(d) === elementPrefix)?.value ?? inner.get(elementPrefix) ?? "";
-  // A declaration of the element's own prefix that its ancestors already make is dropped like
-  // the others, unless one of its attributes uses that prefix too.
-  const ownDeclaration = declarations.find((d) => declaredPrefix(d) === ownPrefix);
-  const declaresFirst =
-    ownFirst &&
-    (inheritedBinding(state, element, ownPrefix) !== ownDeclaration?.value ||
-      regular.some((a) => (a.prefix ?? "") === ownPrefix));
-  if (
-    (declaresFirst || regular.length === 0) &&
-    (declaresFirst ? inner.get(elementPrefix) : boundAfterDeclarations()) !== elementUri
-  ) {
-    bind(elementPrefix, elementUri);
+    if (view.namespaceAware && inheritedBinding(state, element, prefix) === decl.value) continue;
+    calls.push({ kind: "map", prefix, uri: decl.value });
   }
-  for (const decl of kept) {
-    if (inner.get(declaredPrefix(decl)) !== decl.value) bind(declaredPrefix(decl), decl.value);
+  for (const attr of attributesOfView(element)) {
+    const uri = view.namespaceAware ? attr.namespaceURI : null;
+    if (uri !== null && uri !== "") calls.push({ kind: "map", prefix: attr.prefix ?? "", uri });
+    calls.push({ kind: "attr", name: attr.nodeName, value: attr.value });
   }
-  for (const attr of regular) {
-    const prefix = attr.prefix ?? "";
-    const uri = attr.namespaceURI;
-    if (prefix !== "" && prefix !== "xml" && uri !== null && inner.get(prefix) !== uri)
-      bind(prefix, uri);
+  const colon = element.nodeName.indexOf(":");
+  const elementPrefix = colon === -1 ? "" : element.nodeName.slice(0, colon);
+  if (view.namespaceAware) {
+    const uri = element.namespaceURI;
+    calls.push({ kind: "map", prefix: uri === null ? "" : elementPrefix, uri: uri ?? "" });
   }
-  for (const attr of regular) tag += attribute(attr.nodeName, attr.value);
-  if ((inner.get(elementPrefix) ?? "") !== elementUri) bind(elementPrefix, elementUri);
+
+  const inner = new Map(scope);
+  const lookup = (prefix: string): string | undefined =>
+    inner.get(prefix) ?? (prefix === "" ? "" : prefix === "xml" ? XML_URI : undefined);
+  let tag = `<${element.nodeName}`;
+  const write = (name: string, value: string): void => {
+    tag += ` ${name}="${escapeAttribute(value)}"`;
+  };
+  const map = (prefix: string, uri: string): void => {
+    // NamespaceMappings.pushNamespace: never an xml* prefix, nor a binding already in effect.
+    if (prefix.startsWith("xml") || lookup(prefix) === uri) return;
+    inner.set(prefix, uri);
+    if (prefix === "") write("xmlns", uri);
+    else if (uri !== "") write(`xmlns:${prefix}`, uri);
+  };
+  let next = 0;
+  if (renderRoot) {
+    let firstUri: string | undefined;
+    const held: { prefix: string; uri: string }[] = [];
+    for (; next < calls.length; next++) {
+      const call = calls[next] as Call;
+      if (call.kind !== "map") break;
+      held.push(call);
+      if (firstUri === undefined && call.prefix === elementPrefix) firstUri = call.uri;
+    }
+    if (firstUri !== undefined && firstUri !== "") map(elementPrefix, firstUri);
+    for (const { prefix, uri } of held) map(prefix, uri);
+  }
+  for (; next < calls.length; next++) {
+    const call = calls[next] as Call;
+    if (call.kind === "map") {
+      map(call.prefix, call.uri);
+      continue;
+    }
+    const attrColon = call.name.indexOf(":");
+    const prefix = attrColon === -1 ? "" : call.name.slice(0, attrColon);
+    // The JDK transformer refuses an attribute prefix not declared within the rendered subtree,
+    // so WireMock's match fails.
+    if (prefix !== "" && prefix !== "xml" && lookup(prefix) === undefined) {
+      throw new Error(`Namespace for prefix '${prefix}' has not been declared.`);
+    }
+    write(call.name, call.value);
+  }
   return { tag, scope: inner };
 }
 

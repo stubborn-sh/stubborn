@@ -454,8 +454,15 @@ function compileXPathMatcher(
       return valueMatcher === undefined ? true : valueMatcher(valueText(outcome.value));
     }
     if (valueMatcher === undefined) return outcome.nodes.length > 0;
-    const matcher = valueMatcher;
-    return outcome.nodes.some((node) => matcher(nodeText(doc, node)));
+    // WireMock renders every selected node before matching any: one it cannot render (an
+    // attribute prefix declared outside the node) fails the whole match.
+    let texts: string[];
+    try {
+      texts = outcome.nodes.map((node) => nodeText(doc, node));
+    } catch {
+      return false;
+    }
+    return texts.some((text) => valueMatcher(text));
   };
 }
 

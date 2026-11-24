@@ -16175,6 +16175,3708 @@
     "<s:root xmlns:s=\"urn:s\" xmlns=\"v\" xmlns:p=\"u\">\n  <p:b>tt</p:b>\n</s:root>\n",
     "<p:b>tt</p:b>\n"
    ]
+  },
+  {
+   "body": "<s:Envelope xmlns:s=\"urn:s\" xmlns:m=\"urn:m\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"><s:Body><m:Order m:id=\"1\" xsi:type=\"m:T\"/></s:Body></s:Envelope>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "m": "urn:m"
+   },
+   "nodes": [
+    "<s:Body xmlns:s=\"urn:s\">\n  <m:Order xmlns:m=\"urn:m\" m:id=\"1\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"m:T\"/>\n</s:Body>\n"
+   ]
+  },
+  {
+   "body": "<s:Envelope xmlns:s=\"urn:s\" xmlns:m=\"urn:m\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"><s:Body><m:Order m:id=\"1\" xsi:type=\"m:T\"/></s:Body></s:Envelope>",
+   "xpath": "/*/*",
+   "error": "TransformerException: java.lang.RuntimeException: Namespace for prefix 'm' has not been declared."
+  },
+  {
+   "body": "<s:Envelope xmlns:s=\"urn:s\" xmlns:m=\"urn:m\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"><s:Body><m:Order m:id=\"1\" xsi:type=\"m:T\"/></s:Body></s:Envelope>",
+   "xpath": "//*",
+   "namespaces": {
+    "m": "urn:m"
+   },
+   "nodes": [
+    "<s:Envelope xmlns:s=\"urn:s\" xmlns:m=\"urn:m\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n  <s:Body>\n    <m:Order m:id=\"1\" xsi:type=\"m:T\"/>\n  </s:Body>\n</s:Envelope>\n",
+    "<s:Body xmlns:s=\"urn:s\">\n  <m:Order xmlns:m=\"urn:m\" m:id=\"1\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"m:T\"/>\n</s:Body>\n",
+    "<m:Order xmlns:m=\"urn:m\" m:id=\"1\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"m:T\"/>\n"
+   ]
+  },
+  {
+   "body": "<s:Envelope xmlns:s=\"urn:s\" xmlns:m=\"urn:m\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"><s:Body><m:Order m:id=\"1\" xsi:type=\"m:T\"/></s:Body></s:Envelope>",
+   "xpath": "//*",
+   "error": "TransformerException: java.lang.RuntimeException: Namespace for prefix 'm' has not been declared."
+  },
+  {
+   "body": "<s:Envelope xmlns:s=\"urn:s\" xmlns:m=\"urn:m\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"><s:Body><m:Order m:id=\"1\" xsi:type=\"m:T\"/></s:Body></s:Envelope>",
+   "xpath": "/*/*/*",
+   "namespaces": {
+    "m": "urn:m"
+   },
+   "nodes": [
+    "<m:Order xmlns:m=\"urn:m\" m:id=\"1\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"m:T\"/>\n"
+   ]
+  },
+  {
+   "body": "<s:Envelope xmlns:s=\"urn:s\" xmlns:m=\"urn:m\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"><s:Body><m:Order m:id=\"1\" xsi:type=\"m:T\"/></s:Body></s:Envelope>",
+   "xpath": "/*/*/*",
+   "error": "TransformerException: java.lang.RuntimeException: Namespace for prefix 'm' has not been declared."
+  },
+  {
+   "body": "<a xmlns:r=\"u2\" xmlns:q=\"u3\"><b r:z=\"1\" q:z=\"2\"/></a>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "m": "urn:m"
+   },
+   "nodes": [
+    "<b xmlns:q=\"u3\" q:z=\"2\" xmlns:r=\"u2\" r:z=\"1\"/>\n"
+   ]
+  },
+  {
+   "body": "<a xmlns:r=\"u2\" xmlns:q=\"u3\"><b r:z=\"1\" q:z=\"2\"/></a>",
+   "xpath": "/*/*",
+   "error": "TransformerException: java.lang.RuntimeException: Namespace for prefix 'q' has not been declared."
+  },
+  {
+   "body": "<a xmlns:r=\"u2\" xmlns:q=\"u3\"><b r:z=\"1\" q:z=\"2\"/></a>",
+   "xpath": "//*",
+   "namespaces": {
+    "m": "urn:m"
+   },
+   "nodes": [
+    "<a xmlns:q=\"u3\" xmlns:r=\"u2\">\n  <b q:z=\"2\" r:z=\"1\"/>\n</a>\n",
+    "<b xmlns:q=\"u3\" q:z=\"2\" xmlns:r=\"u2\" r:z=\"1\"/>\n"
+   ]
+  },
+  {
+   "body": "<a xmlns:r=\"u2\" xmlns:q=\"u3\"><b r:z=\"1\" q:z=\"2\"/></a>",
+   "xpath": "//*",
+   "error": "TransformerException: java.lang.RuntimeException: Namespace for prefix 'q' has not been declared."
+  },
+  {
+   "body": "<a xmlns:r=\"u2\" xmlns:q=\"u3\"><b r:z=\"1\" q:z=\"2\"/></a>",
+   "xpath": "/*/*/*",
+   "namespaces": {
+    "m": "urn:m"
+   },
+   "nodes": []
+  },
+  {
+   "body": "<a xmlns:r=\"u2\" xmlns:q=\"u3\"><b r:z=\"1\" q:z=\"2\"/></a>",
+   "xpath": "/*/*/*",
+   "nodes": []
+  },
+  {
+   "body": "<a xmlns:r=\"u2\"><r:b xmlns=\"u1\" xmlns:p=\"u2\" r:z=\"1\"/></a>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "m": "urn:m"
+   },
+   "nodes": [
+    "<r:b xmlns:r=\"u2\" xmlns=\"u1\" xmlns:p=\"u2\" r:z=\"1\"/>\n"
+   ]
+  },
+  {
+   "body": "<a xmlns:r=\"u2\"><r:b xmlns=\"u1\" xmlns:p=\"u2\" r:z=\"1\"/></a>",
+   "xpath": "/*/*",
+   "error": "TransformerException: java.lang.RuntimeException: Namespace for prefix 'r' has not been declared."
+  },
+  {
+   "body": "<a xmlns:r=\"u2\"><r:b xmlns=\"u1\" xmlns:p=\"u2\" r:z=\"1\"/></a>",
+   "xpath": "//*",
+   "namespaces": {
+    "m": "urn:m"
+   },
+   "nodes": [
+    "<a xmlns:r=\"u2\">\n  <r:b xmlns=\"u1\" xmlns:p=\"u2\" r:z=\"1\"/>\n</a>\n",
+    "<r:b xmlns:r=\"u2\" xmlns=\"u1\" xmlns:p=\"u2\" r:z=\"1\"/>\n"
+   ]
+  },
+  {
+   "body": "<a xmlns:r=\"u2\"><r:b xmlns=\"u1\" xmlns:p=\"u2\" r:z=\"1\"/></a>",
+   "xpath": "//*",
+   "error": "TransformerException: java.lang.RuntimeException: Namespace for prefix 'r' has not been declared."
+  },
+  {
+   "body": "<a xmlns:r=\"u2\"><r:b xmlns=\"u1\" xmlns:p=\"u2\" r:z=\"1\"/></a>",
+   "xpath": "/*/*/*",
+   "namespaces": {
+    "m": "urn:m"
+   },
+   "nodes": []
+  },
+  {
+   "body": "<a xmlns:r=\"u2\"><r:b xmlns=\"u1\" xmlns:p=\"u2\" r:z=\"1\"/></a>",
+   "xpath": "/*/*/*",
+   "nodes": []
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><q:c xmlns=\"u3\"><?pi d?>t</q:c></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<q:c xmlns:q=\"u2\" xmlns=\"u3\">\n  <?pi d?>\n  t\n</q:c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u3\"><a xmlns=\"u3\" xmlns:p=\"u3\">t</a><?pi d?></c></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <c xmlns=\"u3\">\n    <a xmlns:p=\"u3\">t</a>\n    <?pi d?>\n  </c>\n</root>\n",
+    "<c xmlns=\"u3\">\n  <a xmlns:p=\"u3\">t</a>\n  <?pi d?>\n</c>\n",
+    "<a xmlns=\"u3\" xmlns:p=\"u3\">t</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a/></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<a xmlns=\"u1\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u1\"/></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b/>\n</root>\n",
+    "<b xmlns=\"u1\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a>t</a></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<a xmlns=\"u1\">t</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b/></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b/>\n</root>\n",
+    "<b xmlns=\"u1\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u1\"><a/></b></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u1\">\n  <a/>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u1\"><a xmlns=\"u3\">tt</a></b></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b>\n    <a xmlns=\"u3\">tt</a>\n  </b>\n</root>\n",
+    "<b xmlns=\"u1\">\n  <a xmlns=\"u3\">tt</a>\n</b>\n",
+    "<a xmlns=\"u3\">tt</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c>t<?pi d?></c></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<c xmlns=\"u1\">\n  t\n  <?pi d?>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a/></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <a/>\n</root>\n",
+    "<a xmlns=\"u1\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u3\"><a><c xmlns=\"u1\"><a xmlns=\"u3\"/></c><c xmlns=\"u3\">t</c></a></c></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<c xmlns=\"u3\">\n  <a>\n    <c xmlns=\"u1\">\n      <a xmlns=\"u3\"/>\n    </c>\n    <c>t</c>\n  </a>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c>t</c></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <c>t</c>\n</root>\n",
+    "<c xmlns=\"u1\">t</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u1\"/></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<a xmlns=\"u1\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a><?pi d?>t</a></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <a>\n    <?pi d?>\n    t\n  </a>\n</root>\n",
+    "<a xmlns=\"u1\">\n  <?pi d?>\n  t\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u2\"><?pi d?></c></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<c xmlns=\"u2\">\n  <?pi d?>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a><?pi d?></a></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<a xmlns=\"u1\">\n  <?pi d?>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u3\">t<b xmlns=\"u3\"/></a></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <a xmlns=\"u3\">\n    t\n    <b/>\n  </a>\n</root>\n",
+    "<a xmlns=\"u3\">\n  t\n  <b/>\n</a>\n",
+    "<b xmlns=\"u3\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c/></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <c/>\n</root>\n",
+    "<c xmlns=\"u1\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u1\"><?pi d?><?pi d?></c></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<c xmlns=\"u1\">\n  <?pi d?>\n  <?pi d?>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b><b xmlns=\"u2\"/></b></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b>\n    <b xmlns=\"u2\"/>\n  </b>\n</root>\n",
+    "<b xmlns=\"u1\">\n  <b xmlns=\"u2\"/>\n</b>\n",
+    "<b xmlns=\"u2\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c/></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<c xmlns=\"u1\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b><b/></b></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u1\">\n  <b/>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u1\">t</c></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <c>t</c>\n</root>\n",
+    "<c xmlns=\"u1\">t</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u2\">t</b></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u2\">t</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u3\"><?pi d?><?pi d?></b></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b xmlns=\"u3\">\n    <?pi d?>\n    <?pi d?>\n  </b>\n</root>\n",
+    "<b xmlns=\"u3\">\n  <?pi d?>\n  <?pi d?>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b>tt</b></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u1\">tt</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a><b xmlns=\"u1\">tt</b>t</a></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <a>\n    <b>tt</b>\n    t\n  </a>\n</root>\n",
+    "<a xmlns=\"u1\">\n  <b>tt</b>\n  t\n</a>\n",
+    "<b xmlns=\"u1\">tt</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c><?pi d?><?pi d?></c></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<c xmlns=\"u1\">\n  <?pi d?>\n  <?pi d?>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u2\"/></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <a xmlns=\"u2\"/>\n</root>\n",
+    "<a xmlns=\"u2\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a><b xmlns=\"u2\"><c><b xmlns=\"u2\"/><c/></c>t</b><a><b><?pi d?></b></a></a></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<a xmlns=\"u1\">\n  <b xmlns=\"u2\">\n    <c>\n      <b/>\n      <c/>\n    </c>\n    t\n  </b>\n  <a>\n    <b>\n      <?pi d?>\n    </b>\n  </a>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u2\"><b/>t</b></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b xmlns=\"u2\">\n    <b/>\n    t\n  </b>\n</root>\n",
+    "<b xmlns=\"u2\">\n  <b/>\n  t\n</b>\n",
+    "<b xmlns=\"u2\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b>t<?pi d?></b></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u1\">\n  t\n  <?pi d?>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b><?pi d?></b></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b>\n    <?pi d?>\n  </b>\n</root>\n",
+    "<b xmlns=\"u1\">\n  <?pi d?>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u3\"><a/><c xmlns=\"u2\"><?pi d?></c></c></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<c xmlns=\"u3\">\n  <a/>\n  <c xmlns=\"u2\">\n    <?pi d?>\n  </c>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u3\"/></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <c xmlns=\"u3\"/>\n</root>\n",
+    "<c xmlns=\"u3\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u3\"><c><?pi d?><b xmlns=\"u3\"/></c></b></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u3\">\n  <c>\n    <?pi d?>\n    <b/>\n  </c>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c><b><?pi d?><b xmlns=\"u1\">t<c xmlns=\"u1\"/></b></b><b>t</b></c></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <c>\n    <b>\n      <?pi d?>\n      <b>\n        t\n        <c/>\n      </b>\n    </b>\n    <b>t</b>\n  </c>\n</root>\n",
+    "<c xmlns=\"u1\">\n  <b>\n    <?pi d?>\n    <b>\n      t\n      <c/>\n    </b>\n  </b>\n  <b>t</b>\n</c>\n",
+    "<b xmlns=\"u1\">\n  <?pi d?>\n  <b>\n    t\n    <c/>\n  </b>\n</b>\n",
+    "<b xmlns=\"u1\">\n  t\n  <c/>\n</b>\n",
+    "<c xmlns=\"u1\"/>\n",
+    "<b xmlns=\"u1\">t</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u1\">t</a></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<a xmlns=\"u1\">t</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u1\"/></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <c/>\n</root>\n",
+    "<c xmlns=\"u1\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b><c xmlns=\"u3\"/></b></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u1\">\n  <c xmlns=\"u3\"/>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u1\"><c xmlns=\"u1\"><?pi d?></c>t</a></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <a>\n    <c>\n      <?pi d?>\n    </c>\n    t\n  </a>\n</root>\n",
+    "<a xmlns=\"u1\">\n  <c>\n    <?pi d?>\n  </c>\n  t\n</a>\n",
+    "<c xmlns=\"u1\">\n  <?pi d?>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c>tt</c></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<c xmlns=\"u1\">tt</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u1\"/></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <a/>\n</root>\n",
+    "<a xmlns=\"u1\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u1\">t</b></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u1\">t</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u3\"><a xmlns=\"u3\">t<a xmlns=\"u1\"><?pi d?>t</a></a></c></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<c xmlns=\"u3\">\n  <a>\n    t\n    <a xmlns=\"u1\">\n      <?pi d?>\n      t\n    </a>\n  </a>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u1\">t<?pi d?></a></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<a xmlns=\"u1\">\n  t\n  <?pi d?>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u2\"><?pi d?></c></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <c xmlns=\"u2\">\n    <?pi d?>\n  </c>\n</root>\n",
+    "<c xmlns=\"u2\">\n  <?pi d?>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u3\"/></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<a xmlns=\"u3\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u1\">tt</c></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <c>tt</c>\n</root>\n",
+    "<c xmlns=\"u1\">tt</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u1\"/></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<c xmlns=\"u1\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u3\"><b xmlns=\"u2\"><c xmlns=\"u3\"><b/></c><a xmlns=\"u1\"><b/></a></b><?pi d?></b></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b xmlns=\"u3\">\n    <b xmlns=\"u2\">\n      <c xmlns=\"u3\">\n        <b/>\n      </c>\n      <a xmlns=\"u1\">\n        <b/>\n      </a>\n    </b>\n    <?pi d?>\n  </b>\n</root>\n",
+    "<b xmlns=\"u3\">\n  <b xmlns=\"u2\">\n    <c xmlns=\"u3\">\n      <b/>\n    </c>\n    <a xmlns=\"u1\">\n      <b/>\n    </a>\n  </b>\n  <?pi d?>\n</b>\n",
+    "<b xmlns=\"u2\">\n  <c xmlns=\"u3\">\n    <b/>\n  </c>\n  <a xmlns=\"u1\">\n    <b/>\n  </a>\n</b>\n",
+    "<c xmlns=\"u3\">\n  <b/>\n</c>\n",
+    "<b xmlns=\"u3\"/>\n",
+    "<a xmlns=\"u1\">\n  <b/>\n</a>\n",
+    "<b xmlns=\"u1\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u2\"/></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u2\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u3\"><?pi d?>t</c></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <c xmlns=\"u3\">\n    <?pi d?>\n    t\n  </c>\n</root>\n",
+    "<c xmlns=\"u3\">\n  <?pi d?>\n  t\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a><?pi d?><a/></a></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<a xmlns=\"u1\">\n  <?pi d?>\n  <a/>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u1\"><?pi d?></c></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <c>\n    <?pi d?>\n  </c>\n</root>\n",
+    "<c xmlns=\"u1\">\n  <?pi d?>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u3\">t<a xmlns=\"u1\"><b><?pi d?><b/></b><c xmlns=\"u1\"/></a></c></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<c xmlns=\"u3\">\n  t\n  <a xmlns=\"u1\">\n    <b>\n      <?pi d?>\n      <b/>\n    </b>\n    <c/>\n  </a>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u2\"/></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <c xmlns=\"u2\"/>\n</root>\n",
+    "<c xmlns=\"u2\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u2\"/></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<a xmlns=\"u2\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u2\">t</c></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<c xmlns=\"u2\">t</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u1\">tt</b></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u1\">tt</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u3\"><?pi d?></b></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u3\">\n  <?pi d?>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u3\">t</c></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <c xmlns=\"u3\">t</c>\n</root>\n",
+    "<c xmlns=\"u3\">t</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u3\"><?pi d?><?pi d?></a></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<a xmlns=\"u3\">\n  <?pi d?>\n  <?pi d?>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b><c>t<?pi d?></c></b></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b>\n    <c>\n      t\n      <?pi d?>\n    </c>\n  </b>\n</root>\n",
+    "<b xmlns=\"u1\">\n  <c>\n    t\n    <?pi d?>\n  </c>\n</b>\n",
+    "<c xmlns=\"u1\">\n  t\n  <?pi d?>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u3\"/></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<c xmlns=\"u3\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u3\"/></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <a xmlns=\"u3\"/>\n</root>\n",
+    "<a xmlns=\"u3\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u2\"/></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<c xmlns=\"u2\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u1\">t</c></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<c xmlns=\"u1\">t</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u2\"><c xmlns=\"u1\"/><b xmlns=\"u2\"><c xmlns=\"u2\"><?pi d?>t</c><a xmlns=\"u2\">t</a></b></c></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <c xmlns=\"u2\">\n    <c xmlns=\"u1\"/>\n    <b>\n      <c>\n        <?pi d?>\n        t\n      </c>\n      <a>t</a>\n    </b>\n  </c>\n</root>\n",
+    "<c xmlns=\"u2\">\n  <c xmlns=\"u1\"/>\n  <b>\n    <c>\n      <?pi d?>\n      t\n    </c>\n    <a>t</a>\n  </b>\n</c>\n",
+    "<c xmlns=\"u1\"/>\n",
+    "<b xmlns=\"u2\">\n  <c>\n    <?pi d?>\n    t\n  </c>\n  <a>t</a>\n</b>\n",
+    "<c xmlns=\"u2\">\n  <?pi d?>\n  t\n</c>\n",
+    "<a xmlns=\"u2\">t</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u3\"/></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u3\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a>t<b><b xmlns=\"u1\"/></b></a></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<a xmlns=\"u1\">\n  t\n  <b>\n    <b/>\n  </b>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b><?pi d?><?pi d?></b></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b>\n    <?pi d?>\n    <?pi d?>\n  </b>\n</root>\n",
+    "<b xmlns=\"u1\">\n  <?pi d?>\n  <?pi d?>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u1\"><a xmlns=\"u3\"/></c></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<c xmlns=\"u1\">\n  <a xmlns=\"u3\"/>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u3\"><c><?pi d?><?pi d?></c><a xmlns=\"u2\"><a/></a></b></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b xmlns=\"u3\">\n    <c>\n      <?pi d?>\n      <?pi d?>\n    </c>\n    <a xmlns=\"u2\">\n      <a/>\n    </a>\n  </b>\n</root>\n",
+    "<b xmlns=\"u3\">\n  <c>\n    <?pi d?>\n    <?pi d?>\n  </c>\n  <a xmlns=\"u2\">\n    <a/>\n  </a>\n</b>\n",
+    "<c xmlns=\"u3\">\n  <?pi d?>\n  <?pi d?>\n</c>\n",
+    "<a xmlns=\"u2\">\n  <a/>\n</a>\n",
+    "<a xmlns=\"u2\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u2\"><c xmlns=\"u2\"><?pi d?>t</c><a xmlns=\"u1\"><a xmlns=\"u2\"/>t</a></c></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <c xmlns=\"u2\">\n    <c>\n      <?pi d?>\n      t\n    </c>\n    <a xmlns=\"u1\">\n      <a xmlns=\"u2\"/>\n      t\n    </a>\n  </c>\n</root>\n",
+    "<c xmlns=\"u2\">\n  <c>\n    <?pi d?>\n    t\n  </c>\n  <a xmlns=\"u1\">\n    <a xmlns=\"u2\"/>\n    t\n  </a>\n</c>\n",
+    "<c xmlns=\"u2\">\n  <?pi d?>\n  t\n</c>\n",
+    "<a xmlns=\"u1\">\n  <a xmlns=\"u2\"/>\n  t\n</a>\n",
+    "<a xmlns=\"u2\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u3\"><a xmlns=\"u1\">t</a><?pi d?></b></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b xmlns=\"u3\">\n    <a xmlns=\"u1\">t</a>\n    <?pi d?>\n  </b>\n</root>\n",
+    "<b xmlns=\"u3\">\n  <a xmlns=\"u1\">t</a>\n  <?pi d?>\n</b>\n",
+    "<a xmlns=\"u1\">t</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u3\">tt</c></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<c xmlns=\"u3\">tt</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c><?pi d?></c></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <c>\n    <?pi d?>\n  </c>\n</root>\n",
+    "<c xmlns=\"u1\">\n  <?pi d?>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u1\">tt</c></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<c xmlns=\"u1\">tt</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u3\"><a xmlns=\"u3\">tt</a><?pi d?></b></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b xmlns=\"u3\">\n    <a>tt</a>\n    <?pi d?>\n  </b>\n</root>\n",
+    "<b xmlns=\"u3\">\n  <a>tt</a>\n  <?pi d?>\n</b>\n",
+    "<a xmlns=\"u3\">tt</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u2\"><?pi d?>t</c></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<c xmlns=\"u2\">\n  <?pi d?>\n  t\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b><a><b xmlns=\"u1\"/></a><a xmlns=\"u3\">t<?pi d?></a></b></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u1\">\n  <a>\n    <b/>\n  </a>\n  <a xmlns=\"u3\">\n    t\n    <?pi d?>\n  </a>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u3\"><?pi d?></a></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <a xmlns=\"u3\">\n    <?pi d?>\n  </a>\n</root>\n",
+    "<a xmlns=\"u3\">\n  <?pi d?>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u3\"><b><?pi d?><?pi d?></b></b></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u3\">\n  <b>\n    <?pi d?>\n    <?pi d?>\n  </b>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u3\"><?pi d?></c></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<c xmlns=\"u3\">\n  <?pi d?>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u3\">t</b></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b xmlns=\"u3\">t</b>\n</root>\n",
+    "<b xmlns=\"u3\">t</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b/></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u1\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u3\">t<b xmlns=\"u3\"><c/><c xmlns=\"u3\">t</c></b></b></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b xmlns=\"u3\">\n    t\n    <b>\n      <c/>\n      <c>t</c>\n    </b>\n  </b>\n</root>\n",
+    "<b xmlns=\"u3\">\n  t\n  <b>\n    <c/>\n    <c>t</c>\n  </b>\n</b>\n",
+    "<b xmlns=\"u3\">\n  <c/>\n  <c>t</c>\n</b>\n",
+    "<c xmlns=\"u3\"/>\n",
+    "<c xmlns=\"u3\">t</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a><a xmlns=\"u1\"><?pi d?><c xmlns=\"u1\"/></a></a></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <a>\n    <a>\n      <?pi d?>\n      <c/>\n    </a>\n  </a>\n</root>\n",
+    "<a xmlns=\"u1\">\n  <a>\n    <?pi d?>\n    <c/>\n  </a>\n</a>\n",
+    "<a xmlns=\"u1\">\n  <?pi d?>\n  <c/>\n</a>\n",
+    "<c xmlns=\"u1\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u1\"/></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u1\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u2\"><b xmlns=\"u3\">t<?pi d?></b></a></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <a xmlns=\"u2\">\n    <b xmlns=\"u3\">\n      t\n      <?pi d?>\n    </b>\n  </a>\n</root>\n",
+    "<a xmlns=\"u2\">\n  <b xmlns=\"u3\">\n    t\n    <?pi d?>\n  </b>\n</a>\n",
+    "<b xmlns=\"u3\">\n  t\n  <?pi d?>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u2\">t</b></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b xmlns=\"u2\">t</b>\n</root>\n",
+    "<b xmlns=\"u2\">t</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u1\"><c><?pi d?>t</c></a></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<a xmlns=\"u1\">\n  <c>\n    <?pi d?>\n    t\n  </c>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u1\"><c/></a></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <a>\n    <c/>\n  </a>\n</root>\n",
+    "<a xmlns=\"u1\">\n  <c/>\n</a>\n",
+    "<c xmlns=\"u1\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u3\"><?pi d?><b xmlns=\"u1\"><?pi d?></b></c></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<c xmlns=\"u3\">\n  <?pi d?>\n  <b xmlns=\"u1\">\n    <?pi d?>\n  </b>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b>t</b></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u1\">t</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c><?pi d?><b xmlns=\"u3\"/></c></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <c>\n    <?pi d?>\n    <b xmlns=\"u3\"/>\n  </c>\n</root>\n",
+    "<c xmlns=\"u1\">\n  <?pi d?>\n  <b xmlns=\"u3\"/>\n</c>\n",
+    "<b xmlns=\"u3\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u2\"><?pi d?><?pi d?></b></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u2\">\n  <?pi d?>\n  <?pi d?>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b><a xmlns=\"u1\"/><?pi d?></b></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b>\n    <a/>\n    <?pi d?>\n  </b>\n</root>\n",
+    "<b xmlns=\"u1\">\n  <a/>\n  <?pi d?>\n</b>\n",
+    "<a xmlns=\"u1\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u3\">t</b></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u3\">t</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u3\"><?pi d?><b>t</b></a></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<a xmlns=\"u3\">\n  <?pi d?>\n  <b>t</b>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u1\"><c><?pi d?></c></b></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b>\n    <c>\n      <?pi d?>\n    </c>\n  </b>\n</root>\n",
+    "<b xmlns=\"u1\">\n  <c>\n    <?pi d?>\n  </c>\n</b>\n",
+    "<c xmlns=\"u1\">\n  <?pi d?>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u1\"><c>t<?pi d?></c></a></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <a>\n    <c>\n      t\n      <?pi d?>\n    </c>\n  </a>\n</root>\n",
+    "<a xmlns=\"u1\">\n  <c>\n    t\n    <?pi d?>\n  </c>\n</a>\n",
+    "<c xmlns=\"u1\">\n  t\n  <?pi d?>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u2\"><?pi d?></a></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <a xmlns=\"u2\">\n    <?pi d?>\n  </a>\n</root>\n",
+    "<a xmlns=\"u2\">\n  <?pi d?>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><p:a xmlns=\"u1\">t</p:a></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<p:a xmlns:p=\"u1\">t</p:a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u1\"><b xmlns=\"u1\"><a xmlns=\"u3\"/><c xmlns=\"u3\"><?pi d?></c></b><c><?pi d?><?pi d?></c></c></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <c>\n    <b>\n      <a xmlns=\"u3\"/>\n      <c xmlns=\"u3\">\n        <?pi d?>\n      </c>\n    </b>\n    <c>\n      <?pi d?>\n      <?pi d?>\n    </c>\n  </c>\n</root>\n",
+    "<c xmlns=\"u1\">\n  <b>\n    <a xmlns=\"u3\"/>\n    <c xmlns=\"u3\">\n      <?pi d?>\n    </c>\n  </b>\n  <c>\n    <?pi d?>\n    <?pi d?>\n  </c>\n</c>\n",
+    "<b xmlns=\"u1\">\n  <a xmlns=\"u3\"/>\n  <c xmlns=\"u3\">\n    <?pi d?>\n  </c>\n</b>\n",
+    "<a xmlns=\"u3\"/>\n",
+    "<c xmlns=\"u3\">\n  <?pi d?>\n</c>\n",
+    "<c xmlns=\"u1\">\n  <?pi d?>\n  <?pi d?>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b>t<?pi d?></b></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b>\n    t\n    <?pi d?>\n  </b>\n</root>\n",
+    "<b xmlns=\"u1\">\n  t\n  <?pi d?>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c>tt</c></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <c>tt</c>\n</root>\n",
+    "<c xmlns=\"u1\">tt</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u3\"><?pi d?><b><?pi d?><?pi d?></b></b></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b xmlns=\"u3\">\n    <?pi d?>\n    <b>\n      <?pi d?>\n      <?pi d?>\n    </b>\n  </b>\n</root>\n",
+    "<b xmlns=\"u3\">\n  <?pi d?>\n  <b>\n    <?pi d?>\n    <?pi d?>\n  </b>\n</b>\n",
+    "<b xmlns=\"u3\">\n  <?pi d?>\n  <?pi d?>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u3\"/></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b xmlns=\"u3\"/>\n</root>\n",
+    "<b xmlns=\"u3\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u2\">t</a></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<a xmlns=\"u2\">t</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a><?pi d?><b xmlns=\"u3\"><?pi d?></b></a></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <a>\n    <?pi d?>\n    <b xmlns=\"u3\">\n      <?pi d?>\n    </b>\n  </a>\n</root>\n",
+    "<a xmlns=\"u1\">\n  <?pi d?>\n  <b xmlns=\"u3\">\n    <?pi d?>\n  </b>\n</a>\n",
+    "<b xmlns=\"u3\">\n  <?pi d?>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c><?pi d?>t</c></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<c xmlns=\"u1\">\n  <?pi d?>\n  t\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u2\"/></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b xmlns=\"u2\"/>\n</root>\n",
+    "<b xmlns=\"u2\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b><?pi d?></b></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u1\">\n  <?pi d?>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u1\"><?pi d?></c></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<c xmlns=\"u1\">\n  <?pi d?>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u2\"><c xmlns=\"u2\"><b>t</b>t</c></b></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b xmlns=\"u2\">\n    <c>\n      <b>t</b>\n      t\n    </c>\n  </b>\n</root>\n",
+    "<b xmlns=\"u2\">\n  <c>\n    <b>t</b>\n    t\n  </c>\n</b>\n",
+    "<c xmlns=\"u2\">\n  <b>t</b>\n  t\n</c>\n",
+    "<b xmlns=\"u2\">t</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a>t<?pi d?></a></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<a xmlns=\"u1\">\n  t\n  <?pi d?>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u1\">t</b></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b>t</b>\n</root>\n",
+    "<b xmlns=\"u1\">t</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u1\"><c xmlns=\"u1\"><?pi d?></c><b xmlns=\"u1\"><?pi d?></b></c></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<c xmlns=\"u1\">\n  <c>\n    <?pi d?>\n  </c>\n  <b>\n    <?pi d?>\n  </b>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u2\">t</c></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <c xmlns=\"u2\">t</c>\n</root>\n",
+    "<c xmlns=\"u2\">t</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u1\"><a xmlns=\"u1\"><?pi d?><?pi d?></a></b></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u1\">\n  <a>\n    <?pi d?>\n    <?pi d?>\n  </a>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c><?pi d?><b xmlns=\"u2\"><c xmlns=\"u3\"><?pi d?>t</c>t</b></c></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <c>\n    <?pi d?>\n    <b xmlns=\"u2\">\n      <c xmlns=\"u3\">\n        <?pi d?>\n        t\n      </c>\n      t\n    </b>\n  </c>\n</root>\n",
+    "<c xmlns=\"u1\">\n  <?pi d?>\n  <b xmlns=\"u2\">\n    <c xmlns=\"u3\">\n      <?pi d?>\n      t\n    </c>\n    t\n  </b>\n</c>\n",
+    "<b xmlns=\"u2\">\n  <c xmlns=\"u3\">\n    <?pi d?>\n    t\n  </c>\n  t\n</b>\n",
+    "<c xmlns=\"u3\">\n  <?pi d?>\n  t\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u3\"><b xmlns=\"u2\"><?pi d?></b>t</c></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <c xmlns=\"u3\">\n    <b xmlns=\"u2\">\n      <?pi d?>\n    </b>\n    t\n  </c>\n</root>\n",
+    "<c xmlns=\"u3\">\n  <b xmlns=\"u2\">\n    <?pi d?>\n  </b>\n  t\n</c>\n",
+    "<b xmlns=\"u2\">\n  <?pi d?>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u2\"><?pi d?></b></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u2\">\n  <?pi d?>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u3\">t</c></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<c xmlns=\"u3\">t</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u2\"><c xmlns=\"u2\"><c y=\"0\" xmlns=\"u1\"><c/><a xmlns=\"u1\"/></c></c></a></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <a xmlns=\"u2\">\n    <c>\n      <c xmlns=\"u1\" y=\"0\">\n        <c/>\n        <a/>\n      </c>\n    </c>\n  </a>\n</root>\n",
+    "<a xmlns=\"u2\">\n  <c>\n    <c xmlns=\"u1\" y=\"0\">\n      <c/>\n      <a/>\n    </c>\n  </c>\n</a>\n",
+    "<c xmlns=\"u2\">\n  <c xmlns=\"u1\" y=\"0\">\n    <c/>\n    <a/>\n  </c>\n</c>\n",
+    "<c xmlns=\"u1\" y=\"0\">\n  <c/>\n  <a/>\n</c>\n",
+    "<c xmlns=\"u1\"/>\n",
+    "<a xmlns=\"u1\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a><b xmlns=\"u2\"/></a></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <a>\n    <b xmlns=\"u2\"/>\n  </a>\n</root>\n",
+    "<a xmlns=\"u1\">\n  <b xmlns=\"u2\"/>\n</a>\n",
+    "<b xmlns=\"u2\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u1\"><?pi d?><b><c><?pi d?></c></b></b></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b>\n    <?pi d?>\n    <b>\n      <c>\n        <?pi d?>\n      </c>\n    </b>\n  </b>\n</root>\n",
+    "<b xmlns=\"u1\">\n  <?pi d?>\n  <b>\n    <c>\n      <?pi d?>\n    </c>\n  </b>\n</b>\n",
+    "<b xmlns=\"u1\">\n  <c>\n    <?pi d?>\n  </c>\n</b>\n",
+    "<c xmlns=\"u1\">\n  <?pi d?>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u1\"><a xmlns=\"u3\">t</a></c></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <c>\n    <a xmlns=\"u3\">t</a>\n  </c>\n</root>\n",
+    "<c xmlns=\"u1\">\n  <a xmlns=\"u3\">t</a>\n</c>\n",
+    "<a xmlns=\"u3\">t</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u2\"><c xmlns=\"u1\"><c><?pi d?><c xmlns=\"u1\"/></c><a xmlns=\"u2\">tt</a></c><?pi d?></c></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<c xmlns=\"u2\">\n  <c xmlns=\"u1\">\n    <c>\n      <?pi d?>\n      <c/>\n    </c>\n    <a xmlns=\"u2\">tt</a>\n  </c>\n  <?pi d?>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u1\"><?pi d?><a xmlns=\"u1\"><?pi d?><?pi d?></a></a></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <a>\n    <?pi d?>\n    <a>\n      <?pi d?>\n      <?pi d?>\n    </a>\n  </a>\n</root>\n",
+    "<a xmlns=\"u1\">\n  <?pi d?>\n  <a>\n    <?pi d?>\n    <?pi d?>\n  </a>\n</a>\n",
+    "<a xmlns=\"u1\">\n  <?pi d?>\n  <?pi d?>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u1\"><c xmlns=\"u2\"/></b></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u1\">\n  <c xmlns=\"u2\"/>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u1\"><?pi d?>t</a></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <a>\n    <?pi d?>\n    t\n  </a>\n</root>\n",
+    "<a xmlns=\"u1\">\n  <?pi d?>\n  t\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u1\">t<?pi d?></c></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <c>\n    t\n    <?pi d?>\n  </c>\n</root>\n",
+    "<c xmlns=\"u1\">\n  t\n  <?pi d?>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b><?pi d?>t</b></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u1\">\n  <?pi d?>\n  t\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u3\"><a xmlns=\"u1\">t</a><a xmlns=\"u1\"/></c></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <c xmlns=\"u3\">\n    <a xmlns=\"u1\">t</a>\n    <a xmlns=\"u1\"/>\n  </c>\n</root>\n",
+    "<c xmlns=\"u3\">\n  <a xmlns=\"u1\">t</a>\n  <a xmlns=\"u1\"/>\n</c>\n",
+    "<a xmlns=\"u1\">t</a>\n",
+    "<a xmlns=\"u1\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u2\"><?pi d?></a></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<a xmlns=\"u2\">\n  <?pi d?>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u2\">tt</b></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b xmlns=\"u2\">tt</b>\n</root>\n",
+    "<b xmlns=\"u2\">tt</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c>t<?pi d?></c></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <c>\n    t\n    <?pi d?>\n  </c>\n</root>\n",
+    "<c xmlns=\"u1\">\n  t\n  <?pi d?>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u2\"><b xmlns=\"u2\"><?pi d?></b><?pi d?></b></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u2\">\n  <b>\n    <?pi d?>\n  </b>\n  <?pi d?>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u3\"><?pi d?><a/></c></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <c xmlns=\"u3\">\n    <?pi d?>\n    <a/>\n  </c>\n</root>\n",
+    "<c xmlns=\"u3\">\n  <?pi d?>\n  <a/>\n</c>\n",
+    "<a xmlns=\"u3\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u3\">t</a></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<a xmlns=\"u3\">t</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u1\"><a><?pi d?><a><c xmlns=\"u3\"/><?pi d?></a></a></b></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b>\n    <a>\n      <?pi d?>\n      <a>\n        <c xmlns=\"u3\"/>\n        <?pi d?>\n      </a>\n    </a>\n  </b>\n</root>\n",
+    "<b xmlns=\"u1\">\n  <a>\n    <?pi d?>\n    <a>\n      <c xmlns=\"u3\"/>\n      <?pi d?>\n    </a>\n  </a>\n</b>\n",
+    "<a xmlns=\"u1\">\n  <?pi d?>\n  <a>\n    <c xmlns=\"u3\"/>\n    <?pi d?>\n  </a>\n</a>\n",
+    "<a xmlns=\"u1\">\n  <c xmlns=\"u3\"/>\n  <?pi d?>\n</a>\n",
+    "<c xmlns=\"u3\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u3\">tt</b></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u3\">tt</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a><c xmlns=\"u1\">tt</c><?pi d?></a></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<a xmlns=\"u1\">\n  <c>tt</c>\n  <?pi d?>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u1\">t</a></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <a>t</a>\n</root>\n",
+    "<a xmlns=\"u1\">t</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b><?pi d?>t</b></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b>\n    <?pi d?>\n    t\n  </b>\n</root>\n",
+    "<b xmlns=\"u1\">\n  <?pi d?>\n  t\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u2\"><?pi d?><a xmlns=\"u3\"><c xmlns=\"u3\"/><?pi d?></a></c></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<c xmlns=\"u2\">\n  <?pi d?>\n  <a xmlns=\"u3\">\n    <c/>\n    <?pi d?>\n  </a>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u3\"><c xmlns=\"u3\"/><?pi d?></c></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <c xmlns=\"u3\">\n    <c/>\n    <?pi d?>\n  </c>\n</root>\n",
+    "<c xmlns=\"u3\">\n  <c/>\n  <?pi d?>\n</c>\n",
+    "<c xmlns=\"u3\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a><?pi d?></a></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <a>\n    <?pi d?>\n  </a>\n</root>\n",
+    "<a xmlns=\"u1\">\n  <?pi d?>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u2\"><c/><?pi d?></c></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<c xmlns=\"u2\">\n  <c/>\n  <?pi d?>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u2\">tt</b></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u2\">tt</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a><?pi d?><c xmlns=\"u3\"><?pi d?></c></a></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <a>\n    <?pi d?>\n    <c xmlns=\"u3\">\n      <?pi d?>\n    </c>\n  </a>\n</root>\n",
+    "<a xmlns=\"u1\">\n  <?pi d?>\n  <c xmlns=\"u3\">\n    <?pi d?>\n  </c>\n</a>\n",
+    "<c xmlns=\"u3\">\n  <?pi d?>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u2\"><a xmlns=\"u3\">t</a></b></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b xmlns=\"u2\">\n    <a xmlns=\"u3\">t</a>\n  </b>\n</root>\n",
+    "<b xmlns=\"u2\">\n  <a xmlns=\"u3\">t</a>\n</b>\n",
+    "<a xmlns=\"u3\">t</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c>t</c></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<c xmlns=\"u1\">t</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u3\">t<?pi d?></b></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u3\">\n  t\n  <?pi d?>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u3\"><?pi d?></a></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<a xmlns=\"u3\">\n  <?pi d?>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u3\"><c xmlns=\"u2\"><?pi d?>t</c>t</a></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <a xmlns=\"u3\">\n    <c xmlns=\"u2\">\n      <?pi d?>\n      t\n    </c>\n    t\n  </a>\n</root>\n",
+    "<a xmlns=\"u3\">\n  <c xmlns=\"u2\">\n    <?pi d?>\n    t\n  </c>\n  t\n</a>\n",
+    "<c xmlns=\"u2\">\n  <?pi d?>\n  t\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u2\"><b xmlns=\"u3\"><b/></b><c xmlns=\"u1\"><b xmlns=\"u3\">t</b></c></a></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<a xmlns=\"u2\">\n  <b xmlns=\"u3\">\n    <b/>\n  </b>\n  <c xmlns=\"u1\">\n    <b xmlns=\"u3\">t</b>\n  </c>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u3\"><b/>t</a></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<a xmlns=\"u3\">\n  <b/>\n  t\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u3\"><?pi d?>t</a></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<a xmlns=\"u3\">\n  <?pi d?>\n  t\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b>t<b xmlns=\"u3\"/></b></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b>\n    t\n    <b xmlns=\"u3\"/>\n  </b>\n</root>\n",
+    "<b xmlns=\"u1\">\n  t\n  <b xmlns=\"u3\"/>\n</b>\n",
+    "<b xmlns=\"u3\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u2\"><?pi d?><?pi d?></c></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<c xmlns=\"u2\">\n  <?pi d?>\n  <?pi d?>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c><?pi d?></c></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<c xmlns=\"u1\">\n  <?pi d?>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u2\">t<?pi d?></c></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <c xmlns=\"u2\">\n    t\n    <?pi d?>\n  </c>\n</root>\n",
+    "<c xmlns=\"u2\">\n  t\n  <?pi d?>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b><?pi d?><b xmlns=\"u2\"/></b></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u1\">\n  <?pi d?>\n  <b xmlns=\"u2\"/>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u1\"><a xmlns=\"u3\"><?pi d?></a><?pi d?></a></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<a xmlns=\"u1\">\n  <a xmlns=\"u3\">\n    <?pi d?>\n  </a>\n  <?pi d?>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u3\"><a xmlns=\"u1\"><?pi d?>t</a><?pi d?></c></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <c xmlns=\"u3\">\n    <a xmlns=\"u1\">\n      <?pi d?>\n      t\n    </a>\n    <?pi d?>\n  </c>\n</root>\n",
+    "<c xmlns=\"u3\">\n  <a xmlns=\"u1\">\n    <?pi d?>\n    t\n  </a>\n  <?pi d?>\n</c>\n",
+    "<a xmlns=\"u1\">\n  <?pi d?>\n  t\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u3\"><a/></c></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<c xmlns=\"u3\">\n  <a/>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b><c xmlns=\"u3\"><?pi d?></c><?pi d?></b></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b>\n    <c xmlns=\"u3\">\n      <?pi d?>\n    </c>\n    <?pi d?>\n  </b>\n</root>\n",
+    "<b xmlns=\"u1\">\n  <c xmlns=\"u3\">\n    <?pi d?>\n  </c>\n  <?pi d?>\n</b>\n",
+    "<c xmlns=\"u3\">\n  <?pi d?>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b><a>t<a xmlns=\"u3\"><c xmlns=\"u1\"/><?pi d?></a></a><?pi d?></b></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u1\">\n  <a>\n    t\n    <a xmlns=\"u3\">\n      <c xmlns=\"u1\"/>\n      <?pi d?>\n    </a>\n  </a>\n  <?pi d?>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c><a xmlns=\"u3\"/></c></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <c>\n    <a xmlns=\"u3\"/>\n  </c>\n</root>\n",
+    "<c xmlns=\"u1\">\n  <a xmlns=\"u3\"/>\n</c>\n",
+    "<a xmlns=\"u3\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b>tt</b></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b>tt</b>\n</root>\n",
+    "<b xmlns=\"u1\">tt</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b><c>t<b xmlns=\"u1\"/></c>t</b></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b>\n    <c>\n      t\n      <b/>\n    </c>\n    t\n  </b>\n</root>\n",
+    "<b xmlns=\"u1\">\n  <c>\n    t\n    <b/>\n  </c>\n  t\n</b>\n",
+    "<c xmlns=\"u1\">\n  t\n  <b/>\n</c>\n",
+    "<b xmlns=\"u1\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u1\"><c>t</c></c></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <c>\n    <c>t</c>\n  </c>\n</root>\n",
+    "<c xmlns=\"u1\">\n  <c>t</c>\n</c>\n",
+    "<c xmlns=\"u1\">t</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u3\">t<?pi d?></b></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b xmlns=\"u3\">\n    t\n    <?pi d?>\n  </b>\n</root>\n",
+    "<b xmlns=\"u3\">\n  t\n  <?pi d?>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><p:c xmlns=\"u1\"/></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<p:c xmlns:p=\"u1\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u3\"><?pi d?><c xmlns=\"u1\"><?pi d?></c></b></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b xmlns=\"u3\">\n    <?pi d?>\n    <c xmlns=\"u1\">\n      <?pi d?>\n    </c>\n  </b>\n</root>\n",
+    "<b xmlns=\"u3\">\n  <?pi d?>\n  <c xmlns=\"u1\">\n    <?pi d?>\n  </c>\n</b>\n",
+    "<c xmlns=\"u1\">\n  <?pi d?>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a>t</a></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <a>t</a>\n</root>\n",
+    "<a xmlns=\"u1\">t</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c><?pi d?><a xmlns=\"u2\"/></c></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<c xmlns=\"u1\">\n  <?pi d?>\n  <a xmlns=\"u2\"/>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b><b><c>t<?pi d?></c>t</b></b></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b>\n    <b>\n      <c>\n        t\n        <?pi d?>\n      </c>\n      t\n    </b>\n  </b>\n</root>\n",
+    "<b xmlns=\"u1\">\n  <b>\n    <c>\n      t\n      <?pi d?>\n    </c>\n    t\n  </b>\n</b>\n",
+    "<b xmlns=\"u1\">\n  <c>\n    t\n    <?pi d?>\n  </c>\n  t\n</b>\n",
+    "<c xmlns=\"u1\">\n  t\n  <?pi d?>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b><a><b/>t</a><c xmlns=\"u2\"><c xmlns=\"u1\"/></c></b></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u1\">\n  <a>\n    <b/>\n    t\n  </a>\n  <c xmlns=\"u2\">\n    <c xmlns=\"u1\"/>\n  </c>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u3\">t<b xmlns=\"u2\"/></a></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<a xmlns=\"u3\">\n  t\n  <b xmlns=\"u2\"/>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u1\"><?pi d?>t</b></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b>\n    <?pi d?>\n    t\n  </b>\n</root>\n",
+    "<b xmlns=\"u1\">\n  <?pi d?>\n  t\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c><?pi d?><a xmlns=\"u3\"/></c></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <c>\n    <?pi d?>\n    <a xmlns=\"u3\"/>\n  </c>\n</root>\n",
+    "<c xmlns=\"u1\">\n  <?pi d?>\n  <a xmlns=\"u3\"/>\n</c>\n",
+    "<a xmlns=\"u3\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u3\"><?pi d?></b></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b xmlns=\"u3\">\n    <?pi d?>\n  </b>\n</root>\n",
+    "<b xmlns=\"u3\">\n  <?pi d?>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u2\">t<?pi d?></b></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u2\">\n  t\n  <?pi d?>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u3\">t<a xmlns=\"u2\">t<?pi d?></a></b></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b xmlns=\"u3\">\n    t\n    <a xmlns=\"u2\">\n      t\n      <?pi d?>\n    </a>\n  </b>\n</root>\n",
+    "<b xmlns=\"u3\">\n  t\n  <a xmlns=\"u2\">\n    t\n    <?pi d?>\n  </a>\n</b>\n",
+    "<a xmlns=\"u2\">\n  t\n  <?pi d?>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b><b><?pi d?></b></b></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u1\">\n  <b>\n    <?pi d?>\n  </b>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u1\"><b/>t</b></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u1\">\n  <b/>\n  t\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u3\"><b xmlns=\"u2\"><?pi d?></b></b></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u3\">\n  <b xmlns=\"u2\">\n    <?pi d?>\n  </b>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u2\"><a xmlns=\"u2\"><?pi d?><?pi d?></a></a></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<a xmlns=\"u2\">\n  <a>\n    <?pi d?>\n    <?pi d?>\n  </a>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u1\"><a xmlns=\"u2\"/></b></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b>\n    <a xmlns=\"u2\"/>\n  </b>\n</root>\n",
+    "<b xmlns=\"u1\">\n  <a xmlns=\"u2\"/>\n</b>\n",
+    "<a xmlns=\"u2\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u2\"><?pi d?><c/></b></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b xmlns=\"u2\">\n    <?pi d?>\n    <c/>\n  </b>\n</root>\n",
+    "<b xmlns=\"u2\">\n  <?pi d?>\n  <c/>\n</b>\n",
+    "<c xmlns=\"u2\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b><c xmlns=\"u2\"><c xmlns=\"u3\"><a/><c xmlns=\"u3\"/></c><c xmlns=\"u2\"><a xmlns=\"u3\"/></c></c></b></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u1\">\n  <c xmlns=\"u2\">\n    <c xmlns=\"u3\">\n      <a/>\n      <c/>\n    </c>\n    <c>\n      <a xmlns=\"u3\"/>\n    </c>\n  </c>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a><b xmlns=\"u3\"><a xmlns=\"u3\">t<?pi d?></a></b></a></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <a>\n    <b xmlns=\"u3\">\n      <a>\n        t\n        <?pi d?>\n      </a>\n    </b>\n  </a>\n</root>\n",
+    "<a xmlns=\"u1\">\n  <b xmlns=\"u3\">\n    <a>\n      t\n      <?pi d?>\n    </a>\n  </b>\n</a>\n",
+    "<b xmlns=\"u3\">\n  <a>\n    t\n    <?pi d?>\n  </a>\n</b>\n",
+    "<a xmlns=\"u3\">\n  t\n  <?pi d?>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u3\"><b xmlns=\"u2\"><b xmlns=\"u3\"/>t</b></b></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u3\">\n  <b xmlns=\"u2\">\n    <b xmlns=\"u3\"/>\n    t\n  </b>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c><c xmlns=\"u1\"><?pi d?><a><?pi d?><?pi d?></a></c><b xmlns=\"u2\">t<!--c--></b></c></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <c>\n    <c>\n      <?pi d?>\n      <a>\n        <?pi d?>\n        <?pi d?>\n      </a>\n    </c>\n    <b xmlns=\"u2\">\n      t\n      <!--c-->\n    </b>\n  </c>\n</root>\n",
+    "<c xmlns=\"u1\">\n  <c>\n    <?pi d?>\n    <a>\n      <?pi d?>\n      <?pi d?>\n    </a>\n  </c>\n  <b xmlns=\"u2\">\n    t\n    <!--c-->\n  </b>\n</c>\n",
+    "<c xmlns=\"u1\">\n  <?pi d?>\n  <a>\n    <?pi d?>\n    <?pi d?>\n  </a>\n</c>\n",
+    "<a xmlns=\"u1\">\n  <?pi d?>\n  <?pi d?>\n</a>\n",
+    "<b xmlns=\"u2\">\n  t\n  <!--c-->\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u2\">t</a></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <a xmlns=\"u2\">t</a>\n</root>\n",
+    "<a xmlns=\"u2\">t</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u3\"><b>t</b></a></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <a xmlns=\"u3\">\n    <b>t</b>\n  </a>\n</root>\n",
+    "<a xmlns=\"u3\">\n  <b>t</b>\n</a>\n",
+    "<b xmlns=\"u3\">t</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b><c/><?pi d?></b></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u1\">\n  <c/>\n  <?pi d?>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u3\"><c>t</c></a></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<a xmlns=\"u3\">\n  <c>t</c>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u1\"><c xmlns=\"u2\"/>t</a></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <a>\n    <c xmlns=\"u2\"/>\n    t\n  </a>\n</root>\n",
+    "<a xmlns=\"u1\">\n  <c xmlns=\"u2\"/>\n  t\n</a>\n",
+    "<c xmlns=\"u2\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u2\">t<?pi d?></a></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <a xmlns=\"u2\">\n    t\n    <?pi d?>\n  </a>\n</root>\n",
+    "<a xmlns=\"u2\">\n  t\n  <?pi d?>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a><a xmlns=\"u2\"><c><?pi d?></c></a><?pi d?></a></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <a>\n    <a xmlns=\"u2\">\n      <c>\n        <?pi d?>\n      </c>\n    </a>\n    <?pi d?>\n  </a>\n</root>\n",
+    "<a xmlns=\"u1\">\n  <a xmlns=\"u2\">\n    <c>\n      <?pi d?>\n    </c>\n  </a>\n  <?pi d?>\n</a>\n",
+    "<a xmlns=\"u2\">\n  <c>\n    <?pi d?>\n  </c>\n</a>\n",
+    "<c xmlns=\"u2\">\n  <?pi d?>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u3\" xmlns:p=\"u3\"><c xmlns=\"u2\">t</c></b></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u3\" xmlns:p=\"u3\">\n  <c xmlns=\"u2\">t</c>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u3\">t</a></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <a xmlns=\"u3\">t</a>\n</root>\n",
+    "<a xmlns=\"u3\">t</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a r:x=\"0\" xmlns=\"u3\"><a><b>t</b></a><?pi d?></a></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <a xmlns=\"u3\" r:x=\"0\">\n    <a>\n      <b>t</b>\n    </a>\n    <?pi d?>\n  </a>\n</root>\n",
+    "<a xmlns=\"u3\" xmlns:r=\"u3\" r:x=\"0\">\n  <a>\n    <b>t</b>\n  </a>\n  <?pi d?>\n</a>\n",
+    "<a xmlns=\"u3\">\n  <b>t</b>\n</a>\n",
+    "<b xmlns=\"u3\">t</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u2\">t<b xmlns=\"u1\">tt</b></c></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <c xmlns=\"u2\">\n    t\n    <b xmlns=\"u1\">tt</b>\n  </c>\n</root>\n",
+    "<c xmlns=\"u2\">\n  t\n  <b xmlns=\"u1\">tt</b>\n</c>\n",
+    "<b xmlns=\"u1\">tt</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c><a>t</a></c></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<c xmlns=\"u1\">\n  <a>t</a>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u3\"><c xmlns=\"u3\"><a xmlns=\"u3\"><?pi d?></a><?pi d?></c><c xmlns=\"u2\"><?pi d?></c></a></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <a xmlns=\"u3\">\n    <c>\n      <a>\n        <?pi d?>\n      </a>\n      <?pi d?>\n    </c>\n    <c xmlns=\"u2\">\n      <?pi d?>\n    </c>\n  </a>\n</root>\n",
+    "<a xmlns=\"u3\">\n  <c>\n    <a>\n      <?pi d?>\n    </a>\n    <?pi d?>\n  </c>\n  <c xmlns=\"u2\">\n    <?pi d?>\n  </c>\n</a>\n",
+    "<c xmlns=\"u3\">\n  <a>\n    <?pi d?>\n  </a>\n  <?pi d?>\n</c>\n",
+    "<a xmlns=\"u3\">\n  <?pi d?>\n</a>\n",
+    "<c xmlns=\"u2\">\n  <?pi d?>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u3\"><?pi d?><?pi d?></c></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<c xmlns=\"u3\">\n  <?pi d?>\n  <?pi d?>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u3\"><b/></c></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <c xmlns=\"u3\">\n    <b/>\n  </c>\n</root>\n",
+    "<c xmlns=\"u3\">\n  <b/>\n</c>\n",
+    "<b xmlns=\"u3\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c>t<a/></c></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<c xmlns=\"u1\">\n  t\n  <a/>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a><c xmlns=\"u2\"><c/><?pi d?></c></a></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <a>\n    <c xmlns=\"u2\">\n      <c/>\n      <?pi d?>\n    </c>\n  </a>\n</root>\n",
+    "<a xmlns=\"u1\">\n  <c xmlns=\"u2\">\n    <c/>\n    <?pi d?>\n  </c>\n</a>\n",
+    "<c xmlns=\"u2\">\n  <c/>\n  <?pi d?>\n</c>\n",
+    "<c xmlns=\"u2\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u1\"><?pi d?></b></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u1\">\n  <?pi d?>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u1\"><?pi d?></b></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b>\n    <?pi d?>\n  </b>\n</root>\n",
+    "<b xmlns=\"u1\">\n  <?pi d?>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u1\"><c/>t</a></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <a>\n    <c/>\n    t\n  </a>\n</root>\n",
+    "<a xmlns=\"u1\">\n  <c/>\n  t\n</a>\n",
+    "<c xmlns=\"u1\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u1\"><?pi d?><a xmlns=\"u1\"/></c></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<c xmlns=\"u1\">\n  <?pi d?>\n  <a/>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a><a xmlns=\"u2\"><?pi d?></a><c><a xmlns=\"u2\"/><a xmlns=\"u2\"><b xmlns=\"u3\"/><b xmlns=\"u2\"/></a></c></a></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<a xmlns=\"u1\">\n  <a xmlns=\"u2\">\n    <?pi d?>\n  </a>\n  <c>\n    <a xmlns=\"u2\"/>\n    <a xmlns=\"u2\">\n      <b xmlns=\"u3\"/>\n      <b/>\n    </a>\n  </c>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u3\"><c xmlns=\"u2\"/></b></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b xmlns=\"u3\">\n    <c xmlns=\"u2\"/>\n  </b>\n</root>\n",
+    "<b xmlns=\"u3\">\n  <c xmlns=\"u2\"/>\n</b>\n",
+    "<c xmlns=\"u2\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u3\"><?pi d?></c></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <c xmlns=\"u3\">\n    <?pi d?>\n  </c>\n</root>\n",
+    "<c xmlns=\"u3\">\n  <?pi d?>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u3\"><a xmlns=\"u2\" xmlns:p=\"u3\"><?pi d?></a>t</c></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <c xmlns=\"u3\">\n    <a xmlns=\"u2\" xmlns:p=\"u3\">\n      <?pi d?>\n    </a>\n    t\n  </c>\n</root>\n",
+    "<c xmlns=\"u3\">\n  <a xmlns=\"u2\" xmlns:p=\"u3\">\n    <?pi d?>\n  </a>\n  t\n</c>\n",
+    "<a xmlns=\"u2\" xmlns:p=\"u3\">\n  <?pi d?>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b><b xmlns=\"u1\"/><b xmlns=\"u2\"><a xmlns=\"u2\"><a/><?pi d?></a><c><?pi d?><?pi d?></c></b></b></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b>\n    <b/>\n    <b xmlns=\"u2\">\n      <a>\n        <a/>\n        <?pi d?>\n      </a>\n      <c>\n        <?pi d?>\n        <?pi d?>\n      </c>\n    </b>\n  </b>\n</root>\n",
+    "<b xmlns=\"u1\">\n  <b/>\n  <b xmlns=\"u2\">\n    <a>\n      <a/>\n      <?pi d?>\n    </a>\n    <c>\n      <?pi d?>\n      <?pi d?>\n    </c>\n  </b>\n</b>\n",
+    "<b xmlns=\"u1\"/>\n",
+    "<b xmlns=\"u2\">\n  <a>\n    <a/>\n    <?pi d?>\n  </a>\n  <c>\n    <?pi d?>\n    <?pi d?>\n  </c>\n</b>\n",
+    "<a xmlns=\"u2\">\n  <a/>\n  <?pi d?>\n</a>\n",
+    "<a xmlns=\"u2\"/>\n",
+    "<c xmlns=\"u2\">\n  <?pi d?>\n  <?pi d?>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b><c xmlns=\"u2\"><?pi d?>t</c><b xmlns=\"u3\"><a xmlns=\"u3\"/><a xmlns=\"u2\"><?pi d?></a></b></b></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u1\">\n  <c xmlns=\"u2\">\n    <?pi d?>\n    t\n  </c>\n  <b xmlns=\"u3\">\n    <a/>\n    <a xmlns=\"u2\">\n      <?pi d?>\n    </a>\n  </b>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a><c xmlns=\"u2\"/><c><?pi d?><?pi d?></c></a></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <a>\n    <c xmlns=\"u2\"/>\n    <c>\n      <?pi d?>\n      <?pi d?>\n    </c>\n  </a>\n</root>\n",
+    "<a xmlns=\"u1\">\n  <c xmlns=\"u2\"/>\n  <c>\n    <?pi d?>\n    <?pi d?>\n  </c>\n</a>\n",
+    "<c xmlns=\"u2\"/>\n",
+    "<c xmlns=\"u1\">\n  <?pi d?>\n  <?pi d?>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u1\"><b xmlns=\"u1\">t<c xmlns=\"u1\"><b xmlns=\"u1\"/>t</c></b>t</a></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <a>\n    <b>\n      t\n      <c>\n        <b/>\n        t\n      </c>\n    </b>\n    t\n  </a>\n</root>\n",
+    "<a xmlns=\"u1\">\n  <b>\n    t\n    <c>\n      <b/>\n      t\n    </c>\n  </b>\n  t\n</a>\n",
+    "<b xmlns=\"u1\">\n  t\n  <c>\n    <b/>\n    t\n  </c>\n</b>\n",
+    "<c xmlns=\"u1\">\n  <b/>\n  t\n</c>\n",
+    "<b xmlns=\"u1\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c><?pi d?><?pi d?></c></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <c>\n    <?pi d?>\n    <?pi d?>\n  </c>\n</root>\n",
+    "<c xmlns=\"u1\">\n  <?pi d?>\n  <?pi d?>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u2\"><?pi d?><b xmlns=\"u2\"/></c></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <c xmlns=\"u2\">\n    <?pi d?>\n    <b/>\n  </c>\n</root>\n",
+    "<c xmlns=\"u2\">\n  <?pi d?>\n  <b/>\n</c>\n",
+    "<b xmlns=\"u2\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u3\"><?pi d?>t</c></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<c xmlns=\"u3\">\n  <?pi d?>\n  t\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a><?pi d?>t</a></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<a xmlns=\"u1\">\n  <?pi d?>\n  t\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b><c><?pi d?><?pi d?></c><c xmlns=\"u2\"><a><?pi d?>t</a></c></b></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u1\">\n  <c>\n    <?pi d?>\n    <?pi d?>\n  </c>\n  <c xmlns=\"u2\">\n    <a>\n      <?pi d?>\n      t\n    </a>\n  </c>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u1\"><?pi d?><?pi d?></a></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<a xmlns=\"u1\">\n  <?pi d?>\n  <?pi d?>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b>t</b></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b>t</b>\n</root>\n",
+    "<b xmlns=\"u1\">t</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b>t<c><b>t</b></c></b></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u1\">\n  t\n  <c>\n    <b>t</b>\n  </c>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u3\"><c xmlns=\"u2\"><b xmlns=\"u1\">t<?pi d?></b><c xmlns=\"u1\"><?pi d?>t</c></c><b xmlns=\"u1\"><?pi d?><?pi d?></b></a></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <a xmlns=\"u3\">\n    <c xmlns=\"u2\">\n      <b xmlns=\"u1\">\n        t\n        <?pi d?>\n      </b>\n      <c xmlns=\"u1\">\n        <?pi d?>\n        t\n      </c>\n    </c>\n    <b xmlns=\"u1\">\n      <?pi d?>\n      <?pi d?>\n    </b>\n  </a>\n</root>\n",
+    "<a xmlns=\"u3\">\n  <c xmlns=\"u2\">\n    <b xmlns=\"u1\">\n      t\n      <?pi d?>\n    </b>\n    <c xmlns=\"u1\">\n      <?pi d?>\n      t\n    </c>\n  </c>\n  <b xmlns=\"u1\">\n    <?pi d?>\n    <?pi d?>\n  </b>\n</a>\n",
+    "<c xmlns=\"u2\">\n  <b xmlns=\"u1\">\n    t\n    <?pi d?>\n  </b>\n  <c xmlns=\"u1\">\n    <?pi d?>\n    t\n  </c>\n</c>\n",
+    "<b xmlns=\"u1\">\n  t\n  <?pi d?>\n</b>\n",
+    "<c xmlns=\"u1\">\n  <?pi d?>\n  t\n</c>\n",
+    "<b xmlns=\"u1\">\n  <?pi d?>\n  <?pi d?>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u2\"><b xmlns=\"u3\"><?pi d?></b><a xmlns=\"u1\"><?pi d?></a></c></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <c xmlns=\"u2\">\n    <b xmlns=\"u3\">\n      <?pi d?>\n    </b>\n    <a xmlns=\"u1\">\n      <?pi d?>\n    </a>\n  </c>\n</root>\n",
+    "<c xmlns=\"u2\">\n  <b xmlns=\"u3\">\n    <?pi d?>\n  </b>\n  <a xmlns=\"u1\">\n    <?pi d?>\n  </a>\n</c>\n",
+    "<b xmlns=\"u3\">\n  <?pi d?>\n</b>\n",
+    "<a xmlns=\"u1\">\n  <?pi d?>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u2\"><?pi d?><b><?pi d?>t</b></a></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <a xmlns=\"u2\">\n    <?pi d?>\n    <b>\n      <?pi d?>\n      t\n    </b>\n  </a>\n</root>\n",
+    "<a xmlns=\"u2\">\n  <?pi d?>\n  <b>\n    <?pi d?>\n    t\n  </b>\n</a>\n",
+    "<b xmlns=\"u2\">\n  <?pi d?>\n  t\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b><c><?pi d?>t</c><b xmlns=\"u2\"><?pi d?><c/></b></b></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b>\n    <c>\n      <?pi d?>\n      t\n    </c>\n    <b xmlns=\"u2\">\n      <?pi d?>\n      <c/>\n    </b>\n  </b>\n</root>\n",
+    "<b xmlns=\"u1\">\n  <c>\n    <?pi d?>\n    t\n  </c>\n  <b xmlns=\"u2\">\n    <?pi d?>\n    <c/>\n  </b>\n</b>\n",
+    "<c xmlns=\"u1\">\n  <?pi d?>\n  t\n</c>\n",
+    "<b xmlns=\"u2\">\n  <?pi d?>\n  <c/>\n</b>\n",
+    "<c xmlns=\"u2\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u3\"><?pi d?><c><a xmlns=\"u1\"/></c></b></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b xmlns=\"u3\">\n    <?pi d?>\n    <c>\n      <a xmlns=\"u1\"/>\n    </c>\n  </b>\n</root>\n",
+    "<b xmlns=\"u3\">\n  <?pi d?>\n  <c>\n    <a xmlns=\"u1\"/>\n  </c>\n</b>\n",
+    "<c xmlns=\"u3\">\n  <a xmlns=\"u1\"/>\n</c>\n",
+    "<a xmlns=\"u1\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u2\">t<?pi d?></a></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<a xmlns=\"u2\">\n  t\n  <?pi d?>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u2\"><?pi d?><a xmlns=\"u3\"><?pi d?></a></c></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <c xmlns=\"u2\">\n    <?pi d?>\n    <a xmlns=\"u3\">\n      <?pi d?>\n    </a>\n  </c>\n</root>\n",
+    "<c xmlns=\"u2\">\n  <?pi d?>\n  <a xmlns=\"u3\">\n    <?pi d?>\n  </a>\n</c>\n",
+    "<a xmlns=\"u3\">\n  <?pi d?>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u3\"><?pi d?><?pi d?></c></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <c xmlns=\"u3\">\n    <?pi d?>\n    <?pi d?>\n  </c>\n</root>\n",
+    "<c xmlns=\"u3\">\n  <?pi d?>\n  <?pi d?>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u2\"><a xmlns=\"u1\">t<?pi d?></a></a></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<a xmlns=\"u2\">\n  <a xmlns=\"u1\">\n    t\n    <?pi d?>\n  </a>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u2\"><?pi d?><c xmlns=\"u3\"/></a></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<a xmlns=\"u2\">\n  <?pi d?>\n  <c xmlns=\"u3\"/>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u2\"><c><?pi d?><?pi d?></c></c></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<c xmlns=\"u2\">\n  <c>\n    <?pi d?>\n    <?pi d?>\n  </c>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u3\"><b xmlns=\"u2\">t</b><?pi d?></c></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<c xmlns=\"u3\">\n  <b xmlns=\"u2\">t</b>\n  <?pi d?>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u3\"><?pi d?>t</a></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <a xmlns=\"u3\">\n    <?pi d?>\n    t\n  </a>\n</root>\n",
+    "<a xmlns=\"u3\">\n  <?pi d?>\n  t\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u1\"><?pi d?><a xmlns=\"u1\"><a xmlns=\"u2\"><?pi d?></a><?pi d?></a></a></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<a xmlns=\"u1\">\n  <?pi d?>\n  <a>\n    <a xmlns=\"u2\">\n      <?pi d?>\n    </a>\n    <?pi d?>\n  </a>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u3\"><b/><a xmlns=\"u3\"/></c></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <c xmlns=\"u3\">\n    <b/>\n    <a/>\n  </c>\n</root>\n",
+    "<c xmlns=\"u3\">\n  <b/>\n  <a/>\n</c>\n",
+    "<b xmlns=\"u3\"/>\n",
+    "<a xmlns=\"u3\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u3\"><c>tt</c>t</a></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<a xmlns=\"u3\">\n  <c>tt</c>\n  t\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u2\"><b xmlns=\"u2\">tt</b><?pi d?></b></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b xmlns=\"u2\">\n    <b>tt</b>\n    <?pi d?>\n  </b>\n</root>\n",
+    "<b xmlns=\"u2\">\n  <b>tt</b>\n  <?pi d?>\n</b>\n",
+    "<b xmlns=\"u2\">tt</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u2\"><a/><?pi d?></a></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<a xmlns=\"u2\">\n  <a/>\n  <?pi d?>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u1\"><c><?pi d?></c><?pi d?></b></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u1\">\n  <c>\n    <?pi d?>\n  </c>\n  <?pi d?>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c x=\"0\" xmlns=\"u1\"><c xmlns=\"u1\"/>t</c></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<c x=\"0\" xmlns=\"u1\">\n  <c/>\n  t\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xml:lang=\"0\">t</a></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<a xml:lang=\"0\" xmlns=\"u1\">t</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b><c><?pi d?></c></b></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b>\n    <c>\n      <?pi d?>\n    </c>\n  </b>\n</root>\n",
+    "<b xmlns=\"u1\">\n  <c>\n    <?pi d?>\n  </c>\n</b>\n",
+    "<c xmlns=\"u1\">\n  <?pi d?>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b>t<c xmlns=\"u1\"/></b></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u1\">\n  t\n  <c/>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u2\"><?pi d?><?pi d?></a></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <a xmlns=\"u2\">\n    <?pi d?>\n    <?pi d?>\n  </a>\n</root>\n",
+    "<a xmlns=\"u2\">\n  <?pi d?>\n  <?pi d?>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xml:lang=\"0\" xmlns=\"u3\">t</b></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b xmlns=\"u3\" xml:lang=\"0\">t</b>\n</root>\n",
+    "<b xmlns=\"u3\" xml:lang=\"0\">t</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u3\">t<b xmlns=\"u3\">t</b></c></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<c xmlns=\"u3\">\n  t\n  <b>t</b>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c><b><?pi d?></b>t</c></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<c xmlns=\"u1\">\n  <b>\n    <?pi d?>\n  </b>\n  t\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u2\"><a>t</a>t</c></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<c xmlns=\"u2\">\n  <a>t</a>\n  t\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u3\"><?pi d?><c xmlns=\"u2\">t<a xmlns=\"u1\">tt</a></c></a></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <a xmlns=\"u3\">\n    <?pi d?>\n    <c xmlns=\"u2\">\n      t\n      <a xmlns=\"u1\">tt</a>\n    </c>\n  </a>\n</root>\n",
+    "<a xmlns=\"u3\">\n  <?pi d?>\n  <c xmlns=\"u2\">\n    t\n    <a xmlns=\"u1\">tt</a>\n  </c>\n</a>\n",
+    "<c xmlns=\"u2\">\n  t\n  <a xmlns=\"u1\">tt</a>\n</c>\n",
+    "<a xmlns=\"u1\">tt</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u2\"><a xmlns=\"u2\"/></a></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <a xmlns=\"u2\">\n    <a/>\n  </a>\n</root>\n",
+    "<a xmlns=\"u2\">\n  <a/>\n</a>\n",
+    "<a xmlns=\"u2\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u2\"><a xmlns=\"u2\"/></c></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<c xmlns=\"u2\">\n  <a/>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b>t<c xmlns=\"u1\">t</c></b></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u1\">\n  t\n  <c>t</c>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u3\"><a/></c></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <c xmlns=\"u3\">\n    <a/>\n  </c>\n</root>\n",
+    "<c xmlns=\"u3\">\n  <a/>\n</c>\n",
+    "<a xmlns=\"u3\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u1\">t<a xmlns=\"u3\"><?pi d?></a></b></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u1\">\n  t\n  <a xmlns=\"u3\">\n    <?pi d?>\n  </a>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u3\"><b xmlns=\"u2\"><?pi d?></b></a></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <a xmlns=\"u3\">\n    <b xmlns=\"u2\">\n      <?pi d?>\n    </b>\n  </a>\n</root>\n",
+    "<a xmlns=\"u3\">\n  <b xmlns=\"u2\">\n    <?pi d?>\n  </b>\n</a>\n",
+    "<b xmlns=\"u2\">\n  <?pi d?>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u3\"><c xmlns=\"u3\"><?pi d?><c><?pi d?><c/></c></c></b></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b xmlns=\"u3\">\n    <c>\n      <?pi d?>\n      <c>\n        <?pi d?>\n        <c/>\n      </c>\n    </c>\n  </b>\n</root>\n",
+    "<b xmlns=\"u3\">\n  <c>\n    <?pi d?>\n    <c>\n      <?pi d?>\n      <c/>\n    </c>\n  </c>\n</b>\n",
+    "<c xmlns=\"u3\">\n  <?pi d?>\n  <c>\n    <?pi d?>\n    <c/>\n  </c>\n</c>\n",
+    "<c xmlns=\"u3\">\n  <?pi d?>\n  <c/>\n</c>\n",
+    "<c xmlns=\"u3\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u2\"><c xmlns=\"u2\"/>t</a></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <a xmlns=\"u2\">\n    <c/>\n    t\n  </a>\n</root>\n",
+    "<a xmlns=\"u2\">\n  <c/>\n  t\n</a>\n",
+    "<c xmlns=\"u2\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c><b>t</b><?pi d?></c></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <c>\n    <b>t</b>\n    <?pi d?>\n  </c>\n</root>\n",
+    "<c xmlns=\"u1\">\n  <b>t</b>\n  <?pi d?>\n</c>\n",
+    "<b xmlns=\"u1\">t</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u3\"><c/><c xmlns=\"u2\"><c>t</c>t</c></b></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b xmlns=\"u3\">\n    <c/>\n    <c xmlns=\"u2\">\n      <c>t</c>\n      t\n    </c>\n  </b>\n</root>\n",
+    "<b xmlns=\"u3\">\n  <c/>\n  <c xmlns=\"u2\">\n    <c>t</c>\n    t\n  </c>\n</b>\n",
+    "<c xmlns=\"u3\"/>\n",
+    "<c xmlns=\"u2\">\n  <c>t</c>\n  t\n</c>\n",
+    "<c xmlns=\"u2\">t</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u3\"><a xmlns=\"u2\"><a><?pi d?></a><?pi d?></a><?pi d?></a></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<a xmlns=\"u3\">\n  <a xmlns=\"u2\">\n    <a>\n      <?pi d?>\n    </a>\n    <?pi d?>\n  </a>\n  <?pi d?>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a><c xmlns=\"u2\">t</c><c>t</c></a></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<a xmlns=\"u1\">\n  <c xmlns=\"u2\">t</c>\n  <c>t</c>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c><c xmlns=\"u1\">t<c>t</c></c><?pi d?></c></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <c>\n    <c>\n      t\n      <c>t</c>\n    </c>\n    <?pi d?>\n  </c>\n</root>\n",
+    "<c xmlns=\"u1\">\n  <c>\n    t\n    <c>t</c>\n  </c>\n  <?pi d?>\n</c>\n",
+    "<c xmlns=\"u1\">\n  t\n  <c>t</c>\n</c>\n",
+    "<c xmlns=\"u1\">t</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a><c xmlns=\"u1\"><c xmlns=\"u2\"/>t</c><?pi d?></a></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<a xmlns=\"u1\">\n  <c>\n    <c xmlns=\"u2\"/>\n    t\n  </c>\n  <?pi d?>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u3\"><?pi d?>t</b></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u3\">\n  <?pi d?>\n  t\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u1\"><c xmlns=\"u3\">t</c><a><b/></a></c></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <c>\n    <c xmlns=\"u3\">t</c>\n    <a>\n      <b/>\n    </a>\n  </c>\n</root>\n",
+    "<c xmlns=\"u1\">\n  <c xmlns=\"u3\">t</c>\n  <a>\n    <b/>\n  </a>\n</c>\n",
+    "<c xmlns=\"u3\">t</c>\n",
+    "<a xmlns=\"u1\">\n  <b/>\n</a>\n",
+    "<b xmlns=\"u1\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b><c xmlns=\"u3\"><a xmlns=\"u2\"><b/></a>t</c><?pi d?></b></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u1\">\n  <c xmlns=\"u3\">\n    <a xmlns=\"u2\">\n      <b/>\n    </a>\n    t\n  </c>\n  <?pi d?>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a><?pi d?><?pi d?></a></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<a xmlns=\"u1\">\n  <?pi d?>\n  <?pi d?>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u3\"><?pi d?><b xmlns=\"u3\"><?pi d?><a q:x=\"0\" xmlns=\"u1\"><?pi d?></a></b></b></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u3\">\n  <?pi d?>\n  <b>\n    <?pi d?>\n    <a xmlns=\"u1\" xmlns:q=\"u2\" q:x=\"0\">\n      <?pi d?>\n    </a>\n  </b>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a><b xmlns=\"u2\"><?pi d?></b></a></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <a>\n    <b xmlns=\"u2\">\n      <?pi d?>\n    </b>\n  </a>\n</root>\n",
+    "<a xmlns=\"u1\">\n  <b xmlns=\"u2\">\n    <?pi d?>\n  </b>\n</a>\n",
+    "<b xmlns=\"u2\">\n  <?pi d?>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u3\"><c><?pi d?></c></a></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<a xmlns=\"u3\">\n  <c>\n    <?pi d?>\n  </c>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a><a xmlns=\"u2\"/><c xmlns=\"u2\"/></a></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <a>\n    <a xmlns=\"u2\"/>\n    <c xmlns=\"u2\"/>\n  </a>\n</root>\n",
+    "<a xmlns=\"u1\">\n  <a xmlns=\"u2\"/>\n  <c xmlns=\"u2\"/>\n</a>\n",
+    "<a xmlns=\"u2\"/>\n",
+    "<c xmlns=\"u2\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u2\"><?pi d?><?pi d?></a></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<a xmlns=\"u2\">\n  <?pi d?>\n  <?pi d?>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u2\"><a xmlns=\"u2\">tt</a></c></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <c xmlns=\"u2\">\n    <a>tt</a>\n  </c>\n</root>\n",
+    "<c xmlns=\"u2\">\n  <a>tt</a>\n</c>\n",
+    "<a xmlns=\"u2\">tt</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u2\">t<?pi d?></b></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b xmlns=\"u2\">\n    t\n    <?pi d?>\n  </b>\n</root>\n",
+    "<b xmlns=\"u2\">\n  t\n  <?pi d?>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u1\"><c xmlns=\"u2\"/></c></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<c xmlns=\"u1\">\n  <c xmlns=\"u2\"/>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u2\"><a xmlns=\"u3\"/></b></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b xmlns=\"u2\">\n    <a xmlns=\"u3\"/>\n  </b>\n</root>\n",
+    "<b xmlns=\"u2\">\n  <a xmlns=\"u3\"/>\n</b>\n",
+    "<a xmlns=\"u3\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u1\"><?pi d?><?pi d?></a></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <a>\n    <?pi d?>\n    <?pi d?>\n  </a>\n</root>\n",
+    "<a xmlns=\"u1\">\n  <?pi d?>\n  <?pi d?>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u3\"><a xmlns=\"u2\"><?pi d?></a><?pi d?></c></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<c xmlns=\"u3\">\n  <a xmlns=\"u2\">\n    <?pi d?>\n  </a>\n  <?pi d?>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a><c xmlns=\"u2\"><?pi d?><a xmlns=\"u1\"><?pi d?><c xmlns=\"u2\"/></a></c></a></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<a xmlns=\"u1\">\n  <c xmlns=\"u2\">\n    <?pi d?>\n    <a xmlns=\"u1\">\n      <?pi d?>\n      <c xmlns=\"u2\"/>\n    </a>\n  </c>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u2\"><a xmlns=\"u3\"/></a></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <a xmlns=\"u2\">\n    <a xmlns=\"u3\"/>\n  </a>\n</root>\n",
+    "<a xmlns=\"u2\">\n  <a xmlns=\"u3\"/>\n</a>\n",
+    "<a xmlns=\"u3\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u3\"><c xmlns=\"u1\">tt</c></b></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u3\">\n  <c xmlns=\"u1\">tt</c>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a><?pi d?><a xmlns=\"u3\"><c><?pi d?></c></a></a></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <a>\n    <?pi d?>\n    <a xmlns=\"u3\">\n      <c>\n        <?pi d?>\n      </c>\n    </a>\n  </a>\n</root>\n",
+    "<a xmlns=\"u1\">\n  <?pi d?>\n  <a xmlns=\"u3\">\n    <c>\n      <?pi d?>\n    </c>\n  </a>\n</a>\n",
+    "<a xmlns=\"u3\">\n  <c>\n    <?pi d?>\n  </c>\n</a>\n",
+    "<c xmlns=\"u3\">\n  <?pi d?>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u3\"><a><?pi d?></a></b></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u3\">\n  <a>\n    <?pi d?>\n  </a>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u3\"><?pi d?><b xmlns=\"u3\"><?pi d?><a xmlns=\"u3\"><?pi d?><c xmlns=\"u2\"/></a></b></c></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <c xmlns=\"u3\">\n    <?pi d?>\n    <b>\n      <?pi d?>\n      <a>\n        <?pi d?>\n        <c xmlns=\"u2\"/>\n      </a>\n    </b>\n  </c>\n</root>\n",
+    "<c xmlns=\"u3\">\n  <?pi d?>\n  <b>\n    <?pi d?>\n    <a>\n      <?pi d?>\n      <c xmlns=\"u2\"/>\n    </a>\n  </b>\n</c>\n",
+    "<b xmlns=\"u3\">\n  <?pi d?>\n  <a>\n    <?pi d?>\n    <c xmlns=\"u2\"/>\n  </a>\n</b>\n",
+    "<a xmlns=\"u3\">\n  <?pi d?>\n  <c xmlns=\"u2\"/>\n</a>\n",
+    "<c xmlns=\"u2\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u3\"><c xmlns=\"u3\"><b>tt</b></c></b></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b xmlns=\"u3\">\n    <c>\n      <b>tt</b>\n    </c>\n  </b>\n</root>\n",
+    "<b xmlns=\"u3\">\n  <c>\n    <b>tt</b>\n  </c>\n</b>\n",
+    "<c xmlns=\"u3\">\n  <b>tt</b>\n</c>\n",
+    "<b xmlns=\"u3\">tt</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u3\">t<a xmlns=\"u3\"><?pi d?></a></a></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<a xmlns=\"u3\">\n  t\n  <a>\n    <?pi d?>\n  </a>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a><b><c><?pi d?>t</c><b xmlns=\"u3\"><b/></b></b><c/></a></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <a>\n    <b>\n      <c>\n        <?pi d?>\n        t\n      </c>\n      <b xmlns=\"u3\">\n        <b/>\n      </b>\n    </b>\n    <c/>\n  </a>\n</root>\n",
+    "<a xmlns=\"u1\">\n  <b>\n    <c>\n      <?pi d?>\n      t\n    </c>\n    <b xmlns=\"u3\">\n      <b/>\n    </b>\n  </b>\n  <c/>\n</a>\n",
+    "<b xmlns=\"u1\">\n  <c>\n    <?pi d?>\n    t\n  </c>\n  <b xmlns=\"u3\">\n    <b/>\n  </b>\n</b>\n",
+    "<c xmlns=\"u1\">\n  <?pi d?>\n  t\n</c>\n",
+    "<b xmlns=\"u3\">\n  <b/>\n</b>\n",
+    "<b xmlns=\"u3\"/>\n",
+    "<c xmlns=\"u1\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u1\"><?pi d?><a><a><?pi d?></a></a></b></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u1\">\n  <?pi d?>\n  <a>\n    <a>\n      <?pi d?>\n    </a>\n  </a>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u2\"><a xmlns=\"u3\"><?pi d?>t</a></c></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<c xmlns=\"u2\">\n  <a xmlns=\"u3\">\n    <?pi d?>\n    t\n  </a>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u3\">t<a/></b></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u3\">\n  t\n  <a/>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a><c><?pi d?><?pi d?></c>t</a></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <a>\n    <c>\n      <?pi d?>\n      <?pi d?>\n    </c>\n    t\n  </a>\n</root>\n",
+    "<a xmlns=\"u1\">\n  <c>\n    <?pi d?>\n    <?pi d?>\n  </c>\n  t\n</a>\n",
+    "<c xmlns=\"u1\">\n  <?pi d?>\n  <?pi d?>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a><c xmlns=\"u2\">t<?pi d?></c></a></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<a xmlns=\"u1\">\n  <c xmlns=\"u2\">\n    t\n    <?pi d?>\n  </c>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u3\">tt</c></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <c xmlns=\"u3\">tt</c>\n</root>\n",
+    "<c xmlns=\"u3\">tt</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u2\"><a xmlns=\"u1\">t</a><b xmlns=\"u1\"/></c></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<c xmlns=\"u2\">\n  <a xmlns=\"u1\">t</a>\n  <b xmlns=\"u1\"/>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u2\"><?pi d?><c xmlns=\"u1\"/></b></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b xmlns=\"u2\">\n    <?pi d?>\n    <c xmlns=\"u1\"/>\n  </b>\n</root>\n",
+    "<b xmlns=\"u2\">\n  <?pi d?>\n  <c xmlns=\"u1\"/>\n</b>\n",
+    "<c xmlns=\"u1\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u2\"><a/></b></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u2\">\n  <a/>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u2\"><a/></c></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<c xmlns=\"u2\">\n  <a/>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u2\">tt</a></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <a xmlns=\"u2\">tt</a>\n</root>\n",
+    "<a xmlns=\"u2\">tt</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u1\">t<b xmlns=\"u3\"><b xmlns=\"u1\"><?pi d?></b></b></a></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<a xmlns=\"u1\">\n  t\n  <b xmlns=\"u3\">\n    <b xmlns=\"u1\">\n      <?pi d?>\n    </b>\n  </b>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u1\"><a xmlns=\"u3\"><b xmlns=\"u3\"><?pi d?></b><b xmlns=\"u1\"><b xmlns=\"u3\"/></b></a>t</a></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<a xmlns=\"u1\">\n  <a xmlns=\"u3\">\n    <b>\n      <?pi d?>\n    </b>\n    <b xmlns=\"u1\">\n      <b xmlns=\"u3\"/>\n    </b>\n  </a>\n  t\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c>t<c xmlns=\"u2\"/></c></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<c xmlns=\"u1\">\n  t\n  <c xmlns=\"u2\"/>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><c xmlns=\"u1\"><?pi d?><b><b/></b></c></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <c>\n    <?pi d?>\n    <b>\n      <b/>\n    </b>\n  </c>\n</root>\n",
+    "<c xmlns=\"u1\">\n  <?pi d?>\n  <b>\n    <b/>\n  </b>\n</c>\n",
+    "<b xmlns=\"u1\">\n  <b/>\n</b>\n",
+    "<b xmlns=\"u1\"/>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u3\"><b xmlns=\"u3\"><?pi d?></b></b></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <b xmlns=\"u3\">\n    <b>\n      <?pi d?>\n    </b>\n  </b>\n</root>\n",
+    "<b xmlns=\"u3\">\n  <b>\n    <?pi d?>\n  </b>\n</b>\n",
+    "<b xmlns=\"u3\">\n  <?pi d?>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a xmlns=\"u1\"><?pi d?></a></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<a xmlns=\"u1\">\n  <?pi d?>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a>tt</a></root>",
+   "xpath": "//*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<root xmlns=\"u1\" xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\">\n  <a>tt</a>\n</root>\n",
+    "<a xmlns=\"u1\">tt</a>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><b xmlns=\"u3\"><a xmlns=\"u2\"><?pi d?></a></b></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<b xmlns=\"u3\">\n  <a xmlns=\"u2\">\n    <?pi d?>\n  </a>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<root xmlns:p=\"u1\" xmlns:q=\"u2\" xmlns:r=\"u3\" xmlns=\"u1\"><a><b xmlns=\"u3\"><?pi d?></b></a></root>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "z": "urn:z"
+   },
+   "nodes": [
+    "<a xmlns=\"u1\">\n  <b xmlns=\"u3\">\n    <?pi d?>\n  </b>\n</a>\n"
+   ]
   }
  ]
 }
