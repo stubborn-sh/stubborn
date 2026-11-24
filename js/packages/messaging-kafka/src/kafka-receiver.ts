@@ -33,6 +33,7 @@ export class KafkaReceiver implements MessageReceiver {
           } else {
             this.buffer.set(msg.destination, [msg]);
           }
+          return Promise.resolve();
         },
       });
     }
@@ -72,12 +73,17 @@ function toReceivedMessage(payload: EachMessagePayload): ReceivedMessage {
     }
   }
 
+  // As the JVM building block: a binary (application/octet-stream) payload is kept as bytes.
   let parsedPayload: unknown;
-  const raw = payload.message.value?.toString() ?? "";
-  try {
-    parsedPayload = JSON.parse(raw);
-  } catch {
-    parsedPayload = raw;
+  if (isBinaryContentType(headers["contentType"])) {
+    parsedPayload = payload.message.value ?? Buffer.alloc(0);
+  } else {
+    const raw = payload.message.value?.toString() ?? "";
+    try {
+      parsedPayload = JSON.parse(raw);
+    } catch {
+      parsedPayload = raw;
+    }
   }
 
   return {
@@ -85,6 +91,10 @@ function toReceivedMessage(payload: EachMessagePayload): ReceivedMessage {
     payload: parsedPayload,
     headers,
   };
+}
+
+function isBinaryContentType(contentType: string | undefined): boolean {
+  return contentType?.trim().toLowerCase() === "application/octet-stream";
 }
 
 function sleep(ms: number): Promise<void> {

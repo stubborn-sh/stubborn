@@ -107,4 +107,35 @@ describe("RabbitSender", () => {
       }),
     );
   });
+
+  it("should_send_bytes_verbatim_as_octet_stream", async () => {
+    // when
+    await sender.send("queue", new Uint8Array([0, 1, 255]));
+
+    // then
+    const [, content, options] = vi.mocked(mockChannel.sendToQueue).mock.calls[0] ?? [];
+    expect(Array.from(content as Buffer)).toEqual([0, 1, 255]);
+    expect(options).toEqual(expect.objectContaining({ contentType: "application/octet-stream" }));
+  });
+
+  it("should_keep_the_contract_content_type_for_bytes", async () => {
+    // when
+    await sender.send("queue", new Uint8Array([1]), { contentType: "application/avro" });
+
+    // then
+    expect(mockChannel.sendToQueue).toHaveBeenCalledWith(
+      "queue",
+      expect.any(Buffer),
+      expect.objectContaining({ contentType: "application/avro" }),
+    );
+  });
+
+  it("should_send_an_empty_message_when_the_contract_has_no_body", async () => {
+    // when
+    await sender.send("queue", null);
+
+    // then
+    const [, content] = vi.mocked(mockChannel.sendToQueue).mock.calls[0] ?? [];
+    expect((content as Buffer).length).toBe(0);
+  });
 });

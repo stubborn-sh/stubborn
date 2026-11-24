@@ -13,8 +13,17 @@ export class RabbitSender implements MessageSender {
     payload: unknown,
     headers?: Readonly<Record<string, string>>,
   ): Promise<void> {
+    // As the JVM building block: bytes are sent verbatim (application/octet-stream unless the
+    // contract says otherwise), and a contract without a body sends an empty message.
+    const binary = payload instanceof Uint8Array;
     const content =
-      typeof payload === "string" ? Buffer.from(payload) : Buffer.from(JSON.stringify(payload));
+      payload === null || payload === undefined
+        ? Buffer.alloc(0)
+        : binary
+          ? Buffer.from(payload.buffer, payload.byteOffset, payload.byteLength)
+          : typeof payload === "string"
+            ? Buffer.from(payload)
+            : Buffer.from(JSON.stringify(payload));
 
     const messageHeaders: Record<string, string> = {};
     if (headers !== undefined) {
@@ -26,7 +35,8 @@ export class RabbitSender implements MessageSender {
     await this.channel.assertQueue(destination, { durable: false });
 
     this.channel.sendToQueue(destination, content, {
-      contentType: messageHeaders["contentType"] ?? "application/json",
+      contentType:
+        messageHeaders["contentType"] ?? (binary ? "application/octet-stream" : "application/json"),
       headers: messageHeaders,
     });
   }

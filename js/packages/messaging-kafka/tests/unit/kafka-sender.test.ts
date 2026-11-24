@@ -139,4 +139,27 @@ describe("KafkaSender", () => {
     // then
     expect(mockProducer.disconnect).not.toHaveBeenCalled();
   });
+
+  it("should_send_bytes_verbatim_as_octet_stream", async () => {
+    // when
+    await sender.send("topic", new Uint8Array([0, 1, 255]));
+
+    // then
+    const record = vi.mocked(mockProducer.send).mock.calls[0]?.[0];
+    const message = record?.messages[0];
+    expect(Buffer.isBuffer(message?.value)).toBe(true);
+    expect(Array.from(message?.value as Buffer)).toEqual([0, 1, 255]);
+    expect(message?.headers).toEqual({ contentType: "application/octet-stream" });
+  });
+
+  it("should_send_a_record_without_value_when_the_contract_has_no_body", async () => {
+    // when
+    await sender.send("topic", null);
+
+    // then
+    expect(mockProducer.send).toHaveBeenCalledWith({
+      topic: "topic",
+      messages: [{ value: null, headers: { contentType: "application/json" } }],
+    });
+  });
 });
