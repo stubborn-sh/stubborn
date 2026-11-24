@@ -129,6 +129,42 @@ describe("documented differences from WireMock 3.13.2", () => {
     expect(performance.now() - started).toBeLessThan(10_000);
   });
 
+  it("should_render_numbers_with_java_digits", () => {
+    // Java's FloatingDecimal: integers below 2^63 keep their exact digits down to the double's
+    // precision; others use the shortest digits, and only a tie consults the exact value.
+    const sum = (n: string, expected: string): boolean =>
+      verdict(
+        [{ matchesXPath: { expression: "sum(/a/b)", equalTo: expected } }],
+        `<a><b>${n}</b></a>`,
+      );
+    expect(sum("1152921504606846976", "1,152,921,504,606,846,980")).toBe(true);
+    expect(sum("36028797018963968", "36,028,797,018,963,968")).toBe(true);
+    expect(sum("4611686018427387904", "4,611,686,018,427,387,900")).toBe(true);
+    expect(sum("2.0005", "2.001")).toBe(true);
+    expect(sum("0.0025", "0.003")).toBe(true);
+    expect(sum("1234.5675", "1,234.568")).toBe(true);
+  });
+
+  it("should_render_numbers_above_2_to_the_63_with_shortest_digits", () => {
+    // Java's legacy dtoa sometimes emits a 17th digit there (2^69 is 590,295,810,358,705,650,000).
+    expect(
+      verdict(
+        [{ matchesXPath: { expression: "sum(/a/b)", equalTo: "590,295,810,358,705,700,000" } }],
+        "<a><b>590295810358705651712</b></a>",
+      ),
+    ).toBe(true);
+  });
+
+  it("should_keep_cdata_as_written_where_the_jdk_turns_it_into_text", () => {
+    // JAXP's descendant axis skips text runs that start with CDATA (//text() selects nothing
+    // here), its serializer drops the CDATA wrapper around supplementary characters, and its
+    // namespace-aware parser turns such CDATA, and empty CDATA, into plain text.
+    const node = (body: string, expression: string, equalTo: string): boolean =>
+      verdict([{ matchesXPath: { expression, equalTo } }], body);
+    expect(node("<c><![CDATA[a]]></c>", "//text()", "[#cdata-section: a]")).toBe(true);
+    expect(node("<a><![CDATA[😀]]>x</a>", "/*", "<a><![CDATA[😀]]>x</a>\n")).toBe(true);
+  });
+
   it("should_not_support_the_namespace_axis", () => {
     const patterns = [{ matchesXPath: "/a/namespace::q", xPathNamespaces: { p: "urn:p" } }];
     expect(verdict(patterns, '<a xmlns:q="urn:x"/>')).toBe(false);

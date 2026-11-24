@@ -54,4 +54,5 @@ const UNSUPPORTED: readonly RegExp[] = [
   /\\[GXN]/, // \G, grapheme clusters, named characters
   /\\p\{(Is|LC|all|blk=|script=|javaMirrored|javaSpaceChar)/, // properties without a JS equivalent
   /\}\{/, // a quantifier applied to a quantifier
+  /\(\?<[=!]/, // a lookbehind that could match a supplementary character (Java counts UTF-16 units)
 ];

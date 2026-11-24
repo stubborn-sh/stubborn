@@ -58,7 +58,7 @@ export function javaRegex(pattern: string, options?: JavaRegexOptions): RegExp |
   }).translate();
   if (translated === null) return null;
 
-  const body = options?.mode === "find" ? translated : `(?<![\\s\\S])(?:${translated})(?![\\s\\S])`;
+  const body = options?.mode === "find" ? translated : `^(?:${translated})$`;
   try {
     // eslint-disable-next-line security/detect-non-literal-regexp -- translated, validated pattern
     return new RegExp(body, "u");
@@ -68,6 +68,40 @@ export function javaRegex(pattern: string, options?: JavaRegexOptions): RegExp |
 }
 
 const LEADING_FLAGS = /^\(\?([a-zA-Z]+)\)/;
+
+/** The source of a group's body starting at `start`, up to its closing parenthesis. */
+function groupBody(source: string, start: number): string {
+  let depth = 1;
+  let i = start;
+  while (i < source.length) {
+    const ch = source.charAt(i);
+    if (ch === "\\") {
+      if (source.charAt(i + 1) === "Q") {
+        const end = source.indexOf("\\E", i + 2);
+        i = end === -1 ? source.length : end + 2;
+      } else i += 2;
+      continue;
+    }
+    if (ch === "[") {
+      i++;
+      if (source.charAt(i) === "^") i++;
+      if (source.charAt(i) === "]") i++;
+      while (i < source.length && source.charAt(i) !== "]") i += source.charAt(i) === "\\" ? 2 : 1;
+    } else if (ch === "(") depth++;
+    else if (ch === ")" && --depth === 0) break;
+    i++;
+  }
+  return source.slice(start, i);
+}
+
+/** Whether a pattern fragment has a construct that can match a supplementary character. */
+function mayMatchAstral(fragment: string): boolean {
+  return (
+    /[\uD800-\uDFFF]/.test(fragment) || // a literal supplementary character
+    /(^|[^\\])(\\\\)*(\.|\[\^)/.test(fragment) || // "." or a negated class
+    /\\([DSWHVPpXNRx]|u[dD][89a-fA-F])/.test(fragment) // negated sets, properties, \x{…}, surrogates
+  );
+}
 
 interface TranslateContext {
   readonly dotAll: boolean;
@@ -158,6 +192,11 @@ class Translator {
             return null; // (?>…) atomic, (?i:…) scoped flags, (?flags) mid-pattern
           }
           const text = group === null ? "(" : group[0];
+          // Java bounds a lookbehind in UTF-16 units, so it never steps over a surrogate pair
+          // where JavaScript does: report lookbehinds that could match an astral character.
+          if ((text === "(?<=" || text === "(?<!") && mayMatchAstral(groupBody(s, this.pos + 4))) {
+            return null;
+          }
           this.out += text;
           this.pos += text.length;
           continue;
@@ -168,13 +207,13 @@ class Translator {
         case "^":
           // MULTILINE: after a line terminator (not inside \r\n), never at the end of input.
           this.out += this.context.multiline
-            ? "(?:(?<![\\s\\S])(?=[\\s\\S])|(?<=[\\n\\u0085\\u2028\\u2029]|\\r(?!\\n))(?=[\\s\\S]))"
-            : "(?<![\\s\\S])";
+            ? "(?:^(?=[\\s\\S])|(?<=[\\n\\u0085\\u2028\\u2029]|\\r(?!\\n))(?=[\\s\\S]))"
+            : "^";
           break;
         case "$":
           this.out += this.context.multiline
-            ? "(?=[\\r\\u0085\\u2028\\u2029]|(?<!\\r)\\n|(?![\\s\\S]))"
-            : `(?=(?:\\r\\n|[${LINE_TERMINATORS}])?(?![\\s\\S]))`;
+            ? "(?=[\\r\\u0085\\u2028\\u2029]|(?<!\\r)\\n|$)"
+            : `(?=(?:\\r\\n|[${LINE_TERMINATORS}])?$)`;
           break;
         case "*":
         case "+":
@@ -285,15 +324,20 @@ class Translator {
       const atom = atoms[i] as ClassAtom | { kind: "dash" };
       const dash = atoms[i + 1];
       const end = atoms[i + 2];
-      if (atom.kind === "char" && dash?.kind === "dash" && end?.kind === "char") {
-        if (end.cp < atom.cp) return null; // Java: illegal character range
-        body += this.classRange(atom.cp, end.cp);
-        i += 2;
-        continue;
+      // Java: a "-" is itself a character that can start or end a range ([--a], [!--]).
+      const lo = atom.kind === "char" ? atom.cp : atom.kind === "dash" ? 0x2d : undefined;
+      const hi = end?.kind === "char" ? end.cp : end?.kind === "dash" ? 0x2d : undefined;
+      if (lo !== undefined && dash?.kind === "dash") {
+        if (end?.kind === "set") return null; // Java: a range ending in a set is an error
+        if (hi !== undefined) {
+          if (hi < lo) return null; // Java: illegal character range
+          body += this.classRange(lo, hi);
+          i += 2;
+          continue;
+        }
       }
       if (atom.kind === "dash") {
-        // Java: a "-" next to a set (\s-x) is a literal; a range ending in a set is an error.
-        if (i > 0 && atoms[i - 1]?.kind === "char" && atoms[i + 1]?.kind === "set") return null;
+        // Java: a "-" next to a set (\s-x) or at either end of the class is a literal.
         body += "\\-";
       } else if (atom.kind === "set") {
         body += atom.text;
@@ -415,11 +459,11 @@ class Translator {
       case "R":
         return text(`(?:\\r\\n|[${JAVA_VSPACE}])`);
       case "A":
-        return text("(?<![\\s\\S])");
+        return text("^");
       case "z":
-        return text("(?![\\s\\S])");
+        return text("$");
       case "Z":
-        return text(`(?=(?:\\r\\n|[${LINE_TERMINATORS}])?(?![\\s\\S]))`);
+        return text(`(?=(?:\\r\\n|[${LINE_TERMINATORS}])?$)`);
       case "c": {
         // Java: the control character is the letter's code XOR 64 (\ca is "!", \cA is U+0001).
         const letter = s.codePointAt(at + 2);

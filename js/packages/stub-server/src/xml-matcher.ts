@@ -485,14 +485,18 @@ function prepareView(state: ViewState, namespaceAware: boolean): boolean {
         if (names.has(name)) return false;
         names.add(name);
       }
-      tag(attr);
       if (!namespaceAware) define(attr, "namespaceURI", null);
       kept.push(attr);
     }
-    if (declared.length > 0) {
-      state.declarations.set(element, declared);
-      define(element, "attributes", attributeList(kept));
-    }
+    // The JDK DOM keeps attributes sorted by name (UTF-16 order): the attribute axis, positions
+    // and rendering all follow that order, not the document's.
+    const byName = (a: Attr, b: Attr): number =>
+      a.nodeName < b.nodeName ? -1 : a.nodeName > b.nodeName ? 1 : 0;
+    kept.sort(byName);
+    declared.sort(byName);
+    for (const attr of kept) tag(attr);
+    if (declared.length > 0) state.declarations.set(element, declared);
+    if (declared.length > 0 || kept.length > 1) define(element, "attributes", attributeList(kept));
     if (!namespaceAware) define(element, "namespaceURI", null);
     return true;
   }
@@ -635,28 +639,63 @@ export function valueText(value: string | number | boolean): string {
 
 /**
  * Java `NumberFormat.getInstance()` (en-US): thousands grouping and at most three fraction
- * digits, rounded HALF_EVEN on the exact binary value of the double (2.0005 is stored as
- * 2.000500000000000078… and rounds up; Intl would see a tie and round down).
+ * digits, rounded HALF_EVEN. Like Java's `DigitList`, the digits are the shortest representation
+ * of the double, and only a tie consults its exact binary value (2.0005 is stored as
+ * 2.000500000000000078… and rounds up; Intl would round the tie down).
  */
 function formatJavaNumber(value: number): string {
   if (Number.isNaN(value)) return "NaN";
   if (!Number.isFinite(value)) return value > 0 ? "∞" : "-∞";
   const negative = value < 0 || Object.is(value, -0);
   const magnitude = Math.abs(value);
-  // The exact decimal expansion: toFixed is exact up to 100 digits, which covers every double
-  // whose fraction matters at three places; above 1e21 doubles are integers.
-  const exact = magnitude >= 1e21 ? BigInt(magnitude).toString() : magnitude.toFixed(100);
-  const [intPart = "0", fraction = ""] = exact.split(".");
+  const [intPart, fraction] = plainDigits(magnitude);
   let digits = BigInt(intPart + fraction.slice(0, 3).padEnd(3, "0"));
   const rest = fraction.slice(3);
   const first = rest.charAt(0);
-  const tail = rest.slice(1).replace(/0+$/, "");
-  const roundUp = first > "5" || (first === "5" && (tail !== "" || digits % 2n === 1n));
+  let roundUp = first > "5" || (first === "5" && rest.length > 1);
+  if (first === "5" && rest.length === 1) {
+    // A tie in the shortest digits: the exact value decides, and an exact tie rounds to even.
+    // toFixed is exact up to 100 digits; doubles with a fraction are below 2^53.
+    const beyond = magnitude.toFixed(100).split(".")[1]?.slice(4).replace(/0+$/, "") ?? "";
+    const exactFirst = magnitude.toFixed(100).split(".")[1]?.charAt(3) ?? "0";
+    roundUp = exactFirst > "5" || (exactFirst === "5" && (beyond !== "" || digits % 2n === 1n));
+  }
   if (roundUp) digits += 1n;
   const text = digits.toString().padStart(4, "0");
   const integer = text.slice(0, -3).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   const decimals = text.slice(-3).replace(/0+$/, "");
   return `${negative ? "-" : ""}${integer}${decimals === "" ? "" : `.${decimals}`}`;
+}
+
+/** `FloatingDecimal.insignificantDigitsNumber`, indexed by excess binary exponent. */
+const INSIGNIFICANT_DIGITS = [
+  0, 0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6, 6,
+];
+
+/**
+ * The decimal digits Java's `FloatingDecimal` produces for a non-negative double, as integer and
+ * fraction digits: the shortest representation, except that an integer below 2^63 takes its
+ * exact value with only the digits below the double's precision rounded off (2^60 is
+ * 1152921504606846980, not 1152921504606847000).
+ */
+function plainDigits(magnitude: number): [string, string] {
+  if (Number.isInteger(magnitude) && magnitude >= 2 ** 53 && magnitude < 2 ** 63) {
+    const exact = BigInt(magnitude);
+    const excess = exact.toString(2).length - 1 - 54;
+    const insignificant = excess > 1 ? (INSIGNIFICANT_DIGITS[excess] ?? 0) : 0;
+    if (insignificant === 0) return [exact.toString(), ""];
+    const scale = 10n ** BigInt(insignificant);
+    let kept = exact / scale;
+    if (exact % scale >= scale / 2n) kept += 1n;
+    return [(kept * scale).toString(), ""];
+  }
+  const [mantissa = "0", exponentText = "0"] = magnitude.toExponential().split("e");
+  const significand = mantissa.replace(".", "");
+  const point = Number(exponentText) + 1; // digits before the decimal point
+  if (point <= 0) return ["0", "0".repeat(-point) + significand];
+  if (point >= significand.length)
+    return [significand + "0".repeat(point - significand.length), ""];
+  return [significand.slice(0, point), significand.slice(point)];
 }
 
 function render(view: XPathDocument, state: ViewState, node: Node): string {

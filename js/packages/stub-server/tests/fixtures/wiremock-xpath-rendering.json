@@ -9168,6 +9168,2323 @@
     "x": "urn:x"
    },
    "error": "XmlException: {"
+  },
+  {
+   "body": "<order><item sku=\"1\" qty=\"2\"/></order>",
+   "xpath": "/*",
+   "nodes": [
+    "<order>\n  <item qty=\"2\" sku=\"1\"/>\n</order>\n"
+   ]
+  },
+  {
+   "body": "<order><item sku=\"1\" qty=\"2\"/></order>",
+   "xpath": "/*",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": [
+    "<order>\n  <item qty=\"2\" sku=\"1\"/>\n</order>\n"
+   ]
+  },
+  {
+   "body": "<order><item sku=\"1\" qty=\"2\"/></order>",
+   "xpath": "/*/*",
+   "nodes": [
+    "<item qty=\"2\" sku=\"1\"/>\n"
+   ]
+  },
+  {
+   "body": "<order><item sku=\"1\" qty=\"2\"/></order>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": [
+    "<item qty=\"2\" sku=\"1\"/>\n"
+   ]
+  },
+  {
+   "body": "<order><item sku=\"1\" qty=\"2\"/></order>",
+   "xpath": "//@*",
+   "nodes": [
+    "2",
+    "1"
+   ]
+  },
+  {
+   "body": "<order><item sku=\"1\" qty=\"2\"/></order>",
+   "xpath": "//@*",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": [
+    "2",
+    "1"
+   ]
+  },
+  {
+   "body": "<order><item sku=\"1\" qty=\"2\"/></order>",
+   "xpath": "(//@*)[1]",
+   "nodes": [
+    "2"
+   ]
+  },
+  {
+   "body": "<order><item sku=\"1\" qty=\"2\"/></order>",
+   "xpath": "(//@*)[1]",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": [
+    "2"
+   ]
+  },
+  {
+   "body": "<order><item sku=\"1\" qty=\"2\"/></order>",
+   "xpath": "(/*/@*)[2]",
+   "nodes": []
+  },
+  {
+   "body": "<order><item sku=\"1\" qty=\"2\"/></order>",
+   "xpath": "(/*/@*)[2]",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": []
+  },
+  {
+   "body": "<order><item sku=\"1\" qty=\"2\"/></order>",
+   "xpath": "name(/*/@*[1])",
+   "nodes": [
+    ""
+   ]
+  },
+  {
+   "body": "<order><item sku=\"1\" qty=\"2\"/></order>",
+   "xpath": "name(/*/@*[1])",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": [
+    ""
+   ]
+  },
+  {
+   "body": "<order><item sku=\"1\" qty=\"2\"/></order>",
+   "xpath": "count(//@*)",
+   "nodes": [
+    "2"
+   ]
+  },
+  {
+   "body": "<order><item sku=\"1\" qty=\"2\"/></order>",
+   "xpath": "count(//@*)",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": [
+    "2"
+   ]
+  },
+  {
+   "body": "<order><item sku=\"1\" qty=\"2\"/></order>",
+   "xpath": "/*/@*",
+   "nodes": []
+  },
+  {
+   "body": "<order><item sku=\"1\" qty=\"2\"/></order>",
+   "xpath": "/*/@*",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": []
+  },
+  {
+   "body": "<order><item sku=\"1\" qty=\"2\"/></order>",
+   "xpath": "//*",
+   "nodes": [
+    "<order>\n  <item qty=\"2\" sku=\"1\"/>\n</order>\n",
+    "<item qty=\"2\" sku=\"1\"/>\n"
+   ]
+  },
+  {
+   "body": "<order><item sku=\"1\" qty=\"2\"/></order>",
+   "xpath": "//*",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": [
+    "<order>\n  <item qty=\"2\" sku=\"1\"/>\n</order>\n",
+    "<item qty=\"2\" sku=\"1\"/>\n"
+   ]
+  },
+  {
+   "body": "<a y=\"1\" x=\"2\"/>",
+   "xpath": "/*",
+   "nodes": [
+    "<a x=\"2\" y=\"1\"/>\n"
+   ]
+  },
+  {
+   "body": "<a y=\"1\" x=\"2\"/>",
+   "xpath": "/*",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": [
+    "<a x=\"2\" y=\"1\"/>\n"
+   ]
+  },
+  {
+   "body": "<a y=\"1\" x=\"2\"/>",
+   "xpath": "/*/*",
+   "nodes": []
+  },
+  {
+   "body": "<a y=\"1\" x=\"2\"/>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": []
+  },
+  {
+   "body": "<a y=\"1\" x=\"2\"/>",
+   "xpath": "//@*",
+   "nodes": [
+    "2",
+    "1"
+   ]
+  },
+  {
+   "body": "<a y=\"1\" x=\"2\"/>",
+   "xpath": "//@*",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": [
+    "2",
+    "1"
+   ]
+  },
+  {
+   "body": "<a y=\"1\" x=\"2\"/>",
+   "xpath": "(//@*)[1]",
+   "nodes": [
+    "2"
+   ]
+  },
+  {
+   "body": "<a y=\"1\" x=\"2\"/>",
+   "xpath": "(//@*)[1]",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": [
+    "2"
+   ]
+  },
+  {
+   "body": "<a y=\"1\" x=\"2\"/>",
+   "xpath": "(/*/@*)[2]",
+   "nodes": [
+    "1"
+   ]
+  },
+  {
+   "body": "<a y=\"1\" x=\"2\"/>",
+   "xpath": "(/*/@*)[2]",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": [
+    "1"
+   ]
+  },
+  {
+   "body": "<a y=\"1\" x=\"2\"/>",
+   "xpath": "name(/*/@*[1])",
+   "nodes": [
+    "x"
+   ]
+  },
+  {
+   "body": "<a y=\"1\" x=\"2\"/>",
+   "xpath": "name(/*/@*[1])",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": [
+    "x"
+   ]
+  },
+  {
+   "body": "<a y=\"1\" x=\"2\"/>",
+   "xpath": "count(//@*)",
+   "nodes": [
+    "2"
+   ]
+  },
+  {
+   "body": "<a y=\"1\" x=\"2\"/>",
+   "xpath": "count(//@*)",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": [
+    "2"
+   ]
+  },
+  {
+   "body": "<a y=\"1\" x=\"2\"/>",
+   "xpath": "/*/@*",
+   "nodes": [
+    "2",
+    "1"
+   ]
+  },
+  {
+   "body": "<a y=\"1\" x=\"2\"/>",
+   "xpath": "/*/@*",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": [
+    "2",
+    "1"
+   ]
+  },
+  {
+   "body": "<a y=\"1\" x=\"2\"/>",
+   "xpath": "//*",
+   "nodes": [
+    "<a x=\"2\" y=\"1\"/>\n"
+   ]
+  },
+  {
+   "body": "<a y=\"1\" x=\"2\"/>",
+   "xpath": "//*",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": [
+    "<a x=\"2\" y=\"1\"/>\n"
+   ]
+  },
+  {
+   "body": "<a xmlns:p=\"urn:p\" y=\"1\" p:z=\"\" xmlns=\"urn:x\" b=\"3\"/>",
+   "xpath": "/*",
+   "nodes": [
+    "<a xmlns=\"urn:x\" xmlns:p=\"urn:p\" b=\"3\" p:z=\"\" y=\"1\"/>\n"
+   ]
+  },
+  {
+   "body": "<a xmlns:p=\"urn:p\" y=\"1\" p:z=\"\" xmlns=\"urn:x\" b=\"3\"/>",
+   "xpath": "/*",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": [
+    "<a xmlns=\"urn:x\" xmlns:p=\"urn:p\" b=\"3\" p:z=\"\" y=\"1\"/>\n"
+   ]
+  },
+  {
+   "body": "<a xmlns:p=\"urn:p\" y=\"1\" p:z=\"\" xmlns=\"urn:x\" b=\"3\"/>",
+   "xpath": "/*/*",
+   "nodes": []
+  },
+  {
+   "body": "<a xmlns:p=\"urn:p\" y=\"1\" p:z=\"\" xmlns=\"urn:x\" b=\"3\"/>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": []
+  },
+  {
+   "body": "<a xmlns:p=\"urn:p\" y=\"1\" p:z=\"\" xmlns=\"urn:x\" b=\"3\"/>",
+   "xpath": "//@*",
+   "nodes": [
+    "3",
+    "",
+    "1"
+   ]
+  },
+  {
+   "body": "<a xmlns:p=\"urn:p\" y=\"1\" p:z=\"\" xmlns=\"urn:x\" b=\"3\"/>",
+   "xpath": "//@*",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": [
+    "3",
+    "",
+    "1"
+   ]
+  },
+  {
+   "body": "<a xmlns:p=\"urn:p\" y=\"1\" p:z=\"\" xmlns=\"urn:x\" b=\"3\"/>",
+   "xpath": "(//@*)[1]",
+   "nodes": [
+    "3"
+   ]
+  },
+  {
+   "body": "<a xmlns:p=\"urn:p\" y=\"1\" p:z=\"\" xmlns=\"urn:x\" b=\"3\"/>",
+   "xpath": "(//@*)[1]",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": [
+    "3"
+   ]
+  },
+  {
+   "body": "<a xmlns:p=\"urn:p\" y=\"1\" p:z=\"\" xmlns=\"urn:x\" b=\"3\"/>",
+   "xpath": "(/*/@*)[2]",
+   "nodes": [
+    ""
+   ]
+  },
+  {
+   "body": "<a xmlns:p=\"urn:p\" y=\"1\" p:z=\"\" xmlns=\"urn:x\" b=\"3\"/>",
+   "xpath": "(/*/@*)[2]",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": [
+    ""
+   ]
+  },
+  {
+   "body": "<a xmlns:p=\"urn:p\" y=\"1\" p:z=\"\" xmlns=\"urn:x\" b=\"3\"/>",
+   "xpath": "name(/*/@*[1])",
+   "nodes": [
+    "b"
+   ]
+  },
+  {
+   "body": "<a xmlns:p=\"urn:p\" y=\"1\" p:z=\"\" xmlns=\"urn:x\" b=\"3\"/>",
+   "xpath": "name(/*/@*[1])",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": [
+    "b"
+   ]
+  },
+  {
+   "body": "<a xmlns:p=\"urn:p\" y=\"1\" p:z=\"\" xmlns=\"urn:x\" b=\"3\"/>",
+   "xpath": "count(//@*)",
+   "nodes": [
+    "3"
+   ]
+  },
+  {
+   "body": "<a xmlns:p=\"urn:p\" y=\"1\" p:z=\"\" xmlns=\"urn:x\" b=\"3\"/>",
+   "xpath": "count(//@*)",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": [
+    "3"
+   ]
+  },
+  {
+   "body": "<a xmlns:p=\"urn:p\" y=\"1\" p:z=\"\" xmlns=\"urn:x\" b=\"3\"/>",
+   "xpath": "/*/@*",
+   "nodes": [
+    "3",
+    "",
+    "1"
+   ]
+  },
+  {
+   "body": "<a xmlns:p=\"urn:p\" y=\"1\" p:z=\"\" xmlns=\"urn:x\" b=\"3\"/>",
+   "xpath": "/*/@*",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": [
+    "3",
+    "",
+    "1"
+   ]
+  },
+  {
+   "body": "<a xmlns:p=\"urn:p\" y=\"1\" p:z=\"\" xmlns=\"urn:x\" b=\"3\"/>",
+   "xpath": "//*",
+   "nodes": [
+    "<a xmlns=\"urn:x\" xmlns:p=\"urn:p\" b=\"3\" p:z=\"\" y=\"1\"/>\n"
+   ]
+  },
+  {
+   "body": "<a xmlns:p=\"urn:p\" y=\"1\" p:z=\"\" xmlns=\"urn:x\" b=\"3\"/>",
+   "xpath": "//*",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": [
+    "<a xmlns=\"urn:x\" xmlns:p=\"urn:p\" b=\"3\" p:z=\"\" y=\"1\"/>\n"
+   ]
+  },
+  {
+   "body": "<a Z=\"1\" a=\"2\" _=\"3\" é=\"4\" A=\"5\"/>",
+   "xpath": "/*",
+   "nodes": [
+    "<a A=\"5\" Z=\"1\" _=\"3\" a=\"2\" é=\"4\"/>\n"
+   ]
+  },
+  {
+   "body": "<a Z=\"1\" a=\"2\" _=\"3\" é=\"4\" A=\"5\"/>",
+   "xpath": "/*",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": [
+    "<a A=\"5\" Z=\"1\" _=\"3\" a=\"2\" é=\"4\"/>\n"
+   ]
+  },
+  {
+   "body": "<a Z=\"1\" a=\"2\" _=\"3\" é=\"4\" A=\"5\"/>",
+   "xpath": "/*/*",
+   "nodes": []
+  },
+  {
+   "body": "<a Z=\"1\" a=\"2\" _=\"3\" é=\"4\" A=\"5\"/>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": []
+  },
+  {
+   "body": "<a Z=\"1\" a=\"2\" _=\"3\" é=\"4\" A=\"5\"/>",
+   "xpath": "//@*",
+   "nodes": [
+    "5",
+    "1",
+    "3",
+    "2",
+    "4"
+   ]
+  },
+  {
+   "body": "<a Z=\"1\" a=\"2\" _=\"3\" é=\"4\" A=\"5\"/>",
+   "xpath": "//@*",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": [
+    "5",
+    "1",
+    "3",
+    "2",
+    "4"
+   ]
+  },
+  {
+   "body": "<a Z=\"1\" a=\"2\" _=\"3\" é=\"4\" A=\"5\"/>",
+   "xpath": "(//@*)[1]",
+   "nodes": [
+    "5"
+   ]
+  },
+  {
+   "body": "<a Z=\"1\" a=\"2\" _=\"3\" é=\"4\" A=\"5\"/>",
+   "xpath": "(//@*)[1]",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": [
+    "5"
+   ]
+  },
+  {
+   "body": "<a Z=\"1\" a=\"2\" _=\"3\" é=\"4\" A=\"5\"/>",
+   "xpath": "(/*/@*)[2]",
+   "nodes": [
+    "1"
+   ]
+  },
+  {
+   "body": "<a Z=\"1\" a=\"2\" _=\"3\" é=\"4\" A=\"5\"/>",
+   "xpath": "(/*/@*)[2]",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": [
+    "1"
+   ]
+  },
+  {
+   "body": "<a Z=\"1\" a=\"2\" _=\"3\" é=\"4\" A=\"5\"/>",
+   "xpath": "name(/*/@*[1])",
+   "nodes": [
+    "A"
+   ]
+  },
+  {
+   "body": "<a Z=\"1\" a=\"2\" _=\"3\" é=\"4\" A=\"5\"/>",
+   "xpath": "name(/*/@*[1])",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": [
+    "A"
+   ]
+  },
+  {
+   "body": "<a Z=\"1\" a=\"2\" _=\"3\" é=\"4\" A=\"5\"/>",
+   "xpath": "count(//@*)",
+   "nodes": [
+    "5"
+   ]
+  },
+  {
+   "body": "<a Z=\"1\" a=\"2\" _=\"3\" é=\"4\" A=\"5\"/>",
+   "xpath": "count(//@*)",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": [
+    "5"
+   ]
+  },
+  {
+   "body": "<a Z=\"1\" a=\"2\" _=\"3\" é=\"4\" A=\"5\"/>",
+   "xpath": "/*/@*",
+   "nodes": [
+    "5",
+    "1",
+    "3",
+    "2",
+    "4"
+   ]
+  },
+  {
+   "body": "<a Z=\"1\" a=\"2\" _=\"3\" é=\"4\" A=\"5\"/>",
+   "xpath": "/*/@*",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": [
+    "5",
+    "1",
+    "3",
+    "2",
+    "4"
+   ]
+  },
+  {
+   "body": "<a Z=\"1\" a=\"2\" _=\"3\" é=\"4\" A=\"5\"/>",
+   "xpath": "//*",
+   "nodes": [
+    "<a A=\"5\" Z=\"1\" _=\"3\" a=\"2\" é=\"4\"/>\n"
+   ]
+  },
+  {
+   "body": "<a Z=\"1\" a=\"2\" _=\"3\" é=\"4\" A=\"5\"/>",
+   "xpath": "//*",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": [
+    "<a A=\"5\" Z=\"1\" _=\"3\" a=\"2\" é=\"4\"/>\n"
+   ]
+  },
+  {
+   "body": "<a xmlns:q=\"urn:q\" q:b=\"1\" a=\"2\" xmlns:p=\"urn:p\" p:c=\"3\"/>",
+   "xpath": "/*",
+   "nodes": [
+    "<a xmlns:p=\"urn:p\" xmlns:q=\"urn:q\" a=\"2\" p:c=\"3\" q:b=\"1\"/>\n"
+   ]
+  },
+  {
+   "body": "<a xmlns:q=\"urn:q\" q:b=\"1\" a=\"2\" xmlns:p=\"urn:p\" p:c=\"3\"/>",
+   "xpath": "/*",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": [
+    "<a xmlns:p=\"urn:p\" xmlns:q=\"urn:q\" a=\"2\" p:c=\"3\" q:b=\"1\"/>\n"
+   ]
+  },
+  {
+   "body": "<a xmlns:q=\"urn:q\" q:b=\"1\" a=\"2\" xmlns:p=\"urn:p\" p:c=\"3\"/>",
+   "xpath": "/*/*",
+   "nodes": []
+  },
+  {
+   "body": "<a xmlns:q=\"urn:q\" q:b=\"1\" a=\"2\" xmlns:p=\"urn:p\" p:c=\"3\"/>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": []
+  },
+  {
+   "body": "<a xmlns:q=\"urn:q\" q:b=\"1\" a=\"2\" xmlns:p=\"urn:p\" p:c=\"3\"/>",
+   "xpath": "//@*",
+   "nodes": [
+    "2",
+    "3",
+    "1"
+   ]
+  },
+  {
+   "body": "<a xmlns:q=\"urn:q\" q:b=\"1\" a=\"2\" xmlns:p=\"urn:p\" p:c=\"3\"/>",
+   "xpath": "//@*",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": [
+    "2",
+    "3",
+    "1"
+   ]
+  },
+  {
+   "body": "<a xmlns:q=\"urn:q\" q:b=\"1\" a=\"2\" xmlns:p=\"urn:p\" p:c=\"3\"/>",
+   "xpath": "(//@*)[1]",
+   "nodes": [
+    "2"
+   ]
+  },
+  {
+   "body": "<a xmlns:q=\"urn:q\" q:b=\"1\" a=\"2\" xmlns:p=\"urn:p\" p:c=\"3\"/>",
+   "xpath": "(//@*)[1]",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": [
+    "2"
+   ]
+  },
+  {
+   "body": "<a xmlns:q=\"urn:q\" q:b=\"1\" a=\"2\" xmlns:p=\"urn:p\" p:c=\"3\"/>",
+   "xpath": "(/*/@*)[2]",
+   "nodes": [
+    "3"
+   ]
+  },
+  {
+   "body": "<a xmlns:q=\"urn:q\" q:b=\"1\" a=\"2\" xmlns:p=\"urn:p\" p:c=\"3\"/>",
+   "xpath": "(/*/@*)[2]",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": [
+    "3"
+   ]
+  },
+  {
+   "body": "<a xmlns:q=\"urn:q\" q:b=\"1\" a=\"2\" xmlns:p=\"urn:p\" p:c=\"3\"/>",
+   "xpath": "name(/*/@*[1])",
+   "nodes": [
+    "a"
+   ]
+  },
+  {
+   "body": "<a xmlns:q=\"urn:q\" q:b=\"1\" a=\"2\" xmlns:p=\"urn:p\" p:c=\"3\"/>",
+   "xpath": "name(/*/@*[1])",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": [
+    "a"
+   ]
+  },
+  {
+   "body": "<a xmlns:q=\"urn:q\" q:b=\"1\" a=\"2\" xmlns:p=\"urn:p\" p:c=\"3\"/>",
+   "xpath": "count(//@*)",
+   "nodes": [
+    "3"
+   ]
+  },
+  {
+   "body": "<a xmlns:q=\"urn:q\" q:b=\"1\" a=\"2\" xmlns:p=\"urn:p\" p:c=\"3\"/>",
+   "xpath": "count(//@*)",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": [
+    "3"
+   ]
+  },
+  {
+   "body": "<a xmlns:q=\"urn:q\" q:b=\"1\" a=\"2\" xmlns:p=\"urn:p\" p:c=\"3\"/>",
+   "xpath": "/*/@*",
+   "nodes": [
+    "2",
+    "3",
+    "1"
+   ]
+  },
+  {
+   "body": "<a xmlns:q=\"urn:q\" q:b=\"1\" a=\"2\" xmlns:p=\"urn:p\" p:c=\"3\"/>",
+   "xpath": "/*/@*",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": [
+    "2",
+    "3",
+    "1"
+   ]
+  },
+  {
+   "body": "<a xmlns:q=\"urn:q\" q:b=\"1\" a=\"2\" xmlns:p=\"urn:p\" p:c=\"3\"/>",
+   "xpath": "//*",
+   "nodes": [
+    "<a xmlns:p=\"urn:p\" xmlns:q=\"urn:q\" a=\"2\" p:c=\"3\" q:b=\"1\"/>\n"
+   ]
+  },
+  {
+   "body": "<a xmlns:q=\"urn:q\" q:b=\"1\" a=\"2\" xmlns:p=\"urn:p\" p:c=\"3\"/>",
+   "xpath": "//*",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": [
+    "<a xmlns:p=\"urn:p\" xmlns:q=\"urn:q\" a=\"2\" p:c=\"3\" q:b=\"1\"/>\n"
+   ]
+  },
+  {
+   "body": "<r><a c=\"1\" b=\"2\"><b z=\"1\" y=\"2\">t</b></a></r>",
+   "xpath": "/*",
+   "nodes": [
+    "<r>\n  <a b=\"2\" c=\"1\">\n    <b y=\"2\" z=\"1\">t</b>\n  </a>\n</r>\n"
+   ]
+  },
+  {
+   "body": "<r><a c=\"1\" b=\"2\"><b z=\"1\" y=\"2\">t</b></a></r>",
+   "xpath": "/*",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": [
+    "<r>\n  <a b=\"2\" c=\"1\">\n    <b y=\"2\" z=\"1\">t</b>\n  </a>\n</r>\n"
+   ]
+  },
+  {
+   "body": "<r><a c=\"1\" b=\"2\"><b z=\"1\" y=\"2\">t</b></a></r>",
+   "xpath": "/*/*",
+   "nodes": [
+    "<a b=\"2\" c=\"1\">\n  <b y=\"2\" z=\"1\">t</b>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<r><a c=\"1\" b=\"2\"><b z=\"1\" y=\"2\">t</b></a></r>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": [
+    "<a b=\"2\" c=\"1\">\n  <b y=\"2\" z=\"1\">t</b>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<r><a c=\"1\" b=\"2\"><b z=\"1\" y=\"2\">t</b></a></r>",
+   "xpath": "//@*",
+   "nodes": [
+    "2",
+    "1",
+    "2",
+    "1"
+   ]
+  },
+  {
+   "body": "<r><a c=\"1\" b=\"2\"><b z=\"1\" y=\"2\">t</b></a></r>",
+   "xpath": "//@*",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": [
+    "2",
+    "1",
+    "2",
+    "1"
+   ]
+  },
+  {
+   "body": "<r><a c=\"1\" b=\"2\"><b z=\"1\" y=\"2\">t</b></a></r>",
+   "xpath": "(//@*)[1]",
+   "nodes": [
+    "2"
+   ]
+  },
+  {
+   "body": "<r><a c=\"1\" b=\"2\"><b z=\"1\" y=\"2\">t</b></a></r>",
+   "xpath": "(//@*)[1]",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": [
+    "2"
+   ]
+  },
+  {
+   "body": "<r><a c=\"1\" b=\"2\"><b z=\"1\" y=\"2\">t</b></a></r>",
+   "xpath": "(/*/@*)[2]",
+   "nodes": []
+  },
+  {
+   "body": "<r><a c=\"1\" b=\"2\"><b z=\"1\" y=\"2\">t</b></a></r>",
+   "xpath": "(/*/@*)[2]",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": []
+  },
+  {
+   "body": "<r><a c=\"1\" b=\"2\"><b z=\"1\" y=\"2\">t</b></a></r>",
+   "xpath": "name(/*/@*[1])",
+   "nodes": [
+    ""
+   ]
+  },
+  {
+   "body": "<r><a c=\"1\" b=\"2\"><b z=\"1\" y=\"2\">t</b></a></r>",
+   "xpath": "name(/*/@*[1])",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": [
+    ""
+   ]
+  },
+  {
+   "body": "<r><a c=\"1\" b=\"2\"><b z=\"1\" y=\"2\">t</b></a></r>",
+   "xpath": "count(//@*)",
+   "nodes": [
+    "4"
+   ]
+  },
+  {
+   "body": "<r><a c=\"1\" b=\"2\"><b z=\"1\" y=\"2\">t</b></a></r>",
+   "xpath": "count(//@*)",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": [
+    "4"
+   ]
+  },
+  {
+   "body": "<r><a c=\"1\" b=\"2\"><b z=\"1\" y=\"2\">t</b></a></r>",
+   "xpath": "/*/@*",
+   "nodes": []
+  },
+  {
+   "body": "<r><a c=\"1\" b=\"2\"><b z=\"1\" y=\"2\">t</b></a></r>",
+   "xpath": "/*/@*",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": []
+  },
+  {
+   "body": "<r><a c=\"1\" b=\"2\"><b z=\"1\" y=\"2\">t</b></a></r>",
+   "xpath": "//*",
+   "nodes": [
+    "<r>\n  <a b=\"2\" c=\"1\">\n    <b y=\"2\" z=\"1\">t</b>\n  </a>\n</r>\n",
+    "<a b=\"2\" c=\"1\">\n  <b y=\"2\" z=\"1\">t</b>\n</a>\n",
+    "<b y=\"2\" z=\"1\">t</b>\n"
+   ]
+  },
+  {
+   "body": "<r><a c=\"1\" b=\"2\"><b z=\"1\" y=\"2\">t</b></a></r>",
+   "xpath": "//*",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": [
+    "<r>\n  <a b=\"2\" c=\"1\">\n    <b y=\"2\" z=\"1\">t</b>\n  </a>\n</r>\n",
+    "<a b=\"2\" c=\"1\">\n  <b y=\"2\" z=\"1\">t</b>\n</a>\n",
+    "<b y=\"2\" z=\"1\">t</b>\n"
+   ]
+  },
+  {
+   "body": "<a b:x=\"1\" a:y=\"2\" c=\"3\"/>",
+   "xpath": "/*",
+   "error": "TransformerException: java.lang.RuntimeException: Namespace for prefix 'a' has not been declared."
+  },
+  {
+   "body": "<a b:x=\"1\" a:y=\"2\" c=\"3\"/>",
+   "xpath": "/*",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "error": "XMLUnitException: java.lang.RuntimeException: Namespace for prefix 'a' has not been declared."
+  },
+  {
+   "body": "<a b:x=\"1\" a:y=\"2\" c=\"3\"/>",
+   "xpath": "/*/*",
+   "nodes": []
+  },
+  {
+   "body": "<a b:x=\"1\" a:y=\"2\" c=\"3\"/>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "error": "XMLUnitException: java.lang.RuntimeException: Namespace for prefix 'a' has not been declared."
+  },
+  {
+   "body": "<a b:x=\"1\" a:y=\"2\" c=\"3\"/>",
+   "xpath": "//@*",
+   "nodes": [
+    "2",
+    "1",
+    "3"
+   ]
+  },
+  {
+   "body": "<a b:x=\"1\" a:y=\"2\" c=\"3\"/>",
+   "xpath": "//@*",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "error": "XMLUnitException: java.lang.RuntimeException: Namespace for prefix 'a' has not been declared."
+  },
+  {
+   "body": "<a b:x=\"1\" a:y=\"2\" c=\"3\"/>",
+   "xpath": "(//@*)[1]",
+   "nodes": [
+    "2"
+   ]
+  },
+  {
+   "body": "<a b:x=\"1\" a:y=\"2\" c=\"3\"/>",
+   "xpath": "(//@*)[1]",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "error": "XMLUnitException: java.lang.RuntimeException: Namespace for prefix 'a' has not been declared."
+  },
+  {
+   "body": "<a b:x=\"1\" a:y=\"2\" c=\"3\"/>",
+   "xpath": "(/*/@*)[2]",
+   "nodes": [
+    "1"
+   ]
+  },
+  {
+   "body": "<a b:x=\"1\" a:y=\"2\" c=\"3\"/>",
+   "xpath": "(/*/@*)[2]",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "error": "XMLUnitException: java.lang.RuntimeException: Namespace for prefix 'a' has not been declared."
+  },
+  {
+   "body": "<a b:x=\"1\" a:y=\"2\" c=\"3\"/>",
+   "xpath": "name(/*/@*[1])",
+   "nodes": [
+    "a:y"
+   ]
+  },
+  {
+   "body": "<a b:x=\"1\" a:y=\"2\" c=\"3\"/>",
+   "xpath": "name(/*/@*[1])",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "error": "XMLUnitException: java.lang.RuntimeException: Namespace for prefix 'a' has not been declared."
+  },
+  {
+   "body": "<a b:x=\"1\" a:y=\"2\" c=\"3\"/>",
+   "xpath": "count(//@*)",
+   "nodes": [
+    "3"
+   ]
+  },
+  {
+   "body": "<a b:x=\"1\" a:y=\"2\" c=\"3\"/>",
+   "xpath": "count(//@*)",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "error": "XMLUnitException: java.lang.RuntimeException: Namespace for prefix 'a' has not been declared."
+  },
+  {
+   "body": "<a b:x=\"1\" a:y=\"2\" c=\"3\"/>",
+   "xpath": "/*/@*",
+   "nodes": [
+    "2",
+    "1",
+    "3"
+   ]
+  },
+  {
+   "body": "<a b:x=\"1\" a:y=\"2\" c=\"3\"/>",
+   "xpath": "/*/@*",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "error": "XMLUnitException: java.lang.RuntimeException: Namespace for prefix 'a' has not been declared."
+  },
+  {
+   "body": "<a b:x=\"1\" a:y=\"2\" c=\"3\"/>",
+   "xpath": "//*",
+   "error": "TransformerException: java.lang.RuntimeException: Namespace for prefix 'a' has not been declared."
+  },
+  {
+   "body": "<a b:x=\"1\" a:y=\"2\" c=\"3\"/>",
+   "xpath": "//*",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "error": "XMLUnitException: java.lang.RuntimeException: Namespace for prefix 'a' has not been declared."
+  },
+  {
+   "body": "<a xmlns=\"urn:x\" z=\"1\" xmlns:a=\"urn:a\" a:a=\"2\"/>",
+   "xpath": "/*",
+   "nodes": [
+    "<a xmlns=\"urn:x\" xmlns:a=\"urn:a\" a:a=\"2\" z=\"1\"/>\n"
+   ]
+  },
+  {
+   "body": "<a xmlns=\"urn:x\" z=\"1\" xmlns:a=\"urn:a\" a:a=\"2\"/>",
+   "xpath": "/*",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": [
+    "<a xmlns=\"urn:x\" xmlns:a=\"urn:a\" a:a=\"2\" z=\"1\"/>\n"
+   ]
+  },
+  {
+   "body": "<a xmlns=\"urn:x\" z=\"1\" xmlns:a=\"urn:a\" a:a=\"2\"/>",
+   "xpath": "/*/*",
+   "nodes": []
+  },
+  {
+   "body": "<a xmlns=\"urn:x\" z=\"1\" xmlns:a=\"urn:a\" a:a=\"2\"/>",
+   "xpath": "/*/*",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": []
+  },
+  {
+   "body": "<a xmlns=\"urn:x\" z=\"1\" xmlns:a=\"urn:a\" a:a=\"2\"/>",
+   "xpath": "//@*",
+   "nodes": [
+    "2",
+    "1"
+   ]
+  },
+  {
+   "body": "<a xmlns=\"urn:x\" z=\"1\" xmlns:a=\"urn:a\" a:a=\"2\"/>",
+   "xpath": "//@*",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": [
+    "2",
+    "1"
+   ]
+  },
+  {
+   "body": "<a xmlns=\"urn:x\" z=\"1\" xmlns:a=\"urn:a\" a:a=\"2\"/>",
+   "xpath": "(//@*)[1]",
+   "nodes": [
+    "2"
+   ]
+  },
+  {
+   "body": "<a xmlns=\"urn:x\" z=\"1\" xmlns:a=\"urn:a\" a:a=\"2\"/>",
+   "xpath": "(//@*)[1]",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": [
+    "2"
+   ]
+  },
+  {
+   "body": "<a xmlns=\"urn:x\" z=\"1\" xmlns:a=\"urn:a\" a:a=\"2\"/>",
+   "xpath": "(/*/@*)[2]",
+   "nodes": [
+    "1"
+   ]
+  },
+  {
+   "body": "<a xmlns=\"urn:x\" z=\"1\" xmlns:a=\"urn:a\" a:a=\"2\"/>",
+   "xpath": "(/*/@*)[2]",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": [
+    "1"
+   ]
+  },
+  {
+   "body": "<a xmlns=\"urn:x\" z=\"1\" xmlns:a=\"urn:a\" a:a=\"2\"/>",
+   "xpath": "name(/*/@*[1])",
+   "nodes": [
+    "a:a"
+   ]
+  },
+  {
+   "body": "<a xmlns=\"urn:x\" z=\"1\" xmlns:a=\"urn:a\" a:a=\"2\"/>",
+   "xpath": "name(/*/@*[1])",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": [
+    "a:a"
+   ]
+  },
+  {
+   "body": "<a xmlns=\"urn:x\" z=\"1\" xmlns:a=\"urn:a\" a:a=\"2\"/>",
+   "xpath": "count(//@*)",
+   "nodes": [
+    "2"
+   ]
+  },
+  {
+   "body": "<a xmlns=\"urn:x\" z=\"1\" xmlns:a=\"urn:a\" a:a=\"2\"/>",
+   "xpath": "count(//@*)",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": [
+    "2"
+   ]
+  },
+  {
+   "body": "<a xmlns=\"urn:x\" z=\"1\" xmlns:a=\"urn:a\" a:a=\"2\"/>",
+   "xpath": "/*/@*",
+   "nodes": [
+    "2",
+    "1"
+   ]
+  },
+  {
+   "body": "<a xmlns=\"urn:x\" z=\"1\" xmlns:a=\"urn:a\" a:a=\"2\"/>",
+   "xpath": "/*/@*",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": [
+    "2",
+    "1"
+   ]
+  },
+  {
+   "body": "<a xmlns=\"urn:x\" z=\"1\" xmlns:a=\"urn:a\" a:a=\"2\"/>",
+   "xpath": "//*",
+   "nodes": [
+    "<a xmlns=\"urn:x\" xmlns:a=\"urn:a\" a:a=\"2\" z=\"1\"/>\n"
+   ]
+  },
+  {
+   "body": "<a xmlns=\"urn:x\" z=\"1\" xmlns:a=\"urn:a\" a:a=\"2\"/>",
+   "xpath": "//*",
+   "namespaces": {
+    "p": "urn:p",
+    "q": "urn:q",
+    "x": "urn:x"
+   },
+   "nodes": [
+    "<a xmlns=\"urn:x\" xmlns:a=\"urn:a\" a:a=\"2\" z=\"1\"/>\n"
+   ]
+  },
+  {
+   "body": "<c><b/><![CDATA[a]]><d/></c>",
+   "xpath": "/*/text()",
+   "nodes": [
+    "[#cdata-section: a]"
+   ]
+  },
+  {
+   "body": "<c><b/><![CDATA[a]]><d/></c>",
+   "xpath": "/*/text()",
+   "namespaces": {
+    "p": "urn:p"
+   },
+   "nodes": [
+    "[#cdata-section: a]"
+   ]
+  },
+  {
+   "body": "<c><b/><![CDATA[a]]><d/></c>",
+   "xpath": "/*",
+   "nodes": [
+    "<c>\n  <b/><![CDATA[a]]>\n  <d/>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<c><b/><![CDATA[a]]><d/></c>",
+   "xpath": "/*",
+   "namespaces": {
+    "p": "urn:p"
+   },
+   "nodes": [
+    "<c>\n  <b/><![CDATA[a]]>\n  <d/>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<c><b/><![CDATA[a]]><d/></c>",
+   "xpath": "//node()",
+   "nodes": [
+    "<c>\n  <b/><![CDATA[a]]>\n  <d/>\n</c>\n",
+    "<b/>\n",
+    "[#cdata-section: a]",
+    "<d/>\n"
+   ]
+  },
+  {
+   "body": "<c><b/><![CDATA[a]]><d/></c>",
+   "xpath": "//node()",
+   "namespaces": {
+    "p": "urn:p"
+   },
+   "nodes": [
+    "<c>\n  <b/><![CDATA[a]]>\n  <d/>\n</c>\n",
+    "<b/>\n",
+    "[#cdata-section: a]",
+    "<d/>\n"
+   ]
+  },
+  {
+   "body": "<c><b/><![CDATA[a]]><d/></c>",
+   "xpath": "//*",
+   "nodes": [
+    "<c>\n  <b/><![CDATA[a]]>\n  <d/>\n</c>\n",
+    "<b/>\n",
+    "<d/>\n"
+   ]
+  },
+  {
+   "body": "<c><b/><![CDATA[a]]><d/></c>",
+   "xpath": "//*",
+   "namespaces": {
+    "p": "urn:p"
+   },
+   "nodes": [
+    "<c>\n  <b/><![CDATA[a]]>\n  <d/>\n</c>\n",
+    "<b/>\n",
+    "<d/>\n"
+   ]
+  },
+  {
+   "body": "<c><b/><![CDATA[a]]><d/></c>",
+   "xpath": "/*/node()",
+   "nodes": [
+    "<b/>\n",
+    "[#cdata-section: a]",
+    "<d/>\n"
+   ]
+  },
+  {
+   "body": "<c><b/><![CDATA[a]]><d/></c>",
+   "xpath": "/*/node()",
+   "namespaces": {
+    "p": "urn:p"
+   },
+   "nodes": [
+    "<b/>\n",
+    "[#cdata-section: a]",
+    "<d/>\n"
+   ]
+  },
+  {
+   "body": "<c><![CDATA[a]]></c>",
+   "xpath": "/*/text()",
+   "nodes": [
+    "[#cdata-section: a]"
+   ]
+  },
+  {
+   "body": "<c><![CDATA[a]]></c>",
+   "xpath": "/*/text()",
+   "namespaces": {
+    "p": "urn:p"
+   },
+   "nodes": [
+    "[#cdata-section: a]"
+   ]
+  },
+  {
+   "body": "<c><![CDATA[a]]></c>",
+   "xpath": "/*",
+   "nodes": [
+    "<c><![CDATA[a]]></c>\n"
+   ]
+  },
+  {
+   "body": "<c><![CDATA[a]]></c>",
+   "xpath": "/*",
+   "namespaces": {
+    "p": "urn:p"
+   },
+   "nodes": [
+    "<c><![CDATA[a]]></c>\n"
+   ]
+  },
+  {
+   "body": "<c><![CDATA[a]]></c>",
+   "xpath": "//node()",
+   "nodes": [
+    "<c><![CDATA[a]]></c>\n",
+    "[#cdata-section: a]"
+   ]
+  },
+  {
+   "body": "<c><![CDATA[a]]></c>",
+   "xpath": "//node()",
+   "namespaces": {
+    "p": "urn:p"
+   },
+   "nodes": [
+    "<c><![CDATA[a]]></c>\n",
+    "[#cdata-section: a]"
+   ]
+  },
+  {
+   "body": "<c><![CDATA[a]]></c>",
+   "xpath": "//*",
+   "nodes": [
+    "<c><![CDATA[a]]></c>\n"
+   ]
+  },
+  {
+   "body": "<c><![CDATA[a]]></c>",
+   "xpath": "//*",
+   "namespaces": {
+    "p": "urn:p"
+   },
+   "nodes": [
+    "<c><![CDATA[a]]></c>\n"
+   ]
+  },
+  {
+   "body": "<c><![CDATA[a]]></c>",
+   "xpath": "/*/node()",
+   "nodes": [
+    "[#cdata-section: a]"
+   ]
+  },
+  {
+   "body": "<c><![CDATA[a]]></c>",
+   "xpath": "/*/node()",
+   "namespaces": {
+    "p": "urn:p"
+   },
+   "nodes": [
+    "[#cdata-section: a]"
+   ]
+  },
+  {
+   "body": "<c>x<![CDATA[a]]></c>",
+   "xpath": "//text()",
+   "nodes": [
+    "x"
+   ]
+  },
+  {
+   "body": "<c>x<![CDATA[a]]></c>",
+   "xpath": "//text()",
+   "namespaces": {
+    "p": "urn:p"
+   },
+   "nodes": [
+    "x"
+   ]
+  },
+  {
+   "body": "<c>x<![CDATA[a]]></c>",
+   "xpath": "/*/text()",
+   "nodes": [
+    "x"
+   ]
+  },
+  {
+   "body": "<c>x<![CDATA[a]]></c>",
+   "xpath": "/*/text()",
+   "namespaces": {
+    "p": "urn:p"
+   },
+   "nodes": [
+    "x"
+   ]
+  },
+  {
+   "body": "<c>x<![CDATA[a]]></c>",
+   "xpath": "/*",
+   "nodes": [
+    "<c>x<![CDATA[a]]></c>\n"
+   ]
+  },
+  {
+   "body": "<c>x<![CDATA[a]]></c>",
+   "xpath": "/*",
+   "namespaces": {
+    "p": "urn:p"
+   },
+   "nodes": [
+    "<c>x<![CDATA[a]]></c>\n"
+   ]
+  },
+  {
+   "body": "<c>x<![CDATA[a]]></c>",
+   "xpath": "//node()",
+   "nodes": [
+    "<c>x<![CDATA[a]]></c>\n",
+    "x"
+   ]
+  },
+  {
+   "body": "<c>x<![CDATA[a]]></c>",
+   "xpath": "//node()",
+   "namespaces": {
+    "p": "urn:p"
+   },
+   "nodes": [
+    "<c>x<![CDATA[a]]></c>\n",
+    "x"
+   ]
+  },
+  {
+   "body": "<c>x<![CDATA[a]]></c>",
+   "xpath": "//*",
+   "nodes": [
+    "<c>x<![CDATA[a]]></c>\n"
+   ]
+  },
+  {
+   "body": "<c>x<![CDATA[a]]></c>",
+   "xpath": "//*",
+   "namespaces": {
+    "p": "urn:p"
+   },
+   "nodes": [
+    "<c>x<![CDATA[a]]></c>\n"
+   ]
+  },
+  {
+   "body": "<c>x<![CDATA[a]]></c>",
+   "xpath": "/*/node()",
+   "nodes": [
+    "x"
+   ]
+  },
+  {
+   "body": "<c>x<![CDATA[a]]></c>",
+   "xpath": "/*/node()",
+   "namespaces": {
+    "p": "urn:p"
+   },
+   "nodes": [
+    "x"
+   ]
+  },
+  {
+   "body": "<c><![CDATA[a]]>x</c>",
+   "xpath": "//text()",
+   "nodes": [
+    "[#cdata-section: a]"
+   ]
+  },
+  {
+   "body": "<c><![CDATA[a]]>x</c>",
+   "xpath": "//text()",
+   "namespaces": {
+    "p": "urn:p"
+   },
+   "nodes": [
+    "[#cdata-section: a]"
+   ]
+  },
+  {
+   "body": "<c><![CDATA[a]]>x</c>",
+   "xpath": "/*/text()",
+   "nodes": [
+    "[#cdata-section: a]"
+   ]
+  },
+  {
+   "body": "<c><![CDATA[a]]>x</c>",
+   "xpath": "/*/text()",
+   "namespaces": {
+    "p": "urn:p"
+   },
+   "nodes": [
+    "[#cdata-section: a]"
+   ]
+  },
+  {
+   "body": "<c><![CDATA[a]]>x</c>",
+   "xpath": "/*",
+   "nodes": [
+    "<c><![CDATA[a]]>x</c>\n"
+   ]
+  },
+  {
+   "body": "<c><![CDATA[a]]>x</c>",
+   "xpath": "/*",
+   "namespaces": {
+    "p": "urn:p"
+   },
+   "nodes": [
+    "<c><![CDATA[a]]>x</c>\n"
+   ]
+  },
+  {
+   "body": "<c><![CDATA[a]]>x</c>",
+   "xpath": "//node()",
+   "nodes": [
+    "<c><![CDATA[a]]>x</c>\n",
+    "[#cdata-section: a]"
+   ]
+  },
+  {
+   "body": "<c><![CDATA[a]]>x</c>",
+   "xpath": "//node()",
+   "namespaces": {
+    "p": "urn:p"
+   },
+   "nodes": [
+    "<c><![CDATA[a]]>x</c>\n",
+    "[#cdata-section: a]"
+   ]
+  },
+  {
+   "body": "<c><![CDATA[a]]>x</c>",
+   "xpath": "//*",
+   "nodes": [
+    "<c><![CDATA[a]]>x</c>\n"
+   ]
+  },
+  {
+   "body": "<c><![CDATA[a]]>x</c>",
+   "xpath": "//*",
+   "namespaces": {
+    "p": "urn:p"
+   },
+   "nodes": [
+    "<c><![CDATA[a]]>x</c>\n"
+   ]
+  },
+  {
+   "body": "<c><![CDATA[a]]>x</c>",
+   "xpath": "/*/node()",
+   "nodes": [
+    "[#cdata-section: a]"
+   ]
+  },
+  {
+   "body": "<c><![CDATA[a]]>x</c>",
+   "xpath": "/*/node()",
+   "namespaces": {
+    "p": "urn:p"
+   },
+   "nodes": [
+    "[#cdata-section: a]"
+   ]
+  },
+  {
+   "body": "<r><c><b/><![CDATA[a]]>t<d/></c></r>",
+   "xpath": "//text()",
+   "nodes": [
+    "[#cdata-section: a]"
+   ]
+  },
+  {
+   "body": "<r><c><b/><![CDATA[a]]>t<d/></c></r>",
+   "xpath": "//text()",
+   "namespaces": {
+    "p": "urn:p"
+   },
+   "nodes": [
+    "[#cdata-section: a]"
+   ]
+  },
+  {
+   "body": "<r><c><b/><![CDATA[a]]>t<d/></c></r>",
+   "xpath": "/*/text()",
+   "nodes": []
+  },
+  {
+   "body": "<r><c><b/><![CDATA[a]]>t<d/></c></r>",
+   "xpath": "/*/text()",
+   "namespaces": {
+    "p": "urn:p"
+   },
+   "nodes": []
+  },
+  {
+   "body": "<r><c><b/><![CDATA[a]]>t<d/></c></r>",
+   "xpath": "/*",
+   "nodes": [
+    "<r>\n  <c>\n    <b/><![CDATA[a]]>\n    t\n    <d/>\n  </c>\n</r>\n"
+   ]
+  },
+  {
+   "body": "<r><c><b/><![CDATA[a]]>t<d/></c></r>",
+   "xpath": "/*",
+   "namespaces": {
+    "p": "urn:p"
+   },
+   "nodes": [
+    "<r>\n  <c>\n    <b/><![CDATA[a]]>\n    t\n    <d/>\n  </c>\n</r>\n"
+   ]
+  },
+  {
+   "body": "<r><c><b/><![CDATA[a]]>t<d/></c></r>",
+   "xpath": "//node()",
+   "nodes": [
+    "<r>\n  <c>\n    <b/><![CDATA[a]]>\n    t\n    <d/>\n  </c>\n</r>\n",
+    "<c>\n  <b/><![CDATA[a]]>\n  t\n  <d/>\n</c>\n",
+    "<b/>\n",
+    "[#cdata-section: a]",
+    "<d/>\n"
+   ]
+  },
+  {
+   "body": "<r><c><b/><![CDATA[a]]>t<d/></c></r>",
+   "xpath": "//node()",
+   "namespaces": {
+    "p": "urn:p"
+   },
+   "nodes": [
+    "<r>\n  <c>\n    <b/><![CDATA[a]]>\n    t\n    <d/>\n  </c>\n</r>\n",
+    "<c>\n  <b/><![CDATA[a]]>\n  t\n  <d/>\n</c>\n",
+    "<b/>\n",
+    "[#cdata-section: a]",
+    "<d/>\n"
+   ]
+  },
+  {
+   "body": "<r><c><b/><![CDATA[a]]>t<d/></c></r>",
+   "xpath": "//*",
+   "nodes": [
+    "<r>\n  <c>\n    <b/><![CDATA[a]]>\n    t\n    <d/>\n  </c>\n</r>\n",
+    "<c>\n  <b/><![CDATA[a]]>\n  t\n  <d/>\n</c>\n",
+    "<b/>\n",
+    "<d/>\n"
+   ]
+  },
+  {
+   "body": "<r><c><b/><![CDATA[a]]>t<d/></c></r>",
+   "xpath": "//*",
+   "namespaces": {
+    "p": "urn:p"
+   },
+   "nodes": [
+    "<r>\n  <c>\n    <b/><![CDATA[a]]>\n    t\n    <d/>\n  </c>\n</r>\n",
+    "<c>\n  <b/><![CDATA[a]]>\n  t\n  <d/>\n</c>\n",
+    "<b/>\n",
+    "<d/>\n"
+   ]
+  },
+  {
+   "body": "<r><c><b/><![CDATA[a]]>t<d/></c></r>",
+   "xpath": "/*/node()",
+   "nodes": [
+    "<c>\n  <b/><![CDATA[a]]>\n  t\n  <d/>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<r><c><b/><![CDATA[a]]>t<d/></c></r>",
+   "xpath": "/*/node()",
+   "namespaces": {
+    "p": "urn:p"
+   },
+   "nodes": [
+    "<c>\n  <b/><![CDATA[a]]>\n  t\n  <d/>\n</c>\n"
+   ]
+  },
+  {
+   "body": "<a><![CDATA[😀]]>x</a>",
+   "xpath": "//text()",
+   "nodes": [
+    "[#cdata-section: 😀]"
+   ]
+  },
+  {
+   "body": "<a><![CDATA[😀]]>x</a>",
+   "xpath": "/*/text()",
+   "nodes": [
+    "[#cdata-section: 😀]"
+   ]
+  },
+  {
+   "body": "<a><![CDATA[😀]]>x</a>",
+   "xpath": "/*/node()",
+   "nodes": [
+    "[#cdata-section: 😀]"
+   ]
+  },
+  {
+   "body": "<a><![CDATA[x😀y]]></a>",
+   "xpath": "/*/text()",
+   "nodes": [
+    "[#cdata-section: x😀y]"
+   ]
+  },
+  {
+   "body": "<a><![CDATA[x😀y]]></a>",
+   "xpath": "/*/text()",
+   "namespaces": {
+    "p": "urn:p"
+   },
+   "nodes": [
+    "[#cdata-section: x😀y]"
+   ]
+  },
+  {
+   "body": "<a><![CDATA[x😀y]]></a>",
+   "xpath": "/*",
+   "nodes": [
+    "<a><![CDATA[x😀y]]></a>\n"
+   ]
+  },
+  {
+   "body": "<a><![CDATA[x😀y]]></a>",
+   "xpath": "/*",
+   "namespaces": {
+    "p": "urn:p"
+   },
+   "nodes": [
+    "<a><![CDATA[x😀y]]></a>\n"
+   ]
+  },
+  {
+   "body": "<a><![CDATA[x😀y]]></a>",
+   "xpath": "//node()",
+   "nodes": [
+    "<a><![CDATA[x😀y]]></a>\n",
+    "[#cdata-section: x😀y]"
+   ]
+  },
+  {
+   "body": "<a><![CDATA[x😀y]]></a>",
+   "xpath": "//node()",
+   "namespaces": {
+    "p": "urn:p"
+   },
+   "nodes": [
+    "<a><![CDATA[x😀y]]></a>\n",
+    "[#cdata-section: x😀y]"
+   ]
+  },
+  {
+   "body": "<a><![CDATA[x😀y]]></a>",
+   "xpath": "//*",
+   "nodes": [
+    "<a><![CDATA[x😀y]]></a>\n"
+   ]
+  },
+  {
+   "body": "<a><![CDATA[x😀y]]></a>",
+   "xpath": "//*",
+   "namespaces": {
+    "p": "urn:p"
+   },
+   "nodes": [
+    "<a><![CDATA[x😀y]]></a>\n"
+   ]
+  },
+  {
+   "body": "<a><![CDATA[x😀y]]></a>",
+   "xpath": "/*/node()",
+   "nodes": [
+    "[#cdata-section: x😀y]"
+   ]
+  },
+  {
+   "body": "<a><![CDATA[x😀y]]></a>",
+   "xpath": "/*/node()",
+   "namespaces": {
+    "p": "urn:p"
+   },
+   "nodes": [
+    "[#cdata-section: x😀y]"
+   ]
+  },
+  {
+   "body": "<a><b/><![CDATA[😀]]></a>",
+   "xpath": "/*/text()",
+   "nodes": [
+    "[#cdata-section: 😀]"
+   ]
+  },
+  {
+   "body": "<a><b/><![CDATA[😀]]></a>",
+   "xpath": "/*/node()",
+   "nodes": [
+    "<b/>\n",
+    "[#cdata-section: 😀]"
+   ]
+  },
+  {
+   "body": "<a>x<![CDATA[]]><b/></a>",
+   "xpath": "//text()",
+   "nodes": [
+    "x"
+   ]
+  },
+  {
+   "body": "<a>x<![CDATA[]]><b/></a>",
+   "xpath": "//text()",
+   "namespaces": {
+    "p": "urn:p"
+   },
+   "nodes": [
+    "x"
+   ]
+  },
+  {
+   "body": "<a>x<![CDATA[]]><b/></a>",
+   "xpath": "/*/text()",
+   "nodes": [
+    "x"
+   ]
+  },
+  {
+   "body": "<a>x<![CDATA[]]><b/></a>",
+   "xpath": "/*/text()",
+   "namespaces": {
+    "p": "urn:p"
+   },
+   "nodes": [
+    "x"
+   ]
+  },
+  {
+   "body": "<a>x<![CDATA[]]><b/></a>",
+   "xpath": "/*",
+   "nodes": [
+    "<a>x\n  <b/>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<a>x<![CDATA[]]><b/></a>",
+   "xpath": "//node()",
+   "nodes": [
+    "<a>x\n  <b/>\n</a>\n",
+    "x",
+    "<b/>\n"
+   ]
+  },
+  {
+   "body": "<a>x<![CDATA[]]><b/></a>",
+   "xpath": "//*",
+   "nodes": [
+    "<a>x\n  <b/>\n</a>\n",
+    "<b/>\n"
+   ]
+  },
+  {
+   "body": "<a>x<![CDATA[]]><b/></a>",
+   "xpath": "/*/node()",
+   "nodes": [
+    "x",
+    "<b/>\n"
+   ]
+  },
+  {
+   "body": "<a>x<![CDATA[]]><b/></a>",
+   "xpath": "/*/node()",
+   "namespaces": {
+    "p": "urn:p"
+   },
+   "nodes": [
+    "x",
+    "<b/>\n"
+   ]
+  },
+  {
+   "body": "<a><![CDATA[]]><b/></a>",
+   "xpath": "/*/text()",
+   "nodes": [
+    "[#cdata-section: ]"
+   ]
+  },
+  {
+   "body": "<a><![CDATA[]]><b/></a>",
+   "xpath": "/*",
+   "nodes": [
+    "<a>\n  <b/>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<a><![CDATA[]]><b/></a>",
+   "xpath": "/*",
+   "namespaces": {
+    "p": "urn:p"
+   },
+   "nodes": [
+    "<a>\n  <b/>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<a><![CDATA[]]><b/></a>",
+   "xpath": "//node()",
+   "nodes": [
+    "<a>\n  <b/>\n</a>\n",
+    "[#cdata-section: ]",
+    "<b/>\n"
+   ]
+  },
+  {
+   "body": "<a><![CDATA[]]><b/></a>",
+   "xpath": "//*",
+   "nodes": [
+    "<a>\n  <b/>\n</a>\n",
+    "<b/>\n"
+   ]
+  },
+  {
+   "body": "<a><![CDATA[]]><b/></a>",
+   "xpath": "//*",
+   "namespaces": {
+    "p": "urn:p"
+   },
+   "nodes": [
+    "<a>\n  <b/>\n</a>\n",
+    "<b/>\n"
+   ]
+  },
+  {
+   "body": "<a><![CDATA[]]><b/></a>",
+   "xpath": "/*/node()",
+   "nodes": [
+    "[#cdata-section: ]",
+    "<b/>\n"
+   ]
+  },
+  {
+   "body": "<a>x<![CDATA[]]></a>",
+   "xpath": "//text()",
+   "nodes": [
+    "x"
+   ]
+  },
+  {
+   "body": "<a>x<![CDATA[]]></a>",
+   "xpath": "//text()",
+   "namespaces": {
+    "p": "urn:p"
+   },
+   "nodes": [
+    "x"
+   ]
+  },
+  {
+   "body": "<a>x<![CDATA[]]></a>",
+   "xpath": "/*/text()",
+   "nodes": [
+    "x"
+   ]
+  },
+  {
+   "body": "<a>x<![CDATA[]]></a>",
+   "xpath": "/*/text()",
+   "namespaces": {
+    "p": "urn:p"
+   },
+   "nodes": [
+    "x"
+   ]
+  },
+  {
+   "body": "<a>x<![CDATA[]]></a>",
+   "xpath": "/*",
+   "nodes": [
+    "<a>x</a>\n"
+   ]
+  },
+  {
+   "body": "<a>x<![CDATA[]]></a>",
+   "xpath": "/*",
+   "namespaces": {
+    "p": "urn:p"
+   },
+   "nodes": [
+    "<a>x</a>\n"
+   ]
+  },
+  {
+   "body": "<a>x<![CDATA[]]></a>",
+   "xpath": "//node()",
+   "nodes": [
+    "<a>x</a>\n",
+    "x"
+   ]
+  },
+  {
+   "body": "<a>x<![CDATA[]]></a>",
+   "xpath": "//node()",
+   "namespaces": {
+    "p": "urn:p"
+   },
+   "nodes": [
+    "<a>x</a>\n",
+    "x"
+   ]
+  },
+  {
+   "body": "<a>x<![CDATA[]]></a>",
+   "xpath": "//*",
+   "nodes": [
+    "<a>x</a>\n"
+   ]
+  },
+  {
+   "body": "<a>x<![CDATA[]]></a>",
+   "xpath": "//*",
+   "namespaces": {
+    "p": "urn:p"
+   },
+   "nodes": [
+    "<a>x</a>\n"
+   ]
+  },
+  {
+   "body": "<a>x<![CDATA[]]></a>",
+   "xpath": "/*/node()",
+   "nodes": [
+    "x"
+   ]
+  },
+  {
+   "body": "<a>x<![CDATA[]]></a>",
+   "xpath": "/*/node()",
+   "namespaces": {
+    "p": "urn:p"
+   },
+   "nodes": [
+    "x"
+   ]
+  },
+  {
+   "body": "<a><b/>x<![CDATA[]]><c/></a>",
+   "xpath": "//text()",
+   "nodes": [
+    "x"
+   ]
+  },
+  {
+   "body": "<a><b/>x<![CDATA[]]><c/></a>",
+   "xpath": "//text()",
+   "namespaces": {
+    "p": "urn:p"
+   },
+   "nodes": [
+    "x"
+   ]
+  },
+  {
+   "body": "<a><b/>x<![CDATA[]]><c/></a>",
+   "xpath": "/*/text()",
+   "nodes": [
+    "x"
+   ]
+  },
+  {
+   "body": "<a><b/>x<![CDATA[]]><c/></a>",
+   "xpath": "/*/text()",
+   "namespaces": {
+    "p": "urn:p"
+   },
+   "nodes": [
+    "x"
+   ]
+  },
+  {
+   "body": "<a><b/>x<![CDATA[]]><c/></a>",
+   "xpath": "/*",
+   "nodes": [
+    "<a>\n  <b/>x\n  <c/>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<a><b/>x<![CDATA[]]><c/></a>",
+   "xpath": "//node()",
+   "nodes": [
+    "<a>\n  <b/>x\n  <c/>\n</a>\n",
+    "<b/>\n",
+    "x",
+    "<c/>\n"
+   ]
+  },
+  {
+   "body": "<a><b/>x<![CDATA[]]><c/></a>",
+   "xpath": "//*",
+   "nodes": [
+    "<a>\n  <b/>x\n  <c/>\n</a>\n",
+    "<b/>\n",
+    "<c/>\n"
+   ]
+  },
+  {
+   "body": "<a><b/>x<![CDATA[]]><c/></a>",
+   "xpath": "/*/node()",
+   "nodes": [
+    "<b/>\n",
+    "x",
+    "<c/>\n"
+   ]
+  },
+  {
+   "body": "<a><b/>x<![CDATA[]]><c/></a>",
+   "xpath": "/*/node()",
+   "namespaces": {
+    "p": "urn:p"
+   },
+   "nodes": [
+    "<b/>\n",
+    "x",
+    "<c/>\n"
+   ]
   }
  ]
 }
