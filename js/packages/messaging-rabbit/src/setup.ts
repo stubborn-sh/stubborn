@@ -11,6 +11,7 @@ import {
   fetchAllPages,
   type PageParams,
   type ContractResponse,
+  isYamlContract,
 } from "@stubborn-sh/broker-client";
 import { RabbitSender } from "./rabbit-sender.js";
 import { RabbitReceiver } from "./rabbit-receiver.js";
@@ -126,7 +127,7 @@ async function loadMessagingContracts(config: MessagingStubConfig): Promise<Mess
   );
 
   return contractResponses
-    .filter((c: ContractResponse) => c.contentType === "application/x-yaml")
+    .filter((c: ContractResponse) => isYamlContract(c))
     .filter((c: ContractResponse) => isMessagingContract(c.content))
     .map((c: ContractResponse) => parseMessagingContract(c.contractName, c.content));
 }

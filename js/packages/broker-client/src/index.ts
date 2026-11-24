@@ -1,4 +1,5 @@
 export { BrokerClient } from "./client.js";
+export { isYamlContract } from "./content-types.js";
 export type { BrokerClientConfig } from "./config.js";
 export { resolveConfig, buildAuthHeader } from "./config.js";
 export { pageIterator, fetchAllPages } from "./pagination.js";

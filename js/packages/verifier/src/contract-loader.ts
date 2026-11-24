@@ -2,7 +2,7 @@ import { readdir, readFile } from "node:fs/promises";
 import { join } from "node:path";
 import type { BrokerClient } from "@stubborn-sh/broker-client";
 import { parseContract, type ParsedContract } from "@stubborn-sh/stub-server";
-import { fetchAllPages } from "@stubborn-sh/broker-client";
+import { fetchAllPages, isYamlContract } from "@stubborn-sh/broker-client";
 
 /** Load contracts from a local directory. */
 export async function loadFromDirectory(directory: string): Promise<readonly ParsedContract[]> {
@@ -45,7 +45,5 @@ export async function loadFromBroker(
     client.listContracts(applicationName, version, params),
   );
 
-  return contracts
-    .filter((c) => c.contentType === "application/x-yaml")
-    .map((c) => parseContract(c.contractName, c.content));
+  return contracts.filter(isYamlContract).map((c) => parseContract(c.contractName, c.content));
 }

@@ -4,7 +4,9 @@ const mockSetContracts = vi.fn();
 const mockStart = vi.fn().mockResolvedValue(12345);
 const mockStop = vi.fn().mockResolvedValue(undefined);
 
-vi.mock("@stubborn-sh/broker-client", () => ({
+vi.mock("@stubborn-sh/broker-client", async () => ({
+  // The real content-type check, so loaders are tested against the broker's actual types.
+  isYamlContract: (await import("../../../broker-client/src/content-types.js")).isYamlContract,
   BrokerClient: class {
     listContracts = vi.fn().mockResolvedValue({
       content: [
