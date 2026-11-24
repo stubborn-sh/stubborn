@@ -949,7 +949,7 @@ function inheritedBinding(state: ViewState, element: Element, prefix: string): s
   for (let node = element.parentNode; node !== null; node = node.parentNode) {
     if (node.nodeType !== ELEMENT_NODE) break;
     const decl = state.declarations
-      .get(node as Element)
+      .get(node)
       ?.find((a) => declaredPrefix(a) === prefix && !a.value.startsWith(UNBOUND_PREFIX_URI));
     if (decl !== undefined) return decl.value;
   }
