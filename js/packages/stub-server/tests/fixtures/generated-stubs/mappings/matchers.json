@@ -1,0 +1,28 @@
+{
+  "id": "44c787f5-038b-4755-bd21-97e34bdde1ee",
+  "request": {
+    "url": "/items/match",
+    "method": "POST",
+    "headers": {
+      "Content-Type": {
+        "matches": "application/json.*"
+      }
+    },
+    "bodyPatterns": [
+      {
+        "matchesJsonPath": "$.items[*][?(@.id =~ /([0-9]+)/)]"
+      },
+      {
+        "matchesJsonPath": "$[?(@.items.size() >= 1 && @.items.size() <= 5)]"
+      },
+      {
+        "matchesJsonPath": "$[?(@.count == 1)]"
+      }
+    ]
+  },
+  "response": {
+    "status": 200,
+    "transformers": ["response-template", "stubborn-contract"]
+  },
+  "uuid": "44c787f5-038b-4755-bd21-97e34bdde1ee"
+}

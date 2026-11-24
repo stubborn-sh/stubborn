@@ -1,0 +1,31 @@
+{
+  "id": "8e45107c-4447-4d71-9ad2-9725e2422e18",
+  "request": {
+    "url": "/items",
+    "method": "PUT",
+    "headers": {
+      "Content-Type": {
+        "matches": "application/json.*"
+      }
+    },
+    "bodyPatterns": [
+      {
+        "matchesJsonPath": "$[*][?(@.['id'] == '1')]"
+      },
+      {
+        "matchesJsonPath": "$[*][?(@.['price'] == 2.5)]"
+      },
+      {
+        "matchesJsonPath": "$[*][?(@.['id'] == '2')]"
+      },
+      {
+        "matchesJsonPath": "$[*][?(@.['price'] == 3)]"
+      }
+    ]
+  },
+  "response": {
+    "status": 204,
+    "transformers": ["response-template", "stubborn-contract"]
+  },
+  "uuid": "8e45107c-4447-4d71-9ad2-9725e2422e18"
+}

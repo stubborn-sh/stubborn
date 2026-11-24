@@ -1,0 +1,40 @@
+{
+  "id": "28141114-acb6-4364-843f-82f7306d3f5c",
+  "request": {
+    "url": "/orders",
+    "method": "POST",
+    "headers": {
+      "Content-Type": {
+        "matches": "application/json.*"
+      }
+    },
+    "bodyPatterns": [
+      {
+        "matchesJsonPath": "$.['order'][?(@.['id'] == 7)]"
+      },
+      {
+        "matchesJsonPath": "$.['order'].['lines'][*][?(@.['sku'] == 'A')]"
+      },
+      {
+        "matchesJsonPath": "$.['order'].['lines'][*][?(@.['qty'] == 1)]"
+      },
+      {
+        "matchesJsonPath": "$.['order'].['lines'][*][?(@.['gift'] == true)]"
+      },
+      {
+        "matchesJsonPath": "$.['order'].['lines'][*].['tags'][?(@ == 'x')]"
+      },
+      {
+        "matchesJsonPath": "$.['order'].['lines'][*].['tags'][?(@ == 'y')]"
+      },
+      {
+        "matchesJsonPath": "$.['order'].['lines'][*].['parts'][*][?(@.['code'] == 'p1')]"
+      }
+    ]
+  },
+  "response": {
+    "status": 201,
+    "transformers": ["response-template", "stubborn-contract"]
+  },
+  "uuid": "28141114-acb6-4364-843f-82f7306d3f5c"
+}
