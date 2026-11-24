@@ -1,0 +1,36 @@
+{
+  "id": "006a8934-ee6a-4e63-89bf-bac84dcbd841",
+  "request": {
+    "url": "/items/single",
+    "method": "POST",
+    "headers": {
+      "Content-Type": {
+        "matches": "application/json.*"
+      },
+      "X-Trace": {
+        "equalTo": "abc"
+      }
+    },
+    "bodyPatterns": [
+      {
+        "matchesJsonPath": "$.['items'][*][?(@.['id'] == '1')]"
+      },
+      {
+        "matchesJsonPath": "$.['items'][*][?(@.['name'] == 'First')]"
+      },
+      {
+        "matchesJsonPath": "$.['owner'][?(@.['name'] == 'Ann')]"
+      }
+    ]
+  },
+  "response": {
+    "status": 200,
+    "body": "{\"ids\":{{{jsonPath request.body '$.items[*].id'}}} ,\"first\":\"{{{jsonPath request.body '$.items[0].name'}}}\",\"owner\":\"{{{jsonPath request.body '$.owner.name'}}}\",\"url\":\"{{{request.url}}}\",\"trace\":\"{{{request.headers.X-Trace.[0]}}}\"}",
+    "headers": {
+      "Content-Type": "application/json",
+      "X-Path": "{{{request.path}}}"
+    },
+    "transformers": ["response-template", "stubborn-contract"]
+  },
+  "uuid": "006a8934-ee6a-4e63-89bf-bac84dcbd841"
+}

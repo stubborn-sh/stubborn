@@ -1,0 +1,37 @@
+{
+  "id": "34b0adba-1783-4687-bcc2-db0dba98eda9",
+  "request": {
+    "url": "/items/tricky",
+    "method": "POST",
+    "headers": {
+      "Content-Type": {
+        "matches": "application/json.*"
+      }
+    },
+    "bodyPatterns": [
+      {
+        "matchesJsonPath": "$.['grid'][*][?(@ == 1)]"
+      },
+      {
+        "matchesJsonPath": "$.['grid'][*][?(@ == 2)]"
+      },
+      {
+        "matchesJsonPath": "$.['grid'][*][?(@ == 3)]"
+      },
+      {
+        "matchesJsonPath": "$.['notes'][*][?(@.['text'] == 'it\\'s (a) [test] $5 & \"q\"')]"
+      },
+      {
+        "matchesJsonPath": "$.['notes'][*][?(@.['gone'] == null)]"
+      },
+      {
+        "matchesJsonPath": "$.['odd key'][?(@.['v'] == -1.5)]"
+      }
+    ]
+  },
+  "response": {
+    "status": 200,
+    "transformers": ["response-template", "stubborn-contract"]
+  },
+  "uuid": "34b0adba-1783-4687-bcc2-db0dba98eda9"
+}
