@@ -1,0 +1,588 @@
+{
+ "source": "WireMock 3.13.2 Xml.parse(body).findNodes(xpath, namespaces) -> XmlNode.toString()",
+ "cases": [
+  {
+   "body": "<a><b>\n    <c>1</c>\n  </b></a>",
+   "xpath": "/a/b",
+   "nodes": [
+    "<b>\n      \n  <c>1</c>\n    \n</b>\n"
+   ]
+  },
+  {
+   "body": "<a>\n  <b>\n    <c>1</c>\n    <d/>\n  </b>\n</a>",
+   "xpath": "/a/b",
+   "nodes": [
+    "<b>\n      \n  <c>1</c>\n      \n  <d/>\n    \n</b>\n"
+   ]
+  },
+  {
+   "body": "<a><b><c>1</c><d><e>x</e></d></b></a>",
+   "xpath": "/a/b",
+   "nodes": [
+    "<b>\n  <c>1</c>\n  <d>\n    <e>x</e>\n  </d>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<a><b x=\"1\" y='2'>t &amp; &lt; &gt; \" '</b></a>",
+   "xpath": "/a/b",
+   "nodes": [
+    "<b x=\"1\" y=\"2\">t &amp; &lt; &gt; \" '</b>\n"
+   ]
+  },
+  {
+   "body": "<a><b x=\"&quot;&amp;&lt;&#10;\"/></a>",
+   "xpath": "/a/b",
+   "nodes": [
+    "<b x=\"&quot;&amp;&lt;&#10;\"/>\n"
+   ]
+  },
+  {
+   "body": "<p:a xmlns:p=\"urn:x\"><p:b q=\"1\"/></p:a>",
+   "xpath": "/a/b",
+   "nodes": [
+    "<p:b q=\"1\"/>\n"
+   ]
+  },
+  {
+   "body": "<p:a xmlns:p=\"urn:x\"><p:b q=\"1\"/></p:a>",
+   "xpath": "/p:a/p:b",
+   "namespaces": {
+    "p": "urn:x"
+   },
+   "nodes": [
+    "<p:b q=\"1\" xmlns:p=\"urn:x\"/>\n"
+   ]
+  },
+  {
+   "body": "<a xmlns=\"urn:d\"><b/></a>",
+   "xpath": "/d:a/d:b",
+   "namespaces": {
+    "d": "urn:d"
+   },
+   "nodes": [
+    "<b xmlns=\"urn:d\"/>\n"
+   ]
+  },
+  {
+   "body": "<a xmlns=\"urn:d\"><b/></a>",
+   "xpath": "/a/b",
+   "nodes": [
+    "<b/>\n"
+   ]
+  },
+  {
+   "body": "<a><b c=\"1\" xmlns:q=\"urn:q\"/></a>",
+   "xpath": "/a/b",
+   "nodes": [
+    "<b xmlns:q=\"urn:q\" c=\"1\"/>\n"
+   ]
+  },
+  {
+   "body": "<a><b>x<c/>y</b></a>",
+   "xpath": "/a/b",
+   "nodes": [
+    "<b>\n  x\n  <c/>\n  y\n</b>\n"
+   ]
+  },
+  {
+   "body": "<a><b><!--x--><c/></b></a>",
+   "xpath": "/a/b",
+   "nodes": [
+    "<b>\n  <!--x-->\n  <c/>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<a><b><?pi d?><c/></b></a>",
+   "xpath": "/a/b",
+   "nodes": [
+    "<b>\n  <?pi d?>\n  <c/>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<a><b><![CDATA[x<y]]></b></a>",
+   "xpath": "/a/b",
+   "nodes": [
+    "<b><![CDATA[x<y]]></b>\n"
+   ]
+  },
+  {
+   "body": "<a><b><![CDATA[x]]><c/></b></a>",
+   "xpath": "/a/b",
+   "nodes": [
+    "<b><![CDATA[x]]>\n  <c/>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<a>t</a>",
+   "xpath": "/",
+   "nodes": [
+    "<a>t</a>\n"
+   ]
+  },
+  {
+   "body": "<?pi x?><!--c--><a>t</a>",
+   "xpath": "/",
+   "nodes": [
+    "<?pi x?><!--c--><a>t</a>\n"
+   ]
+  },
+  {
+   "body": "<a><!--x--></a>",
+   "xpath": "/a/comment()",
+   "nodes": [
+    "[#comment: x]"
+   ]
+  },
+  {
+   "body": "<a><![CDATA[x]]></a>",
+   "xpath": "/a/text()",
+   "nodes": [
+    "[#cdata-section: x]"
+   ]
+  },
+  {
+   "body": "<a><?t d e?></a>",
+   "xpath": "/a/processing-instruction()",
+   "nodes": [
+    "[t: d e]"
+   ]
+  },
+  {
+   "body": "<a/>",
+   "xpath": "1 div 10000000",
+   "nodes": [
+    "0"
+   ]
+  },
+  {
+   "body": "<a/>",
+   "xpath": "1234567.891",
+   "nodes": [
+    "1,234,567.891"
+   ]
+  },
+  {
+   "body": "<a/>",
+   "xpath": "-0",
+   "nodes": [
+    "-0"
+   ]
+  },
+  {
+   "body": "<a/>",
+   "xpath": "0 div 0",
+   "nodes": [
+    "NaN"
+   ]
+  },
+  {
+   "body": "<a/>",
+   "xpath": "1 div 0",
+   "nodes": [
+    "\u221e"
+   ]
+  },
+  {
+   "body": "<a/>",
+   "xpath": "0.0005",
+   "nodes": [
+    "0"
+   ]
+  },
+  {
+   "body": "<a/>",
+   "xpath": "0.0015",
+   "nodes": [
+    "0.002"
+   ]
+  },
+  {
+   "body": "<a/>",
+   "xpath": "2.5 * 1",
+   "nodes": [
+    "2.5"
+   ]
+  },
+  {
+   "body": "<a/>",
+   "xpath": "1e21",
+   "error": "XPathException: {"
+  },
+  {
+   "body": "<a/>",
+   "xpath": "string(1e21)",
+   "error": "XPathException: {"
+  },
+  {
+   "body": "<a/>",
+   "xpath": "true()",
+   "nodes": [
+    "true"
+   ]
+  },
+  {
+   "body": "<a/>",
+   "xpath": "'s'",
+   "nodes": [
+    "s"
+   ]
+  },
+  {
+   "body": "<a xmlns:q=\"urn:q\" x=\"1\"/>",
+   "xpath": "/a/@*",
+   "nodes": [
+    "1"
+   ]
+  },
+  {
+   "body": "<a xmlns:q=\"urn:q\" x=\"1\"/>",
+   "xpath": "count(/a/@*)",
+   "nodes": [
+    "1"
+   ]
+  },
+  {
+   "body": "<a xmlns:q=\"urn:q\" x=\"1\"/>",
+   "xpath": "count(/a/@*)",
+   "namespaces": {
+    "q": "urn:q"
+   },
+   "nodes": [
+    "1"
+   ]
+  },
+  {
+   "body": "<a xmlns:p=\"urn:p\" p:x=\"1\" x=\"2\"/>",
+   "xpath": "/a/@x",
+   "nodes": [
+    "1",
+    "2"
+   ]
+  },
+  {
+   "body": "<a xmlns:p=\"urn:p\" p:x=\"1\"/>",
+   "xpath": "name(/a/@*)",
+   "nodes": [
+    "p:x"
+   ]
+  },
+  {
+   "body": "<p:a xmlns:p=\"urn:p\"/>",
+   "xpath": "namespace-uri(/*)",
+   "nodes": [
+    ""
+   ]
+  },
+  {
+   "body": "<p:a xmlns:p=\"urn:p\"/>",
+   "xpath": "local-name(/*)",
+   "nodes": [
+    "a"
+   ]
+  },
+  {
+   "body": "<p:a xmlns:p=\"urn:p\"/>",
+   "xpath": "name(/*)",
+   "nodes": [
+    "p:a"
+   ]
+  },
+  {
+   "body": "<p:a/>",
+   "xpath": "/a",
+   "nodes": [
+    "<p:a/>\n"
+   ]
+  },
+  {
+   "body": "<p:a><p:b>1</p:b></p:a>",
+   "xpath": "/a/b",
+   "nodes": [
+    "<p:b>1</p:b>\n"
+   ]
+  },
+  {
+   "body": "<a><p:b xmlns:p=\"urn:p\"><c/></p:b></a>",
+   "xpath": "/a/b",
+   "nodes": [
+    "<p:b xmlns:p=\"urn:p\">\n  <c/>\n</p:b>\n"
+   ]
+  },
+  {
+   "body": "<a xmlns:p=\"urn:p\"><p:b><c/></p:b></a>",
+   "xpath": "/a/b",
+   "nodes": [
+    "<p:b>\n  <c/>\n</p:b>\n"
+   ]
+  },
+  {
+   "body": "<a xmlns:p=\"urn:p\"><p:b><c/></p:b></a>",
+   "xpath": "/a/p:b",
+   "namespaces": {
+    "p": "urn:p"
+   },
+   "nodes": [
+    "<p:b xmlns:p=\"urn:p\">\n  <c/>\n</p:b>\n"
+   ]
+  },
+  {
+   "body": "<a><b id=\"x\"/></a>",
+   "xpath": "id('x')",
+   "nodes": []
+  },
+  {
+   "body": "\ufeff<a/>",
+   "xpath": "/a",
+   "error": "XmlException: {"
+  },
+  {
+   "body": "  <a/>",
+   "xpath": "/a",
+   "nodes": [
+    "<a/>\n"
+   ]
+  },
+  {
+   "body": "<a>\u00e9\u2028\t</a>",
+   "xpath": "/a",
+   "nodes": [
+    "<a>\u00e9\u2028\t</a>\n"
+   ]
+  },
+  {
+   "body": "<a><b>  </b></a>",
+   "xpath": "/a/b",
+   "nodes": [
+    "<b>  </b>\n"
+   ]
+  },
+  {
+   "body": "<a><b>\n</b></a>",
+   "xpath": "/a",
+   "nodes": [
+    "<a>\n  <b>\n</b>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<a>x<b/></a>",
+   "xpath": "/a",
+   "nodes": [
+    "<a>\n  x\n  <b/>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<a><b/>x</a>",
+   "xpath": "/a",
+   "nodes": [
+    "<a>\n  <b/>\n  x\n</a>\n"
+   ]
+  },
+  {
+   "body": "<a><b x=\"&gt;&#9;&#13;'\"/></a>",
+   "xpath": "/a/b",
+   "nodes": [
+    "<b x=\"&gt;&#9;&#13;'\"/>\n"
+   ]
+  },
+  {
+   "body": "<a><b>x&#13;]]&gt;\"</b></a>",
+   "xpath": "/a/b",
+   "nodes": [
+    "<b>x&#13;]]&gt;\"</b>\n"
+   ]
+  },
+  {
+   "body": "<a><b><c/><![CDATA[x]]></b></a>",
+   "xpath": "/a/b",
+   "nodes": [
+    "<b>\n  <c/><![CDATA[x]]></b>\n"
+   ]
+  },
+  {
+   "body": "<a><b><c/><![CDATA[x]]><d/></b></a>",
+   "xpath": "/a/b",
+   "nodes": [
+    "<b>\n  <c/><![CDATA[x]]>\n  <d/>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<a><b>t<!--x--></b></a>",
+   "xpath": "/a/b",
+   "nodes": [
+    "<b>\n  t\n  <!--x-->\n</b>\n"
+   ]
+  },
+  {
+   "body": "<a><b><!--x--></b></a>",
+   "xpath": "/a/b",
+   "nodes": [
+    "<b>\n  <!--x-->\n</b>\n"
+   ]
+  },
+  {
+   "body": "<a><b>t<![CDATA[x]]>u</b></a>",
+   "xpath": "/a/b",
+   "nodes": [
+    "<b>t<![CDATA[x]]>u</b>\n"
+   ]
+  },
+  {
+   "body": "<a><p:b xmlns:p=\"urn:p\" z=\"1\"><c/></p:b></a>",
+   "xpath": "/a/p:b",
+   "namespaces": {
+    "p": "urn:p"
+   },
+   "nodes": [
+    "<p:b xmlns:p=\"urn:p\" z=\"1\">\n  <c/>\n</p:b>\n"
+   ]
+  },
+  {
+   "body": "<a xmlns:p=\"urn:p\"><b p:x=\"1\"/></a>",
+   "xpath": "/a/b",
+   "namespaces": {
+    "p": "urn:p"
+   },
+   "nodes": [
+    "<b xmlns:p=\"urn:p\" p:x=\"1\"/>\n"
+   ]
+  },
+  {
+   "body": "<a xmlns:p=\"urn:p\" xmlns=\"urn:d\"><p:b><c><p:d/></c></p:b></a>",
+   "xpath": "/d:a/p:b",
+   "namespaces": {
+    "p": "urn:p",
+    "d": "urn:d"
+   },
+   "nodes": [
+    "<p:b xmlns:p=\"urn:p\">\n  <c xmlns=\"urn:d\">\n    <p:d/>\n  </c>\n</p:b>\n"
+   ]
+  },
+  {
+   "body": "<a xmlns:p=\"urn:p\"><b><p:c/></b></a>",
+   "xpath": "/a/b",
+   "namespaces": {
+    "p": "urn:p"
+   },
+   "nodes": [
+    "<b>\n  <p:c xmlns:p=\"urn:p\"/>\n</b>\n"
+   ]
+  },
+  {
+   "body": "<a xmlns:q=\"urn:q\"><b/></a>",
+   "xpath": "/a",
+   "namespaces": {
+    "p": "urn:p"
+   },
+   "nodes": [
+    "<a xmlns:q=\"urn:q\">\n  <b/>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<a><b>1</b><b>2</b></a>",
+   "xpath": "/a/b/text()",
+   "nodes": [
+    "1",
+    "2"
+   ]
+  },
+  {
+   "body": "<a>x</a>",
+   "xpath": "/a/text()",
+   "namespaces": {},
+   "nodes": [
+    "x"
+   ]
+  },
+  {
+   "body": "<a><b/><c/></a>",
+   "xpath": "/",
+   "nodes": [
+    "<a>\n  <b/>\n  <c/>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<a>\n  <b/>\n</a>",
+   "xpath": "/",
+   "nodes": [
+    "<a>\n    \n  <b/>\n  \n</a>\n"
+   ]
+  },
+  {
+   "body": "<a> <b/> t </a>",
+   "xpath": "/a",
+   "nodes": [
+    "<a>\n   \n  <b/>\n   t \n</a>\n"
+   ]
+  },
+  {
+   "body": "<a>t<b/><c/></a>",
+   "xpath": "/a",
+   "nodes": [
+    "<a>\n  t\n  <b/>\n  <c/>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<a><b>t<c/></b></a>",
+   "xpath": "/a",
+   "nodes": [
+    "<a>\n  <b>\n    t\n    <c/>\n  </b>\n</a>\n"
+   ]
+  },
+  {
+   "body": "<a xml:lang=\"en\"/>",
+   "xpath": "/a",
+   "nodes": [
+    "<a xml:lang=\"en\"/>\n"
+   ]
+  },
+  {
+   "body": "<a xml:lang=\"en\"/>",
+   "xpath": "/a/@xml:lang",
+   "nodes": []
+  },
+  {
+   "body": "<a/>",
+   "xpath": "/a[",
+   "error": "XPathException: {"
+  },
+  {
+   "body": "<a xmlns:p='urn:p'><p:b p:x='1'>t</p:b></a>",
+   "xpath": "/a/b",
+   "error": "TransformerException: java.lang.RuntimeException: Namespace for prefix 'p' has not been declared."
+  },
+  {
+   "body": "<a xmlns:p='urn:p'><b p:x='1'>t</b></a>",
+   "xpath": "/a/b",
+   "error": "TransformerException: java.lang.RuntimeException: Namespace for prefix 'p' has not been declared."
+  },
+  {
+   "body": "<a xmlns:p='urn:p'><p:b>t</p:b></a>",
+   "xpath": "/a/b",
+   "nodes": [
+    "<p:b>t</p:b>\n"
+   ]
+  },
+  {
+   "body": "<a xmlns:p='urn:p' xmlns:q='urn:q'><b p:x='1' q:y='2'/></a>",
+   "xpath": "/a/b",
+   "error": "TransformerException: java.lang.RuntimeException: Namespace for prefix 'p' has not been declared."
+  },
+  {
+   "body": "<a xmlns:p='urn:p'><b><c p:x='1'/></b></a>",
+   "xpath": "/a/b",
+   "error": "TransformerException: java.lang.RuntimeException: Namespace for prefix 'p' has not been declared."
+  },
+  {
+   "body": "<p:a xmlns:p='urn:p'><p:b><p:c/></p:b></p:a>",
+   "xpath": "/a/b",
+   "nodes": [
+    "<p:b>\n  <p:c/>\n</p:b>\n"
+   ]
+  },
+  {
+   "body": "<a p:x='1'/>",
+   "xpath": "/a",
+   "error": "TransformerException: java.lang.RuntimeException: Namespace for prefix 'p' has not been declared."
+  }
+ ]
+}

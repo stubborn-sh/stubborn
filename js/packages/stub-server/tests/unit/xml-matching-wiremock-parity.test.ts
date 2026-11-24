@@ -677,7 +677,7 @@ describe("XML body matching parity with WireMock 3.13.2", () => {
     ]);
     expect(
       parse({ equalToXml: "<a>${xmlunit.isDateTime}</a>", enablePlaceholders: true })?.[0],
-    ).toContain("unsupported XMLUnit placeholder(s): isDateTime");
+    ).toContain("${xmlunit.isDateTime} (isDateTime)");
     expect(parse({ matchesXPath: "/a[" })?.[0]).toContain("invalid XPath");
     expect(parse({ equalToXml: "<a>" })?.[0]).toContain("not well-formed XML");
   });

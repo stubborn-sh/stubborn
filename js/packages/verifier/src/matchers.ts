@@ -1,4 +1,5 @@
 import { isDeepStrictEqual } from "node:util";
+import { javaFullMatchRegex } from "@stubborn-sh/stub-server";
 
 /** Maximum regex pattern length to prevent ReDoS. */
 const MAX_REGEX_LENGTH = 1000;
@@ -11,14 +12,9 @@ export function byRegex(value: unknown, pattern: string): boolean {
   if (pattern.length > MAX_REGEX_LENGTH) {
     return false;
   }
-  const str = String(value);
-  let regex: RegExp;
-  try {
-    regex = new RegExp(`^${pattern}$`);
-  } catch {
-    return false;
-  }
-  return regex.test(str);
+  // Contract regexes are Java regexes, matched like `String.matches` in the generated tests.
+  const regex = javaFullMatchRegex(pattern, { dotAll: false });
+  return regex !== null && regex.test(String(value));
 }
 
 /** Match a value by type (any value of the same type passes). */

@@ -789,10 +789,10 @@ class Parser {
     const flagsMatch = /^[a-z]*/.exec(this.source.slice(this.pos));
     const javaFlags = flagsMatch?.[0] ?? "";
     this.pos += javaFlags.length;
-    const flags = [...javaFlags].filter((f) => f === "i" || f === "m" || f === "s").join("");
+
     // Jayway compiles the regex with Java's Pattern (no DOTALL); a Java-only construct JavaScript
     // cannot reproduce yields null, and the filter never matches.
-    const regex = javaFullMatchRegex(pattern, { dotAll: false, flags });
+    const regex = javaFullMatchRegex(pattern, { dotAll: false, javaFlags });
     return { kind: "regex", regex };
   }
 

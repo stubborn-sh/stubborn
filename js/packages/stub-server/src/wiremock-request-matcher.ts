@@ -1,14 +1,14 @@
 import { isDeepStrictEqual } from "node:util";
-import type { Document } from "@xmldom/xmldom";
 import { javaFullMatchRegex } from "./java-regex.js";
 import { evaluateJsonPath, matchesJsonPath } from "./json-path.js";
 import {
+  checkXPath,
   compileXmlEquality,
   evaluateXPath,
   nodeText,
-  parseXml,
-  stripNamespaces,
+  parseForXPath,
   valueText,
+  type XPathDocument,
 } from "./xml-matcher.js";
 
 /**
@@ -60,7 +60,7 @@ interface ParsedRequest {
   readonly body: string;
   json(): unknown;
   /** The body as XML: namespace-aware, or with namespaces stripped (WireMock's default). */
-  xml(namespaceAware: boolean): Document | null;
+  xml(namespaceAware: boolean): XPathDocument | null;
 }
 
 const NOT_JSON: unique symbol = Symbol("not-json");
@@ -143,8 +143,13 @@ export function compileRequestPattern(
     unsupported,
     matches(request: IncomingRequest): boolean {
       if (unsupported.length > 0) return false;
-      const parsed = parseRequest(request);
-      return checks.every((check) => check(parsed));
+      try {
+        const parsed = parseRequest(request);
+        return checks.every((check) => check(parsed));
+      } catch {
+        // A body that defeats a matcher (or a bug) is a non-match, never a crash.
+        return false;
+      }
     },
   };
 }
@@ -205,9 +210,9 @@ function compileValueMatcher(spec: unknown, where: string, unsupported: string[]
   }
 
   const caseInsensitive = spec["caseInsensitive"] === true;
-  const key = Object.keys(spec).find(
-    (k) => k !== "caseInsensitive" && !JSON_OPTION_KEYS.has(k) && !XML_OPTION_KEYS.has(k),
-  );
+  const key = Object.keys(spec).find((k) => OPERATORS.has(k));
+  // Like WireMock, keys an operator does not read are ignored; the options it honours and
+  // stub-server lacks (equalToXml namespaceAwareness, exemptedComparisons) are reported below.
   const operand = key === undefined ? undefined : spec[key];
   const onMissing = key !== undefined && NEGATIVE_KEYS.has(key);
   const present = (test: (value: string) => boolean): ValueMatcher => {
@@ -248,8 +253,19 @@ function compileValueMatcher(spec: unknown, where: string, unsupported: string[]
     case "equalToXml": {
       if (typeof operand !== "string") break;
       const exempted = spec["exemptedComparisons"];
-      if (exempted !== undefined && !(Array.isArray(exempted) && exempted.length === 0)) {
+      if (
+        exempted !== undefined &&
+        exempted !== null &&
+        !(Array.isArray(exempted) && exempted.length === 0)
+      ) {
         unsupported.push(`${where}.equalToXml.exemptedComparisons`);
+        return () => false;
+      }
+      const awareness = spec["namespaceAwareness"];
+      if (awareness !== undefined && awareness !== null && awareness !== "STRICT") {
+        // LEGACY and NONE parse namespace-unaware, under which WireMock's XMLUnit setup behaves
+        // very differently.
+        unsupported.push(`${where}.equalToXml.namespaceAwareness=${JSON.stringify(awareness)}`);
         return () => false;
       }
       const compiled = compileXmlEquality(operand, {
@@ -335,15 +351,21 @@ function jsonPathValueText(value: unknown): string {
 
 // --- equalToJson -------------------------------------------------------------------------------
 
-const JSON_OPTION_KEYS = new Set(["ignoreArrayOrder", "ignoreExtraElements", "serializeAsString"]);
-
-const XML_OPTION_KEYS = new Set([
-  "enablePlaceholders",
-  "placeholderOpeningDelimiterRegex",
-  "placeholderClosingDelimiterRegex",
-  "ignoreOrderOfSameNode",
-  "exemptedComparisons",
-  "xPathNamespaces",
+/** The matcher operators WireMock knows (the first one present in a matcher object is used). */
+const OPERATORS: ReadonlySet<string> = new Set([
+  "equalTo",
+  "contains",
+  "doesNotContain",
+  "matches",
+  "doesNotMatch",
+  "equalToJson",
+  "equalToXml",
+  "matchesJsonPath",
+  "matchesXPath",
+  "binaryEqualTo",
+  "before",
+  "after",
+  "equalToDateTime",
 ]);
 
 function stringOr(value: unknown, fallback: string): string {
@@ -384,7 +406,12 @@ function compileXPathMatcher(
   }
 
   let namespaces: Record<string, string> | undefined;
-  if (namespacesSpec !== undefined) {
+  // WireMock treats an empty map like no map: namespace-unaware evaluation.
+  if (
+    namespacesSpec !== undefined &&
+    namespacesSpec !== null &&
+    !(isRecord(namespacesSpec) && Object.keys(namespacesSpec).length === 0)
+  ) {
     if (
       !isRecord(namespacesSpec) ||
       !Object.values(namespacesSpec).every((v) => typeof v === "string")
@@ -394,9 +421,8 @@ function compileXPathMatcher(
     namespaces = namespacesSpec as Record<string, string>;
   }
 
-  const probe = parseXml("<_/>");
   try {
-    if (probe !== null) evaluateXPath(probe, expression, namespaces);
+    checkXPath(expression, namespaces);
   } catch (err: unknown) {
     return fail(`invalid XPath: ${err instanceof Error ? err.message : String(err)}`);
   }
@@ -415,7 +441,7 @@ function compileXPathMatcher(
     }
     if (valueMatcher === undefined) return outcome.nodes.length > 0;
     const matcher = valueMatcher;
-    return outcome.nodes.some((node) => matcher(nodeText(node)));
+    return outcome.nodes.some((node) => matcher(nodeText(doc, node)));
   };
 }
 
@@ -536,8 +562,8 @@ function parseRequest(request: IncomingRequest): ParsedRequest {
 
   let json: unknown;
   let parsed = false;
-  let xml: Document | null | undefined;
-  let stripped: Document | undefined;
+  let awareXml: XPathDocument | null | undefined;
+  let unawareXml: XPathDocument | null | undefined;
   return {
     method: request.method.toUpperCase(),
     url,
@@ -553,11 +579,15 @@ function parseRequest(request: IncomingRequest): ParsedRequest {
       }
       return json;
     },
-    xml(namespaceAware: boolean): Document | null {
-      if (xml === undefined) xml = parseXml(request.body);
-      if (namespaceAware || xml === null) return xml;
-      stripped ??= stripNamespaces(xml);
-      return stripped;
+    xml(namespaceAware: boolean): XPathDocument | null {
+      // Two parses at most: WireMock reads the body namespace-unaware, and namespace-aware only
+      // for XPath with xPathNamespaces.
+      if (namespaceAware) {
+        if (awareXml === undefined) awareXml = parseForXPath(request.body, true);
+        return awareXml;
+      }
+      if (unawareXml === undefined) unawareXml = parseForXPath(request.body, false);
+      return unawareXml;
     },
   };
 }

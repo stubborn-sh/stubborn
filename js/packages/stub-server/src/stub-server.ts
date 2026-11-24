@@ -41,7 +41,16 @@ export class StubServer {
 
     return new Promise((resolve, reject) => {
       const server = createServer((req, res) => {
-        void this.handleRequest(req, res);
+        this.handleRequest(req, res).catch((err: unknown) => {
+          // Never let one request take the server down: answer 500 instead.
+          if (!res.headersSent) res.writeHead(500, { "Content-Type": "application/json" });
+          res.end(
+            JSON.stringify({
+              error: "Internal stub-server error",
+              message: err instanceof Error ? err.message : String(err),
+            }),
+          );
+        });
       });
 
       server.on("error", reject);
