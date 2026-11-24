@@ -50,7 +50,8 @@ describe("validateResponse", () => {
       makeResult({ body: { id: "2", name: "other" } }),
     );
     expect(result.valid).toBe(false);
-    expect(result.failures.some((f) => f.field === "body")).toBe(true);
+    // Field by field, as the JVM's assertThatJson(parsedJson).field("['id']")… checks.
+    expect(result.failures.map((f) => f.field)).toEqual(["body$.['id']", "body$.['name']"]);
   });
 
   it("should_validate_by_regex_matcher", () => {
@@ -132,14 +133,17 @@ describe("validateResponse body matchers with full JSONPath", () => {
     expect(validateResponse(contract, makeResult({ body: bad })).valid).toBe(false);
   });
 
-  it("should_check_by_type_on_each_element_against_the_contract", () => {
+  it("should_check_only_that_a_wildcard_by_type_path_reads_a_list", () => {
+    // JsonBodyVerificationBuilder.checkType: isInstanceOf(classToCheck(contract value)); on a
+    // [*] path both the contract and the response read as a List, so elements are not typed.
     const contract = contractWith({ path: "$.items[*].id", type: "by_type" });
     expect(validateResponse(contract, makeResult({ body: { items: [{ id: "a" }] } })).valid).toBe(
       true,
     );
     expect(validateResponse(contract, makeResult({ body: { items: [{ id: 1 }] } })).valid).toBe(
-      false,
+      true,
     );
+    expect(validateResponse(contract, makeResult({ body: { other: [] } })).valid).toBe(false);
   });
 
   it("should_compare_by_equality_on_a_wildcard_path_as_a_list", () => {

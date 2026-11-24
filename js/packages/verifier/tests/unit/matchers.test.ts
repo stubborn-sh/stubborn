@@ -16,12 +16,17 @@ describe("byRegex", () => {
     expect(byRegex("123", "^[0-9]+$")).toBe(true);
   });
 
-  it("should_return_false_for_non_string_non_number", () => {
+  it("should_return_false_for_objects_lists_and_null", () => {
     expect(byRegex(null, ".*")).toBe(false);
     expect(byRegex(undefined, ".*")).toBe(false);
     expect(byRegex({}, ".*")).toBe(false);
     expect(byRegex([], ".*")).toBe(false);
-    expect(byRegex(true, ".*")).toBe(false);
+  });
+
+  it("should_match_a_boolean_by_its_text", () => {
+    // The generated test reads the value with parsedJson.read(path, String.class): "true".
+    expect(byRegex(true, "true|false")).toBe(true);
+    expect(byRegex(false, "[0-9]+")).toBe(false);
   });
 
   it("should_handle_uuid_pattern", () => {
@@ -44,6 +49,14 @@ describe("byType", () => {
   it("should_not_match_different_types", () => {
     expect(byType("hello", 42)).toBe(false);
     expect(byType(42, "hello")).toBe(false);
+  });
+
+  it("should_tell_lists_and_objects_apart", () => {
+    // isInstanceOf(java.util.List) vs isInstanceOf(java.util.Map)
+    expect(byType([1], [])).toBe(true);
+    expect(byType({ a: 1 }, {})).toBe(true);
+    expect(byType([1], {})).toBe(false);
+    expect(byType({ a: 1 }, [])).toBe(false);
   });
 
   it("should_return_false_for_null_value", () => {

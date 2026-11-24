@@ -207,4 +207,34 @@ describe("fetchFromSupertest", () => {
     expect(result.status).toBe(200);
     expect(result.body).toEqual({ ok: true });
   });
+
+  it("should_keep_every_set_cookie_header", async () => {
+    // Node hands repeated headers to supertest as arrays.
+    const { factory } = fakeSupertest({
+      headers: { "set-cookie": ["a=1; Path=/", "b=2"] } as unknown as Record<string, string>,
+    });
+
+    const result = await executeRequest("http://sut", contract(), fetchFromSupertest({}, factory));
+
+    expect(result.cookies).toEqual({ a: "1", b: "2" });
+  });
+
+  it("should_send_a_binary_body_as_a_buffer", async () => {
+    const { factory, calls } = fakeSupertest();
+    await fetchFromSupertest({}, factory)("http://sut/x", {
+      method: "POST",
+      body: new Uint8Array([0, 255]),
+    });
+
+    expect(Buffer.isBuffer(calls.body)).toBe(true);
+    expect(Array.from(calls.body as Buffer)).toEqual([0, 255]);
+  });
+
+  it("should_accept_a_URL_or_Request_input", async () => {
+    const { factory, calls } = fakeSupertest();
+    await fetchFromSupertest({}, factory)(new URL("http://sut/u?x=1"));
+    expect(calls.url).toBe("/u?x=1");
+    await fetchFromSupertest({}, factory)(new Request("http://sut/r"));
+    expect(calls.url).toBe("/r");
+  });
 });
