@@ -24,6 +24,24 @@ describe("StubServer", () => {
     server = null;
   });
 
+  it("should_prefer_the_last_loaded_stub_among_equal_priorities_like_wiremock", async () => {
+    const stub = (name: string, priority?: number): ParsedContract => ({
+      name,
+      request: { method: "GET", urlPath: "/same" },
+      response: { status: 200, body: name },
+      ...(priority === undefined ? {} : { priority }),
+    });
+    server = new StubServer({ port: 0 });
+    server.setContracts([stub("first"), stub("second")]);
+    const port = await server.start();
+    expect(await (await fetch(`http://127.0.0.1:${port}/same`)).text()).toBe("second");
+    // No priority is WireMock's default 5: it beats 6 and loses to 4.
+    server.setContracts([stub("four", 4), stub("unset"), stub("six", 6)]);
+    expect(await (await fetch(`http://127.0.0.1:${port}/same`)).text()).toBe("four");
+    server.setContracts([stub("unset"), stub("six", 6)]);
+    expect(await (await fetch(`http://127.0.0.1:${port}/same`)).text()).toBe("unset");
+  });
+
   it("should_throw_when_starting_twice", async () => {
     server = new StubServer({ port: 0 });
     await server.start();

@@ -13,6 +13,9 @@ export interface StubServerConfig {
 }
 
 /** HTTP stub server that responds based on parsed contracts. */
+/** WireMock's priority for a mapping that sets none. */
+const DEFAULT_PRIORITY = 5;
+
 export class StubServer {
   private server: Server | null = null;
   private contracts: ParsedContract[] = [];
@@ -24,13 +27,19 @@ export class StubServer {
     this.host = config?.host ?? "127.0.0.1";
   }
 
-  /** Load contracts to serve. Sorts by priority (lower number = higher priority). */
+  /**
+   * Load contracts to serve, in WireMock's order: by priority (lower number first; unset means
+   * WireMock's default, 5), and among equal priorities the one loaded last first.
+   */
   setContracts(contracts: readonly ParsedContract[]): void {
-    this.contracts = [...contracts].sort((a, b) => {
-      const pa = a.priority ?? Number.MAX_SAFE_INTEGER;
-      const pb = b.priority ?? Number.MAX_SAFE_INTEGER;
-      return pa - pb;
-    });
+    this.contracts = contracts
+      .map((contract, index) => ({ contract, index }))
+      .sort(
+        (a, b) =>
+          (a.contract.priority ?? DEFAULT_PRIORITY) - (b.contract.priority ?? DEFAULT_PRIORITY) ||
+          b.index - a.index,
+      )
+      .map(({ contract }) => contract);
   }
 
   /** Start the stub server. Returns the assigned port. */
