@@ -4,11 +4,14 @@
  * `=~` filters, the XMLUnit `matchesRegex` placeholder and the verifier's `by_regex` matcher.
  *
  * Java and JavaScript disagree on more than syntax: `\s` is ASCII in Java and Unicode in
- * JavaScript, `$` also matches before a final line terminator in Java, `(?i)` is ASCII-only unless
- * `(?u)` is set, `\p{L}` is a literal "p{L}" in JavaScript without the `u` flag, and so on. Every
- * construct is therefore translated explicitly; anything that cannot be reproduced faithfully makes
- * the function return `null` so the caller can report the regex as unsupported instead of
- * matching something Java would not.
+ * JavaScript, `$` also matches before a final line terminator in Java, `(?i)` folds ASCII only,
+ * `\p{L}` is a literal "p{L}" in JavaScript without the `u` flag, a "-" next to `\s` inside a class
+ * is a literal in Java and a range in JavaScript, and so on. Every construct is therefore
+ * translated explicitly and the result always compiles in Unicode mode (so "." and negated classes
+ * consume whole code points, as in Java), with case-insensitivity spelled out rather than left to
+ * JavaScript's Unicode case folding. Anything that cannot be reproduced faithfully makes the
+ * function return `null`, so the caller can report the regex as unsupported instead of matching
+ * something Java would not.
  */
 
 /** Options for {@link javaRegex}. */
@@ -36,77 +39,59 @@ export function javaRegex(pattern: string, options?: JavaRegexOptions): RegExp |
 
   let source = pattern;
   // Leading flag groups: (?i), (?is), (?s)(?i)…
-  for (
-    let inline = /^\(\?([a-zA-Z]+)\)/.exec(source);
-    inline !== null;
-    inline = /^\(\?([a-zA-Z]+)\)/.exec(source)
-  ) {
-    for (const flag of inline[1] ?? "") flags.add(flag);
-    source = source.slice(inline[0].length);
+  for (let m = LEADING_FLAGS.exec(source); m !== null; m = LEADING_FLAGS.exec(source)) {
+    for (const flag of m[1] ?? "") flags.add(flag);
+    source = source.slice(m[0].length);
   }
   for (const flag of flags) {
     // x (comments), d (UNIX_LINES), U (UNICODE_CHARACTER_CLASS), c (CANON_EQ): no equivalent.
     if (!"imsu".includes(flag)) return null;
   }
+  // Java's UNICODE_CASE folding (?iu) differs from JavaScript's in too many places (ß, the
+  // Kelvin sign with \w, dotted İ…) to reproduce.
+  if (flags.has("i") && flags.has("u")) return null;
 
-  const translated = translate(source, {
+  const translated = new Translator(source, {
     dotAll: flags.has("s"),
     multiline: flags.has("m"),
-    groupCount: countGroups(source),
-  });
+    asciiFold: flags.has("i"),
+  }).translate();
   if (translated === null) return null;
 
-  const caseInsensitive = flags.has("i");
-  const unicodeCase = caseInsensitive && flags.has("u");
-  // Java's (?i) folds ASCII only; JavaScript's folds every script. Refuse non-ASCII then.
-  if (caseInsensitive && !unicodeCase && translated.nonAscii) return null;
-
-  // Unicode mode makes ".", negated classes and \S consume a whole code point, as Java does. Not
-  // with ASCII-only (?i), where it would also fold "k" to the Kelvin sign and "s" to "ſ".
-  if (caseInsensitive && !unicodeCase && translated.unicode) return null;
-  const unicode = !caseInsensitive || unicodeCase;
-  const jsFlags = `${caseInsensitive ? "i" : ""}${unicode ? "u" : ""}`;
-  const translatedSource = unicode
-    ? translated.source.replaceAll(NOT_JAVA_SPACE_BMP, NOT_JAVA_SPACE_ASTRAL)
-    : translated.source;
-  const body =
-    options?.mode === "find"
-      ? translatedSource
-      : `(?<![\\s\\S])(?:${translatedSource})(?![\\s\\S])`;
+  const body = options?.mode === "find" ? translated : `(?<![\\s\\S])(?:${translated})(?![\\s\\S])`;
   try {
-    return new RegExp(body, jsFlags);
+    // eslint-disable-next-line security/detect-non-literal-regexp -- translated, validated pattern
+    return new RegExp(body, "u");
   } catch {
     return null;
   }
 }
 
+const LEADING_FLAGS = /^\(\?([a-zA-Z]+)\)/;
+
 interface TranslateContext {
   readonly dotAll: boolean;
   readonly multiline: boolean;
-  readonly groupCount: number;
+  /** Java CASE_INSENSITIVE without UNICODE_CASE: ASCII letters only. */
+  readonly asciiFold: boolean;
 }
 
-interface Translation {
-  readonly source: string;
-  /** Needs the JavaScript `u` flag (Unicode property classes, astral code points). */
-  readonly unicode: boolean;
-  /** Contains a non-ASCII character or class (matters for ASCII-only case folding). */
-  readonly nonAscii: boolean;
-}
-
-const LINE_TERMINATORS = "\\n\\r\\x85\\u2028\\u2029";
-const JAVA_SPACE = "\\t\\n\\x0B\\f\\r ";
-const JAVA_HSPACE = " \\t\\xA0\\u1680\\u180E\\u2000-\\u200A\\u202F\\u205F\\u3000";
-const JAVA_VSPACE = "\\n\\x0B\\f\\r\\x85\\u2028\\u2029";
+/** Java line terminators (for ".", "^" and "$"). */
+const LINE_TERMINATORS = "\\n\\r\\u0085\\u2028\\u2029";
+const JAVA_SPACE = "\\t\\n\\u000B\\f\\r ";
+const JAVA_HSPACE = " \\t\\u00A0\\u1680\\u180E\\u2000-\\u200A\\u202F\\u205F\\u3000";
+const JAVA_VSPACE = "\\n\\u000B\\f\\r\\u0085\\u2028\\u2029";
 /** Everything but Java `\s`, for use inside a class (`[\S\s]` is common in SCC patterns). */
-const NOT_JAVA_SPACE_BMP = "\\x00-\\x08\\x0E-\\x1F\\x21-\\uFFFF";
-const NOT_JAVA_SPACE_ASTRAL = "\\x00-\\x08\\x0E-\\x1F\\x21-\\u{10FFFF}";
+const NOT_JAVA_SPACE = "\\u0000-\\u0008\\u000E-\\u001F\\u0021-\\u{10FFFF}";
+/** java.lang.Character.isWhitespace: space separators except no-break spaces, and \t-\r, \x1C-\x1F. */
+const JAVA_WHITESPACE =
+  "\\t-\\r\\u001C-\\u0020\\u1680\\u2000-\\u2006\\u2008-\\u200A\\u2028\\u2029\\u205F\\u3000";
 
 /** Java's POSIX and java.lang.Character classes (\p{Alpha}, \p{javaLowerCase}…). */
 const JAVA_CLASSES: ReadonlyMap<string, string> = new Map([
   ["Lower", "a-z"],
   ["Upper", "A-Z"],
-  ["ASCII", "\\x00-\\x7F"],
+  ["ASCII", "\\u0000-\\u007F"],
   ["Alpha", "a-zA-Z"],
   ["Digit", "0-9"],
   ["Alnum", "a-zA-Z0-9"],
@@ -114,340 +99,422 @@ const JAVA_CLASSES: ReadonlyMap<string, string> = new Map([
   ["Graph", "!-~"],
   ["Print", " -~"],
   ["Blank", " \\t"],
-  ["Cntrl", "\\x00-\\x1F\\x7F"],
+  ["Cntrl", "\\u0000-\\u001F\\u007F"],
   ["XDigit", "0-9a-fA-F"],
-  ["Space", " \\t\\n\\x0B\\f\\r"],
+  ["Space", " \\t\\n\\u000B\\f\\r"],
   ["javaLowerCase", "\\p{Lowercase}"],
   ["javaUpperCase", "\\p{Uppercase}"],
-  ["javaWhitespace", "\\p{White_Space}"],
+  ["javaWhitespace", JAVA_WHITESPACE],
   ["javaAlphabetic", "\\p{Alphabetic}"],
   ["javaDigit", "\\p{Nd}"],
   ["javaLetter", "\\p{L}"],
   ["javaLetterOrDigit", "\\p{L}\\p{Nd}"],
 ]);
 
-/** Translate pattern syntax. `null` when something cannot be reproduced faithfully. */
-function translate(source: string, context: TranslateContext): Translation | null {
-  let out = "";
-  let unicode = false;
-  let nonAscii = false;
-  let inClass = false;
-  let classStart = false; // just after "[" or "[^"
-  let i = 0;
+/** One element of a character class: a code point, or a set (`\d`, `\p{L}`…) as class body text. */
+type ClassAtom =
+  { readonly kind: "char"; readonly cp: number } | { readonly kind: "set"; readonly text: string };
 
-  const literal = (codePoint: number): string => {
-    if (hasNonAsciiCase(codePoint)) nonAscii = true;
-    if (codePoint > 0xffff) {
-      unicode = true;
-      return `\\u{${codePoint.toString(16)}}`;
-    }
-    const ch = String.fromCharCode(codePoint);
-    if (inClass) return /[\\\]^-]/.test(ch) ? `\\${ch}` : ch;
-    return /[\\^$.*+?()[\]{}|/]/.test(ch) ? `\\${ch}` : ch;
-  };
+/** An escape outside a class: a single code point, or ready-made JavaScript text. */
+type Escape =
+  | { readonly kind: "char"; readonly cp: number; readonly end: number }
+  | { readonly kind: "text"; readonly text: string; readonly end: number };
 
-  while (i < source.length) {
-    const ch = source.charAt(i);
-    const code = source.codePointAt(i) ?? 0;
+class Translator {
+  private pos = 0;
+  private out = "";
 
-    if (ch === "\\") {
-      const next = source.charAt(i + 1);
-      if (next === "") return null;
-      // \Q…\E: everything quoted literally.
-      if (next === "Q") {
-        const end = source.indexOf("\\E", i + 2);
-        const quoted = source.slice(i + 2, end === -1 ? source.length : end);
-        for (const c of quoted) out += literal(c.codePointAt(0) ?? 0);
-        i = end === -1 ? source.length : end + 2;
-        classStart = false;
-        continue;
-      }
-      const escape = translateEscape(source, i, inClass, context);
-      if (escape === null) return null;
-      out += escape.text;
-      unicode ||= escape.unicode;
-      nonAscii ||= escape.nonAscii;
-      i = escape.end;
-      classStart = false;
-      continue;
-    }
+  constructor(
+    private readonly source: string,
+    private readonly context: TranslateContext,
+  ) {}
 
-    if (inClass) {
-      if (ch === "[") return null; // Java nested class (union) — no JavaScript equivalent
-      if (ch === "&" && source.charAt(i + 1) === "&") return null; // Java intersection
-      if (ch === "]" && !classStart) {
-        inClass = false;
-        out += "]";
-        i++;
-        continue;
-      }
-      // A "]" right after "[" is a literal in Java; "-" stays a range operator.
-      out += ch === "]" ? "\\]" : code > 0x7f ? literal(code) : ch;
-      classStart = false;
-      i += code > 0xffff ? 2 : 1;
-      continue;
-    }
-
-    switch (ch) {
-      case "[":
-        inClass = true;
-        classStart = true;
-        out += "[";
-        if (source.charAt(i + 1) === "^") {
-          out += "^";
-          i++;
-        }
-        i++;
-        continue;
-      case "(": {
-        const rest = source.slice(i);
-        if (rest.startsWith("(?")) {
-          const group = /^\(\?(:|=|!|<=|<!|<([a-zA-Z][a-zA-Z0-9]*)>)/.exec(rest);
-          if (group === null) return null; // (?>…) atomic, (?i:…) scoped flags, (?flags) mid-pattern
-          out += group[0];
-          i += group[0].length;
+  translate(): string | null {
+    const s = this.source;
+    while (this.pos < s.length) {
+      const ch = s.charAt(this.pos);
+      const cp = s.codePointAt(this.pos) ?? 0;
+      if (ch === "\\") {
+        if (s.charAt(this.pos + 1) === "Q") {
+          for (const c of this.quoted()) this.out += this.char(c);
           continue;
         }
-        out += "(";
-        i++;
+        const escape = this.escape(this.pos);
+        if (escape === null) return null;
+        this.out += escape.kind === "char" ? this.char(escape.cp) : escape.text;
+        this.pos = escape.end;
         continue;
       }
-      case ".":
-        out += context.dotAll ? "[\\s\\S]" : `[^${LINE_TERMINATORS}]`;
-        i++;
-        continue;
-      case "^":
-        out += context.multiline
-          ? `(?:(?<![\\s\\S])|(?<=[${LINE_TERMINATORS}])(?=[\\s\\S]))`
-          : "(?<![\\s\\S])";
-        i++;
-        continue;
-      case "$":
-        out += context.multiline
-          ? `(?=[${LINE_TERMINATORS}]|(?![\\s\\S]))`
-          : `(?=(?:\\r\\n|[${LINE_TERMINATORS}])?(?![\\s\\S]))`;
-        i++;
-        continue;
-      case "*":
-      case "+":
-      case "?":
-      case "}": {
-        if (ch === "}") {
-          out += "\\}"; // a "}" that does not close a quantifier is a literal in Java
-          i++;
+      switch (ch) {
+        case "[": {
+          const cls = this.characterClass();
+          if (cls === null) return null;
+          this.out += cls;
           continue;
         }
-        const after = source.charAt(i + 1);
-        if (after === "+") return null; // possessive quantifier
-        out += ch;
-        if (after === "?") {
-          out += "?";
-          i++;
+        case "(": {
+          const group = /^\(\?(:|=|!|<=|<!|<[a-zA-Z][a-zA-Z0-9]*>)/.exec(s.slice(this.pos));
+          if (s.startsWith("(?", this.pos) && group === null) {
+            return null; // (?>…) atomic, (?i:…) scoped flags, (?flags) mid-pattern
+          }
+          const text = group === null ? "(" : group[0];
+          this.out += text;
+          this.pos += text.length;
+          continue;
         }
-        i++;
-        continue;
-      }
-      case "{": {
-        const quantifier = /^\{\d+(,\d*)?\}/.exec(source.slice(i));
-        if (quantifier === null) return null; // Java rejects a "{" that is not a quantifier
-        if (source.charAt(i + quantifier[0].length) === "+") return null;
-        out += quantifier[0];
-        i += quantifier[0].length;
-        if (source.charAt(i) === "?") {
-          out += "?";
-          i++;
+        case ".":
+          this.out += this.context.dotAll ? "[\\s\\S]" : `[^${LINE_TERMINATORS}]`;
+          break;
+        case "^":
+          // MULTILINE: after a line terminator (not inside \r\n), never at the end of input.
+          this.out += this.context.multiline
+            ? "(?:(?<![\\s\\S])(?=[\\s\\S])|(?<=[\\n\\u0085\\u2028\\u2029]|\\r(?!\\n))(?=[\\s\\S]))"
+            : "(?<![\\s\\S])";
+          break;
+        case "$":
+          this.out += this.context.multiline
+            ? "(?=[\\r\\u0085\\u2028\\u2029]|(?<!\\r)\\n|(?![\\s\\S]))"
+            : `(?=(?:\\r\\n|[${LINE_TERMINATORS}])?(?![\\s\\S]))`;
+          break;
+        case "*":
+        case "+":
+        case "?": {
+          const after = s.charAt(this.pos + 1);
+          if (after === "+") return null; // possessive quantifier
+          this.out += ch;
+          if (after === "?") {
+            this.out += "?";
+            this.pos++;
+          }
+          break;
         }
+        case "{": {
+          const quantifier = /^\{\d+(,\d*)?\}/.exec(s.slice(this.pos));
+          if (quantifier === null) return null; // Java rejects a "{" that is not a quantifier
+          this.pos += quantifier[0].length;
+          if (s.charAt(this.pos) === "+") return null;
+          this.out += quantifier[0];
+          if (s.charAt(this.pos) === "?") {
+            this.out += "?";
+            this.pos++;
+          }
+          continue;
+        }
+        case "}":
+        case "]":
+        case "/":
+          this.out += `\\${ch}`; // literals in Java; "}" and "]" must be escaped in Unicode mode
+          break;
+        case "|":
+        case ")":
+          this.out += ch;
+          break;
+        default:
+          this.out += this.char(cp);
+          this.pos += cp > 0xffff ? 2 : 1;
+          continue;
+      }
+      this.pos++;
+    }
+    return this.out;
+  }
+
+  /** A literal code point outside a class, case-folded for ASCII (?i). */
+  private char(cp: number): string {
+    if (this.context.asciiFold && isAsciiLetter(cp)) {
+      return `[${String.fromCharCode(cp)}${String.fromCharCode(cp ^ 0x20)}]`;
+    }
+    return escapeCodePoint(cp, /[\\^$.*+?()[\]{}|/]/);
+  }
+
+  /** The code points of \Q…\E starting at this.pos; advances past it. */
+  private quoted(): number[] {
+    const end = this.source.indexOf("\\E", this.pos + 2);
+    const text = this.source.slice(this.pos + 2, end === -1 ? this.source.length : end);
+    this.pos = end === -1 ? this.source.length : end + 2;
+    return [...text].map((c) => c.codePointAt(0) ?? 0);
+  }
+
+  /**
+   * A whole character class, parsed into atoms first: a "-" is a range only between two single
+   * characters (next to a set such as \s or \d it is a literal, as in Java), and ASCII (?i) adds
+   * the other case of letters and letter ranges.
+   */
+  private characterClass(): string | null {
+    const s = this.source;
+    this.pos++; // "["
+    let negated = false;
+    if (s.charAt(this.pos) === "^") {
+      negated = true;
+      this.pos++;
+    }
+    const atoms: (ClassAtom | { readonly kind: "dash" })[] = [];
+    let first = true;
+    for (;;) {
+      if (this.pos >= s.length) return null;
+      const ch = s.charAt(this.pos);
+      if (ch === "]" && !first) {
+        this.pos++;
+        break;
+      }
+      first = false;
+      if (ch === "[") return null; // Java nested class (union)
+      if (ch === "&" && s.charAt(this.pos + 1) === "&") return null; // Java intersection
+      if (ch === "-") {
+        atoms.push({ kind: "dash" });
+        this.pos++;
         continue;
       }
-      case "]":
-        out += "\\]";
-        i++;
+      if (ch === "\\") {
+        if (s.charAt(this.pos + 1) === "Q") {
+          for (const cp of this.quoted()) atoms.push({ kind: "char", cp });
+          continue;
+        }
+        const atom = this.classEscape();
+        if (atom === null) return null;
+        atoms.push(atom);
         continue;
-      default:
-        out += code > 0x7f || code > 0xffff ? literal(code) : ch === "/" ? "\\/" : ch;
-        i += code > 0xffff ? 2 : 1;
-    }
-  }
-  if (inClass) return null;
-  return { source: out, unicode, nonAscii };
-}
-
-interface Escape {
-  readonly text: string;
-  readonly end: number;
-  readonly unicode: boolean;
-  readonly nonAscii: boolean;
-}
-
-function translateEscape(
-  source: string,
-  at: number,
-  inClass: boolean,
-  context: TranslateContext,
-): Escape | null {
-  const next = source.charAt(at + 1);
-  const simple = (
-    text: string,
-    length = 2,
-    flags?: { unicode?: boolean; nonAscii?: boolean },
-  ): Escape => ({
-    text,
-    end: at + length,
-    unicode: flags?.unicode ?? false,
-    nonAscii: flags?.nonAscii ?? false,
-  });
-  const codePointEscape = (codePoint: number, length: number): Escape | null => {
-    if (codePoint > 0x10ffff) return null;
-    if (codePoint > 0xffff) {
-      return simple(`\\u{${codePoint.toString(16)}}`, length, {
-        unicode: true,
-        nonAscii: hasNonAsciiCase(codePoint),
-      });
-    }
-    return simple(`\\u${codePoint.toString(16).padStart(4, "0")}`, length, {
-      nonAscii: hasNonAsciiCase(codePoint),
-    });
-  };
-
-  switch (next) {
-    case "d":
-    case "D":
-    case "w":
-    case "W":
-    case "t":
-    case "n":
-    case "r":
-    case "f":
-      return simple(`\\${next}`);
-    case "b":
-    case "B":
-      return inClass ? null : simple(`\\${next}`);
-    case "a":
-      return simple("\\x07");
-    case "e":
-      return simple("\\x1B");
-    case "s":
-      return simple(inClass ? JAVA_SPACE : `[${JAVA_SPACE}]`);
-    case "S":
-      // Inside a class there is no negation, so spell out the complement.
-      return inClass ? simple(NOT_JAVA_SPACE_BMP) : simple(`[^${JAVA_SPACE}]`);
-    case "h":
-      return simple(inClass ? JAVA_HSPACE : `[${JAVA_HSPACE}]`);
-    case "H":
-      return inClass ? null : simple(`[^${JAVA_HSPACE}]`);
-    case "v":
-      return simple(inClass ? JAVA_VSPACE : `[${JAVA_VSPACE}]`);
-    case "V":
-      return inClass ? null : simple(`[^${JAVA_VSPACE}]`);
-    case "R":
-      return inClass ? null : simple(`(?:\\r\\n|[${JAVA_VSPACE}])`);
-    case "A":
-      return inClass ? null : simple("(?<![\\s\\S])");
-    case "z":
-      return inClass ? null : simple("(?![\\s\\S])");
-    case "Z":
-      return inClass ? null : simple(`(?=(?:\\r\\n|[${LINE_TERMINATORS}])?(?![\\s\\S]))`);
-    case "c": {
-      const letter = source.charAt(at + 2);
-      if (!/[A-Za-z]/.test(letter)) return null;
-      return simple(`\\c${letter}`, 3);
-    }
-    case "x": {
-      if (source.charAt(at + 2) === "{") {
-        const end = source.indexOf("}", at + 3);
-        const hex = end === -1 ? "" : source.slice(at + 3, end);
-        if (!/^[0-9a-fA-F]+$/.test(hex)) return null;
-        return codePointEscape(Number.parseInt(hex, 16), end - at + 1);
       }
-      const hex = source.slice(at + 2, at + 4);
-      if (!/^[0-9a-fA-F]{2}$/.test(hex)) return null;
-      return codePointEscape(Number.parseInt(hex, 16), 4);
+      const cp = s.codePointAt(this.pos) ?? 0;
+      atoms.push({ kind: "char", cp });
+      this.pos += cp > 0xffff ? 2 : 1;
     }
-    case "u": {
-      const hex = source.slice(at + 2, at + 6);
-      if (!/^[0-9a-fA-F]{4}$/.test(hex)) return null;
-      return codePointEscape(Number.parseInt(hex, 16), 6);
+
+    let body = "";
+    for (let i = 0; i < atoms.length; i++) {
+      const atom = atoms[i] as ClassAtom | { kind: "dash" };
+      const dash = atoms[i + 1];
+      const end = atoms[i + 2];
+      if (atom.kind === "char" && dash?.kind === "dash" && end?.kind === "char") {
+        if (end.cp < atom.cp) return null; // Java: illegal character range
+        body += this.classRange(atom.cp, end.cp);
+        i += 2;
+        continue;
+      }
+      if (atom.kind === "dash") {
+        // Java: a "-" next to a set (\s-x) is a literal; a range ending in a set is an error.
+        if (i > 0 && atoms[i - 1]?.kind === "char" && atoms[i + 1]?.kind === "set") return null;
+        body += "\\-";
+      } else if (atom.kind === "set") {
+        body += atom.text;
+      } else {
+        body += this.classChar(atom.cp);
+      }
     }
-    case "0": {
-      // Octal: \0n, \0nn, \0mnn (m <= 3)
-      const octal = /^[0-3]?[0-7]{1,2}|^[0-7]/.exec(source.slice(at + 2));
-      if (octal === null) return null;
-      let digits = octal[0];
-      if (digits.length === 3 && Number.parseInt(digits, 8) > 0o377) digits = digits.slice(0, 2);
-      return codePointEscape(Number.parseInt(digits, 8), 2 + digits.length);
-    }
-    case "k": {
-      const name = /^k<([a-zA-Z][a-zA-Z0-9]*)>/.exec(source.slice(at + 1));
-      return name === null || inClass ? null : simple(`\\k<${name[1]}>`, 1 + name[0].length);
-    }
-    case "p":
-    case "P":
-      return translatePropertyEscape(source, at, inClass);
-    default:
-      break;
+    return `[${negated ? "^" : ""}${body}]`;
   }
 
-  if (/[1-9]/.test(next)) {
-    if (inClass) return null;
-    // Back reference: Java takes as many digits as still name an existing group.
-    let digits = next;
-    while (
-      /[0-9]/.test(source.charAt(at + 1 + digits.length)) &&
-      Number(digits + source.charAt(at + 1 + digits.length)) <= context.groupCount
-    ) {
-      digits += source.charAt(at + 1 + digits.length);
-    }
-    if (Number(digits) > context.groupCount) return null; // a reference to a missing group never matches
-    // (?:) keeps a following digit from being read as part of the reference.
-    return simple(`\\${digits}(?:)`, 1 + digits.length);
+  private classChar(cp: number): string {
+    const text = escapeCodePoint(cp, /[\\\]^-]/);
+    if (this.context.asciiFold && isAsciiLetter(cp)) return text + String.fromCharCode(cp ^ 0x20);
+    return text;
   }
-  if (/[a-zA-Z]/.test(next)) return null; // \N{…}, \X, \G and unknown escapes
-  // Escaped punctuation: a literal.
-  const codePoint = source.codePointAt(at + 1) ?? 0;
-  const length = codePoint > 0xffff ? 3 : 2;
-  if (codePoint > 0x7f) return codePointEscape(codePoint, length);
-  const ch = String.fromCharCode(codePoint);
-  const special = inClass ? /[\\\]^-]/ : /[\\^$.*+?()[\]{}|/]/;
-  return simple(special.test(ch) ? `\\${ch}` : ch === " " ? " " : ch, length);
-}
 
-function translatePropertyEscape(source: string, at: number, inClass: boolean): Escape | null {
-  const negated = source.charAt(at + 1) === "P";
-  let name: string;
-  let end: number;
-  if (source.charAt(at + 2) === "{") {
-    const close = source.indexOf("}", at + 3);
-    if (close === -1) return null;
-    name = source.slice(at + 3, close);
-    end = close + 1;
-  } else {
-    name = source.charAt(at + 2);
-    if (!/[A-Za-z]/.test(name)) return null;
-    end = at + 3;
-  }
-  const javaClass = JAVA_CLASSES.get(name);
-  if (javaClass !== undefined) {
-    const usesProperty = javaClass.includes("\\p{");
-    if (negated) {
-      if (inClass) return null;
-      return { text: `[^${javaClass}]`, end, unicode: usesProperty, nonAscii: usesProperty };
+  private classRange(lo: number, hi: number): string {
+    let text = `${escapeCodePoint(lo, /[\\\]^-]/)}-${escapeCodePoint(hi, /[\\\]^-]/)}`;
+    if (this.context.asciiFold) {
+      // The other case of the ASCII letters the range covers.
+      for (const [start, end] of [
+        [0x41, 0x5a],
+        [0x61, 0x7a],
+      ] as const) {
+        const a = Math.max(lo, start);
+        const b = Math.min(hi, end);
+        if (a <= b) text += `${String.fromCharCode(a ^ 0x20)}-${String.fromCharCode(b ^ 0x20)}`;
+      }
     }
-    return {
-      text: inClass ? javaClass : `[${javaClass}]`,
-      end,
-      unicode: usesProperty,
-      nonAscii: usesProperty,
+    return text;
+  }
+
+  /** An escape inside a class, as an atom; advances past it. */
+  private classEscape(): ClassAtom | null {
+    const next = this.source.charAt(this.pos + 1);
+    const set = (text: string, length = 2): ClassAtom => {
+      this.pos += length;
+      return { kind: "set", text };
     };
+    switch (next) {
+      case "d":
+      case "D":
+      case "w":
+      case "W":
+        return set(`\\${next}`);
+      case "s":
+        return set(JAVA_SPACE);
+      case "S":
+        return set(NOT_JAVA_SPACE);
+      case "h":
+        return set(JAVA_HSPACE);
+      case "v":
+        return set(JAVA_VSPACE);
+      case "H":
+      case "V":
+      case "R":
+      case "A":
+      case "z":
+      case "Z":
+      case "b":
+      case "B":
+      case "k":
+        return null;
+      case "p":
+      case "P": {
+        const property = this.property(true);
+        if (property === null) return null;
+        return { kind: "set", text: property };
+      }
+      default: {
+        if (/[1-9]/.test(next)) return null; // no back references in a class
+        const escape = this.escape(this.pos);
+        if (escape === null || escape.kind !== "char") return null;
+        this.pos = escape.end;
+        return { kind: "char", cp: escape.cp };
+      }
+    }
   }
-  const js = javaPropertyName(name);
-  if (js === null) return null;
-  return { text: `${negated ? "\\P" : "\\p"}{${js}}`, end, unicode: true, nonAscii: true };
+
+  /** An escape outside a class (also single-character escapes inside one). */
+  private escape(at: number): Escape | null {
+    const s = this.source;
+    const next = s.charAt(at + 1);
+    const text = (t: string, length = 2): Escape => ({ kind: "text", text: t, end: at + length });
+    const char = (cp: number, length: number): Escape | null =>
+      cp > 0x10ffff ? null : { kind: "char", cp, end: at + length };
+    switch (next) {
+      case "d":
+      case "D":
+      case "w":
+      case "W":
+      case "b":
+      case "B":
+        return text(`\\${next}`);
+      case "t":
+        return char(0x09, 2);
+      case "n":
+        return char(0x0a, 2);
+      case "r":
+        return char(0x0d, 2);
+      case "f":
+        return char(0x0c, 2);
+      case "a":
+        return char(0x07, 2);
+      case "e":
+        return char(0x1b, 2);
+      case "s":
+        return text(`[${JAVA_SPACE}]`);
+      case "S":
+        return text(`[^${JAVA_SPACE}]`);
+      case "h":
+        return text(`[${JAVA_HSPACE}]`);
+      case "H":
+        return text(`[^${JAVA_HSPACE}]`);
+      case "v":
+        return text(`[${JAVA_VSPACE}]`);
+      case "V":
+        return text(`[^${JAVA_VSPACE}]`);
+      case "R":
+        return text(`(?:\\r\\n|[${JAVA_VSPACE}])`);
+      case "A":
+        return text("(?<![\\s\\S])");
+      case "z":
+        return text("(?![\\s\\S])");
+      case "Z":
+        return text(`(?=(?:\\r\\n|[${LINE_TERMINATORS}])?(?![\\s\\S]))`);
+      case "c": {
+        // Java: the control character is the letter's code XOR 64 (\ca is "!", \cA is U+0001).
+        const letter = s.codePointAt(at + 2);
+        if (letter === undefined || letter > 0x7f) return null;
+        return char(letter ^ 0x40, 3);
+      }
+      case "x": {
+        if (s.charAt(at + 2) === "{") {
+          const end = s.indexOf("}", at + 3);
+          const hex = end === -1 ? "" : s.slice(at + 3, end);
+          if (!/^[0-9a-fA-F]+$/.test(hex)) return null;
+          return char(Number.parseInt(hex, 16), end - at + 1);
+        }
+        const hex = s.slice(at + 2, at + 4);
+        return /^[0-9a-fA-F]{2}$/.test(hex) ? char(Number.parseInt(hex, 16), 4) : null;
+      }
+      case "u": {
+        const hex = s.slice(at + 2, at + 6);
+        return /^[0-9a-fA-F]{4}$/.test(hex) ? char(Number.parseInt(hex, 16), 6) : null;
+      }
+      case "0": {
+        // Octal: \0n, \0nn, \0mnn (m <= 3)
+        const octal = /^[0-3]?[0-7]{1,2}|^[0-7]/.exec(s.slice(at + 2));
+        if (octal === null) return null;
+        let digits = octal[0];
+        if (digits.length === 3 && Number.parseInt(digits, 8) > 0o377) digits = digits.slice(0, 2);
+        return char(Number.parseInt(digits, 8), 2 + digits.length);
+      }
+      case "p":
+      case "P": {
+        const saved = this.pos;
+        this.pos = at;
+        const property = this.property(false);
+        const end = this.pos;
+        this.pos = saved;
+        return property === null ? null : { kind: "text", text: property, end };
+      }
+      default:
+        break;
+    }
+    // Back references: a quantifier would bind differently, and a reference to a group that did
+    // not participate fails in Java but matches empty in JavaScript. Not reproduced.
+    if (/[1-9]/.test(next) || next === "k") return null;
+    if (/[a-zA-Z]/.test(next)) return null; // \N{…}, \X, \G and unknown escapes
+    // Escaped punctuation: a literal.
+    const cp = s.codePointAt(at + 1) ?? 0;
+    return char(cp, cp > 0xffff ? 3 : 2);
+  }
+
+  /** \p{…} / \P{…} at this.pos as JavaScript text (class body text when `inClass`). */
+  private property(inClass: boolean): string | null {
+    const s = this.source;
+    const at = this.pos;
+    const negated = s.charAt(at + 1) === "P";
+    let name: string;
+    if (s.charAt(at + 2) === "{") {
+      const close = s.indexOf("}", at + 3);
+      if (close === -1) return null;
+      name = s.slice(at + 3, close);
+      this.pos = close + 1;
+    } else {
+      name = s.charAt(at + 2);
+      if (!/[A-Za-z]/.test(name)) return null;
+      this.pos = at + 3;
+    }
+    // Java's case-insensitive matching of property classes is not reproduced.
+    if (this.context.asciiFold) return null;
+    const javaClass = JAVA_CLASSES.get(name);
+    if (javaClass !== undefined) {
+      if (negated) return inClass ? null : `[^${javaClass}]`;
+      return inClass ? javaClass : `[${javaClass}]`;
+    }
+    const js = javaPropertyName(name);
+    if (js === null) return null;
+    return `${negated ? "\\P" : "\\p"}{${js}}`;
+  }
+}
+
+function isAsciiLetter(cp: number): boolean {
+  return (cp >= 0x41 && cp <= 0x5a) || (cp >= 0x61 && cp <= 0x7a);
+}
+
+/** A code point as Unicode-mode JavaScript regex text, escaping the given syntax characters. */
+function escapeCodePoint(cp: number, special: RegExp): string {
+  if (cp > 0xffff) return `\\u{${cp.toString(16)}}`;
+  if (cp < 0x20 || (cp >= 0x7f && cp <= 0xa0)) return `\\u${cp.toString(16).padStart(4, "0")}`;
+  const ch = String.fromCharCode(cp);
+  if (cp >= 0xd800 && cp <= 0xdfff) return `\\u${cp.toString(16)}`;
+  return special.test(ch) ? `\\${ch}` : ch;
 }
 
 /**
  * Java property names JavaScript understands: general categories (L, Lu, …, also as IsL),
  * scripts (IsLatin, script=Latin), binary properties (IsAlphabetic). Bare long names such as
- * \p{Letter} or \p{Alphabetic} are rejected by Java, and so here.
+ * \p{Letter} or \p{Alphabetic}, and \p{IsAny}, are rejected by Java, and so here.
  */
 function javaPropertyName(name: string): string | null {
   if (/^[A-Z][a-z]?$/.test(name)) return isValidProperty(name) ? name : null; // category: L, Lu
@@ -456,9 +523,7 @@ function javaPropertyName(name: string): string | null {
     const bare = name.slice(2);
     if (/^[A-Z][a-z]?$/.test(bare) && isValidProperty(bare)) return bare;
     if (isValidProperty(`Script=${bare}`)) return `Script=${bare}`;
-    if (/^[A-Z][A-Za-z_]+$/.test(bare) && isValidProperty(bare) && !/^[A-Z][a-z]?$/.test(bare)) {
-      return bare; // binary property, e.g. IsAlphabetic, IsWhite_Space
-    }
+    if (JAVA_BINARY_PROPERTIES.has(bare.toLowerCase()) && isValidProperty(bare)) return bare;
     return null;
   }
   const keyed = /^(script|sc|general_category|gc)=(.+)$/i.exec(name);
@@ -470,6 +535,34 @@ function javaPropertyName(name: string): string | null {
   return null;
 }
 
+/** The binary properties java.util.regex accepts as \p{IsX}. */
+const JAVA_BINARY_PROPERTIES: ReadonlySet<string> = new Set([
+  "alphabetic",
+  "ideographic",
+  "letter",
+  "lowercase",
+  "uppercase",
+  "titlecase",
+  "punctuation",
+  "control",
+  "white_space",
+  "whitespace",
+  "digit",
+  "hex_digit",
+  "hexdigit",
+  "join_control",
+  "joincontrol",
+  "noncharacter_code_point",
+  "noncharactercodepoint",
+  "assigned",
+  "emoji",
+  "emoji_presentation",
+  "emoji_modifier",
+  "emoji_modifier_base",
+  "emoji_component",
+  "extended_pictographic",
+]);
+
 function isValidProperty(name: string): boolean {
   try {
     // eslint-disable-next-line security/detect-non-literal-regexp -- probing a property name
@@ -478,39 +571,4 @@ function isValidProperty(name: string): boolean {
   } catch {
     return false;
   }
-}
-
-/** Whether a non-ASCII code point has case (so JavaScript's "i" would fold it, Java's would not). */
-function hasNonAsciiCase(codePoint: number): boolean {
-  if (codePoint <= 0x7f) return false;
-  const ch = String.fromCodePoint(codePoint);
-  return ch.toLowerCase() !== ch.toUpperCase();
-}
-
-/** Number of capturing groups, for resolving back references. */
-function countGroups(source: string): number {
-  let count = 0;
-  let inClass = false;
-  for (let i = 0; i < source.length; i++) {
-    const ch = source.charAt(i);
-    if (ch === "\\") {
-      if (source.charAt(i + 1) === "Q") {
-        const end = source.indexOf("\\E", i + 2);
-        i = end === -1 ? source.length : end + 1;
-      } else {
-        i++;
-      }
-    } else if (inClass) {
-      if (ch === "]") inClass = false;
-    } else if (ch === "[") {
-      inClass = true;
-      if (source.charAt(i + 1) === "]") i++;
-    } else if (
-      ch === "(" &&
-      (source.charAt(i + 1) !== "?" || /^\(\?<[a-zA-Z]/.test(source.slice(i)))
-    ) {
-      count++;
-    }
-  }
-  return count;
 }

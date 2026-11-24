@@ -84,6 +84,51 @@ describe("documented differences from WireMock 3.13.2", () => {
     expect(verdict([{ matchesXPath: "/*" }], "<a:b:c/>")).toBe(false);
   });
 
+  it("should_refuse_bodies_that_only_a_namespace_unaware_parser_accepts", () => {
+    // Xerces reads these loosely (WireMock matches /*); xmldom rejects them, so they under-match.
+    for (const body of [
+      "<:a/>",
+      "<a:/>",
+      '<a xmlns:="u"/>',
+      '<a b:="1"/>',
+      "<xmlns:a/>",
+      '<a xmlns:p=""><p:b/></a>',
+      '<?xml version="1.0" encoding=""?><a/>',
+    ]) {
+      expect(verdict([{ matchesXPath: "/*" }], body), body).toBe(false);
+    }
+  });
+
+  it("should_report_an_expected_document_with_a_processing_instruction_outside_the_root", () => {
+    // WireMock never matches such a document, not even an identical body.
+    const contract = contractFor({
+      method: "POST",
+      urlPath: "/x",
+      bodyPatterns: [{ equalToXml: "<?p d?><a/>" }],
+    });
+    expect(contract.unsupportedMatchers).toBeDefined();
+    expect(verdict([{ equalToXml: "<?p d?><a/>" }], "<?p d?><a/>")).toBe(false);
+  });
+
+  it("should_compare_mixed_content_around_an_ignore_placeholder", () => {
+    // WireMock never matches here either (mixed content); stub-server ignores the text.
+    expect(
+      verdict(
+        [{ equalToXml: "<a>${xmlunit.ignore}<b/></a>", enablePlaceholders: true }],
+        "<a>x<b/></a>",
+      ),
+    ).toBe(true);
+  });
+
+  it("should_select_attributes_quickly_among_many_siblings", () => {
+    const body = `<a>${"<b/>".repeat(250_000)}<b x="1"/></a>`;
+    const started = performance.now();
+    expect(verdict([{ matchesXPath: { expression: "//b[@x]/@x", equalTo: "1" } }], body)).toBe(
+      true,
+    );
+    expect(performance.now() - started).toBeLessThan(10_000);
+  });
+
   it("should_not_support_the_namespace_axis", () => {
     const patterns = [{ matchesXPath: "/a/namespace::q", xPathNamespaces: { p: "urn:p" } }];
     expect(verdict(patterns, '<a xmlns:q="urn:x"/>')).toBe(false);

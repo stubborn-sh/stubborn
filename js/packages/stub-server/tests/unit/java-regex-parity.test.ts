@@ -48,4 +48,10 @@ const UNSUPPORTED: readonly RegExp[] = [
   /\\\d/, // back reference to a missing group
   /^(\(\?[a-z]+\))*\(\?i\)/, // (?i) without (?u) on non-ASCII text
   /\\w-/, // a class escape as a range endpoint
+  /\\k</, // named back reference
+  /^\(\?(iu|ui)/, // (?iu): Java's Unicode case folding differs from JavaScript's
+  /^\(\?[a-z]*[Uc]/, // UNICODE_CHARACTER_CLASS and CANON_EQ
+  /\\[GXN]/, // \G, grapheme clusters, named characters
+  /\\p\{(Is|LC|all|blk=|script=|javaMirrored|javaSpaceChar)/, // properties without a JS equivalent
+  /\}\{/, // a quantifier applied to a quantifier
 ];

@@ -101,14 +101,14 @@
   },
   {
    "pattern": "[\\p{L}]*",
-   "input": "Zo\u00eb",
+   "input": "Zoë",
    "dotAll": true,
    "mode": "full",
    "java": true
   },
   {
    "pattern": "[\\p{L}]*",
-   "input": "Zo\u00eb",
+   "input": "Zoë",
    "dotAll": false,
    "mode": "full",
    "java": true
@@ -199,14 +199,14 @@
   },
   {
    "pattern": "-?(\\d*\\.\\d+|\\d+)",
-   "input": "\u0661\u0662",
+   "input": "١٢",
    "dotAll": true,
    "mode": "full",
    "java": false
   },
   {
    "pattern": "-?(\\d*\\.\\d+|\\d+)",
-   "input": "\u0661\u0662",
+   "input": "١٢",
    "dotAll": false,
    "mode": "full",
    "java": false
@@ -241,14 +241,14 @@
   },
   {
    "pattern": "((http[s]?|ftp):/)/?([^:/\\s]+)(:[0-9]{1,5})?",
-   "input": "http://a\u00a0b",
+   "input": "http://a b",
    "dotAll": true,
    "mode": "full",
    "java": true
   },
   {
    "pattern": "((http[s]?|ftp):/)/?([^:/\\s]+)(:[0-9]{1,5})?",
-   "input": "http://a\u00a0b",
+   "input": "http://a b",
    "dotAll": false,
    "mode": "full",
    "java": true
@@ -325,14 +325,14 @@
   },
   {
    "pattern": "^\\s*\\S[\\S\\s]*",
-   "input": "\u00a0x",
+   "input": " x",
    "dotAll": true,
    "mode": "full",
    "java": true
   },
   {
    "pattern": "^\\s*\\S[\\S\\s]*",
-   "input": "\u00a0x",
+   "input": " x",
    "dotAll": false,
    "mode": "full",
    "java": true
@@ -549,14 +549,14 @@
   },
   {
    "pattern": "a.b",
-   "input": "a\u0085b",
+   "input": "ab",
    "dotAll": true,
    "mode": "full",
    "java": true
   },
   {
    "pattern": "a.b",
-   "input": "a\u0085b",
+   "input": "ab",
    "dotAll": false,
    "mode": "full",
    "java": false
@@ -604,99 +604,99 @@
    "java": true
   },
   {
-   "pattern": "(?i)caf\u00e9",
-   "input": "CAF\u00c9",
+   "pattern": "(?i)café",
+   "input": "CAFÉ",
    "dotAll": true,
    "mode": "full",
    "java": false
   },
   {
-   "pattern": "(?i)caf\u00e9",
-   "input": "CAF\u00c9",
+   "pattern": "(?i)café",
+   "input": "CAFÉ",
    "dotAll": false,
    "mode": "full",
    "java": false
   },
   {
-   "pattern": "(?i)caf\u00e9",
-   "input": "caf\u00e9",
+   "pattern": "(?i)café",
+   "input": "café",
    "dotAll": true,
    "mode": "full",
    "java": true
   },
   {
-   "pattern": "(?i)caf\u00e9",
-   "input": "caf\u00e9",
+   "pattern": "(?i)café",
+   "input": "café",
    "dotAll": false,
    "mode": "full",
    "java": true
   },
   {
-   "pattern": "(?iu)caf\u00e9",
-   "input": "CAF\u00c9",
+   "pattern": "(?iu)café",
+   "input": "CAFÉ",
    "dotAll": true,
    "mode": "full",
    "java": true
   },
   {
-   "pattern": "(?iu)caf\u00e9",
-   "input": "CAF\u00c9",
+   "pattern": "(?iu)café",
+   "input": "CAFÉ",
    "dotAll": false,
    "mode": "full",
    "java": true
   },
   {
    "pattern": "(?i)\\p{L}*k",
-   "input": "\u212a",
+   "input": "K",
    "dotAll": true,
    "mode": "full",
    "java": false
   },
   {
    "pattern": "(?i)\\p{L}*k",
-   "input": "\u212a",
+   "input": "K",
    "dotAll": false,
    "mode": "full",
    "java": false
-  },
-  {
-   "pattern": "(?i)\\p{L}*k",
-   "input": "aK",
-   "dotAll": true,
-   "mode": "full",
-   "java": true
   },
   {
    "pattern": "(?i)\\p{L}*k",
    "input": "aK",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?i)\\p{L}*k",
+   "input": "aK",
    "dotAll": false,
    "mode": "full",
    "java": true
   },
   {
-   "pattern": "(?i)\u00c4\u00d6",
-   "input": "\u00e4\u00f6",
+   "pattern": "(?i)ÄÖ",
+   "input": "äö",
    "dotAll": true,
    "mode": "full",
    "java": false
   },
   {
-   "pattern": "(?i)\u00c4\u00d6",
-   "input": "\u00e4\u00f6",
+   "pattern": "(?i)ÄÖ",
+   "input": "äö",
    "dotAll": false,
    "mode": "full",
    "java": false
   },
   {
    "pattern": "(?i)\\h+",
-   "input": " \u00a0",
+   "input": "  ",
    "dotAll": true,
    "mode": "full",
    "java": true
   },
   {
    "pattern": "(?i)\\h+",
-   "input": " \u00a0",
+   "input": "  ",
    "dotAll": false,
    "mode": "full",
    "java": true
@@ -717,28 +717,28 @@
   },
   {
    "pattern": "(?i)[a-z]+",
-   "input": "\u017f",
+   "input": "ſ",
    "dotAll": true,
    "mode": "full",
    "java": false
   },
   {
    "pattern": "(?i)[a-z]+",
-   "input": "\u017f",
+   "input": "ſ",
    "dotAll": false,
    "mode": "full",
    "java": false
   },
   {
    "pattern": "(?i)[a-z]+",
-   "input": "\u0131",
+   "input": "ı",
    "dotAll": true,
    "mode": "full",
    "java": false
   },
   {
    "pattern": "(?i)[a-z]+",
-   "input": "\u0131",
+   "input": "ı",
    "dotAll": false,
    "mode": "full",
    "java": false
@@ -801,28 +801,28 @@
   },
   {
    "pattern": "a\\sb",
-   "input": "a\u00a0b",
+   "input": "a b",
    "dotAll": true,
    "mode": "full",
    "java": false
   },
   {
    "pattern": "a\\sb",
-   "input": "a\u00a0b",
+   "input": "a b",
    "dotAll": false,
    "mode": "full",
    "java": false
   },
   {
    "pattern": "a\\sb",
-   "input": "a\u2003b",
+   "input": "a b",
    "dotAll": true,
    "mode": "full",
    "java": false
   },
   {
    "pattern": "a\\sb",
-   "input": "a\u2003b",
+   "input": "a b",
    "dotAll": false,
    "mode": "full",
    "java": false
@@ -843,14 +843,14 @@
   },
   {
    "pattern": "\\p{L}\\s\\p{L}",
-   "input": "a\u00a0b",
+   "input": "a b",
    "dotAll": true,
    "mode": "full",
    "java": false
   },
   {
    "pattern": "\\p{L}\\s\\p{L}",
-   "input": "a\u00a0b",
+   "input": "a b",
    "dotAll": false,
    "mode": "full",
    "java": false
@@ -885,14 +885,14 @@
   },
   {
    "pattern": "a\\Sb",
-   "input": "a\u00a0b",
+   "input": "a b",
    "dotAll": true,
    "mode": "full",
    "java": true
   },
   {
    "pattern": "a\\Sb",
-   "input": "a\u00a0b",
+   "input": "a b",
    "dotAll": false,
    "mode": "full",
    "java": true
@@ -913,14 +913,14 @@
   },
   {
    "pattern": "[\\s]+",
-   "input": "\u00a0",
+   "input": " ",
    "dotAll": true,
    "mode": "full",
    "java": false
   },
   {
    "pattern": "[\\s]+",
-   "input": "\u00a0",
+   "input": " ",
    "dotAll": false,
    "mode": "full",
    "java": false
@@ -1081,14 +1081,14 @@
   },
   {
    "pattern": "a\\hb",
-   "input": "a\u00a0b",
+   "input": "a b",
    "dotAll": true,
    "mode": "full",
    "java": true
   },
   {
    "pattern": "a\\hb",
-   "input": "a\u00a0b",
+   "input": "a b",
    "dotAll": false,
    "mode": "full",
    "java": true
@@ -1123,14 +1123,14 @@
   },
   {
    "pattern": "a\\vb",
-   "input": "a\u0085b",
+   "input": "ab",
    "dotAll": true,
    "mode": "full",
    "java": true
   },
   {
    "pattern": "a\\vb",
-   "input": "a\u0085b",
+   "input": "ab",
    "dotAll": false,
    "mode": "full",
    "java": true
@@ -1361,14 +1361,14 @@
   },
   {
    "pattern": "\\x41\\x{1F600}",
-   "input": "A\ud83d\ude00",
+   "input": "A😀",
    "dotAll": true,
    "mode": "full",
    "java": true
   },
   {
    "pattern": "\\x41\\x{1F600}",
-   "input": "A\ud83d\ude00",
+   "input": "A😀",
    "dotAll": false,
    "mode": "full",
    "java": true
@@ -1613,14 +1613,14 @@
   },
   {
    "pattern": "\\p{IsLatin}+",
-   "input": "\u03b1\u03b2",
+   "input": "αβ",
    "dotAll": true,
    "mode": "full",
    "java": false
   },
   {
    "pattern": "\\p{IsLatin}+",
-   "input": "\u03b1\u03b2",
+   "input": "αβ",
    "dotAll": false,
    "mode": "full",
    "java": false
@@ -1767,14 +1767,14 @@
   },
   {
    "pattern": "\\p{InGreek}",
-   "input": "\u03b1",
+   "input": "α",
    "dotAll": true,
    "mode": "full",
    "java": true
   },
   {
    "pattern": "\\p{InGreek}",
-   "input": "\u03b1",
+   "input": "α",
    "dotAll": false,
    "mode": "full",
    "java": true
@@ -1795,14 +1795,14 @@
   },
   {
    "pattern": "\\p{L}+",
-   "input": "\ud835\udc00",
+   "input": "𝐀",
    "dotAll": true,
    "mode": "full",
    "java": true
   },
   {
    "pattern": "\\p{L}+",
-   "input": "\ud835\udc00",
+   "input": "𝐀",
    "dotAll": false,
    "mode": "full",
    "java": true
@@ -1935,14 +1935,14 @@
   },
   {
    "pattern": "\\w+",
-   "input": "\u00e9",
+   "input": "é",
    "dotAll": true,
    "mode": "full",
    "java": false
   },
   {
    "pattern": "\\w+",
-   "input": "\u00e9",
+   "input": "é",
    "dotAll": false,
    "mode": "full",
    "java": false
@@ -1963,14 +1963,14 @@
   },
   {
    "pattern": "\\d+",
-   "input": "\u0661\u0662",
+   "input": "١٢",
    "dotAll": true,
    "mode": "full",
    "java": false
   },
   {
    "pattern": "\\d+",
-   "input": "\u0661\u0662",
+   "input": "١٢",
    "dotAll": false,
    "mode": "full",
    "java": false
@@ -2082,56 +2082,56 @@
   },
   {
    "pattern": ".",
-   "input": "\ud83d\ude00",
+   "input": "😀",
    "dotAll": true,
    "mode": "full",
    "java": true
   },
   {
    "pattern": ".",
-   "input": "\ud83d\ude00",
+   "input": "😀",
    "dotAll": false,
    "mode": "full",
    "java": true
   },
   {
    "pattern": "a.",
-   "input": "a\ud83d\ude00",
+   "input": "a😀",
    "dotAll": true,
    "mode": "full",
    "java": true
   },
   {
    "pattern": "a.",
-   "input": "a\ud83d\ude00",
+   "input": "a😀",
    "dotAll": false,
    "mode": "full",
    "java": true
   },
   {
    "pattern": "[^a]",
-   "input": "\ud83d\ude00",
+   "input": "😀",
    "dotAll": true,
    "mode": "full",
    "java": true
   },
   {
    "pattern": "[^a]",
-   "input": "\ud83d\ude00",
+   "input": "😀",
    "dotAll": false,
    "mode": "full",
    "java": true
   },
   {
    "pattern": "\\S",
-   "input": "\ud83d\ude00",
+   "input": "😀",
    "dotAll": true,
    "mode": "full",
    "java": true
   },
   {
    "pattern": "\\S",
-   "input": "\ud83d\ude00",
+   "input": "😀",
    "dotAll": false,
    "mode": "full",
    "java": true
@@ -2166,56 +2166,56 @@
   },
   {
    "pattern": "(?i)s",
-   "input": "\u017f",
+   "input": "ſ",
    "dotAll": true,
    "mode": "full",
    "java": false
   },
   {
    "pattern": "(?i)s",
-   "input": "\u017f",
+   "input": "ſ",
    "dotAll": false,
    "mode": "full",
    "java": false
   },
   {
    "pattern": "(?i)k",
-   "input": "\u212a",
+   "input": "K",
    "dotAll": true,
    "mode": "full",
    "java": false
   },
   {
    "pattern": "(?i)k",
-   "input": "\u212a",
+   "input": "K",
    "dotAll": false,
    "mode": "full",
    "java": false
   },
   {
-   "pattern": "(?i)\ud83d\ude00",
-   "input": "\ud83d\ude00",
+   "pattern": "(?i)😀",
+   "input": "😀",
    "dotAll": true,
    "mode": "full",
    "java": true
   },
   {
-   "pattern": "(?i)\ud83d\ude00",
-   "input": "\ud83d\ude00",
+   "pattern": "(?i)😀",
+   "input": "😀",
    "dotAll": false,
    "mode": "full",
    "java": true
   },
   {
-   "pattern": "(?u)(?i)\u00e9",
-   "input": "\u00c9",
+   "pattern": "(?u)(?i)é",
+   "input": "É",
    "dotAll": true,
    "mode": "full",
    "java": true
   },
   {
-   "pattern": "(?u)(?i)\u00e9",
-   "input": "\u00c9",
+   "pattern": "(?u)(?i)é",
+   "input": "É",
    "dotAll": false,
    "mode": "full",
    "java": true
@@ -2230,6 +2230,4388 @@
   {
    "pattern": "[\\w-a]",
    "input": "-",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(a)?\\1b",
+   "input": "b",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(a)?\\1b",
+   "input": "b",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(a)?\\1b",
+   "input": "aab",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(a)?\\1b",
+   "input": "aab",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\1(a)",
+   "input": "a",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "\\1(a)",
+   "input": "a",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?:(a)|b)\\1",
+   "input": "b",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?:(a)|b)\\1",
+   "input": "b",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?<n>a)?\\k<n>b",
+   "input": "b",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?<n>a)?\\k<n>b",
+   "input": "b",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?iu)\\w",
+   "input": "ſ",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?iu)\\w",
+   "input": "ſ",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?iu)\\w",
+   "input": "K",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?iu)\\w",
+   "input": "K",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?iu)\\W",
+   "input": "ſ",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?iu)\\W",
+   "input": "ſ",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?iu)\\W",
+   "input": "S",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?iu)\\W",
+   "input": "S",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?iu)[^k]",
+   "input": "K",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?iu)[^k]",
+   "input": "K",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?iu)k",
+   "input": "K",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?iu)k",
+   "input": "K",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?iu)s",
+   "input": "ſ",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?iu)s",
+   "input": "ſ",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?i)[\\x21-\\u00d7]",
+   "input": "é",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?i)[\\x21-\\u00d7]",
+   "input": "é",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?i)[!-×]",
+   "input": "é",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?i)[!-×]",
+   "input": "é",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "\\ca",
+   "input": "!",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\ca",
+   "input": "!",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\ca",
+   "input": "\u0001",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "\\ca",
+   "input": "\u0001",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "\\c?",
+   "input": "",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\c?",
+   "input": "",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?m)a\\r^\\nb",
+   "input": "a\r\nb",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?m)a\\r^\\nb",
+   "input": "a\r\nb",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?m)a$\\n",
+   "input": "a\n",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?m)a$\\n",
+   "input": "a\n",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?m)a$\\r\\n",
+   "input": "a\r\n",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?m)a$\\r\\n",
+   "input": "a\r\n",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?m)a\\r$\\n",
+   "input": "a\r\n",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?m)a\\r$\\n",
+   "input": "a\r\n",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?m)^",
+   "input": "",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?m)^",
+   "input": "",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?m)a\\n^",
+   "input": "a\n",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?m)a\\n^",
+   "input": "a\n",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?m)a\\n^b",
+   "input": "a\nb",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?m)a\\n^b",
+   "input": "a\nb",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "a$",
+   "input": "a\r\n",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "a$",
+   "input": "a\r\n",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "a\\Z",
+   "input": "a\r\n",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "a\\Z",
+   "input": "a\r\n",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "a$\\r\\n",
+   "input": "a\r\n",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "a$\\r\\n",
+   "input": "a\r\n",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "a$\\n",
+   "input": "a\r\n",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "a$\\n",
+   "input": "a\r\n",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "a$\\n",
+   "input": "a\n",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "a$\\n",
+   "input": "a\n",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "a\\Z\\r",
+   "input": "a\r\n",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "a\\Z\\r",
+   "input": "a\r\n",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?s)a.b",
+   "input": "ab",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?s)a.b",
+   "input": "ab",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{Lower}",
+   "input": "A",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "\\p{Lower}",
+   "input": "A",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?i)\\p{Lower}",
+   "input": "A",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?i)\\p{Lower}",
+   "input": "A",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?i)\\p{Upper}",
+   "input": "a",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?i)\\p{Upper}",
+   "input": "a",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?i)[[:alpha:]]",
+   "input": "a",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?i)[[:alpha:]]",
+   "input": "a",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?i)\\p{Alpha}",
+   "input": "Z",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?i)\\p{Alpha}",
+   "input": "Z",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?u)é",
+   "input": "é",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?u)é",
+   "input": "é",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?iu)é",
+   "input": "É",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?iu)é",
+   "input": "É",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?i)\\u00e9",
+   "input": "É",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?i)\\u00e9",
+   "input": "É",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?i)\\x{1F600}",
+   "input": "😀",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?i)\\x{1F600}",
+   "input": "😀",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?i).",
+   "input": "😀",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?i).",
+   "input": "😀",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\x{1F600}",
+   "input": "😀",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\x{1F600}",
+   "input": "😀",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[😀]",
+   "input": "😀",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[😀]",
+   "input": "😀",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[\\S]",
+   "input": "😀",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[\\S]",
+   "input": "😀",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\W",
+   "input": "😀",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\W",
+   "input": "😀",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\D",
+   "input": "😀",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\D",
+   "input": "😀",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\w+",
+   "input": "été",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "\\w+",
+   "input": "été",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "\\bété\\b",
+   "input": "été",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "\\bété\\b",
+   "input": "été",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "\\b\\w",
+   "input": "é",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "\\b\\w",
+   "input": "é",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "é\\b",
+   "input": "é",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "é\\b",
+   "input": "é",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "\\Bé",
+   "input": "é",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\Bé",
+   "input": "é",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "x\\bé",
+   "input": "xé",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "x\\bé",
+   "input": "xé",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[a-]",
+   "input": "-",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[a-]",
+   "input": "-",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[-a]",
+   "input": "-",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[-a]",
+   "input": "-",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[\\w-z]",
+   "input": "-",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[\\w-z]",
+   "input": "-",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[a-\\w]",
+   "input": "-",
+   "dotAll": true,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "[a-\\w]",
+   "input": "-",
+   "dotAll": false,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "[\\d-z]",
+   "input": "-",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[\\d-z]",
+   "input": "-",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[a]]",
+   "input": "a]",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[a]]",
+   "input": "a]",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[]",
+   "input": "]",
+   "dotAll": true,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "[]",
+   "input": "]",
+   "dotAll": false,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "a{,2}",
+   "input": "a{,2}",
+   "dotAll": true,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "a{,2}",
+   "input": "a{,2}",
+   "dotAll": false,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "a{2,1}",
+   "input": "aa",
+   "dotAll": true,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "a{2,1}",
+   "input": "aa",
+   "dotAll": false,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "{",
+   "input": "{",
+   "dotAll": true,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "{",
+   "input": "{",
+   "dotAll": false,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "x{1}{2}",
+   "input": "xx",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "x{1}{2}",
+   "input": "xx",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "a**",
+   "input": "aa",
+   "dotAll": true,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "a**",
+   "input": "aa",
+   "dotAll": false,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "a{2}{3}",
+   "input": "aaaaaa",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "a{2}{3}",
+   "input": "aaaaaa",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "a|*",
+   "input": "a",
+   "dotAll": true,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "a|*",
+   "input": "a",
+   "dotAll": false,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "(?:)",
+   "input": "",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?:)",
+   "input": "",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "()",
+   "input": "",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "()",
+   "input": "",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(|a)",
+   "input": "a",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(|a)",
+   "input": "a",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "a||b",
+   "input": "",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "a||b",
+   "input": "",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\0",
+   "input": "\u0000",
+   "dotAll": true,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "\\0",
+   "input": "\u0000",
+   "dotAll": false,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "\\08",
+   "input": "\u00008",
+   "dotAll": true,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "\\08",
+   "input": "\u00008",
+   "dotAll": false,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "\\0377",
+   "input": "ÿ",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\0377",
+   "input": "ÿ",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\0400",
+   "input": " 0",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\0400",
+   "input": " 0",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\x41",
+   "input": "A",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\x41",
+   "input": "A",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\x4",
+   "input": "\u0004",
+   "dotAll": true,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "\\x4",
+   "input": "\u0004",
+   "dotAll": false,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "\\uD83D\\uDE00",
+   "input": "😀",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\uD83D\\uDE00",
+   "input": "😀",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[\\uD83D\\uDE00]",
+   "input": "😀",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[\\uD83D\\uDE00]",
+   "input": "😀",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\uD83D",
+   "input": "\ud83d",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\uD83D",
+   "input": "\ud83d",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\N{LATIN SMALL LETTER A}",
+   "input": "a",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\N{LATIN SMALL LETTER A}",
+   "input": "a",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\X",
+   "input": "a",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\X",
+   "input": "a",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\G",
+   "input": "",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\G",
+   "input": "",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\Ka",
+   "input": "a",
+   "dotAll": true,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "\\Ka",
+   "input": "a",
+   "dotAll": false,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "\\y",
+   "input": "",
+   "dotAll": true,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "\\y",
+   "input": "",
+   "dotAll": false,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "\\i",
+   "input": "",
+   "dotAll": true,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "\\i",
+   "input": "",
+   "dotAll": false,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "\\#",
+   "input": "#",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\#",
+   "input": "#",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\ ",
+   "input": "",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "\\ ",
+   "input": "",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "\\ ",
+   "input": " ",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\ ",
+   "input": " ",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\<",
+   "input": "<",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\<",
+   "input": "<",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\@",
+   "input": "@",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\@",
+   "input": "@",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\'",
+   "input": "'",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\'",
+   "input": "'",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\\"",
+   "input": "\"",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\\"",
+   "input": "\"",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\%",
+   "input": "%",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\%",
+   "input": "%",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\_",
+   "input": "_",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\_",
+   "input": "_",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\~",
+   "input": "~",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\~",
+   "input": "~",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\é",
+   "input": "é",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\é",
+   "input": "é",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?<a1>x)\\k<a1>",
+   "input": "xx",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?<a1>x)\\k<a1>",
+   "input": "xx",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?<1a>x)",
+   "input": "x",
+   "dotAll": true,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "(?<1a>x)",
+   "input": "x",
+   "dotAll": false,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "(?<a_b>x)",
+   "input": "x",
+   "dotAll": true,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "(?<a_b>x)",
+   "input": "x",
+   "dotAll": false,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "(?P<a>x)",
+   "input": "x",
+   "dotAll": true,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "(?P<a>x)",
+   "input": "x",
+   "dotAll": false,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "(?<=a+)b",
+   "input": "aab",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?<=a+)b",
+   "input": "aab",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "a(?=b)b",
+   "input": "ab",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "a(?=b)b",
+   "input": "ab",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[a&&b]",
+   "input": "",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "[a&&b]",
+   "input": "",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "[a&b]",
+   "input": "&",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[a&b]",
+   "input": "&",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[a&&]",
+   "input": "a",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[a&&]",
+   "input": "a",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\v",
+   "input": "\u000b",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\v",
+   "input": "\u000b",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\V",
+   "input": "a",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\V",
+   "input": "a",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\h",
+   "input": " ",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\h",
+   "input": " ",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\R",
+   "input": "\r\n",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\R",
+   "input": "\r\n",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\R",
+   "input": " ",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\R",
+   "input": " ",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\R\\n",
+   "input": "\r\n",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\R\\n",
+   "input": "\r\n",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[\\s]",
+   "input": " ",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "[\\s]",
+   "input": " ",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "\\s",
+   "input": " ",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "\\s",
+   "input": " ",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "[\\S\\s]+",
+   "input": "a b",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[\\S\\s]+",
+   "input": "a b",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[^\\s]",
+   "input": " ",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[^\\s]",
+   "input": " ",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[^\\S]",
+   "input": " ",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "[^\\S]",
+   "input": " ",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "[^\\S]",
+   "input": " ",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[^\\S]",
+   "input": " ",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{IsLatin}",
+   "input": "a",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{IsLatin}",
+   "input": "a",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{script=Latin}",
+   "input": "a",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{script=Latin}",
+   "input": "a",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{sc=Latn}",
+   "input": "a",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{sc=Latn}",
+   "input": "a",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{IsLatn}",
+   "input": "a",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{IsLatn}",
+   "input": "a",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{gc=Lu}",
+   "input": "A",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{gc=Lu}",
+   "input": "A",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{general_category=Lu}",
+   "input": "A",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{general_category=Lu}",
+   "input": "A",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{IsLu}",
+   "input": "A",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{IsLu}",
+   "input": "A",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{L}",
+   "input": "a",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{L}",
+   "input": "a",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\pL",
+   "input": "a",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\pL",
+   "input": "a",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{LC}",
+   "input": "a",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{LC}",
+   "input": "a",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{L&}",
+   "input": "a",
+   "dotAll": true,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "\\p{L&}",
+   "input": "a",
+   "dotAll": false,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "\\p{IsAlphabetic}",
+   "input": "a",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{IsAlphabetic}",
+   "input": "a",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{IsWhite_Space}",
+   "input": " ",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{IsWhite_Space}",
+   "input": " ",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{IsWhiteSpace}",
+   "input": " ",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{IsWhiteSpace}",
+   "input": " ",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{IsEmoji}",
+   "input": "😀",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{IsEmoji}",
+   "input": "😀",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{IsHan}",
+   "input": "中",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{IsHan}",
+   "input": "中",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{IsCommon}",
+   "input": "1",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{IsCommon}",
+   "input": "1",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{IsAny}",
+   "input": "a",
+   "dotAll": true,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "\\p{IsAny}",
+   "input": "a",
+   "dotAll": false,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "\\p{all}",
+   "input": "a",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{all}",
+   "input": "a",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{IsIdeographic}",
+   "input": "中",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{IsIdeographic}",
+   "input": "中",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{IsPunctuation}",
+   "input": "!",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{IsPunctuation}",
+   "input": "!",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{IsLetter}",
+   "input": "a",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{IsLetter}",
+   "input": "a",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{IsAssigned}",
+   "input": "a",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{IsAssigned}",
+   "input": "a",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{IsJoin_Control}",
+   "input": "‍",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{IsJoin_Control}",
+   "input": "‍",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{IsHex_Digit}",
+   "input": "a",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{IsHex_Digit}",
+   "input": "a",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{IsHexDigit}",
+   "input": "a",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{IsHexDigit}",
+   "input": "a",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{javaMirrored}",
+   "input": "(",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{javaMirrored}",
+   "input": "(",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{javaSpaceChar}",
+   "input": " ",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{javaSpaceChar}",
+   "input": " ",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{javaIdentifierStart}",
+   "input": "a",
+   "dotAll": true,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "\\p{javaIdentifierStart}",
+   "input": "a",
+   "dotAll": false,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "\\p{Sc}",
+   "input": "$",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{Sc}",
+   "input": "$",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{IsSc}",
+   "input": "$",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{IsSc}",
+   "input": "$",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{Cn}",
+   "input": "͸",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{Cn}",
+   "input": "͸",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{Co}",
+   "input": "",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{Co}",
+   "input": "",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{Cs}",
+   "input": "\ud800",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{Cs}",
+   "input": "\ud800",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?U)\\w",
+   "input": "é",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?U)\\w",
+   "input": "é",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?d)a.b",
+   "input": "a\rb",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?d)a.b",
+   "input": "a\rb",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?x)a b",
+   "input": "ab",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?x)a b",
+   "input": "ab",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?c)a",
+   "input": "a",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?c)a",
+   "input": "a",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?is)A",
+   "input": "a",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?is)A",
+   "input": "a",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?im)a$",
+   "input": "A",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?im)a$",
+   "input": "A",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "a*+",
+   "input": "aa",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "a*+",
+   "input": "aa",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?>a)",
+   "input": "a",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?>a)",
+   "input": "a",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "a{1}+",
+   "input": "a",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "a{1}+",
+   "input": "a",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?i)[\\p{Lower}]",
+   "input": "A",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?i)[\\p{Lower}]",
+   "input": "A",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?i)[^\\p{Lower}]",
+   "input": "A",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?i)[^\\p{Lower}]",
+   "input": "A",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?i)\\P{Lower}",
+   "input": "A",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?i)\\P{Lower}",
+   "input": "A",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?i)[a-z&&[^b]]",
+   "input": "B",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?i)[a-z&&[^b]]",
+   "input": "B",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?i)[^a-z]",
+   "input": "A",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?i)[^a-z]",
+   "input": "A",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?i)[^A]",
+   "input": "a",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?i)[^A]",
+   "input": "a",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?i)\\W",
+   "input": "a",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?i)\\W",
+   "input": "a",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?i)[\\W]",
+   "input": "A",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?i)[\\W]",
+   "input": "A",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "[\\Q]\\E]",
+   "input": "]",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[\\Q]\\E]",
+   "input": "]",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[\\Q^\\E]",
+   "input": "^",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[\\Q^\\E]",
+   "input": "^",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[\\Qa-z\\E]",
+   "input": "-",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[\\Qa-z\\E]",
+   "input": "-",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[\\Qa-z\\E]",
+   "input": "b",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "[\\Qa-z\\E]",
+   "input": "b",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "\\Qa\\E+",
+   "input": "aa",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\Qa\\E+",
+   "input": "aa",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\Qab\\E+",
+   "input": "abb",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\Qab\\E+",
+   "input": "abb",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\Qab\\E+",
+   "input": "abab",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "\\Qab\\E+",
+   "input": "abab",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "\\Q\\E+",
+   "input": "",
+   "dotAll": true,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "\\Q\\E+",
+   "input": "",
+   "dotAll": false,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "a\\Q\\E*",
+   "input": "aaa",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "a\\Q\\E*",
+   "input": "aaa",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "x{0}",
+   "input": "",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "x{0}",
+   "input": "",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "x{2,}",
+   "input": "xxx",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "x{2,}",
+   "input": "xxx",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "x{,}",
+   "input": "x{,}",
+   "dotAll": true,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "x{,}",
+   "input": "x{,}",
+   "dotAll": false,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "x{1,2}?",
+   "input": "x",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "x{1,2}?",
+   "input": "x",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "x{ 1}",
+   "input": "x{ 1}",
+   "dotAll": true,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "x{ 1}",
+   "input": "x{ 1}",
+   "dotAll": false,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "x{1 }",
+   "input": "x{1 }",
+   "dotAll": true,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "x{1 }",
+   "input": "x{1 }",
+   "dotAll": false,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "x{a}",
+   "input": "x{a}",
+   "dotAll": true,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "x{a}",
+   "input": "x{a}",
+   "dotAll": false,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "(?<=^)a",
+   "input": "a",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?<=^)a",
+   "input": "a",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?<=\\A)a",
+   "input": "a",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?<=\\A)a",
+   "input": "a",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?<!.)a",
+   "input": "a",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?<!.)a",
+   "input": "a",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?<=a.)b",
+   "input": "a\nb",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?<=a.)b",
+   "input": "a\nb",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?<=a.)b",
+   "input": "a😀b",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?<=a.)b",
+   "input": "a😀b",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "[^\\s\\S]",
+   "input": "",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "[^\\s\\S]",
+   "input": "",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "[\\s\\S]",
+   "input": "😀",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[\\s\\S]",
+   "input": "😀",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[^\\S]",
+   "input": "😀",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "[^\\S]",
+   "input": "😀",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "[\\D]",
+   "input": "😀",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[\\D]",
+   "input": "😀",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[^\\d]",
+   "input": "😀",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[^\\d]",
+   "input": "😀",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\P{L}",
+   "input": "😀",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\P{L}",
+   "input": "😀",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[\\P{L}]",
+   "input": "😀",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[\\P{L}]",
+   "input": "😀",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[^\\p{L}]",
+   "input": "😀",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[^\\p{L}]",
+   "input": "😀",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\x{110000}",
+   "input": "a",
+   "dotAll": true,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "\\x{110000}",
+   "input": "a",
+   "dotAll": false,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "\\x{0}",
+   "input": "\u0000",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\x{0}",
+   "input": "\u0000",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\x{}",
+   "input": "",
+   "dotAll": true,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "\\x{}",
+   "input": "",
+   "dotAll": false,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "a\\b-",
+   "input": "a-",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "a\\b-",
+   "input": "a-",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\b",
+   "input": "",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "\\b",
+   "input": "",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "\\B",
+   "input": "",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\B",
+   "input": "",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?i)\\bK",
+   "input": "",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?i)\\bK",
+   "input": "",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "[a-\\x{1F600}]",
+   "input": "😀",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[a-\\x{1F600}]",
+   "input": "😀",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[\\x{1F600}-\\x{1F601}]",
+   "input": "😁",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[\\x{1F600}-\\x{1F601}]",
+   "input": "😁",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[😀-😁]",
+   "input": "😁",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[😀-😁]",
+   "input": "😁",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[^😀]",
+   "input": "😁",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[^😀]",
+   "input": "😁",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[^😀]",
+   "input": "\ud83d",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[^😀]",
+   "input": "\ud83d",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(a)|\\1",
+   "input": "a",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(a)|\\1",
+   "input": "a",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(a)(?:\\1)",
+   "input": "",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(a)(?:\\1)",
+   "input": "",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?:(a)|b)(?(1)c|d)",
+   "input": "bd",
+   "dotAll": true,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "(?:(a)|b)(?(1)c|d)",
+   "input": "bd",
+   "dotAll": false,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "\\p{L}++",
+   "input": "a",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{L}++",
+   "input": "a",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{IsGreek}",
+   "input": "α",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{IsGreek}",
+   "input": "α",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{Is_Greek}",
+   "input": "α",
+   "dotAll": true,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "\\p{Is_Greek}",
+   "input": "α",
+   "dotAll": false,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "\\p{isGreek}",
+   "input": "α",
+   "dotAll": true,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "\\p{isGreek}",
+   "input": "α",
+   "dotAll": false,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "\\p{script=greek}",
+   "input": "α",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{script=greek}",
+   "input": "α",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{sc=Grek}",
+   "input": "α",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{sc=Grek}",
+   "input": "α",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{blk=Greek}",
+   "input": "α",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{blk=Greek}",
+   "input": "α",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{IsL}",
+   "input": "a",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{IsL}",
+   "input": "a",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{Isl}",
+   "input": "a",
+   "dotAll": true,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "\\p{Isl}",
+   "input": "a",
+   "dotAll": false,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "\\p{l}",
+   "input": "a",
+   "dotAll": true,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "\\p{l}",
+   "input": "a",
+   "dotAll": false,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "\\p{lu}",
+   "input": "A",
+   "dotAll": true,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "\\p{lu}",
+   "input": "A",
+   "dotAll": false,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "\\p{LU}",
+   "input": "A",
+   "dotAll": true,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "\\p{LU}",
+   "input": "A",
+   "dotAll": false,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "\\p{IsLatin}",
+   "input": "ꞵ",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{IsLatin}",
+   "input": "ꞵ",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{javaLowerCase}",
+   "input": "ª",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{javaLowerCase}",
+   "input": "ª",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{javaLetter}",
+   "input": "ª",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{javaLetter}",
+   "input": "ª",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{javaDigit}",
+   "input": "٣",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{javaDigit}",
+   "input": "٣",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{javaWhitespace}",
+   "input": " ",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "\\p{javaWhitespace}",
+   "input": " ",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "\\p{javaWhitespace}",
+   "input": "\u001c",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{javaWhitespace}",
+   "input": "\u001c",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{javaAlphabetic}",
+   "input": "ⅰ",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{javaAlphabetic}",
+   "input": "ⅰ",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{javaUpperCase}",
+   "input": "ⅰ",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "\\p{javaUpperCase}",
+   "input": "ⅰ",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "\\p{javaUpperCase}",
+   "input": "Ⅰ",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{javaUpperCase}",
+   "input": "Ⅰ",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{javaLetterOrDigit}",
+   "input": "_",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "\\p{javaLetterOrDigit}",
+   "input": "_",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "\\p{Punct}",
+   "input": "¡",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "\\p{Punct}",
+   "input": "¡",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "\\p{Space}",
+   "input": " ",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "\\p{Space}",
+   "input": " ",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "\\p{Graph}",
+   "input": "é",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "\\p{Graph}",
+   "input": "é",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "\\p{Print}",
+   "input": " ",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{Print}",
+   "input": " ",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\s",
+   "input": "\u001c",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "\\s",
+   "input": "\u001c",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "\\w",
+   "input": "_",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\w",
+   "input": "_",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\d",
+   "input": "٣",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "\\d",
+   "input": "٣",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?i)ǅ",
+   "input": "ǆ",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?i)ǅ",
+   "input": "ǆ",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?i)\\u01c5",
+   "input": "ǆ",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?i)\\u01c5",
+   "input": "ǆ",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?iu)ǅ",
+   "input": "ǆ",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?iu)ǅ",
+   "input": "ǆ",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?iu)ǅ",
+   "input": "Ǆ",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?iu)ǅ",
+   "input": "Ǆ",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?iu)ß",
+   "input": "SS",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?iu)ß",
+   "input": "SS",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?iu)ß",
+   "input": "ẞ",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?iu)ß",
+   "input": "ẞ",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?iu)ſ",
+   "input": "s",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?iu)ſ",
+   "input": "s",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?iu)k",
+   "input": "K",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?iu)k",
+   "input": "K",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?iu)[a-z]",
+   "input": "K",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?iu)[a-z]",
+   "input": "K",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?iu)\\p{Lower}",
+   "input": "A",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?iu)\\p{Lower}",
+   "input": "A",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?iu)σ",
+   "input": "ς",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?iu)σ",
+   "input": "ς",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?iu)Σ",
+   "input": "ς",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?iu)Σ",
+   "input": "ς",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?iu)i",
+   "input": "İ",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?iu)i",
+   "input": "İ",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?iu)ı",
+   "input": "I",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?iu)ı",
+   "input": "I",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?iu)\\u0130",
+   "input": "i",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?iu)\\u0130",
+   "input": "i",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[a-zA-Z0-9]+",
+   "input": "aZ9",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[a-zA-Z0-9]+",
+   "input": "aZ9",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[\\p{L}]*",
+   "input": "été",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[\\p{L}]*",
+   "input": "été",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "((http[s]?|ftp):/)/?([^:/\\s]+)(:[0-9]{1,5})?",
+   "input": "https://x.com:80",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "((http[s]?|ftp):/)/?([^:/\\s]+)(:[0-9]{1,5})?",
+   "input": "https://x.com:80",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}",
+   "input": "a@b.cd",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}",
+   "input": "a@b.cd",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?i)[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}",
+   "input": "ABCDEF01-2345-6789-abcd-ef0123456789",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?i)[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}",
+   "input": "ABCDEF01-2345-6789-abcd-ef0123456789",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "^\\s*\\S[\\S\\s]*",
+   "input": "  x\n",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "^\\s*\\S[\\S\\s]*",
+   "input": "  x\n",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "^\\s*\\S[\\S\\s]*",
+   "input": " ",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "^\\s*\\S[\\S\\s]*",
+   "input": " ",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\\.\\d+)?(Z|[+-][01]\\d:[0-5]\\d)",
+   "input": "2020-01-01T10:00:00.5+01:00",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\\.\\d+)?(Z|[+-][01]\\d:[0-5]\\d)",
+   "input": "2020-01-01T10:00:00.5+01:00",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "^foo$|^b\\.ar$|^\\{x\\}$",
+   "input": "b.ar",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "^foo$|^b\\.ar$|^\\{x\\}$",
+   "input": "b.ar",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "^foo$|^b\\.ar$",
+   "input": "bxar",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "^foo$|^b\\.ar$",
+   "input": "bxar",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": ".*--(.*)\r?\nContent-Disposition: form-data; name=\"file\"\r?\n(Content-Type: .*\r?\n)?(Content-Transfer-Encoding: .*\r?\n)?(Content-Length: \\d+\r?\n)?\r?\nhello\r?\n--.*",
+   "input": "--b\r\nContent-Disposition: form-data; name=\"file\"\r\n\r\nhello\r\n--b--\r\n",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": ".*--(.*)\r?\nContent-Disposition: form-data; name=\"file\"\r?\n(Content-Type: .*\r?\n)?(Content-Transfer-Encoding: .*\r?\n)?(Content-Length: \\d+\r?\n)?\r?\nhello\r?\n--.*",
+   "input": "--b\r\nContent-Disposition: form-data; name=\"file\"\r\n\r\nhello\r\n--b--\r\n",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "/api/.*",
+   "input": "/api/x?y=1",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "/api/.*",
+   "input": "/api/x?y=1",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "/api/[^/]+/items\\?page=\\d+",
+   "input": "/api/a/items?page=2",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "/api/[^/]+/items\\?page=\\d+",
+   "input": "/api/a/items?page=2",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?i).*json.*",
+   "input": "application/JSON",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?i).*json.*",
+   "input": "application/JSON",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "application/json(;.*)?",
+   "input": "application/json; charset=UTF-8",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "application/json(;.*)?",
+   "input": "application/json; charset=UTF-8",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "Bearer [A-Za-z0-9\\-._~+/]+=*",
+   "input": "Bearer ab-c.d",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "Bearer [A-Za-z0-9\\-._~+/]+=*",
+   "input": "Bearer ab-c.d",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[\\w\\-]+",
+   "input": "a-b",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[\\w\\-]+",
+   "input": "a-b",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[\\w-]+",
+   "input": "a-b",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[\\w-]+",
+   "input": "a-b",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[\\d-]+",
+   "input": "1-2",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[\\d-]+",
+   "input": "1-2",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[\\s-]+",
+   "input": " -",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[\\s-]+",
+   "input": " -",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[a-z\\d]+",
+   "input": "a1",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[a-z\\d]+",
+   "input": "a1",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\d+(\\.\\d{1,2})?",
+   "input": "1.25",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\d+(\\.\\d{1,2})?",
+   "input": "1.25",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[^\\]]+",
+   "input": "abc",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[^\\]]+",
+   "input": "abc",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\[\\]",
+   "input": "[]",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\[\\]",
+   "input": "[]",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\/x",
+   "input": "/x",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\/x",
+   "input": "/x",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "#\\{x\\}",
+   "input": "#{x}",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "#\\{x\\}",
+   "input": "#{x}",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\$\\{x\\}",
+   "input": "${x}",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\$\\{x\\}",
+   "input": "${x}",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[$]",
+   "input": "$",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[$]",
+   "input": "$",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "x\\x20y",
+   "input": "x y",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "x\\x20y",
+   "input": "x y",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\t",
+   "input": "\t",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\t",
+   "input": "\t",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\u00e9",
+   "input": "é",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\u00e9",
+   "input": "é",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "é",
+   "input": "é",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "é",
+   "input": "é",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[à-ÿ]+",
+   "input": "éè",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[à-ÿ]+",
+   "input": "éè",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{Alnum}+",
+   "input": "a1",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{Alnum}+",
+   "input": "a1",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{XDigit}+",
+   "input": "fF",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\p{XDigit}+",
+   "input": "fF",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[A-Za-z\\s-']+",
+   "input": "a!b",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "[A-Za-z\\s-']+",
+   "input": "a!b",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "[A-Za-z\\s-']+",
+   "input": "a-b'c",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[A-Za-z\\s-']+",
+   "input": "a-b'c",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[A-Za-z\\s-']+",
+   "input": "O'Neil-Smith",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[A-Za-z\\s-']+",
+   "input": "O'Neil-Smith",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[\\s-z]",
+   "input": "a",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "[\\s-z]",
+   "input": "a",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "[\\p{Space}-z]",
+   "input": "a",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "[\\p{Space}-z]",
+   "input": "a",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "[\\p{Blank}-z]",
+   "input": "a",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "[\\p{Blank}-z]",
+   "input": "a",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "[\\w-.]+",
+   "input": "a-b.c",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[\\w-.]+",
+   "input": "a-b.c",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[a-z\\d-_]+",
+   "input": "a_1",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[a-z\\d-_]+",
+   "input": "a_1",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "[a-\\d]",
+   "input": "a",
+   "dotAll": true,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "[a-\\d]",
+   "input": "a",
+   "dotAll": false,
+   "mode": "full",
+   "java": "invalid"
+  },
+  {
+   "pattern": "\\cA",
+   "input": "\u0001",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "\\cA",
+   "input": "\u0001",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?i)[×-÷]",
+   "input": "À",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?i)[×-÷]",
+   "input": "À",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?i)[ -×]",
+   "input": "à",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?i)[ -×]",
+   "input": "à",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?i)a.b",
+   "input": "A😀b",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?i)a.b",
+   "input": "A😀b",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?i)a[^x]b",
+   "input": "A😀b",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?i)a[^x]b",
+   "input": "A😀b",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?i)..",
+   "input": "😀",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?i)..",
+   "input": "😀",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?i)café",
+   "input": "CAFé",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?i)café",
+   "input": "CAFé",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?m)a$\\r\\nb",
+   "input": "a\r\nb",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?m)a$\\r\\nb",
+   "input": "a\r\nb",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?m)a\\r$\\nb",
+   "input": "a\r\nb",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(?m)a\\r$\\nb",
+   "input": "a\r\nb",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(a)\\1{2}",
+   "input": "aa",
+   "dotAll": true,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(a)\\1{2}",
+   "input": "aa",
+   "dotAll": false,
+   "mode": "full",
+   "java": false
+  },
+  {
+   "pattern": "(a)\\1{2}",
+   "input": "aaa",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(a)\\1{2}",
+   "input": "aaa",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?i)\\Qab\\E",
+   "input": "AB",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?i)\\Qab\\E",
+   "input": "AB",
+   "dotAll": false,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?i)\\x41",
+   "input": "a",
+   "dotAll": true,
+   "mode": "full",
+   "java": true
+  },
+  {
+   "pattern": "(?i)\\x41",
+   "input": "a",
    "dotAll": false,
    "mode": "full",
    "java": true

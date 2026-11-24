@@ -675,7 +675,7 @@
     "method": "POST",
     "urlPath": "/x"
    },
-   "body": "\ufeff<a/>",
+   "body": "﻿<a/>",
    "wiremock": false
   },
   {
@@ -1509,13 +1509,13 @@
    "request": {
     "bodyPatterns": [
      {
-      "matches": "(?i)caf\u00e9"
+      "matches": "(?i)café"
      }
     ],
     "method": "POST",
     "urlPath": "/x"
    },
-   "body": "CAF\u00c9",
+   "body": "CAFÉ",
    "wiremock": false
   },
   {
@@ -1523,13 +1523,13 @@
    "request": {
     "bodyPatterns": [
      {
-      "matches": "(?i)caf\u00e9"
+      "matches": "(?i)café"
      }
     ],
     "method": "POST",
     "urlPath": "/x"
    },
-   "body": "CAF\u00e9",
+   "body": "CAFé",
    "wiremock": true
   },
   {
@@ -1543,7 +1543,7 @@
     "method": "POST",
     "urlPath": "/x"
    },
-   "body": "\u212a",
+   "body": "K",
    "wiremock": false
   },
   {
@@ -1565,13 +1565,13 @@
    "request": {
     "bodyPatterns": [
      {
-      "matches": "(?iu)caf\u00e9"
+      "matches": "(?iu)café"
      }
     ],
     "method": "POST",
     "urlPath": "/x"
    },
-   "body": "CAF\u00c9",
+   "body": "CAFÉ",
    "wiremock": true
   },
   {
@@ -1627,7 +1627,7 @@
     "method": "POST",
     "urlPath": "/x"
    },
-   "body": "\u0430\u0431\u0432",
+   "body": "абв",
    "wiremock": false
   },
   {
@@ -1641,7 +1641,7 @@
     "method": "POST",
     "urlPath": "/x"
    },
-   "body": "\u03b1\u03b2",
+   "body": "αβ",
    "wiremock": true
   },
   {
@@ -1669,7 +1669,7 @@
     "method": "POST",
     "urlPath": "/x"
    },
-   "body": "\u00aa",
+   "body": "ª",
    "wiremock": true
   },
   {
@@ -1739,7 +1739,7 @@
     "method": "POST",
     "urlPath": "/x"
    },
-   "body": "\ud83d\ude00",
+   "body": "😀",
    "wiremock": true
   },
   {
@@ -1753,7 +1753,7 @@
     "method": "POST",
     "urlPath": "/x"
    },
-   "body": "\ud83d\ude00",
+   "body": "😀",
    "wiremock": true
   },
   {
@@ -2198,7 +2198,7 @@
     "method": "POST",
     "urlPath": "/x"
    },
-   "body": "<a>\ufffe</a>",
+   "body": "<a>￾</a>",
    "wiremock": false
   },
   {
@@ -2282,7 +2282,7 @@
     "method": "POST",
     "urlPath": "/x"
    },
-   "body": "<a\u00a0/>",
+   "body": "<a />",
    "wiremock": false
   },
   {
@@ -2661,13 +2661,13 @@
    "request": {
     "bodyPatterns": [
      {
-      "matchesJsonPath": "$[?(@.n =~ /(?i)caf\u00e9/)]"
+      "matchesJsonPath": "$[?(@.n =~ /(?i)café/)]"
      }
     ],
     "method": "POST",
     "urlPath": "/x"
    },
-   "body": "{\"n\":\"CAF\u00c9\"}",
+   "body": "{\"n\":\"CAFÉ\"}",
    "wiremock": false
   },
   {
@@ -2681,7 +2681,7 @@
     "method": "POST",
     "urlPath": "/x"
    },
-   "body": "{\"n\":\"Zo\u00eb\"}",
+   "body": "{\"n\":\"Zoë\"}",
    "wiremock": true
   },
   {
@@ -3113,7 +3113,7 @@
     "method": "POST",
     "urlPath": "/x"
    },
-   "body": "<a>Zo\u00eb</a>",
+   "body": "<a>Zoë</a>",
    "wiremock": true
   },
   {
@@ -3144,7 +3144,7 @@
     "method": "POST",
     "urlPath": "/x"
    },
-   "body": "a\u00a0b",
+   "body": "a b",
    "wiremock": false
   },
   {
@@ -3172,7 +3172,7 @@
     "method": "POST",
     "urlPath": "/x"
    },
-   "body": "a\u00a0b",
+   "body": "a b",
    "wiremock": false
   },
   {
@@ -3186,7 +3186,7 @@
     "method": "POST",
     "urlPath": "/x"
    },
-   "body": "a\u2003b",
+   "body": "a b",
    "wiremock": false
   },
   {
@@ -3627,13 +3627,13 @@
    "request": {
     "bodyPatterns": [
      {
-      "matches": "(?i)\u00e9"
+      "matches": "(?i)é"
      }
     ],
     "method": "POST",
     "urlPath": "/x"
    },
-   "body": "\u00e9",
+   "body": "é",
    "wiremock": true
   },
   {
@@ -3641,13 +3641,13 @@
    "request": {
     "bodyPatterns": [
      {
-      "matches": "(?i)\u00e9"
+      "matches": "(?i)é"
      }
     ],
     "method": "POST",
     "urlPath": "/x"
    },
-   "body": "\u00c9",
+   "body": "É",
    "wiremock": false
   },
   {
@@ -3675,7 +3675,7 @@
     "method": "POST",
     "urlPath": "/x"
    },
-   "body": "a\u212a",
+   "body": "aK",
    "wiremock": false
   },
   {
@@ -4067,7 +4067,7 @@
     "method": "POST",
     "urlPath": "/x"
    },
-   "body": "a\u2003b",
+   "body": "a b",
    "wiremock": false
   },
   {
@@ -4081,7 +4081,7 @@
     "method": "POST",
     "urlPath": "/x"
    },
-   "body": "a\u00e9",
+   "body": "aé",
    "wiremock": false
   },
   {
@@ -4165,7 +4165,7 @@
     "method": "POST",
     "urlPath": "/x"
    },
-   "body": "a\ud83d\ude00",
+   "body": "a😀",
    "wiremock": true
   },
   {
@@ -4179,7 +4179,7 @@
     "method": "POST",
     "urlPath": "/x"
    },
-   "body": "a\ud83d\ude00",
+   "body": "a😀",
    "wiremock": true
   },
   {
@@ -4609,17 +4609,17 @@
    "wiremock": false
   },
   {
-   "name": "jsonpath (?i) \u00e9",
+   "name": "jsonpath (?i) é",
    "request": {
     "bodyPatterns": [
      {
-      "matchesJsonPath": "$[?(@.a =~ /(?i)\u00e9/)]"
+      "matchesJsonPath": "$[?(@.a =~ /(?i)é/)]"
      }
     ],
     "method": "POST",
     "urlPath": "/x"
    },
-   "body": "{\"a\":\"\u00c9\"}",
+   "body": "{\"a\":\"É\"}",
    "wiremock": false
   },
   {
@@ -4899,7 +4899,7 @@
     "method": "POST",
     "urlPath": "/x"
    },
-   "body": "\ufeff<a/>",
+   "body": "﻿<a/>",
    "wiremock": false
   },
   {
@@ -5095,7 +5095,7 @@
     "method": "POST",
     "urlPath": "/x"
    },
-   "body": "<a>\ufffe</a>",
+   "body": "<a>￾</a>",
    "wiremock": false
   },
   {
@@ -5497,7 +5497,7 @@
     "method": "POST",
     "urlPath": "/x"
    },
-   "body": "<a>\u0661</a>",
+   "body": "<a>١</a>",
    "wiremock": false
   },
   {
@@ -6159,7 +6159,7 @@
     "method": "POST",
     "urlPath": "/x"
    },
-   "body": "<a>\u00a0x</a>",
+   "body": "<a> x</a>",
    "wiremock": false
   },
   {
@@ -6173,7 +6173,7 @@
     "method": "POST",
     "urlPath": "/x"
    },
-   "body": "<a>x\u2003</a>",
+   "body": "<a>x </a>",
    "wiremock": false
   },
   {
@@ -6201,7 +6201,7 @@
     "method": "POST",
     "urlPath": "/x"
    },
-   "body": "<a>\u00a0<b/></a>",
+   "body": "<a> <b/></a>",
    "wiremock": false
   },
   {
@@ -8500,12 +8500,12 @@
    "wiremock": false
   },
   {
-   "name": "/a/b[. = '\u00df']/text()",
+   "name": "/a/b[. = 'ß']/text()",
    "request": {
     "bodyPatterns": [
      {
       "matchesXPath": {
-       "expression": "/a/b[. = '\u00df']/text()",
+       "expression": "/a/b[. = 'ß']/text()",
        "equalTo": "3"
       }
      }
@@ -9930,7 +9930,7 @@
     "method": "POST",
     "urlPath": "/x"
    },
-   "body": "Za\u017c\u00f3\u0142\u0107",
+   "body": "Zażółć",
    "wiremock": true
   },
   {
@@ -9958,7 +9958,7 @@
     "method": "POST",
     "urlPath": "/x"
    },
-   "body": "\u00e9",
+   "body": "é",
    "wiremock": false
   },
   {
@@ -9972,7 +9972,7 @@
     "method": "POST",
     "urlPath": "/x"
    },
-   "body": "\u00e9",
+   "body": "é",
    "wiremock": true
   },
   {
@@ -9986,7 +9986,7 @@
     "method": "POST",
     "urlPath": "/x"
    },
-   "body": "\u00e9",
+   "body": "é",
    "wiremock": true
   },
   {
@@ -10050,13 +10050,13 @@
    "request": {
     "bodyPatterns": [
      {
-      "matches": "(?i)\u00c4\u00d6"
+      "matches": "(?i)ÄÖ"
      }
     ],
     "method": "POST",
     "urlPath": "/x"
    },
-   "body": "\u00e4\u00f6",
+   "body": "äö",
    "wiremock": false
   },
   {
@@ -10064,13 +10064,13 @@
    "request": {
     "bodyPatterns": [
      {
-      "matches": "(?iu)\u00c4\u00d6"
+      "matches": "(?iu)ÄÖ"
      }
     ],
     "method": "POST",
     "urlPath": "/x"
    },
-   "body": "\u00e4\u00f6",
+   "body": "äö",
    "wiremock": true
   },
   {
@@ -10963,7 +10963,7 @@
     "method": "POST",
     "urlPath": "/x"
    },
-   "body": "{\"a\":\"Za\u017c\u00f3\u0142\u0107\"}",
+   "body": "{\"a\":\"Zażółć\"}",
    "wiremock": true
   },
   {
@@ -11123,6 +11123,10126 @@
     "urlPath": "/x"
    },
    "body": "<a xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns:q='urn:1' xsi:type='q:T'/>",
+   "wiremock": true
+  },
+  {
+   "name": "backref quant",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(a)\\1{2}"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "aa",
+   "wiremock": false
+  },
+  {
+   "name": "backref quant",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(a)\\1{2}"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "aaa",
+   "wiremock": true
+  },
+  {
+   "name": "backref star",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(a)\\1*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "a",
+   "wiremock": true
+  },
+  {
+   "name": "backref star",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(a)\\1*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "aaa",
+   "wiremock": true
+  },
+  {
+   "name": "backref unset",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(?:(a)|b)\\1"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "b",
+   "wiremock": false
+  },
+  {
+   "name": "backref unset",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(?:(a)|b)\\1"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "aa",
+   "wiremock": true
+  },
+  {
+   "name": "forward ref",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "\\1?(a)"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "a",
+   "wiremock": true
+  },
+  {
+   "name": "backref other alt",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(a)|\\1b"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "b",
+   "wiremock": false
+  },
+  {
+   "name": "class s-range",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "[\\s-x]+"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "ABC",
+   "wiremock": false
+  },
+  {
+   "name": "class s-range",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "[\\s-x]+"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "-x ",
+   "wiremock": true
+  },
+  {
+   "name": "class Space-range",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "[\\p{Space}-x]+"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "ABC",
+   "wiremock": false
+  },
+  {
+   "name": "class Blank-range",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "[\\p{Blank}-x]+"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "ABC",
+   "wiremock": false
+  },
+  {
+   "name": "class Alnum-",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "[\\p{Alnum}-x]+"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "-",
+   "wiremock": true
+  },
+  {
+   "name": "ci range nonascii endpoint",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(?i)[ -×]"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "à",
+   "wiremock": false
+  },
+  {
+   "name": "ci range nonascii endpoint",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(?i)[ -×]"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "À",
+   "wiremock": true
+  },
+  {
+   "name": "ci negclass astral",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(?i)[^a]{2}"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "😀",
+   "wiremock": false
+  },
+  {
+   "name": "ci dot astral",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(?i).."
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "😀",
+   "wiremock": false
+  },
+  {
+   "name": "ci S astral",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(?i)\\S\\S"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "😀",
+   "wiremock": false
+  },
+  {
+   "name": "ci W astral",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(?i)\\W\\W"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "😀",
+   "wiremock": false
+  },
+  {
+   "name": "ci neg s astral",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(?i)[^\\s]{2}"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "😀",
+   "wiremock": false
+  },
+  {
+   "name": "w",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "\\w+"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "ab_1",
+   "wiremock": true
+  },
+  {
+   "name": "w",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "\\w+"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "é",
+   "wiremock": false
+  },
+  {
+   "name": "b",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "\\bfoo\\b"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "foo",
+   "wiremock": true
+  },
+  {
+   "name": "b unicode",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "a\\bé"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "aé",
+   "wiremock": true
+  },
+  {
+   "name": "u flag alone",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(?u)abc"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "abc",
+   "wiremock": true
+  },
+  {
+   "name": "intersect",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "[a-z&&b]"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "b",
+   "wiremock": true
+  },
+  {
+   "name": "possessive brace",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "a{2}+"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "aa",
+   "wiremock": true
+  },
+  {
+   "name": "brace comma",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "a{,2}"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "a{,2}",
+   "wiremock": "rejected"
+  },
+  {
+   "name": "brace comma",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "a{,2}"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "a",
+   "wiremock": "rejected"
+  },
+  {
+   "name": "bad range quant",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "x{2,1}"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "xx",
+   "wiremock": "rejected"
+  },
+  {
+   "name": "literal brace",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "a}"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "a}",
+   "wiremock": true
+  },
+  {
+   "name": "literal ]",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "]a"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "]a",
+   "wiremock": true
+  },
+  {
+   "name": "class ] first",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "[]a]+"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "]a",
+   "wiremock": true
+  },
+  {
+   "name": "neg class ] first",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "[^]a]+"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "bc",
+   "wiremock": true
+  },
+  {
+   "name": "neg class ] first",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "[^]a]+"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "]",
+   "wiremock": false
+  },
+  {
+   "name": "hex",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "\\x41\\u0042\\x{43}"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "ABC",
+   "wiremock": true
+  },
+  {
+   "name": "ctrl",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "\\cA"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "\u0001",
+   "wiremock": true
+  },
+  {
+   "name": "e a",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "\\e\\a"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "\u001b\u0007",
+   "wiremock": true
+  },
+  {
+   "name": "astral class",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "[\\x{1F600}-\\x{1F64F}]"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "😃",
+   "wiremock": true
+  },
+  {
+   "name": "astral quant",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "😀+"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "😀😀",
+   "wiremock": true
+  },
+  {
+   "name": "named backref",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(?<n>a)\\k<n>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "aa",
+   "wiremock": true
+  },
+  {
+   "name": "named",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(?<a1>x)"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "x",
+   "wiremock": true
+  },
+  {
+   "name": "dollar final nl",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "a$"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "a\n",
+   "wiremock": false
+  },
+  {
+   "name": "dollar final nl",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "a$"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "a",
+   "wiremock": true
+  },
+  {
+   "name": "multiline",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(?m)a$\\n^b"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "a\nb",
+   "wiremock": true
+  },
+  {
+   "name": "s",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(?s)a.b"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "a\nb",
+   "wiremock": true
+  },
+  {
+   "name": "Z",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "a\\Z"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "a\n",
+   "wiremock": false
+  },
+  {
+   "name": "z",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "a\\z"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "a\n",
+   "wiremock": false
+  },
+  {
+   "name": "R",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "\\R"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "\r\n",
+   "wiremock": true
+  },
+  {
+   "name": "R",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "\\R"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "\n",
+   "wiremock": true
+  },
+  {
+   "name": "Q quant",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "\\Qa\\E+"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "aaa",
+   "wiremock": true
+  },
+  {
+   "name": "Q empty quant",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "\\Q\\E+"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "+",
+   "wiremock": "rejected"
+  },
+  {
+   "name": "empty alt",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "a|"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "",
+   "wiremock": false
+  },
+  {
+   "name": "empty alt",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "a|"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "a",
+   "wiremock": true
+  },
+  {
+   "name": "lookahead",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(?=a)a"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "a",
+   "wiremock": true
+  },
+  {
+   "name": "lookbehind start",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(?<=a)b"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "b",
+   "wiremock": false
+  },
+  {
+   "name": "bounded lookbehind",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "a(?<=a{1,3})"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "a",
+   "wiremock": true
+  },
+  {
+   "name": "escaped",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "\\$\\{x\\}"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "${x}",
+   "wiremock": true
+  },
+  {
+   "name": "escaped punct",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "\\-\\@\\#\\ \\'\\\"\\<\\>\\=\\!\\,\\:\\;\\%\\~\\&\\`"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "-@# '\"<>=!,:;%~&`",
+   "wiremock": true
+  },
+  {
+   "name": "escaped punct class",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "[\\-\\@\\#\\.\\,]+"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "-@#.,",
+   "wiremock": true
+  },
+  {
+   "name": "escaped underscore",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "\\_"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "_",
+   "wiremock": true
+  },
+  {
+   "name": "backref 8 no group",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "\\8"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "8",
+   "wiremock": false
+  },
+  {
+   "name": "backref 10",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(a)\\10"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "aa0",
+   "wiremock": true
+  },
+  {
+   "name": "octal 00",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "\\00"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "\u0000",
+   "wiremock": true
+  },
+  {
+   "name": "octal bare",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "\\0"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "\u0000",
+   "wiremock": "rejected"
+  },
+  {
+   "name": "octal class",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "[\\0101]"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "A",
+   "wiremock": true
+  },
+  {
+   "name": "named char",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "\\N{LATIN SMALL LETTER A}"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "a",
+   "wiremock": true
+  },
+  {
+   "name": "sc=",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "\\p{sc=Greek}+"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "αβ",
+   "wiremock": true
+  },
+  {
+   "name": "gc=",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "\\p{gc=Lu}"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "A",
+   "wiremock": true
+  },
+  {
+   "name": "IsUppercase",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "\\p{IsUppercase}"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "A",
+   "wiremock": true
+  },
+  {
+   "name": "Lu",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "\\p{Lu}"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "A",
+   "wiremock": true
+  },
+  {
+   "name": "Lu",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "\\p{Lu}"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "a",
+   "wiremock": false
+  },
+  {
+   "name": "ci Lu",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(?i)\\p{Lu}"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "a",
+   "wiremock": true
+  },
+  {
+   "name": "ciu Lu",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(?iu)\\p{Lu}"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "a",
+   "wiremock": true
+  },
+  {
+   "name": "ciu Lower",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(?iu)\\p{Lower}"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "A",
+   "wiremock": true
+  },
+  {
+   "name": "ci Lower",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(?i)\\p{Lower}"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "A",
+   "wiremock": true
+  },
+  {
+   "name": "ciu kelvin",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(?iu)[a-z]"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "K",
+   "wiremock": true
+  },
+  {
+   "name": "ciu kelvin lit",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(?iu)k"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "K",
+   "wiremock": true
+  },
+  {
+   "name": "ciu long s",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(?iu)s"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "ſ",
+   "wiremock": true
+  },
+  {
+   "name": "ciu sharp s",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(?iu)ß"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "SS",
+   "wiremock": false
+  },
+  {
+   "name": "ciu sharp s",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(?iu)ß"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "ẞ",
+   "wiremock": false
+  },
+  {
+   "name": "ciu w kelvin",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(?iu)\\w"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "K",
+   "wiremock": false
+  },
+  {
+   "name": "ciu W",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(?iu)\\W"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "k",
+   "wiremock": false
+  },
+  {
+   "name": "ciu W",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(?iu)\\W"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "K",
+   "wiremock": true
+  },
+  {
+   "name": "ciu negclass",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(?iu)[^k]"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "K",
+   "wiremock": false
+  },
+  {
+   "name": "ciu negclass",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(?iu)[^k]"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "K",
+   "wiremock": false
+  },
+  {
+   "name": "ciu sigma",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(?iu)σ"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "ς",
+   "wiremock": true
+  },
+  {
+   "name": "ciu sigma",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(?iu)σ"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "Σ",
+   "wiremock": true
+  },
+  {
+   "name": "ciu dotted I",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(?iu)İ"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "i",
+   "wiremock": true
+  },
+  {
+   "name": "ciu dotted I",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(?iu)İ"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "i̇",
+   "wiremock": false
+  },
+  {
+   "name": "ciu titlecase",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(?iu)ǅ"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "Ǆ",
+   "wiremock": true
+  },
+  {
+   "name": "ciu titlecase",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(?iu)ǅ"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "ǆ",
+   "wiremock": true
+  },
+  {
+   "name": "parse",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a$/>",
+   "wiremock": false
+  },
+  {
+   "name": "parse",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a b$='1'/>",
+   "wiremock": false
+  },
+  {
+   "name": "parse",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a/ >",
+   "wiremock": false
+  },
+  {
+   "name": "parse",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "< a/>",
+   "wiremock": false
+  },
+  {
+   "name": "parse",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a></a >",
+   "wiremock": true
+  },
+  {
+   "name": "parse",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "</a>",
+   "wiremock": false
+  },
+  {
+   "name": "parse",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><b></a></b>",
+   "wiremock": false
+  },
+  {
+   "name": "parse",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>&#x110000;</a>",
+   "wiremock": false
+  },
+  {
+   "name": "parse",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>&#0;</a>",
+   "wiremock": false
+  },
+  {
+   "name": "parse",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>&#65</a>",
+   "wiremock": false
+  },
+  {
+   "name": "parse",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>&amp</a>",
+   "wiremock": false
+  },
+  {
+   "name": "parse",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>&#X41;</a>",
+   "wiremock": false
+  },
+  {
+   "name": "parse",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>&#x41;</a>",
+   "wiremock": true
+  },
+  {
+   "name": "parse",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a b='1' c='2' b='3'/>",
+   "wiremock": false
+  },
+  {
+   "name": "parse",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns:p='u' xmlns:q='u' p:x='1' q:x='2'/>",
+   "wiremock": true
+  },
+  {
+   "name": "parse",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns='u' xmlns='v'/>",
+   "wiremock": false
+  },
+  {
+   "name": "parse",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a></a>",
+   "wiremock": true
+  },
+  {
+   "name": "parse",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a> </a>",
+   "wiremock": true
+  },
+  {
+   "name": "parse",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a\n/>",
+   "wiremock": true
+  },
+  {
+   "name": "parse",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a\tb='1'/>",
+   "wiremock": true
+  },
+  {
+   "name": "parse",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<?xml version='1.0'?>\n<!-- c --><a/>",
+   "wiremock": true
+  },
+  {
+   "name": "parse",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<!-- c --><?xml version='1.0'?><a/>",
+   "wiremock": false
+  },
+  {
+   "name": "parse",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a/><!-- trailing -->",
+   "wiremock": true
+  },
+  {
+   "name": "parse",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a/>\n\n",
+   "wiremock": true
+  },
+  {
+   "name": "parse",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<!DOCTYPE a PUBLIC 'x' 'y'><a/>",
+   "wiremock": true
+  },
+  {
+   "name": "parse",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<!DOCTYPE a SYSTEM 'x>y'><a/>",
+   "wiremock": true
+  },
+  {
+   "name": "parse",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<!DOCTYPE a><!DOCTYPE a><a/>",
+   "wiremock": false
+  },
+  {
+   "name": "parse",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><!DOCTYPE a></a>",
+   "wiremock": false
+  },
+  {
+   "name": "parse",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><![CDATA[x]]]></a>",
+   "wiremock": true
+  },
+  {
+   "name": "parse",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>]]&gt;</a>",
+   "wiremock": true
+  },
+  {
+   "name": "parse",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>]]</a>",
+   "wiremock": true
+  },
+  {
+   "name": "parse",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a b=\"x]]>y\"/>",
+   "wiremock": true
+  },
+  {
+   "name": "parse",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><?pi x?y?></a>",
+   "wiremock": true
+  },
+  {
+   "name": "parse",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><?xml-stylesheet x?></a>",
+   "wiremock": true
+  },
+  {
+   "name": "parse",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><?XML x?></a>",
+   "wiremock": false
+  },
+  {
+   "name": "parse",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><!----></a>",
+   "wiremock": true
+  },
+  {
+   "name": "parse",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><!---></a>",
+   "wiremock": false
+  },
+  {
+   "name": "parse",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><!-- - --></a>",
+   "wiremock": true
+  },
+  {
+   "name": "parse",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><!-- a--->",
+   "wiremock": false
+  },
+  {
+   "name": "parse",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a b='&lt;'/>",
+   "wiremock": true
+  },
+  {
+   "name": "parse",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a b='&#x3c;'/>",
+   "wiremock": true
+  },
+  {
+   "name": "parse",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a b='\t'/>",
+   "wiremock": true
+  },
+  {
+   "name": "attr ws norm",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/a/@x",
+       "equalTo": "a b"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a x=\"a\tb\"/>",
+   "wiremock": true
+  },
+  {
+   "name": "attr ws norm",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/a/@x",
+       "equalTo": "a b"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a x=\"a\nb\"/>",
+   "wiremock": true
+  },
+  {
+   "name": "attr ws norm",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/a/@x",
+       "equalTo": "a b"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a x=\"a\r\nb\"/>",
+   "wiremock": true
+  },
+  {
+   "name": "attr ws norm",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/a/@x",
+       "equalTo": "a b"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a x=\"a&#9;b\"/>",
+   "wiremock": false
+  },
+  {
+   "name": "attr tab",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/a/@x",
+       "equalTo": "a\tb"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a x=\"a\tb\"/>",
+   "wiremock": false
+  },
+  {
+   "name": "attr tab",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/a/@x",
+       "equalTo": "a\tb"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a x=\"a&#9;b\"/>",
+   "wiremock": true
+  },
+  {
+   "name": "eqxml attr norm",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a x='a b'/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a x=\"a\tb\"/>",
+   "wiremock": true
+  },
+  {
+   "name": "eqxml attr norm",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a x='a b'/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a x=\"a&#9;b\"/>",
+   "wiremock": false
+  },
+  {
+   "name": "eqxml attr norm",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a x='a b'/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a x=\"a  b\"/>",
+   "wiremock": false
+  },
+  {
+   "name": "text cr",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/a/text()",
+       "equalTo": "x\ny"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>x\ry</a>",
+   "wiremock": true
+  },
+  {
+   "name": "text cr",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/a/text()",
+       "equalTo": "x\ny"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>x&#13;y</a>",
+   "wiremock": false
+  },
+  {
+   "name": "text cr",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/a/text()",
+       "equalTo": "x\ny"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>x\r\ny</a>",
+   "wiremock": true
+  },
+  {
+   "name": "expected no-ns vs actual ns",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns='urn:x'/>",
+   "wiremock": true
+  },
+  {
+   "name": "expected no-ns vs actual ns",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<p:a xmlns:p='urn:x'/>",
+   "wiremock": true
+  },
+  {
+   "name": "nested no-ns",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a><b/></a>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><b xmlns='urn:x'/></a>",
+   "wiremock": true
+  },
+  {
+   "name": "nested no-ns",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a><b/></a>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns='urn:x'><b/></a>",
+   "wiremock": true
+  },
+  {
+   "name": "leftover pairing",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a><b/><c/></a>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><c xmlns='u'/><b/></a>",
+   "wiremock": true
+  },
+  {
+   "name": "leftover pairing",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a><b/><c/></a>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><c/><b xmlns='u'/></a>",
+   "wiremock": true
+  },
+  {
+   "name": "mixed ns same name",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a><b>1</b><b>2</b></a>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><b xmlns='u'>1</b><b>2</b></a>",
+   "wiremock": true
+  },
+  {
+   "name": "mixed ns same name",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a><b>1</b><b>2</b></a>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><b>1</b><b xmlns='u'>2</b></a>",
+   "wiremock": true
+  },
+  {
+   "name": "mixed ns same name",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a><b>1</b><b>2</b></a>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><b xmlns='u'>2</b><b>1</b></a>",
+   "wiremock": false
+  },
+  {
+   "name": "attr no-ns vs ns",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a x='1'/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns:p='u' p:x='1'/>",
+   "wiremock": false
+  },
+  {
+   "name": "regex find",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a>${xmlunit.matchesRegex(\\d)}</a>",
+      "enablePlaceholders": true
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>a1b</a>",
+   "wiremock": true
+  },
+  {
+   "name": "regex find",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a>${xmlunit.matchesRegex(\\d)}</a>",
+      "enablePlaceholders": true
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>1</a>",
+   "wiremock": true
+  },
+  {
+   "name": "regex anchors",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a>${xmlunit.matchesRegex(^\\d+$)}</a>",
+      "enablePlaceholders": true
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>12</a>",
+   "wiremock": true
+  },
+  {
+   "name": "regex anchors",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a>${xmlunit.matchesRegex(^\\d+$)}</a>",
+      "enablePlaceholders": true
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>1\n2</a>",
+   "wiremock": false
+  },
+  {
+   "name": "regex brace",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a>${xmlunit.matchesRegex(\\d{1})}</a>",
+      "enablePlaceholders": true
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>1</a>",
+   "wiremock": true
+  },
+  {
+   "name": "ignore parens",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a>${xmlunit.ignore()}</a>",
+      "enablePlaceholders": true
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>x</a>",
+   "wiremock": false
+  },
+  {
+   "name": "isNumber",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a>${xmlunit.isNumber}</a>",
+      "enablePlaceholders": true
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a> 1 </a>",
+   "wiremock": true
+  },
+  {
+   "name": "isNumber",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a>${xmlunit.isNumber}</a>",
+      "enablePlaceholders": true
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>+.5e-3</a>",
+   "wiremock": true
+  },
+  {
+   "name": "isNumber",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a>${xmlunit.isNumber}</a>",
+      "enablePlaceholders": true
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>1E5</a>",
+   "wiremock": true
+  },
+  {
+   "name": "isNumber",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a>${xmlunit.isNumber}</a>",
+      "enablePlaceholders": true
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>١٢</a>",
+   "wiremock": false
+  },
+  {
+   "name": "unknown placeholder",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a>${xmlunit.foo}</a>",
+      "enablePlaceholders": true
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>${xmlunit.foo}</a>",
+   "wiremock": true
+  },
+  {
+   "name": "unknown placeholder",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a>${xmlunit.foo}</a>",
+      "enablePlaceholders": true
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>x</a>",
+   "wiremock": false
+  },
+  {
+   "name": "ignore vs element",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a>${xmlunit.ignore}</a>",
+      "enablePlaceholders": true
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>x<b/></a>",
+   "wiremock": false
+  },
+  {
+   "name": "attr ignore",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a b='${xmlunit.ignore}' c='1'/>",
+      "enablePlaceholders": true
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a c='1'/>",
+   "wiremock": true
+  },
+  {
+   "name": "attr ignore",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a b='${xmlunit.ignore}' c='1'/>",
+      "enablePlaceholders": true
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a c='1' b='z'/>",
+   "wiremock": true
+  },
+  {
+   "name": "attr ignore",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a b='${xmlunit.ignore}' c='1'/>",
+      "enablePlaceholders": true
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a c='1' d='z'/>",
+   "wiremock": true
+  },
+  {
+   "name": "ignoreOrder case sort",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a><b>B</b><b>a</b></a>",
+      "ignoreOrderOfSameNode": true
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><b>a</b><b>B</b></a>",
+   "wiremock": true
+  },
+  {
+   "name": "sort utf16",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a><b>é</b><b>😀</b><b>￿</b></a>",
+      "ignoreOrderOfSameNode": true
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><b>😀</b><b>￿</b><b>é</b></a>",
+   "wiremock": "rejected"
+  },
+  {
+   "name": "name sort case",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a><x/><b/><B/></a>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><B/><b/><x/></a>",
+   "wiremock": true
+  },
+  {
+   "name": "same local diff ns",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a><p:b xmlns:p='u'/><b/></a>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><b/><p:b xmlns:p='u'/></a>",
+   "wiremock": false
+  },
+  {
+   "name": "same name reorder",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a><b>1</b><c>2</c><b>3</b></a>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><b>3</b><c>2</c><b>1</b></a>",
+   "wiremock": false
+  },
+  {
+   "name": "xsi type",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a xsi:type='p:T' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns:p='u'/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xsi:type='q:T' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns:q='u'/>",
+   "wiremock": true
+  },
+  {
+   "name": "xsi type",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a xsi:type='p:T' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns:p='u'/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xsi:type='T' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns='u'/>",
+   "wiremock": true
+  },
+  {
+   "name": "xsi type default ns",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a xsi:type='T' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xsi:type='T' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns='u'/>",
+   "wiremock": false
+  },
+  {
+   "name": "cdata",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a><![CDATA[x]]></a>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>x</a>",
+   "wiremock": false
+  },
+  {
+   "name": "cdata",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a><![CDATA[x]]></a>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><![CDATA[x]]></a>",
+   "wiremock": true
+  },
+  {
+   "name": "cdata",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a><![CDATA[x]]></a>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><![CDATA[ x ]]></a>",
+   "wiremock": true
+  },
+  {
+   "name": "text+cdata",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a>x<![CDATA[y]]></a>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>xy</a>",
+   "wiremock": false
+  },
+  {
+   "name": "text+cdata",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a>x<![CDATA[y]]></a>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><![CDATA[x]]>y</a>",
+   "wiremock": false
+  },
+  {
+   "name": "pi ws",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a><?p  d ?></a>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><?p d?></a>",
+   "wiremock": true
+  },
+  {
+   "name": "doc pi",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<?p d?><a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a/>",
+   "wiremock": false
+  },
+  {
+   "name": "doc pi",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<?p d?><a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a/><?p d?>",
+   "wiremock": false
+  },
+  {
+   "name": "doc pi actual",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<?p d?><a/>",
+   "wiremock": false
+  },
+  {
+   "name": "doc pi actual",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<!--c--><a/>",
+   "wiremock": true
+  },
+  {
+   "name": "nbsp trim",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a> x </a>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>x</a>",
+   "wiremock": false
+  },
+  {
+   "name": "emsp trim",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a>x</a>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a> x</a>",
+   "wiremock": false
+  },
+  {
+   "name": "<b>&#128512;</b>\n",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/a/b",
+       "equalTo": "<b>&#128512;</b>\n"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><b>😀</b></a>",
+   "wiremock": true
+  },
+  {
+   "name": "<b>&#x1F600;</b>\n",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/a/b",
+       "equalTo": "<b>&#x1F600;</b>\n"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><b>😀</b></a>",
+   "wiremock": false
+  },
+  {
+   "name": "<b>😀</b>\n",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/a/b",
+       "equalTo": "<b>😀</b>\n"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><b>😀</b></a>",
+   "wiremock": false
+  },
+  {
+   "name": "<b>&#133;</b>\n",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/a/b",
+       "equalTo": "<b>&#133;</b>\n"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><b></b></a>",
+   "wiremock": true
+  },
+  {
+   "name": "<b>&#x85;</b>\n",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/a/b",
+       "equalTo": "<b>&#x85;</b>\n"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><b></b></a>",
+   "wiremock": false
+  },
+  {
+   "name": "<b>&#127;</b>\n",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/a/b",
+       "equalTo": "<b>&#127;</b>\n"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><b></b></a>",
+   "wiremock": true
+  },
+  {
+   "name": "<b x=\"&#128512;\"/>\n",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/a/b",
+       "equalTo": "<b x=\"&#128512;\"/>\n"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><b x='😀'/></a>",
+   "wiremock": true
+  },
+  {
+   "name": "empty body",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": ".*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "",
+   "wiremock": false
+  },
+  {
+   "name": "s dash end",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "[\\s-]+"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "- ",
+   "wiremock": true
+  },
+  {
+   "name": "s mid",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "[a\\s-x]+"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "ABC",
+   "wiremock": false
+  },
+  {
+   "name": "bad range",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "[\\x{1F600}-x]"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "a",
+   "wiremock": "rejected"
+  },
+  {
+   "name": "ci nocase nonascii",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(?i)[a-z]+×"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "ABC×",
+   "wiremock": true
+  },
+  {
+   "name": "ci escape nonascii",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(?i)\\u00e0"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "À",
+   "wiremock": false
+  },
+  {
+   "name": "ci range xff",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(?i)[\\x00-\\xff]"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "Ÿ",
+   "wiremock": false
+  },
+  {
+   "name": "ci neg range",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(?i)[^\\x00-\\x7f]"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "K",
+   "wiremock": true
+  },
+  {
+   "name": "ci W nonascii",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(?i)\\W"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "K",
+   "wiremock": true
+  },
+  {
+   "name": "ci W nonascii",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(?i)\\W"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "ſ",
+   "wiremock": true
+  },
+  {
+   "name": "javaLower",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "\\p{javaLowerCase}"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "ª",
+   "wiremock": true
+  },
+  {
+   "name": "IsDigit",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "\\p{IsDigit}"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "١",
+   "wiremock": true
+  },
+  {
+   "name": "IsHex",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "\\p{IsHex_Digit}"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "Ａ",
+   "wiremock": true
+  },
+  {
+   "name": "IsPunct",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "\\p{IsPunctuation}"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "!",
+   "wiremock": true
+  },
+  {
+   "name": "IsLetter",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "\\p{IsLetter}"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "a",
+   "wiremock": true
+  },
+  {
+   "name": "L astral",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "\\p{L}"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "😀",
+   "wiremock": false
+  },
+  {
+   "name": "neg astral u",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "[^a]"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "😀",
+   "wiremock": true
+  },
+  {
+   "name": "flags",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(?s)(?m)a.$"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "a\n",
+   "wiremock": true
+  },
+  {
+   "name": "R crlf",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "a\\R"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "a\r\n",
+   "wiremock": true
+  },
+  {
+   "name": "R backtrack",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "a\\R\\n"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "a\r\n",
+   "wiremock": true
+  },
+  {
+   "name": "unix lines",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(?d)a."
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "a\r",
+   "wiremock": true
+  },
+  {
+   "name": "contains then equalTo",
+   "request": {
+    "bodyPatterns": [
+     {
+      "contains": "zzz",
+      "equalTo": "abc"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "abc",
+   "wiremock": false
+  },
+  {
+   "name": "contains then equalTo",
+   "request": {
+    "bodyPatterns": [
+     {
+      "contains": "zzz",
+      "equalTo": "abc"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "zzz",
+   "wiremock": true
+  },
+  {
+   "name": "matches then equalTo",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "z.*",
+      "equalTo": "abc"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "abc",
+   "wiremock": false
+  },
+  {
+   "name": "matches then equalTo",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "z.*",
+      "equalTo": "abc"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "zz",
+   "wiremock": true
+  },
+  {
+   "name": "doesNotMatch then contains",
+   "request": {
+    "bodyPatterns": [
+     {
+      "doesNotMatch": "a.*",
+      "contains": "b"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "abc",
+   "wiremock": false
+  },
+  {
+   "name": "doesNotMatch then contains",
+   "request": {
+    "bodyPatterns": [
+     {
+      "doesNotMatch": "a.*",
+      "contains": "b"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "xb",
+   "wiremock": true
+  },
+  {
+   "name": "xpath + equalTo",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalTo": "abc",
+      "matchesXPath": "/a"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "abc",
+   "wiremock": true
+  },
+  {
+   "name": "xpath + equalTo",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalTo": "abc",
+      "matchesXPath": "/a"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a/>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToJson + equalTo",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalTo": "x",
+      "equalToJson": "{}"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "x",
+   "wiremock": true
+  },
+  {
+   "name": "equalToJson + equalTo",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalTo": "x",
+      "equalToJson": "{}"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "{}",
+   "wiremock": false
+  },
+  {
+   "name": "eqxml + contains",
+   "request": {
+    "bodyPatterns": [
+     {
+      "contains": "zz",
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a/>",
+   "wiremock": false
+  },
+  {
+   "name": "eqxml + contains",
+   "request": {
+    "bodyPatterns": [
+     {
+      "contains": "zz",
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "zz",
+   "wiremock": true
+  },
+  {
+   "name": "absent+equalTo",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalTo": "x",
+      "absent": false
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "x",
+   "wiremock": true
+  },
+  {
+   "name": "absent+equalTo",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalTo": "x",
+      "absent": false
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "",
+   "wiremock": false
+  },
+  {
+   "name": "S2 eq",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<!DOCTYPE a [<!ATTLIST a x CDATA \"1\">]><a/>",
+   "wiremock": false
+  },
+  {
+   "name": "S2 xp",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/a[not(@x)]"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<!DOCTYPE a [<!ATTLIST a x CDATA \"1\">]><a/>",
+   "wiremock": false
+  },
+  {
+   "name": "V2 adj",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/test/duck/text()",
+       "equalTo": "123"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<test><duck><![CDATA[x]]>123</duck></test>",
+   "wiremock": false
+  },
+  {
+   "name": "V2 empty cdata",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/a/text()"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><![CDATA[]]></a>",
+   "wiremock": true
+  },
+  {
+   "name": "V3",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a/> ",
+   "wiremock": false
+  },
+  {
+   "name": "V3",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a/><![CDATA[x]]>",
+   "wiremock": false
+  },
+  {
+   "name": "V3 nsaware dup",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/a",
+      "xPathNamespaces": {
+       "z": "u"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns:p='u' xmlns:q='u' p:b='1' q:b='2'/>",
+   "wiremock": false
+  },
+  {
+   "name": "V3 nsaware dup",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/a",
+      "xPathNamespaces": {
+       "z": "u"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns:p='http://www.w3.org/2000/xmlns/'/>",
+   "wiremock": false
+  },
+  {
+   "name": "V3 nsaware dup",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/a",
+      "xPathNamespaces": {
+       "z": "u"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns='http://www.w3.org/XML/1998/namespace'/>",
+   "wiremock": false
+  },
+  {
+   "name": "V3 nsaware dup",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/a",
+      "xPathNamespaces": {
+       "z": "u"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns:xml='urn:wrong'/>",
+   "wiremock": true
+  },
+  {
+   "name": "V3 nsaware dup",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/a",
+      "xPathNamespaces": {
+       "z": "u"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns:xmlns='u'/>",
+   "wiremock": true
+  },
+  {
+   "name": "V4",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/p:a/p:b/p:c",
+       "equalTo": "<c/>\n"
+      },
+      "xPathNamespaces": {
+       "p": "u"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns='u'><b><c xmlns=''/></b></a>",
+   "wiremock": false
+  },
+  {
+   "name": "V4b",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/p:a/p:b/c",
+       "equalTo": "<c/>\n"
+      },
+      "xPathNamespaces": {
+       "p": "u"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns='u'><b><c xmlns=''/></b></a>",
+   "wiremock": true
+  },
+  {
+   "name": "V6",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a><b>1</b></a>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='urn:a a.xsd'><b>1</b></a>",
+   "wiremock": true
+  },
+  {
+   "name": "V6",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a><b>1</b></a>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:noNamespaceSchemaLocation='a.xsd'><b>1</b></a>",
+   "wiremock": true
+  },
+  {
+   "name": "V7",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a>[[xmlunit.ignore]]</a>",
+      "enablePlaceholders": true,
+      "placeholderOpeningDelimiterRegex": "\\Q[[\\E",
+      "placeholderClosingDelimiterRegex": "\\Q]]\\E"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>z</a>",
+   "wiremock": true
+  },
+  {
+   "name": "V8 doesNotMatch",
+   "request": {
+    "bodyPatterns": [
+     {
+      "doesNotMatch": "x"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "",
+   "wiremock": true
+  },
+  {
+   "name": "V8 equalTo empty",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalTo": ""
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "",
+   "wiremock": false
+  },
+  {
+   "name": "V8 contains empty",
+   "request": {
+    "bodyPatterns": [
+     {
+      "contains": ""
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "",
+   "wiremock": false
+  },
+  {
+   "name": "V8 doesNotContain",
+   "request": {
+    "bodyPatterns": [
+     {
+      "doesNotContain": "x"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "",
+   "wiremock": true
+  },
+  {
+   "name": "V8 absent",
+   "request": {
+    "bodyPatterns": [
+     {
+      "absent": true
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "",
+   "wiremock": true
+  },
+  {
+   "name": "V8 absent",
+   "request": {
+    "bodyPatterns": [
+     {
+      "absent": true
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "x",
+   "wiremock": false
+  },
+  {
+   "name": "V11 pi",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/processing-instruction()"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<?xml version='1.0'?><a/>",
+   "wiremock": false
+  },
+  {
+   "name": "V11 node1",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/node()[1][self::a]"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<?xml version='1.0'?><a/>",
+   "wiremock": true
+  },
+  {
+   "name": "V12 IsAny",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "\\p{IsAny}"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "a",
+   "wiremock": "rejected"
+  },
+  {
+   "name": "V12 javaWs",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "\\p{javaWhitespace}"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": " ",
+   "wiremock": false
+  },
+  {
+   "name": "V12 javaWs",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "\\p{javaWhitespace}"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "\u001c",
+   "wiremock": true
+  },
+  {
+   "name": "V12 javaWs",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "\\p{javaWhitespace}"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "\u001f",
+   "wiremock": true
+  },
+  {
+   "name": "V13",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/a/b",
+       "matches": ".*"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><b p:x='1'/></a>",
+   "wiremock": false
+  },
+  {
+   "name": "V14",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a>${xmlunit.isNumber}</a>",
+      "enablePlaceholders": true
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>${xmlunit.isNumber}</a>",
+   "wiremock": true
+  },
+  {
+   "name": "V15",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesJsonPath": "$[?(@.a =~ /a b/x)]"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "{\"a\":\"ab\"}",
+   "wiremock": true
+  },
+  {
+   "name": "V16 ns axis",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/a/namespace::*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns:p='u'/>",
+   "wiremock": true
+  },
+  {
+   "name": "V16 nonint",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/a/b[1.5]"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><b/><b/></a>",
+   "wiremock": true
+  },
+  {
+   "name": "V13 root",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/a",
+       "matches": ".*"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a p:x='1'/>",
+   "wiremock": false
+  },
+  {
+   "name": "V13 root",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/a",
+       "matches": ".*"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><b p:x='1'>t</b></a>",
+   "wiremock": false
+  },
+  {
+   "name": "V13 contains",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/a/b",
+       "contains": "b"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><b p:x='1'/></a>",
+   "wiremock": false
+  },
+  {
+   "name": "V13 elem prefix",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/a/b",
+       "matches": ".*"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><p:b/></a>",
+   "wiremock": true
+  },
+  {
+   "name": "V16 ns axis val",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/a/namespace::*",
+       "equalTo": "u"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns:p='u'/>",
+   "wiremock": true
+  },
+  {
+   "name": "ns-aware namespace axis",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/a/namespace::q",
+      "xPathNamespaces": {
+       "p": "urn:p"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns:q=\"urn:x\"/>",
+   "wiremock": true
+  },
+  {
+   "name": "ns-aware namespace axis",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/a/namespace::q",
+      "xPathNamespaces": {
+       "p": "urn:p"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a/>",
+   "wiremock": false
+  },
+  {
+   "name": "/a/b[1.5]/text()",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/a/b[1.5]/text()",
+       "equalTo": "3"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a x=\"1\"><b>3</b><b>10</b><c lang=\"en-US\">t</c></a>",
+   "wiremock": true
+  },
+  {
+   "name": "/a/b[count(/a/namespace::*)=1]/text()",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/a/b[count(/a/namespace::*)=1]/text()",
+       "equalTo": "3"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a x=\"1\"><b>3</b><b>10</b><c lang=\"en-US\">t</c></a>",
+   "wiremock": true
+  },
+  {
+   "name": "matches then equalTo",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": ".*",
+      "equalTo": "x"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "y",
+   "wiremock": true
+  },
+  {
+   "name": "matches then equalTo",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": ".*",
+      "equalTo": "x"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "x",
+   "wiremock": true
+  },
+  {
+   "name": "contains then equalTo",
+   "request": {
+    "bodyPatterns": [
+     {
+      "contains": "y",
+      "equalTo": "x"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "y",
+   "wiremock": true
+  },
+  {
+   "name": "contains then equalTo",
+   "request": {
+    "bodyPatterns": [
+     {
+      "contains": "y",
+      "equalTo": "x"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "x",
+   "wiremock": false
+  },
+  {
+   "name": "doesNotMatch then matches",
+   "request": {
+    "bodyPatterns": [
+     {
+      "doesNotMatch": "z",
+      "matches": "x"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "y",
+   "wiremock": true
+  },
+  {
+   "name": "doesNotMatch then matches",
+   "request": {
+    "bodyPatterns": [
+     {
+      "doesNotMatch": "z",
+      "matches": "x"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "x",
+   "wiremock": true
+  },
+  {
+   "name": "equalToXml then equalTo",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>",
+      "equalTo": "x"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a/>",
+   "wiremock": true
+  },
+  {
+   "name": "equalToXml then equalTo",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>",
+      "equalTo": "x"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "x",
+   "wiremock": false
+  },
+  {
+   "name": "matchesXPath then equalTo",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalTo": "x",
+      "matchesXPath": "/a"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a/>",
+   "wiremock": false
+  },
+  {
+   "name": "matchesXPath then equalTo",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalTo": "x",
+      "matchesXPath": "/a"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "x",
+   "wiremock": true
+  },
+  {
+   "name": "hdr matches then equalTo",
+   "request": {
+    "headers": {
+     "X-A": {
+      "matches": ".*",
+      "equalTo": "x"
+     }
+    },
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "b",
+   "wiremock": false
+  },
+  {
+   "name": "xpath sub two ops",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/a/text()",
+       "contains": "q",
+       "equalTo": "x"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>q</a>",
+   "wiremock": true
+  },
+  {
+   "name": "xpath sub two ops",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/a/text()",
+       "contains": "q",
+       "equalTo": "x"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>x</a>",
+   "wiremock": false
+  },
+  {
+   "name": "equalTo + absent",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalTo": "x",
+      "absent": true
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "x",
+   "wiremock": true
+  },
+  {
+   "name": "equalTo + absent",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalTo": "x",
+      "absent": true
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "",
+   "wiremock": false
+  },
+  {
+   "name": "matches + caseInsensitive",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "X",
+      "caseInsensitive": true
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "x",
+   "wiremock": false
+  },
+  {
+   "name": "contains caseInsensitive",
+   "request": {
+    "bodyPatterns": [
+     {
+      "contains": "X",
+      "caseInsensitive": true
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "x",
+   "wiremock": false
+  },
+  {
+   "name": "jp /g",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesJsonPath": "$[?(@.a =~ /abc/g)]"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "{\"a\":\"abc\"}",
+   "wiremock": "rejected"
+  },
+  {
+   "name": "jp /x",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesJsonPath": "$[?(@.a =~ /a b c/x)]"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "{\"a\":\"abc\"}",
+   "wiremock": true
+  },
+  {
+   "name": "jp /iu",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesJsonPath": "$[?(@.a =~ /é/iu)]"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "{\"a\":\"É\"}",
+   "wiremock": true
+  },
+  {
+   "name": "jp dot nl",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesJsonPath": "$[?(@.a =~ /a.c/)]"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "{\"a\":\"a\\nc\"}",
+   "wiremock": false
+  },
+  {
+   "name": "jp dot nl",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesJsonPath": "$[?(@.a =~ /a.c/)]"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "{\"a\":\"abc\"}",
+   "wiremock": true
+  },
+  {
+   "name": "jp dollar nl",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesJsonPath": "$[?(@.a =~ /abc$/)]"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "{\"a\":\"abc\\n\"}",
+   "wiremock": false
+  },
+  {
+   "name": "jp backref",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesJsonPath": "$[?(@.a =~ /(x)?\\1b/)]"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "{\"a\":\"b\"}",
+   "wiremock": false
+  },
+  {
+   "name": "backref nonpart",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(['\"])?v\\1"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "v",
+   "wiremock": false
+  },
+  {
+   "name": "backref nonpart",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(['\"])?v\\1"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "'v'",
+   "wiremock": true
+  },
+  {
+   "name": "backref nonpart",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(['\"])?v\\1"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "\"v\"",
+   "wiremock": true
+  },
+  {
+   "name": "(?m)^ empty",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(?m)^.*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "",
+   "wiremock": false
+  },
+  {
+   "name": "(?m)^ empty hdr",
+   "request": {
+    "headers": {
+     "X-A": {
+      "matches": "(?m)^\\s*$"
+     }
+    },
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "x",
+   "wiremock": false
+  },
+  {
+   "name": "adjacent cdata text()",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/test/duck/text()",
+       "equalTo": "123"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<test><duck>x<![CDATA[y]]>123</duck></test>",
+   "wiremock": false
+  },
+  {
+   "name": "adjacent cdata text()",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/test/duck/text()",
+       "equalTo": "123"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<test><duck>123<![CDATA[x]]></duck></test>",
+   "wiremock": true
+  },
+  {
+   "name": "adjacent cdata [2]",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/test/duck/text()[2]",
+       "equalTo": "123"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<test><duck><![CDATA[x]]>123</duck></test>",
+   "wiremock": false
+  },
+  {
+   "name": "adjacent count",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/test/duck[count(text())=2]"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<test><duck><![CDATA[x]]>123</duck></test>",
+   "wiremock": false
+  },
+  {
+   "name": "pi decl",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/processing-instruction()"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<?xml version=\"1.0\"?><a/>",
+   "wiremock": false
+  },
+  {
+   "name": "pi decl",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/processing-instruction()"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a/>",
+   "wiremock": false
+  },
+  {
+   "name": "node()[1] decl",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/node()[1][self::a]"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<?xml version=\"1.0\"?><a/>",
+   "wiremock": true
+  },
+  {
+   "name": "C1 render",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/a/b",
+       "contains": "&#127;"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><b>&#x7F;</b></a>",
+   "wiremock": true
+  },
+  {
+   "name": "C1 render raw",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/a/b",
+       "equalTo": "<b></b>\n"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><b>&#x7F;</b></a>",
+   "wiremock": false
+  },
+  {
+   "name": "astral ns-aware",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/a/b",
+       "contains": "😀"
+      },
+      "xPathNamespaces": {
+       "p": "urn:p"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><b>😀</b></a>",
+   "wiremock": false
+  },
+  {
+   "name": "astral unaware",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/a/b",
+       "contains": "😀"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><b>😀</b></a>",
+   "wiremock": false
+  },
+  {
+   "name": "ns pairing",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<r><q:a xmlns:q=\"urn:x\"/><a/></r>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<r><a/><q:a xmlns:q=\"urn:x\"/></r>",
+   "wiremock": false
+  },
+  {
+   "name": "soap header/body same local",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<e><h:id xmlns:h=\"urn:h\">1</h:id><b:id xmlns:b=\"urn:b\">2</b:id></e>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<e><b:id xmlns:b=\"urn:b\">2</b:id><h:id xmlns:h=\"urn:h\">1</h:id></e>",
+   "wiremock": false
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<·a/>",
+   "wiremock": false
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a·/>",
+   "wiremock": true
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<-a/>",
+   "wiremock": false
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<.a/>",
+   "wiremock": false
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a b.c=\"1\"/>",
+   "wiremock": true
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a 1b=\"x\"/>",
+   "wiremock": false
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a b=x/>",
+   "wiremock": false
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a b/>",
+   "wiremock": false
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a b =\"1\"/>",
+   "wiremock": true
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a b= \"1\"/>",
+   "wiremock": true
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a></ a>",
+   "wiremock": false
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a></A>",
+   "wiremock": false
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><!-- --->",
+   "wiremock": false
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><?XmL x?></a>",
+   "wiremock": false
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<?xml version=\"1.0\"?><?xml version=\"1.0\"?><a/>",
+   "wiremock": false
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<?xml version=\"2.0\"?><a/>",
+   "wiremock": false
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<?xml encoding=\"UTF-8\"?><a/>",
+   "wiremock": false
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<?xml  version=\"1.0\"?><a/>",
+   "wiremock": true
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<?xml version=\"1.0\" ?><a/>",
+   "wiremock": true
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<?xml version=\"1.0\"?>\n<!DOCTYPE a>\n<!DOCTYPE a><a/>",
+   "wiremock": false
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a/><!DOCTYPE a>",
+   "wiremock": false
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<!DOCTYPE a PUBLIC \"x\"><a/>",
+   "wiremock": false
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<!DOCTYPE a SYSTEM 'x'><a/>",
+   "wiremock": true
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<!DOCTYPE a SYSTEM \"x\" junk><a/>",
+   "wiremock": false
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<!DOCTYPE><a/>",
+   "wiremock": false
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<!doctype a><a/>",
+   "wiremock": false
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>&#x;</a>",
+   "wiremock": false
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>&#;</a>",
+   "wiremock": false
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>&#x0041;</a>",
+   "wiremock": true
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>&lt</a>",
+   "wiremock": false
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>&a.b;</a>",
+   "wiremock": false
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>&amp ;</a>",
+   "wiremock": false
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a b=\"&#0;\"/>",
+   "wiremock": false
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a b=\"&\"/>",
+   "wiremock": false
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a b=\"]]>\"/>",
+   "wiremock": true
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a b=\"\t\"/>",
+   "wiremock": true
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><![CDATA[\u0001]]></a>",
+   "wiremock": false
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><!-- \u0001 --></a>",
+   "wiremock": false
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><?p \u0001?></a>",
+   "wiremock": false
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a b=\"1\" b=\"1\"/>",
+   "wiremock": false
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns=\"u\" xmlns=\"u\"/>",
+   "wiremock": false
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a p:b=\"1\" xmlns:p=\"u\" xmlns:q=\"u\" q:b=\"2\"/>",
+   "wiremock": true
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns:xml=\"urn:wrong\"/>",
+   "wiremock": true
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns:xmlns=\"u\"/>",
+   "wiremock": true
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns:p=\"http://www.w3.org/2000/xmlns/\"/>",
+   "wiremock": true
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns=\"http://www.w3.org/XML/1998/namespace\"/>",
+   "wiremock": true
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>﻿</a>",
+   "wiremock": true
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "﻿<a/>",
+   "wiremock": false
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>￿</a>",
+   "wiremock": false
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>\r</a>",
+   "wiremock": true
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a\r\nb=\"1\"/>",
+   "wiremock": true
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a b=\"1\"/>",
+   "wiremock": false
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a b=\"1\"/>",
+   "wiremock": false
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>x</a>\u0000",
+   "wiremock": false
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": " <a/>",
+   "wiremock": false
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a/>x",
+   "wiremock": false
+  },
+  {
+   "name": "unaware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a/>&amp;",
+   "wiremock": false
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<·a/>",
+   "wiremock": false
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a·/>",
+   "wiremock": true
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<-a/>",
+   "wiremock": false
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<.a/>",
+   "wiremock": false
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a b.c=\"1\"/>",
+   "wiremock": true
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a 1b=\"x\"/>",
+   "wiremock": false
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a b=x/>",
+   "wiremock": false
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a b/>",
+   "wiremock": false
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a b =\"1\"/>",
+   "wiremock": true
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a b= \"1\"/>",
+   "wiremock": true
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "< a/>",
+   "wiremock": false
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a></ a>",
+   "wiremock": false
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a></a >",
+   "wiremock": true
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a/ >",
+   "wiremock": false
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a></A>",
+   "wiremock": false
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a:/>",
+   "wiremock": false
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a:b:c/>",
+   "wiremock": false
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a b:=\"1\"/>",
+   "wiremock": false
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><!----></a>",
+   "wiremock": true
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><!---></a>",
+   "wiremock": false
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><!-- --->",
+   "wiremock": false
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><!-- - --></a>",
+   "wiremock": true
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><?xml x?></a>",
+   "wiremock": false
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><?XmL x?></a>",
+   "wiremock": false
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<?xml version=\"1.0\"?><?xml version=\"1.0\"?><a/>",
+   "wiremock": false
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<?xml version='1.0' standalone='maybe'?><a/>",
+   "wiremock": false
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<?xml version=\"2.0\"?><a/>",
+   "wiremock": false
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<?xml encoding=\"UTF-8\"?><a/>",
+   "wiremock": false
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<?xml  version=\"1.0\"?><a/>",
+   "wiremock": true
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<?xml version=\"1.0\" ?><a/>",
+   "wiremock": true
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<?xml version=\"1.0\"?>\n<!DOCTYPE a>\n<!DOCTYPE a><a/>",
+   "wiremock": false
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a/><!DOCTYPE a>",
+   "wiremock": false
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<!DOCTYPE a PUBLIC \"x\"><a/>",
+   "wiremock": false
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<!DOCTYPE a SYSTEM 'x'><a/>",
+   "wiremock": true
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<!DOCTYPE a SYSTEM \"x\" junk><a/>",
+   "wiremock": false
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<!DOCTYPE><a/>",
+   "wiremock": false
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<!doctype a><a/>",
+   "wiremock": false
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>&#x;</a>",
+   "wiremock": false
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>&#;</a>",
+   "wiremock": false
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>&#x0041;</a>",
+   "wiremock": true
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>&#65</a>",
+   "wiremock": false
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>&lt</a>",
+   "wiremock": false
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>&a.b;</a>",
+   "wiremock": false
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>&amp ;</a>",
+   "wiremock": false
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a b=\"&#0;\"/>",
+   "wiremock": false
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a b=\"&\"/>",
+   "wiremock": false
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a b=\"]]>\"/>",
+   "wiremock": true
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a b=\"\t\"/>",
+   "wiremock": true
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><![CDATA[x]]]></a>",
+   "wiremock": true
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><![CDATA[\u0001]]></a>",
+   "wiremock": false
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><!-- \u0001 --></a>",
+   "wiremock": false
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><?p \u0001?></a>",
+   "wiremock": false
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a b=\"1\" b=\"1\"/>",
+   "wiremock": false
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns=\"u\" xmlns=\"u\"/>",
+   "wiremock": false
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a p:b=\"1\" xmlns:p=\"u\" xmlns:q=\"u\" q:b=\"2\"/>",
+   "wiremock": false
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns:p=\"\"><p:b/></a>",
+   "wiremock": false
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns:xml=\"urn:wrong\"/>",
+   "wiremock": true
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns:xmlns=\"u\"/>",
+   "wiremock": true
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<xmlns:a/>",
+   "wiremock": false
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns:p=\"http://www.w3.org/2000/xmlns/\"/>",
+   "wiremock": false
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns=\"http://www.w3.org/XML/1998/namespace\"/>",
+   "wiremock": false
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>﻿</a>",
+   "wiremock": true
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "﻿<a/>",
+   "wiremock": false
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>￿</a>",
+   "wiremock": false
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a></a>",
+   "wiremock": true
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>\r</a>",
+   "wiremock": true
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a\r\nb=\"1\"/>",
+   "wiremock": true
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a b=\"1\"/>",
+   "wiremock": false
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a b=\"1\"/>",
+   "wiremock": false
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>x</a>\u0000",
+   "wiremock": false
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a/> ",
+   "wiremock": false
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": " <a/>",
+   "wiremock": false
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a/>x",
+   "wiremock": false
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a/>&amp;",
+   "wiremock": false
+  },
+  {
+   "name": "aware /*",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/*",
+      "xPathNamespaces": {
+       "z": "urn:z"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a/><![CDATA[x]]>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<·a/>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a·/>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<-a/>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<.a/>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a b.c=\"1\"/>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a 1b=\"x\"/>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a b=x/>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a b/>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a b =\"1\"/>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a b= \"1\"/>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "< a/>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a></ a>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a></a >",
+   "wiremock": true
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a/ >",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a></A>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a:/>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<:a/>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a:b:c/>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns:=\"u\"/>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a b:=\"1\"/>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><!----></a>",
+   "wiremock": true
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><!---></a>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><!-- --->",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><!-- - --></a>",
+   "wiremock": true
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><?xml x?></a>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><?XmL x?></a>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<?xml version=\"1.0\"?><?xml version=\"1.0\"?><a/>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<?xml version='1.0' standalone='maybe'?><a/>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<?xml version=\"2.0\"?><a/>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<?xml encoding=\"UTF-8\"?><a/>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<?xml  version=\"1.0\"?><a/>",
+   "wiremock": true
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<?xml version=\"1.0\" ?><a/>",
+   "wiremock": true
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<?xml version=\"1.0\"?>\n<!DOCTYPE a>\n<!DOCTYPE a><a/>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a/><!DOCTYPE a>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<!DOCTYPE a PUBLIC \"x\"><a/>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<!DOCTYPE a SYSTEM 'x'><a/>",
+   "wiremock": true
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<!DOCTYPE a SYSTEM \"x\" junk><a/>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<!DOCTYPE><a/>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<!doctype a><a/>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>&#x;</a>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>&#;</a>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>&#x0041;</a>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>&#65</a>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>&lt</a>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>&a.b;</a>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>&amp ;</a>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a b=\"&#0;\"/>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a b=\"&\"/>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a b=\"]]>\"/>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a b=\"\t\"/>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><![CDATA[x]]]></a>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><![CDATA[\u0001]]></a>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><!-- \u0001 --></a>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><?p \u0001?></a>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a b=\"1\" b=\"1\"/>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns=\"u\" xmlns=\"u\"/>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a p:b=\"1\" xmlns:p=\"u\" xmlns:q=\"u\" q:b=\"2\"/>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns:p=\"\"><p:b/></a>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns:xml=\"urn:wrong\"/>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns:xmlns=\"u\"/>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<xmlns:a/>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns:p=\"http://www.w3.org/2000/xmlns/\"/>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns=\"http://www.w3.org/XML/1998/namespace\"/>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>﻿</a>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>￿</a>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a></a>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>\r</a>",
+   "wiremock": true
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a\r\nb=\"1\"/>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a b=\"1\"/>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a b=\"1\"/>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>x</a>\u0000",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a/> ",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": " <a/>",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a/>x",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a/>&amp;",
+   "wiremock": false
+  },
+  {
+   "name": "equalToXml self",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a/><![CDATA[x]]>",
+   "wiremock": false
+  },
+  {
+   "name": "NaN",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "0 div 0",
+       "equalTo": "NaN"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a/>",
+   "wiremock": true
+  },
+  {
+   "name": "NaN fffd",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "0 div 0",
+       "equalTo": "�"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a/>",
+   "wiremock": false
+  },
+  {
+   "name": "inf",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "1 div 0",
+       "equalTo": "∞"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a/>",
+   "wiremock": true
+  },
+  {
+   "name": "-inf",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "-1 div 0",
+       "equalTo": "-∞"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a/>",
+   "wiremock": true
+  },
+  {
+   "name": "grouping",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "1234567.891",
+       "equalTo": "1,234,567.891"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a/>",
+   "wiremock": true
+  },
+  {
+   "name": "halfeven2",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "0.0015",
+       "equalTo": "0.002"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a/>",
+   "wiremock": true
+  },
+  {
+   "name": "-tiny",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "-0.0001",
+       "equalTo": "-0"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a/>",
+   "wiremock": true
+  },
+  {
+   "name": "huge",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "1000000 * 1000000 * 1000000 * 1000",
+       "equalTo": "1,000,000,000,000,000,000,000"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a/>",
+   "wiremock": true
+  },
+  {
+   "name": "str number",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "number('1e3')",
+       "equalTo": "�"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a/>",
+   "wiremock": false
+  },
+  {
+   "name": "V5 xsi default ns",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a xmlns=\"u\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"T\"/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<p:a xmlns:p=\"u\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"T\"/>",
+   "wiremock": false
+  },
+  {
+   "name": "V5 xsi default ns",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a xmlns=\"u\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"T\"/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns=\"u\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"T\"/>",
+   "wiremock": true
+  },
+  {
+   "name": "V6 schemaLocation",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a><b>1</b></a>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"urn:a a.xsd\"><b>1</b></a>",
+   "wiremock": true
+  },
+  {
+   "name": "V6 schemaLocation",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a><b>1</b></a>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"a.xsd\"><b>1</b></a>",
+   "wiremock": true
+  },
+  {
+   "name": "V7 \\Q delims",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a>[[xmlunit.ignore]]</a>",
+      "enablePlaceholders": true,
+      "placeholderOpeningDelimiterRegex": "\\Q[[\\E",
+      "placeholderClosingDelimiterRegex": "\\Q]]\\E"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>zzz</a>",
+   "wiremock": true
+  },
+  {
+   "name": "V8 equalTo empty",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalTo": ""
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "x",
+   "wiremock": false
+  },
+  {
+   "name": "entity literal",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a>&amp;e;</a>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<!DOCTYPE a [<!ENTITY e \"x\">]><a>&e;</a>",
+   "wiremock": false
+  },
+  {
+   "name": "extra schemaLocation",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='u'/>",
+   "wiremock": true
+  },
+  {
+   "name": "exp schemaLocation, act none",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='u'/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a/>",
+   "wiremock": false
+  },
+  {
+   "name": "noNsSchemaLoc diff",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:noNamespaceSchemaLocation='u'/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:noNamespaceSchemaLocation='v'/>",
+   "wiremock": false
+  },
+  {
+   "name": "exp ns vs act none",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a xmlns='urn:x'/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a/>",
+   "wiremock": false
+  },
+  {
+   "name": "attr ns vs no-ns",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a xmlns:p='u' p:x='1'/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a x='1'/>",
+   "wiremock": false
+  },
+  {
+   "name": "order diff names",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a><b/><c/></a>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><c/><b/></a>",
+   "wiremock": true
+  },
+  {
+   "name": "same local diff ns swapped",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a><p:b xmlns:p='1'>1</p:b><q:b xmlns:q='2'>2</q:b></a>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><q:b xmlns:q='2'>2</q:b><p:b xmlns:p='1'>1</p:b></a>",
+   "wiremock": false
+  },
+  {
+   "name": "same local diff ns swapped content",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a><p:b xmlns:p='1'>1</p:b><q:b xmlns:q='2'>2</q:b></a>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><q:b xmlns:q='1'>2</q:b><p:b xmlns:p='2'>1</p:b></a>",
+   "wiremock": false
+  },
+  {
+   "name": "ignore+sort",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a><b>${xmlunit.ignore}</b><b>1</b></a>",
+      "ignoreOrderOfSameNode": true,
+      "enablePlaceholders": true
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><b>1</b><b>x</b></a>",
+   "wiremock": false
+  },
+  {
+   "name": "ignore+sort2",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a><b>${xmlunit.ignore}</b><b>1</b></a>",
+      "enablePlaceholders": true
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><b>x</b><b>1</b></a>",
+   "wiremock": true
+  },
+  {
+   "name": "ws cdata",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><![CDATA[ ]]></a>",
+   "wiremock": true
+  },
+  {
+   "name": "text+cdata merge",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a>xy</a>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>x<![CDATA[y]]></a>",
+   "wiremock": false
+  },
+  {
+   "name": "pi in elem",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a><?p d?></a>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><?p d?></a>",
+   "wiremock": true
+  },
+  {
+   "name": "pi data diff",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a><?p d?></a>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><?p e?></a>",
+   "wiremock": false
+  },
+  {
+   "name": "ignore attr extra",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a x='${xmlunit.ignore}'/>",
+      "enablePlaceholders": true
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a y='1'/>",
+   "wiremock": true
+  },
+  {
+   "name": "isNumber attr",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a x='${xmlunit.isNumber}'/>",
+      "enablePlaceholders": true
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a x=' 12 '/>",
+   "wiremock": true
+  },
+  {
+   "name": "placeholder partial",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a>id: ${xmlunit.ignore}</a>",
+      "enablePlaceholders": true
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>id: 5</a>",
+   "wiremock": false
+  },
+  {
+   "name": "delims group",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a>[[xmlunit.ignore]]</a>",
+      "placeholderOpeningDelimiterRegex": "(\\[\\[)",
+      "placeholderClosingDelimiterRegex": "(\\]\\])",
+      "enablePlaceholders": true
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>z</a>",
+   "wiremock": false
+  },
+  {
+   "name": "delims literal match",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a>[[xmlunit.ignore]]</a>",
+      "placeholderOpeningDelimiterRegex": "\\Q[[\\E",
+      "placeholderClosingDelimiterRegex": "\\Q]]\\E",
+      "enablePlaceholders": true
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>[[xmlunit.ignore]]</a>",
+   "wiremock": true
+  },
+  {
+   "name": "matchesRegex paren",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a>${xmlunit.matchesRegex(^(ab)$)}</a>",
+      "enablePlaceholders": true
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>ab</a>",
+   "wiremock": false
+  },
+  {
+   "name": "matchesRegex anchors",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a>${xmlunit.matchesRegex(^\\d+$)}</a>",
+      "enablePlaceholders": true
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>12a</a>",
+   "wiremock": false
+  },
+  {
+   "name": "matchesRegex s-range",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a>${xmlunit.matchesRegex(^[a-z\\s-']+$)}</a>",
+      "enablePlaceholders": true
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>a!b</a>",
+   "wiremock": false
+  },
+  {
+   "name": "isNumber trailing ws inner",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a>${xmlunit.isNumber}</a>",
+      "enablePlaceholders": true
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>1 2</a>",
+   "wiremock": false
+  },
+  {
+   "name": "doc comment",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<!--c--><a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a/>",
+   "wiremock": true
+  },
+  {
+   "name": "xml decl in expected 1.1",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<?xml version='1.1'?><a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a/>",
+   "wiremock": true
+  },
+  {
+   "name": "xsi:type same",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns:p='u' xsi:type='p:T'/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns:p='u' xsi:type=' p:T '/>",
+   "wiremock": true
+  },
+  {
+   "name": "xsi:type no prefix default ns",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns='u' xsi:type='T'/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:type='T'/>",
+   "wiremock": false
+  },
+  {
+   "name": "xsi:type unbound prefix",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:type='p:T'/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:type='q:T'/>",
+   "wiremock": true
+  },
+  {
+   "name": "attr value trim",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a x='1'/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a x=' 1'/>",
+   "wiremock": false
+  },
+  {
+   "name": "nested many",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a><b><c>1</c></b></a>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><b><c> 1 </c></b></a>",
+   "wiremock": true
+  },
+  {
+   "name": "prefix diff strict",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<p:a xmlns:p='u'/>",
+      "namespaceAwareness": "STRICT"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<q:a xmlns:q='u'/>",
+   "wiremock": true
+  },
+  {
+   "name": "ns/no-ns swapped",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a><p:b xmlns:p='1'/><b/></a>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><b/><p:b xmlns:p='1'/></a>",
+   "wiremock": false
+  },
+  {
+   "name": "ns/no-ns swapped rev",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a><b/><p:b xmlns:p='1'/></a>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><p:b xmlns:p='1'/><b/></a>",
+   "wiremock": false
+  },
+  {
+   "name": "two ns swapped text",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a><p:b xmlns:p='1'>x</p:b><q:b xmlns:q='2'>x</q:b></a>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><q:b xmlns:q='2'>x</q:b><p:b xmlns:p='1'>x</p:b></a>",
+   "wiremock": false
+  },
+  {
+   "name": "ignore attr extra 2",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a x='1' z='${xmlunit.ignore}'/>",
+      "enablePlaceholders": true
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a x='1' y='2'/>",
+   "wiremock": true
+  },
+  {
+   "name": "s-range names",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "[A-Za-z\\s-']+"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "a!b",
+   "wiremock": false
+  },
+  {
+   "name": "s-range names ok",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "[A-Za-z\\s-']+"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "a-b'c",
+   "wiremock": true
+  },
+  {
+   "name": "s-z",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "[\\s-z]"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "a",
+   "wiremock": false
+  },
+  {
+   "name": "Space-z",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "[\\p{Space}-z]"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "a",
+   "wiremock": false
+  },
+  {
+   "name": "Blank-z",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "[\\p{Blank}-z]"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "a",
+   "wiremock": false
+  },
+  {
+   "name": "w-.",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "[\\w-.]+"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "a-b.c",
+   "wiremock": true
+  },
+  {
+   "name": "d-_",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "[a-z\\d-_]+"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "a_1",
+   "wiremock": true
+  },
+  {
+   "name": "ca bang",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "\\ca"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "!",
+   "wiremock": true
+  },
+  {
+   "name": "ca ctrl",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "\\ca"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "\u0001",
+   "wiremock": false
+  },
+  {
+   "name": "i range",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(?i)[×-÷]"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "À",
+   "wiremock": false
+  },
+  {
+   "name": "b unicode",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": ".*\\bx"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "éx",
+   "wiremock": true
+  },
+  {
+   "name": "b unicode2",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "é\\b.*"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "éx",
+   "wiremock": true
+  },
+  {
+   "name": "S-range",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "[\\S-a]+"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "b",
+   "wiremock": true
+  },
+  {
+   "name": "javaLetter class-",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "[\\p{javaLetter}-]+"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "a-",
+   "wiremock": true
+  },
+  {
+   "name": "nested quant",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(a|b)*c{2}"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "abcc",
+   "wiremock": true
+  },
+  {
+   "name": "dollar crlf",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "abc$"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "abc\r\n",
+   "wiremock": false
+  },
+  {
+   "name": "dotall crlf",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "a.b"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "a\r\nb",
+   "wiremock": false
+  },
+  {
+   "name": "Z crlf",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "abc\\Z\r\n"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "abc\r\n",
+   "wiremock": true
+  },
+  {
+   "name": "hex in class",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "[\\x41-\\x5A]+"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "ABC",
+   "wiremock": true
+  },
+  {
+   "name": "unicode esc",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "\\u00e9"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "é",
+   "wiremock": true
+  },
+  {
+   "name": "lookbehind",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(?<=a)b"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "ab",
+   "wiremock": false
+  },
+  {
+   "name": "negated s in class",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "[^\\s]+"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "a b",
+   "wiremock": true
+  },
+  {
+   "name": "S class nbsp",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "[\\S]+"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "a b",
+   "wiremock": true
+  },
+  {
+   "name": "dot astral",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "a.b"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "a😀b",
+   "wiremock": true
+  },
+  {
+   "name": "i dot astral",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(?i)a.b"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "A😀b",
+   "wiremock": true
+  },
+  {
+   "name": "i neg class astral",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(?i)a[^x]b"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "A😀b",
+   "wiremock": true
+  },
+  {
+   "name": "caret mid",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "a^b"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "a^b",
+   "wiremock": false
+  },
+  {
+   "name": "x esc in class end",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "[a\\-]+"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "a-",
+   "wiremock": true
+  },
+  {
+   "name": "iu w long s",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(?iu)\\w"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "ſ",
+   "wiremock": false
+  },
+  {
+   "name": "iu range long s",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(?iu)[a-z]"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "ſ",
+   "wiremock": true
+  },
+  {
+   "name": "iu b kelvin",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(?iu)a\\bK"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "aK",
+   "wiremock": true
+  },
+  {
+   "name": "m caret crlf",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(?m)a\\r^\\nb"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "a\r\nb",
+   "wiremock": false
+  },
+  {
+   "name": "dollar mid",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "a$b"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "ab",
+   "wiremock": false
+  },
+  {
+   "name": "Z mid",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "a\\Zb"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "ab",
+   "wiremock": false
+  },
+  {
+   "name": "backref fwd",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(a\\2?(b))+"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "abab",
+   "wiremock": true
+  },
+  {
+   "name": "octal 3",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "\\0377"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "ÿ",
+   "wiremock": true
+  },
+  {
+   "name": "class amp single",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "[a&b]+"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "a&b",
+   "wiremock": true
+  },
+  {
+   "name": "class nested escape",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "[\\[]"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "[",
+   "wiremock": true
+  },
+  {
+   "name": "quantifier brace space",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "a{1, 2}"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "a",
+   "wiremock": "rejected"
+  },
+  {
+   "name": "i ascii",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "(?i)ABC"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "abc",
+   "wiremock": true
+  },
+  {
+   "name": "ns empty prefix binding",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/a"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns:p=''/>",
+   "wiremock": true
+  },
+  {
+   "name": "V13 inner",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/r/a",
+       "matches": ".*"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<r><a p:x='1'/></r>",
+   "wiremock": false
+  },
+  {
+   "name": "V3 nbsp after root",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/a"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a/> ",
+   "wiremock": false
+  },
+  {
+   "name": "V3 cdata after root",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/a"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a/><![CDATA[x]]>",
+   "wiremock": false
+  },
+  {
+   "name": "V3 dup expanded ns-aware",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/n:a",
+      "xPathNamespaces": {
+       "n": "u"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<n:a xmlns:n='u' xmlns:p='v' xmlns:q='v' p:b='1' q:b='2'/>",
+   "wiremock": false
+  },
+  {
+   "name": "V3 xmlns:p=xmlns-uri",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/a",
+      "xPathNamespaces": {
+       "n": "u"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns:p='http://www.w3.org/2000/xmlns/'/>",
+   "wiremock": false
+  },
+  {
+   "name": "V3 xmlns=xml-uri",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/a",
+      "xPathNamespaces": {
+       "n": "u"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns='http://www.w3.org/XML/1998/namespace'/>",
+   "wiremock": false
+  },
+  {
+   "name": "V3 xmlns:xml wrong",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/a",
+      "xPathNamespaces": {
+       "n": "u"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns:xml='urn:wrong'/>",
+   "wiremock": true
+  },
+  {
+   "name": "V3 xmlns:xmlns",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/a",
+      "xPathNamespaces": {
+       "n": "u"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns:xmlns='u'/>",
+   "wiremock": true
+  },
+  {
+   "name": "V4 xmlns empty render",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/n:a/c",
+       "equalTo": "<c/>\n"
+      },
+      "xPathNamespaces": {
+       "n": "u"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns='u'><c xmlns=''/></a>",
+   "wiremock": true
+  },
+  {
+   "name": "V5 xsi:type default ns",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns='u' xsi:type='T'/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<b:a xmlns:b='u' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:type='T'/>",
+   "wiremock": false
+  },
+  {
+   "name": "V12 IsAny",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matches": "\\p{IsAny}"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "x",
+   "wiremock": "rejected"
+  },
+  {
+   "name": "V13 undeclared attr prefix",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/a",
+       "matches": "x"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a p:x='1'/>",
+   "wiremock": false
+  },
+  {
+   "name": "V16 namespace axis",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "count(/a/namespace::*)",
+       "equalTo": "2"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns:p='u'/>",
+   "wiremock": true
+  },
+  {
+   "name": "trailing text",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/a"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a/>x",
+   "wiremock": false
+  },
+  {
+   "name": "standalone maybe",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/a"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<?xml version=\"1.0\" standalone=\"maybe\"?><a/>",
+   "wiremock": false
+  },
+  {
+   "name": "dup expanded attr",
+   "request": {
+    "bodyPatterns": [
+     {
+      "equalToXml": "<a/>"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns:p='u' xmlns:q='u' p:x='1' q:x='2'/>",
+   "wiremock": false
+  },
+  {
+   "name": "dup expanded attr xpath",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/a"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns:p='u' xmlns:q='u' p:x='1' q:x='2'/>",
+   "wiremock": true
+  },
+  {
+   "name": "external dtd",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/a"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<!DOCTYPE a SYSTEM \"http://localhost:1/x.dtd\"><a/>",
+   "wiremock": true
+  },
+  {
+   "name": "doctype gt in quote",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/a"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<!DOCTYPE a SYSTEM \"a>b\"><a/>",
+   "wiremock": true
+  },
+  {
+   "name": "pi xml inside",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/a"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><?xml version=\"1.0\"?></a>",
+   "wiremock": false
+  },
+  {
+   "name": "pi XmL",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/a"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a><?XmL x?></a>",
+   "wiremock": false
+  },
+  {
+   "name": "xmlns:xmlns",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/a"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns:xmlns='u'/>",
+   "wiremock": true
+  },
+  {
+   "name": "xml prefix rebind",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": "/a"
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns:xml='urn:x'/>",
+   "wiremock": true
+  },
+  {
+   "name": "unbound attr prefix",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/a/@x",
+       "equalTo": "1"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a p:x='1'/>",
+   "wiremock": true
+  },
+  {
+   "name": "unbound attr prefix any",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/a/@*",
+       "equalTo": "1"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a p:x='1'/>",
+   "wiremock": true
+  },
+  {
+   "name": "unbound elem render",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/a",
+       "equalTo": "<p:a/>\n"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<p:a/>",
+   "wiremock": true
+  },
+  {
+   "name": "ns attrs @* nsunaware",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "count(/a/@*)",
+       "equalTo": "1"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns:p='u' p:x='1'/>",
+   "wiremock": true
+  },
+  {
+   "name": "ns-uri unaware",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "namespace-uri(/a)",
+       "equalTo": ""
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns='urn:x'/>",
+   "wiremock": true
+  },
+  {
+   "name": "ws text",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "count(/a/text())",
+       "equalTo": "2"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a> <b/> </a>",
+   "wiremock": true
+  },
+  {
+   "name": "ws text eq",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/a/text()",
+       "equalTo": " "
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a> <b/></a>",
+   "wiremock": true
+  },
+  {
+   "name": "substring",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "substring('12345', 1.5, 2.6)",
+       "equalTo": "234"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a/>",
+   "wiremock": true
+  },
+  {
+   "name": "string num",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "string(0.1+0.2)",
+       "equalTo": "0.30000000000000004"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a/>",
+   "wiremock": true
+  },
+  {
+   "name": "num 0.1+0.2",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "0.1+0.2",
+       "equalTo": "0.3"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a/>",
+   "wiremock": true
+  },
+  {
+   "name": "num 1234.5678",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "1234.5678",
+       "equalTo": "1,234.568"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a/>",
+   "wiremock": true
+  },
+  {
+   "name": "num 1.0005",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "1.0005",
+       "equalTo": "1"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a/>",
+   "wiremock": true
+  },
+  {
+   "name": "num 2.0005",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "2.0005",
+       "equalTo": "2"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a/>",
+   "wiremock": false
+  },
+  {
+   "name": "num 0.0025",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "0.0025",
+       "equalTo": "0.002"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a/>",
+   "wiremock": false
+  },
+  {
+   "name": "bool",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "1=1",
+       "equalTo": "true"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a/>",
+   "wiremock": true
+  },
+  {
+   "name": "lang",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "lang('en')",
+       "equalTo": "true"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xml:lang='en-US'/>",
+   "wiremock": false
+  },
+  {
+   "name": "lang ctx",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "count(/a[lang('en')])",
+       "equalTo": "1"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xml:lang='en-US'/>",
+   "wiremock": false
+  },
+  {
+   "name": "cr char ref text",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/a/text()",
+       "equalTo": "x\ry"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>x&#13;y</a>",
+   "wiremock": true
+  },
+  {
+   "name": "render cr",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/a",
+       "equalTo": "<a>x&#13;y</a>\n"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>x&#13;y</a>",
+   "wiremock": true
+  },
+  {
+   "name": "render gt attr",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/a",
+       "equalTo": "<a x=\"&gt;\"/>\n"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a x='>'/>",
+   "wiremock": true
+  },
+  {
+   "name": "render apos attr",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/a",
+       "equalTo": "<a x=\"'\"/>\n"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a x=\"'\"/>",
+   "wiremock": true
+  },
+  {
+   "name": "render nonascii",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/a",
+       "equalTo": "<a>é</a>\n"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>é</a>",
+   "wiremock": true
+  },
+  {
+   "name": "render astral",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/a",
+       "equalTo": "<a>😀</a>\n"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>😀</a>",
+   "wiremock": false
+  },
+  {
+   "name": "render ctrl ref",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/a",
+       "equalTo": "<a>&#127;</a>\n"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>&#127;</a>",
+   "wiremock": true
+  },
+  {
+   "name": "render x80",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/a",
+       "equalTo": "<a></a>\n"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a></a>",
+   "wiremock": false
+  },
+  {
+   "name": "render ns default",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/a/b",
+       "equalTo": "<b xmlns=\"u\"/>\n"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns='u'><b/></a>",
+   "wiremock": false
+  },
+  {
+   "name": "render ns aware default",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/n:a/n:b",
+       "equalTo": "<b xmlns=\"u\"/>\n"
+      },
+      "xPathNamespaces": {
+       "n": "u"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a xmlns='u'><b/></a>",
+   "wiremock": true
+  },
+  {
+   "name": "render ns aware prefixed parent decl",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/n:a/n:b",
+       "equalTo": "<p:b xmlns:p=\"u\"/>\n"
+      },
+      "xPathNamespaces": {
+       "n": "u"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<p:a xmlns:p='u'><p:b/></p:a>",
+   "wiremock": true
+  },
+  {
+   "name": "astral ref",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/a",
+       "equalTo": "<a>&#128512;</a>\n"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>😀</a>",
+   "wiremock": true
+  },
+  {
+   "name": "astral ref attr",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/a",
+       "equalTo": "<a x=\"&#128512;\"/>\n"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a x='😀'/>",
+   "wiremock": true
+  },
+  {
+   "name": "x85 ref",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/a",
+       "equalTo": "<a>&#133;</a>\n"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a></a>",
+   "wiremock": true
+  },
+  {
+   "name": "x80-9f ref",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/a",
+       "equalTo": "<a>&#128;</a>\n"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a></a>",
+   "wiremock": true
+  },
+  {
+   "name": "x7f raw?",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/a",
+       "equalTo": "<a></a>\n"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a></a>",
+   "wiremock": false
+  },
+  {
+   "name": "u2028",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/a",
+       "equalTo": "<a>&#8232;</a>\n"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a> </a>",
+   "wiremock": false
+  },
+  {
+   "name": "u2028 raw",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/a",
+       "equalTo": "<a> </a>\n"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a> </a>",
+   "wiremock": true
+  },
+  {
+   "name": "num 2.0005 up",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "2.0005",
+       "equalTo": "2.001"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a/>",
+   "wiremock": true
+  },
+  {
+   "name": "num 0.0025 up",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "0.0025",
+       "equalTo": "0.003"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a/>",
+   "wiremock": true
+  },
+  {
+   "name": "contains emoji text",
+   "request": {
+    "bodyPatterns": [
+     {
+      "matchesXPath": {
+       "expression": "/a/text()",
+       "equalTo": "😀"
+      }
+     }
+    ],
+    "method": "POST",
+    "urlPath": "/x"
+   },
+   "body": "<a>😀</a>",
    "wiremock": true
   }
  ]

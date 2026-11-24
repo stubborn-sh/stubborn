@@ -35,17 +35,25 @@ function matches(c: RenderingCase, valueMatcher: Record<string, unknown>): boole
   ).matched;
 }
 
+/**
+ * Known difference: WireMock's XPath engine parses the literal 0.0005 to a double just below the
+ * tie (rendered "0"), whereas Java's NumberFormat — like stub-server — renders the parsed
+ * 0.0005 as "0.001". Computed numbers (sum(), count(), arithmetic on text) agree.
+ */
+const KNOWN_DIFFERENCES = new Set(["0.0005"]);
+
 describe("matchesXPath node rendering parity with WireMock 3.13.2", () => {
   // Each selected node, rendered as WireMock renders it, must satisfy equalTo — so the text a
   // sub-matcher sees is byte-for-byte WireMock's.
-  it.each(cases.filter((c) => c.nodes !== undefined && c.nodes.length > 0))(
-    "$xpath on $body",
-    (c) => {
-      for (const rendered of c.nodes ?? []) {
-        expect(matches(c, { equalTo: rendered }), JSON.stringify(rendered)).toBe(true);
-      }
-    },
-  );
+  it.each(
+    cases.filter(
+      (c) => c.nodes !== undefined && c.nodes.length > 0 && !KNOWN_DIFFERENCES.has(c.xpath),
+    ),
+  )("$xpath on $body", (c) => {
+    for (const rendered of c.nodes ?? []) {
+      expect(matches(c, { equalTo: rendered }), JSON.stringify(rendered)).toBe(true);
+    }
+  });
 
   it.each(cases.filter((c) => c.error !== undefined || c.nodes?.length === 0))(
     "$xpath on $body selects nothing WireMock can render",

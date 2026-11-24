@@ -48,6 +48,9 @@ interface Path {
   readonly definite: boolean;
 }
 
+/** Regexes in each compiled expression that JavaScript cannot reproduce (they never match). */
+const untranslatable = new WeakMap<Path, readonly string[]>();
+
 type Operand =
   /** `@…` (relative to the filtered item) or `$…` (relative to the document root). */
   | { readonly kind: "path"; readonly path: Path; readonly fromRoot: boolean }
@@ -100,6 +103,7 @@ function compile(expression: string): Path {
   }
   const parser = new Parser(expression);
   const path = parser.parseRootPath();
+  if (parser.untranslatable.length > 0) untranslatable.set(path, parser.untranslatable);
   if (cache.size >= MAX_CACHED) cache.clear();
   cache.set(expression, path);
   return path;
@@ -127,6 +131,15 @@ export interface JsonPathOptions {
    * does not.
    */
   readonly leafToNull?: boolean;
+}
+
+/**
+ * What in `expression` stub-server cannot evaluate faithfully (regexes JavaScript cannot
+ * reproduce, such as Java's `/…/x`); empty when everything is supported. Throws
+ * {@link JsonPathSyntaxError} if the expression is invalid.
+ */
+export function unsupportedJsonPathParts(expression: string): readonly string[] {
+  return untranslatable.get(compile(expression)) ?? [];
 }
 
 /**
@@ -467,6 +480,8 @@ const WORD_OPERATORS: readonly ComparisonOperator[] = [
 
 class Parser {
   private pos = 0;
+  /** Regexes in the expression JavaScript cannot reproduce. */
+  readonly untranslatable: string[] = [];
 
   constructor(private readonly source: string) {}
 
@@ -793,6 +808,7 @@ class Parser {
     // Jayway compiles the regex with Java's Pattern (no DOTALL); a Java-only construct JavaScript
     // cannot reproduce yields null, and the filter never matches.
     const regex = javaFullMatchRegex(pattern, { dotAll: false, javaFlags });
+    if (regex === null) this.untranslatable.push(`/${pattern}/${javaFlags}`);
     return { kind: "regex", regex };
   }
 

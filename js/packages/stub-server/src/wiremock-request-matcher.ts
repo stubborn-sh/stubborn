@@ -1,6 +1,6 @@
 import { isDeepStrictEqual } from "node:util";
 import { javaFullMatchRegex } from "./java-regex.js";
-import { evaluateJsonPath, matchesJsonPath } from "./json-path.js";
+import { evaluateJsonPath, matchesJsonPath, unsupportedJsonPathParts } from "./json-path.js";
 import {
   checkXPath,
   compileXmlEquality,
@@ -197,12 +197,14 @@ function compileValueMatcher(spec: unknown, where: string, unsupported: string[]
     unsupported.push(`${where} (not a matcher object)`);
     return () => false;
   }
-  if ("absent" in spec) {
-    // WireMock treats any `absent` key as "must be absent", whatever its value.
+  // Like WireMock, the operator is the first key it knows, in JSON order.
+  const first = Object.keys(spec).find((k) => VALUE_KEYS.has(k));
+  if (first === "absent") {
+    // WireMock treats an `absent` key as "must be absent", whatever its value.
     return (value) => value === undefined;
   }
-  if (Array.isArray(spec["and"]) || Array.isArray(spec["or"])) {
-    const isAnd = Array.isArray(spec["and"]);
+  if ((first === "and" || first === "or") && Array.isArray(spec[first])) {
+    const isAnd = first === "and";
     const parts = ((isAnd ? spec["and"] : spec["or"]) as unknown[]).map((part, i) =>
       compileValueMatcher(part, `${where}.${isAnd ? "and" : "or"}[${i}]`, unsupported),
     );
@@ -210,7 +212,7 @@ function compileValueMatcher(spec: unknown, where: string, unsupported: string[]
   }
 
   const caseInsensitive = spec["caseInsensitive"] === true;
-  const key = Object.keys(spec).find((k) => OPERATORS.has(k));
+  const key = first !== undefined && OPERATORS.has(first) ? first : undefined;
   // Like WireMock, keys an operator does not read are ignored; the options it honours and
   // stub-server lacks (equalToXml namespaceAwareness, exemptedComparisons) are reported below.
   const operand = key === undefined ? undefined : spec[key];
@@ -295,18 +297,21 @@ function compileValueMatcher(spec: unknown, where: string, unsupported: string[]
 }
 
 function compileBodyMatcher(spec: unknown, where: string, unsupported: string[]): RequestMatcher {
-  if (isRecord(spec) && "absent" in spec) {
+  // Like WireMock, the operator is the first key it knows, in JSON order.
+  const operator = isRecord(spec) ? Object.keys(spec).find((k) => VALUE_KEYS.has(k)) : undefined;
+  if (isRecord(spec) && operator === "absent") {
     return (r) => r.body === "";
   }
-  if (isRecord(spec) && "matchesXPath" in spec) {
+  if (isRecord(spec) && operator === "matchesXPath") {
     return compileXPathMatcher(spec, where, unsupported);
   }
-  if (isRecord(spec) && "matchesJsonPath" in spec) {
+  if (isRecord(spec) && operator === "matchesJsonPath") {
     const matcher = compileJsonPathMatcher(spec, where, unsupported);
     return (r) => matcher(r.json());
   }
   const matcher = compileValueMatcher(spec, where, unsupported);
-  return (r) => matcher(r.body);
+  // WireMock treats an empty body as absent: positive matchers fail, negative ones pass.
+  return (r) => matcher(r.body === "" ? undefined : r.body);
 }
 
 /** `matchesJsonPath`: a bare expression, or `{ expression, <matcher> }` applied to the selected value. */
@@ -317,6 +322,7 @@ function compileJsonPathMatcher(
 ): (json: unknown) => boolean {
   const operand = spec["matchesJsonPath"];
   if (typeof operand === "string") {
+    if (!jsonPathSupported(operand, where, unsupported)) return () => false;
     return (json) => json !== NOT_JSON && matchesJsonPath(json, operand);
   }
   if (!isRecord(operand) || typeof operand["expression"] !== "string") {
@@ -324,6 +330,7 @@ function compileJsonPathMatcher(
     return () => false;
   }
   const expression = operand["expression"];
+  if (!jsonPathSupported(expression, where, unsupported)) return () => false;
   const rest = Object.fromEntries(Object.entries(operand).filter(([k]) => k !== "expression"));
   const valueMatcher = compileValueMatcher(rest, `${where}.matchesJsonPath`, unsupported);
   return (json) => {
@@ -350,6 +357,9 @@ function jsonPathValueText(value: unknown): string {
 }
 
 // --- equalToJson -------------------------------------------------------------------------------
+
+/** Keys that select how a value is matched: the operators, plus absent / and / or. */
+const VALUE_KEYS_EXTRA = ["absent", "and", "or"] as const;
 
 /** The matcher operators WireMock knows (the first one present in a matcher object is used). */
 const OPERATORS: ReadonlySet<string> = new Set([
@@ -426,6 +436,10 @@ function compileXPathMatcher(
   } catch (err: unknown) {
     return fail(`invalid XPath: ${err instanceof Error ? err.message : String(err)}`);
   }
+  // Constructs WireMock's engine evaluates differently (namespace nodes, positions such as
+  // [1.5], which XPath 1.0 says select nothing but WireMock rounds): reported, not guessed.
+  if (/namespace\s*::/.test(expression)) return fail("the namespace axis is not supported");
+  if (/\[\s*\d*\.\d+\s*\]/.test(expression)) return fail("non-integer positions are not supported");
 
   return (r) => {
     const doc = r.xml(namespaces !== undefined);
@@ -617,4 +631,21 @@ function fullMatchRegex(pattern: string): RegExp | null {
 
 function isRecord(value: unknown): value is Readonly<Record<string, unknown>> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+const VALUE_KEYS: ReadonlySet<string> = new Set([...OPERATORS, ...VALUE_KEYS_EXTRA]);
+
+/** Report JSONPath parts stub-server cannot evaluate faithfully (e.g. a Java `/…/x` regex). */
+function jsonPathSupported(expression: string, where: string, unsupported: string[]): boolean {
+  let parts: readonly string[];
+  try {
+    parts = unsupportedJsonPathParts(expression);
+  } catch {
+    return true; // an invalid expression simply never matches, as in WireMock
+  }
+  if (parts.length === 0) return true;
+  unsupported.push(
+    `${where}.matchesJsonPath (regex JavaScript cannot reproduce: ${parts.join(", ")})`,
+  );
+  return false;
 }

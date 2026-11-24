@@ -35,6 +35,32 @@ const MAX_NAME_LENGTH = 1000;
  */
 const MAX_ELEMENT_DEPTH = 2000;
 
+/**
+ * xpath 0.0.34 dedupes node-set insertions with a linear scan, which makes every wide node set
+ * (`//b`, `/a/b` over 250k siblings) quadratic: 16 s on a 1 MB body. Same semantics, with a Set.
+ * Its only other writer of the node array is the constructor.
+ */
+const XNodeSetPrototype = (
+  xpath as unknown as {
+    XNodeSet: {
+      prototype: { add(n: unknown): void; nodes: unknown[]; size: number; tree: unknown };
+    };
+  }
+).XNodeSet.prototype;
+const nodeSetMembers = new WeakMap<object, Set<unknown>>();
+XNodeSetPrototype.add = function (this: typeof XNodeSetPrototype, n: unknown): void {
+  let members = nodeSetMembers.get(this);
+  if (members === undefined) {
+    members = new Set(this.nodes);
+    nodeSetMembers.set(this, members);
+  }
+  if (members.has(n)) return;
+  members.add(n);
+  this.tree = null;
+  this.nodes.push(n);
+  this.size += 1;
+};
+
 // --- parsing -----------------------------------------------------------------------------------
 
 type ParseResult =
@@ -50,7 +76,21 @@ function parseOnce(source: string): ParseResult {
         throw new Error(message);
       },
     }).parseFromString(source, "text/xml");
-    return doc.documentElement === null ? { doc: null, unboundPrefix: false } : { doc };
+    if (doc.documentElement === null) return { doc: null, unboundPrefix: false };
+    // Only comments, processing instructions and XML whitespace may surround the root.
+    for (let child = doc.firstChild; child !== null; child = child.nextSibling) {
+      const type = child.nodeType;
+      if (type === TEXT_NODE && /^[ \t\r\n]*$/.test(child.nodeValue ?? "")) continue;
+      if (
+        type !== ELEMENT_NODE &&
+        type !== PROCESSING_INSTRUCTION_NODE &&
+        type !== COMMENT_NODE &&
+        type !== 10
+      ) {
+        return { doc: null, unboundPrefix: false };
+      }
+    }
+    return { doc };
   } catch (err: unknown) {
     return {
       doc: null,
@@ -64,63 +104,168 @@ function parseOnce(source: string): ParseResult {
  * With `allowUnboundPrefixes` (WireMock's namespace-unaware parse, used for XPath without
  * `xPathNamespaces`) prefixes used without a declaration are accepted.
  */
-function parseDocument(text: string, allowUnboundPrefixes: boolean): Document | null {
-  if (text.trim() === "" || !isWellFormedText(text)) return null;
-  const first = parseOnce(text);
+/**
+ * How strictly namespaces are checked: `"none"` for WireMock's namespace-unaware XPath parse,
+ * `"xpath"` for its namespace-aware re-parse (xPathNamespaces), `"equality"` for equalToXml.
+ */
+type NamespaceChecks = "none" | "xpath" | "equality";
+
+function parseDocument(text: string, checks: NamespaceChecks): Document | null {
+  const allowUnboundPrefixes = checks === "none";
+  if (text.trim() === "" || !isWellFormedText(text, checks)) return null;
+  // xmldom drops empty CDATA sections, which XPath sees as text nodes: mark them, and restore
+  // them as empty when preparing the view.
+  const source = text.replaceAll("<![CDATA[]]>", `<![CDATA[${EMPTY_CDATA}]]>`);
+  const first = parseOnce(source);
   if (first.doc !== null || !allowUnboundPrefixes || !first.unboundPrefix) return first.doc;
-  const declared = declareUnboundPrefixes(text);
+  const declared = declareUnboundPrefixes(source);
   return declared === null ? null : parseOnce(declared).doc;
 }
 
 /**
- * Checks xmldom does not make: characters outside the XML `Char` production and references to
- * them, a bare `&`, `]]>` in character data, and internal DTD subsets.
+ * Marks an empty CDATA section, which xmldom would otherwise drop. xmldom validates CDATA
+ * content, so the marker must be valid XML: a Private Use Area sequence no real CDATA section
+ * consists of.
  */
-function isWellFormedText(text: string): boolean {
+const EMPTY_CDATA = "\uE000\uF8FF\uE001";
+
+/**
+ * Checks xmldom does not make: characters outside the XML `Char` production and references to
+ * them, a bare `&`, `]]>` in character data, internal DTD subsets, anything but XML whitespace,
+ * comments and processing instructions around the root element (xmldom silently drops it), and
+ * — for a namespace-aware parse — reserved namespace bindings and two attributes with the same
+ * expanded name (xmldom silently keeps one).
+ */
+function isWellFormedText(text: string, checks: NamespaceChecks): boolean {
+  const scopes: Map<string, string>[] = [new Map([["xml", XML_URI]])];
+  let depth = 0;
   let i = 0;
-  let inTag = false;
-  let quote = "";
   while (i < text.length) {
     const code = text.charCodeAt(i);
     if (code >= 0xd800 && code <= 0xdbff) {
       const low = text.charCodeAt(i + 1);
-      if (!(low >= 0xdc00 && low <= 0xdfff)) return false;
+      if (!(low >= 0xdc00 && low <= 0xdfff) || depth === 0) return false;
       i += 2;
       continue;
     }
     if (!isXmlChar(code)) return false;
     const ch = text.charAt(i);
-    if (!inTag) {
+    if (ch === "<") {
+      if (depth === 0 && text.startsWith("<![CDATA[", i)) return false; // CDATA outside the root
       const skip = skipMarkup(text, i);
       if (skip === -1) return false;
       if (skip > i) {
         i = skip;
         continue;
       }
-      if (ch === "<") inTag = true;
-      else if (ch === "]" && text.startsWith("]]>", i)) return false;
-    } else if (quote !== "") {
-      if (ch === quote) quote = "";
-      else if (ch === "<") return false;
-    } else if (ch === '"' || ch === "'") {
-      quote = ch;
-    } else if (ch === ">") {
-      inTag = false;
-    }
-    if (ch === "&") {
-      const ref = /^&(?:#([0-9]+)|#x([0-9a-fA-F]+)|([A-Za-z_:][\w.:-]*));/.exec(
-        text.slice(i, i + 256),
-      );
-      if (ref === null) return false;
-      if (ref[1] !== undefined || ref[2] !== undefined) {
-        const value =
-          ref[1] !== undefined ? Number.parseInt(ref[1], 10) : Number.parseInt(ref[2] ?? "", 16);
-        if (!isXmlCodePoint(value)) return false;
+      const end = tagEnd(text, i);
+      if (end === -1 || !allXmlChars(text, i, end)) return false;
+      const tag = text.slice(i, end + 1);
+      if (tag.startsWith("</")) {
+        depth--;
+        scopes.pop();
+        if (depth < 0) return false;
+      } else {
+        if (/\/\s+>$|\/[^>]/.test(tag.slice(1).replace(/("[^"]*"|'[^']*')/g, ""))) return false; // "<a/ >"
+        if (!checkStartTag(tag, scopes, checks)) return false;
+        if (!tag.endsWith("/>")) depth++;
+        else scopes.pop();
       }
-      i += ref[0].length;
+      if (!checkReferences(tag)) return false;
+      i = end + 1;
+      continue;
+    }
+    if (depth === 0 && !/[ \t\r\n]/.test(ch)) return false; // only XML whitespace outside the root
+    if (ch === "]" && text.startsWith("]]>", i)) return false;
+    if (ch === "&") {
+      const length = referenceLength(text, i);
+      if (length === -1) return false;
+      i += length;
       continue;
     }
     i++;
+  }
+  return true;
+}
+
+/** Index of the ">" closing the tag that starts at `at` (quotes respected); -1 if none. */
+function tagEnd(text: string, at: number): number {
+  let quote = "";
+  for (let i = at + 1; i < text.length; i++) {
+    const ch = text.charAt(i);
+    if (quote !== "") {
+      if (ch === quote) quote = "";
+      else if (ch === "<") return -1;
+    } else if (ch === '"' || ch === "'") quote = ch;
+    else if (ch === ">") return i;
+    else if (ch === "<") return -1;
+  }
+  return -1;
+}
+
+function checkReferences(tag: string): boolean {
+  for (let i = tag.indexOf("&"); i !== -1; i = tag.indexOf("&", i + 1)) {
+    if (referenceLength(tag, i) === -1) return false;
+  }
+  return true;
+}
+
+/** Length of the entity or character reference at `at`; -1 when it is not a valid one. */
+function referenceLength(text: string, at: number): number {
+  const ref = /^&(?:#([0-9]+)|#x([0-9a-fA-F]+)|([A-Za-z_:][\w.:-]*));/.exec(
+    text.slice(at, at + 256),
+  );
+  if (ref === null) return -1;
+  if (ref[1] !== undefined || ref[2] !== undefined) {
+    const value =
+      ref[1] !== undefined ? Number.parseInt(ref[1], 10) : Number.parseInt(ref[2] ?? "", 16);
+    if (!isXmlCodePoint(value)) return -1;
+  }
+  return ref[0].length;
+}
+
+/**
+ * Push the start tag's namespace scope and, in a namespace-aware parse, reject what Xerces
+ * rejects there: binding xmlns, binding xml to another namespace, binding a prefix (or the
+ * default namespace) to the xml or xmlns namespace, and two attributes with one expanded name.
+ */
+function checkStartTag(
+  tag: string,
+  scopes: Map<string, string>[],
+  checks: NamespaceChecks,
+): boolean {
+  const namespaceAware = checks !== "none";
+  const scope = new Map(scopes[scopes.length - 1]);
+  const attributes: { readonly name: string; readonly value: string }[] = [];
+  for (const m of tag.matchAll(/\s([^\s=/>]+)\s*=\s*("([^"]*)"|'([^']*)')/g)) {
+    attributes.push({ name: m[1] ?? "", value: m[3] ?? m[4] ?? "" });
+  }
+  for (const { name, value } of attributes) {
+    if (name !== "xmlns" && !name.startsWith("xmlns:")) continue;
+    const prefix = name === "xmlns" ? "" : name.slice(6);
+    if (namespaceAware) {
+      // Binding anything to the xml or xmlns namespace is refused by both namespace-aware
+      // parses; redeclaring the xml / xmlns prefixes only by equalToXml's.
+      if (prefix !== "xml" && (value === XML_URI || value === XMLNS_URI)) return false;
+      if (
+        checks === "equality" &&
+        (prefix === "xmlns" || (prefix === "xml" && value !== XML_URI))
+      ) {
+        return false;
+      }
+    }
+    scope.set(prefix, value);
+  }
+  scopes.push(scope);
+  if (!namespaceAware) return true;
+  const names = new Set<string>();
+  for (const { name } of attributes) {
+    if (name === "xmlns" || name.startsWith("xmlns:")) continue;
+    const colon = name.indexOf(":");
+    const uri = colon === -1 ? "" : (scope.get(name.slice(0, colon)) ?? `?${name.slice(0, colon)}`);
+    const expanded = `{${uri}}${colon === -1 ? name : name.slice(colon + 1)}`;
+    if (names.has(expanded)) return false;
+    names.add(expanded);
   }
   return true;
 }
@@ -140,7 +285,7 @@ function skipMarkup(text: string, at: number): number {
     }
   }
   if (text.startsWith("<!DOCTYPE", at)) {
-    const end = text.indexOf(">", at);
+    const end = tagEnd(text, at);
     if (end === -1 || text.slice(at, end).includes("[")) return -1;
     return end + 1;
   }
@@ -222,6 +367,18 @@ interface ViewState {
   readonly doc: Document;
   /** Namespace declarations of each element, hidden from the XPath attribute axis. */
   readonly declarations: WeakMap<Node, readonly Attr[]>;
+  /** The real child list of each container (XPath sees adjacent text merged). */
+  readonly children: WeakMap<Node, readonly Node[]>;
+  /** The real value of a text node that XPath sees merged with the text after it. */
+  readonly ownValue: WeakMap<Node, string>;
+}
+
+function childrenOf(state: ViewState, node: Node): readonly Node[] {
+  return state.children.get(node) ?? [];
+}
+
+function ownValue(state: ViewState, node: Node): string {
+  return state.ownValue.get(node) ?? node.nodeValue ?? "";
 }
 
 const views = new WeakMap<XPathDocument, ViewState>();
@@ -235,12 +392,17 @@ const views = new WeakMap<XPathDocument, ViewState>();
  */
 export function parseForXPath(text: string, namespaceAware: boolean): XPathDocument | null {
   if (!javaTrim(text).startsWith("<")) return null;
-  const doc = parseDocument(text, !namespaceAware);
+  const doc = parseDocument(text, namespaceAware ? "xpath" : "none");
   if (doc === null) return null;
-  const declarations = new WeakMap<Node, readonly Attr[]>();
-  if (!prepareView(doc, namespaceAware, declarations)) return null;
+  const state: ViewState = {
+    doc,
+    declarations: new WeakMap(),
+    children: new WeakMap(),
+    ownValue: new WeakMap(),
+  };
+  if (!prepareView(state, namespaceAware)) return null;
   const view: XPathDocument = { namespaceAware };
-  views.set(view, { doc, declarations });
+  views.set(view, state);
   return view;
 }
 
@@ -251,11 +413,8 @@ export function parseForXPath(text: string, namespaceAware: boolean): XPathDocum
  * axis; makes the view namespace-unaware if asked; and disables `id()` (no DTD, so WireMock finds
  * no ID attributes).
  */
-function prepareView(
-  doc: Document,
-  namespaceAware: boolean,
-  declarations: WeakMap<Node, readonly Attr[]>,
-): boolean {
+function prepareView(state: ViewState, namespaceAware: boolean): boolean {
+  const { doc } = state;
   const order = new WeakMap<object, number>();
   let index = 0;
   function fastCompare(this: Node, other: Node): number {
@@ -277,45 +436,97 @@ function prepareView(
     define(node, "compareDocumentPosition", fastCompare);
   };
 
+  // xmldom keeps the XML declaration as a processing instruction; XPath does not see it.
+  for (let child = doc.firstChild; child !== null; child = child.nextSibling) {
+    if (child.nodeType === PROCESSING_INSTRUCTION_NODE && child.nodeName.toLowerCase() === "xml") {
+      doc.removeChild(child);
+      break;
+    }
+  }
   tag(doc);
   define(doc, "getElementById", () => null);
-  const stack: { readonly node: Node; readonly depth: number }[] = [];
-  for (let child = doc.lastChild; child !== null; child = child.previousSibling) {
-    stack.push({ node: child, depth: 1 });
-  }
+  const stack: { readonly node: Node; readonly depth: number }[] = [{ node: doc, depth: 0 }];
   while (stack.length > 0) {
     const { node, depth } = stack.pop() as { node: Node; depth: number };
-    tag(node);
-    if (node.nodeType !== ELEMENT_NODE) continue;
-    if (depth > MAX_ELEMENT_DEPTH) return false;
-    const element = node as Element;
-    if (element.nodeName.length > MAX_NAME_LENGTH) return false;
+    if (node !== doc) tag(node);
+    if (node.nodeType === ELEMENT_NODE && !prepareElement(node as Element, depth)) return false;
+    if (node.nodeType !== ELEMENT_NODE && node !== doc) continue;
+
+    const children: Node[] = [];
+    for (let child = node.firstChild; child !== null; child = child.nextSibling)
+      children.push(child);
+    state.children.set(node, children);
+    mergeTextRuns(node, children);
+    for (let i = children.length - 1; i >= 0; i--)
+      stack.push({ node: children[i] as Node, depth: depth + 1 });
+  }
+  return true;
+
+  function prepareElement(element: Element, depth: number): boolean {
+    if (depth > MAX_ELEMENT_DEPTH || element.nodeName.length > MAX_NAME_LENGTH) return false;
     const all = element.attributes;
     if (all.length > MAX_ATTRIBUTES_PER_ELEMENT) return false;
     const kept: Attr[] = [];
     const declared: Attr[] = [];
+    const names = new Set<string>();
     for (let i = 0; i < all.length; i++) {
       const attr = all.item(i);
       if (attr === null) continue;
       if (attr.nodeName.length > MAX_NAME_LENGTH) return false;
       if (isNamespaceDeclaration(attr)) {
+        // Binding a prefix to the xmlns namespace itself is a namespace error.
+        if (namespaceAware && attr.nodeName !== "xmlns" && attr.value === XMLNS_URI) return false;
         declared.push(attr);
         continue;
+      }
+      if (namespaceAware) {
+        // p:b and q:b with p and q bound to one URI are the same attribute twice.
+        const name = `{${attr.namespaceURI ?? ""}}${attr.localName ?? attr.nodeName}`;
+        if (names.has(name)) return false;
+        names.add(name);
       }
       tag(attr);
       if (!namespaceAware) define(attr, "namespaceURI", null);
       kept.push(attr);
     }
     if (declared.length > 0) {
-      declarations.set(element, declared);
+      state.declarations.set(element, declared);
       define(element, "attributes", attributeList(kept));
     }
     if (!namespaceAware) define(element, "namespaceURI", null);
-    for (let child = element.lastChild; child !== null; child = child.previousSibling) {
-      stack.push({ node: child, depth: depth + 1 });
+    return true;
+  }
+
+  /**
+   * JAXP sees a run of adjacent Text/CDATA nodes as one XPath text node, represented by the first
+   * DOM node and valued as the whole run. Hide the rest of the run from sibling navigation.
+   */
+  function mergeTextRuns(parent: Node, children: readonly Node[]): void {
+    for (const child of children) {
+      if (child.nodeType === CDATA_SECTION_NODE && child.nodeValue === EMPTY_CDATA) {
+        define(child, "nodeValue", "");
+      }
+    }
+    const isText = (n: Node | undefined): boolean =>
+      n !== undefined && (n.nodeType === TEXT_NODE || n.nodeType === CDATA_SECTION_NODE);
+    for (let i = 0; i < children.length; i++) {
+      if (!isText(children[i]) || !isText(children[i + 1])) continue;
+      const first = children[i] as Node;
+      let value = first.nodeValue ?? "";
+      let j = i + 1;
+      while (isText(children[j])) {
+        value += (children[j] as Node).nodeValue ?? "";
+        j++;
+      }
+      state.ownValue.set(first, first.nodeValue ?? "");
+      define(first, "nodeValue", value);
+      const after = children[j] ?? null;
+      define(first, "nextSibling", after);
+      if (after !== null) define(after, "previousSibling", first);
+      else define(parent, "lastChild", first);
+      i = j - 1;
     }
   }
-  return true;
 }
 
 interface AttributeList {
@@ -397,17 +608,19 @@ function evaluateOn(
  */
 export function nodeText(view: XPathDocument, node: Node): string {
   const state = views.get(view);
+  if (state === undefined) return "";
   switch (node.nodeType) {
     case TEXT_NODE:
+      return ownValue(state, node); // that DOM node's own text, not the merged XPath value
     case ATTRIBUTE_NODE:
       return node.nodeValue ?? "";
     case ELEMENT_NODE:
     case DOCUMENT_NODE:
-      return state === undefined ? "" : `${render(view, state, node)}\n`;
+      return `${render(view, state, node)}\n`;
     case COMMENT_NODE:
       return `[#comment: ${node.nodeValue ?? ""}]`;
     case CDATA_SECTION_NODE:
-      return `[#cdata-section: ${node.nodeValue ?? ""}]`;
+      return `[#cdata-section: ${ownValue(state, node)}]`;
     case PROCESSING_INSTRUCTION_NODE:
       return `[${node.nodeName}: ${node.nodeValue ?? ""}]`;
     default:
@@ -415,32 +628,41 @@ export function nodeText(view: XPathDocument, node: Node): string {
   }
 }
 
-/** Java `NumberFormat.getInstance()` (en-US): grouping, at most three fraction digits. */
-const NUMBER_FORMAT = new Intl.NumberFormat("en-US", {
-  maximumFractionDigits: 3,
-  roundingMode: "halfEven",
-} as Intl.NumberFormatOptions);
-
 /** Text of an XPath value result, as WireMock's `XmlPrimitiveNode.toString()`. */
 export function valueText(value: string | number | boolean): string {
-  return typeof value === "number" ? NUMBER_FORMAT.format(value) : String(value);
+  return typeof value === "number" ? formatJavaNumber(value) : String(value);
 }
 
-interface RenderFrame {
-  readonly element: Element;
-  readonly level: number;
-  next: Node | null;
-  childCount: number;
-  buffer: { readonly cdata: boolean; readonly data: string }[];
-  previousWasText: boolean;
-  /** Namespace bindings written so far (namespace-aware rendering): prefix -> URI. */
-  readonly scope: ReadonlyMap<string, string>;
+/**
+ * Java `NumberFormat.getInstance()` (en-US): thousands grouping and at most three fraction
+ * digits, rounded HALF_EVEN on the exact binary value of the double (2.0005 is stored as
+ * 2.000500000000000078… and rounds up; Intl would see a tie and round down).
+ */
+function formatJavaNumber(value: number): string {
+  if (Number.isNaN(value)) return "NaN";
+  if (!Number.isFinite(value)) return value > 0 ? "∞" : "-∞";
+  const negative = value < 0 || Object.is(value, -0);
+  const magnitude = Math.abs(value);
+  // The exact decimal expansion: toFixed is exact up to 100 digits, which covers every double
+  // whose fraction matters at three places; above 1e21 doubles are integers.
+  const exact = magnitude >= 1e21 ? BigInt(magnitude).toString() : magnitude.toFixed(100);
+  const [intPart = "0", fraction = ""] = exact.split(".");
+  let digits = BigInt(intPart + fraction.slice(0, 3).padEnd(3, "0"));
+  const rest = fraction.slice(3);
+  const first = rest.charAt(0);
+  const tail = rest.slice(1).replace(/0+$/, "");
+  const roundUp = first > "5" || (first === "5" && (tail !== "" || digits % 2n === 1n));
+  if (roundUp) digits += 1n;
+  const text = digits.toString().padStart(4, "0");
+  const integer = text.slice(0, -3).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  const decimals = text.slice(-3).replace(/0+$/, "");
+  return `${negative ? "-" : ""}${integer}${decimals === "" ? "" : `.${decimals}`}`;
 }
 
 function render(view: XPathDocument, state: ViewState, node: Node): string {
   if (node.nodeType !== DOCUMENT_NODE) return renderElement(view, state, node as Element);
   let out = "";
-  for (let child = node.firstChild; child !== null; child = child.nextSibling) {
+  for (const child of childrenOf(state, node)) {
     if (child.nodeType === ELEMENT_NODE) out += renderElement(view, state, child as Element);
     else if (child.nodeType === COMMENT_NODE) out += `<!--${child.nodeValue ?? ""}-->`;
     else if (
@@ -454,92 +676,123 @@ function render(view: XPathDocument, state: ViewState, node: Node): string {
 }
 
 /**
- * Emulates the JDK's XSLTC serializer with `indent=yes`, `indent-number=2`, as WireMock
- * configures it: buffered character data is indented only when its parent has more than one
- * child (dropping its leading newlines), a buffer holding CDATA is never indented, child
- * elements, comments and processing instructions always are, and an end tag is indented unless
- * unindented text came right before it. Iterative, so a deep body cannot exhaust the stack.
+ * Emulates the JDK serializer (`ToStream`, `indent=yes`, `indent-number=2`) as WireMock drives
+ * it through DOM2SAX, event for event:
+ * - character data is buffered; the buffer is flushed (and counted as a child) before a child
+ *   element, comment or processing instruction and at the end tag, and is indented — dropping
+ *   its leading newlines — only when the element already has more than one child;
+ * - a CDATA section flushes the buffer without counting it, and is itself indented only when
+ *   the element already has more than one child; an empty one writes nothing;
+ * - child elements, comments and processing instructions are always indented;
+ * - an end tag is indented when the element had more than one child or the last output was not
+ *   character data; an element with nothing written inside it is written as `<x/>`.
+ * Iterative, so a deep body cannot exhaust the stack.
  */
 function renderElement(view: XPathDocument, state: ViewState, root: Element): string {
+  interface Frame {
+    readonly element: Element;
+    readonly level: number;
+    readonly children: readonly Node[];
+    index: number;
+    childCount: number;
+    /** The start tag is written but not yet closed with ">" (nothing written inside yet). */
+    startTagOpen: boolean;
+    readonly scope: ReadonlyMap<string, string>;
+  }
   let out = "";
+  let previousWasText = false;
+  let buffer: string[] = [];
   const indent = (level: number): string => `\n${"  ".repeat(level)}`;
-  const flush = (frame: RenderFrame): void => {
-    if (frame.buffer.length === 0) return;
-    frame.childCount++;
-    const hasCdata = frame.buffer.some((chunk) => chunk.cdata);
-    let text = frame.buffer
-      .map((c) => (c.cdata ? `<![CDATA[${c.data}]]>` : escapeText(c.data)))
-      .join("");
-    if (!hasCdata && frame.childCount > 1) {
-      text = text.replace(/^\n+/, "");
-      out += indent(frame.level + 1) + text;
-      frame.previousWasText = false;
-    } else {
-      out += text;
-      frame.previousWasText = true;
+  const closeStartTag = (frame: Frame): void => {
+    if (frame.startTagOpen) {
+      out += ">";
+      frame.startTagOpen = false;
     }
-    frame.buffer = [];
   };
-  const open = (
-    element: Element,
-    level: number,
-    scope: ReadonlyMap<string, string>,
-  ): RenderFrame | null => {
+  const flush = (frame: Frame, countAsChild: boolean): void => {
+    if (buffer.length === 0) return;
+    if (countAsChild) frame.childCount++;
+    let skipNewlines = false;
+    if (frame.childCount > 1) {
+      out += indent(frame.level + 1);
+      skipNewlines = true;
+    }
+    for (const chunk of buffer) {
+      let text = chunk;
+      if (skipNewlines) {
+        text = text.replace(/^\n+/, "");
+        if (text === "") continue; // all newlines: keep skipping into the next chunk
+        skipNewlines = false;
+      }
+      out += escapeText(text);
+      previousWasText = true;
+    }
+    buffer = [];
+  };
+  const open = (element: Element, level: number, scope: ReadonlyMap<string, string>): Frame => {
     const start = startTag(view, state, element, scope);
     out += start.tag;
-    if (element.firstChild === null) {
-      out += "/>";
-      return null;
-    }
-    out += ">";
+    previousWasText = false;
     return {
       element,
       level,
-      next: element.firstChild,
+      children: childrenOf(state, element),
+      index: 0,
       childCount: 0,
-      buffer: [],
-      previousWasText: false,
+      startTagOpen: true,
       scope: start.scope,
     };
   };
 
-  const stack: RenderFrame[] = [];
-  const first = open(root, 0, new Map());
-  if (first !== null) stack.push(first);
+  const stack: Frame[] = [open(root, 0, new Map())];
   while (stack.length > 0) {
-    const frame = stack[stack.length - 1] as RenderFrame;
-    const child = frame.next;
-    if (child === null) {
-      flush(frame);
-      if (!frame.previousWasText) out += indent(frame.level);
-      out += `</${frame.element.nodeName}>`;
+    const frame = stack[stack.length - 1] as Frame;
+    const child = frame.children[frame.index];
+    if (child === undefined) {
+      flush(frame, true);
+      if (frame.startTagOpen) out += "/>";
+      else {
+        if (frame.childCount > 1 || !previousWasText) out += indent(frame.level);
+        out += `</${frame.element.nodeName}>`;
+      }
+      previousWasText = false;
       stack.pop();
       continue;
     }
-    frame.next = child.nextSibling;
-    if (child.nodeType === TEXT_NODE || child.nodeType === CDATA_SECTION_NODE) {
-      frame.buffer.push({
-        cdata: child.nodeType === CDATA_SECTION_NODE,
-        data: child.nodeValue ?? "",
-      });
-      continue;
-    }
-    if (
-      child.nodeType !== ELEMENT_NODE &&
-      child.nodeType !== COMMENT_NODE &&
-      child.nodeType !== PROCESSING_INSTRUCTION_NODE
-    ) {
-      continue;
-    }
-    frame.childCount++;
-    flush(frame);
-    out += indent(frame.level + 1);
-    frame.previousWasText = false;
-    if (child.nodeType === COMMENT_NODE) out += `<!--${child.nodeValue ?? ""}-->`;
-    else if (child.nodeType === PROCESSING_INSTRUCTION_NODE) out += processingInstruction(child);
-    else {
-      const nested = open(child as Element, frame.level + 1, frame.scope);
-      if (nested !== null) stack.push(nested);
+    frame.index++;
+    const value = ownValue(state, child);
+    switch (child.nodeType) {
+      case TEXT_NODE:
+        if (value !== "") {
+          closeStartTag(frame);
+          buffer.push(value);
+        }
+        break;
+      case CDATA_SECTION_NODE:
+        flush(frame, false);
+        if (value === "") break; // an empty CDATA section writes nothing
+        closeStartTag(frame);
+        if (frame.childCount > 1) out += indent(frame.level + 1);
+        out += `<![CDATA[${value}]]>`;
+        previousWasText = true;
+        break;
+      case COMMENT_NODE:
+      case PROCESSING_INSTRUCTION_NODE:
+        frame.childCount++;
+        flush(frame, true);
+        closeStartTag(frame);
+        out += indent(frame.level + 1);
+        out += child.nodeType === COMMENT_NODE ? `<!--${value}-->` : processingInstruction(child);
+        break;
+      case ELEMENT_NODE:
+        frame.childCount++;
+        flush(frame, true);
+        closeStartTag(frame);
+        out += indent(frame.level + 1);
+        stack.push(open(child as Element, frame.level + 1, frame.scope));
+        break;
+      default:
+        break;
     }
   }
   return out;
@@ -565,8 +818,14 @@ function startTag(
   let tag = `<${element.nodeName}`;
   if (!view.namespaceAware) {
     const declared = new Map(scope);
-    for (const decl of own)
-      declared.set(decl.nodeName === "xmlns" ? "" : decl.nodeName.slice(6), decl.value);
+    const written: Attr[] = [];
+    for (const decl of own) {
+      const prefix = decl.nodeName === "xmlns" ? "" : decl.nodeName.slice(6);
+      // xmlns="" with no default namespace in effect is redundant, and not written.
+      if (prefix === "" && decl.value === "" && (declared.get("") ?? "") === "") continue;
+      declared.set(prefix, decl.value);
+      written.push(decl);
+    }
     for (const attr of regular) {
       const colon = attr.nodeName.indexOf(":");
       const prefix = colon === -1 ? "" : attr.nodeName.slice(0, colon);
@@ -576,7 +835,7 @@ function startTag(
         throw new Error(`Namespace for prefix '${prefix}' has not been declared.`);
       }
     }
-    for (const decl of own) tag += attribute(decl.nodeName, decl.value);
+    for (const decl of written) tag += attribute(decl.nodeName, decl.value);
     for (const attr of regular) tag += attribute(attr.nodeName, attr.value);
     return { tag, scope: declared };
   }
@@ -585,7 +844,12 @@ function startTag(
     tag += attribute(prefix === "" ? "xmlns" : `xmlns:${prefix}`, uri);
     inner.set(prefix, uri);
   };
-  for (const decl of own) bind(decl.nodeName === "xmlns" ? "" : decl.nodeName.slice(6), decl.value);
+  for (const decl of own) {
+    const prefix = decl.nodeName === "xmlns" ? "" : decl.nodeName.slice(6);
+    // A declaration already in effect (e.g. xmlns="" at the rendering root) is not repeated.
+    if ((inner.get(prefix) ?? (prefix === "" ? "" : undefined)) !== decl.value)
+      bind(prefix, decl.value);
+  }
   for (const attr of regular) {
     const prefix = attr.prefix ?? "";
     const uri = attr.namespaceURI;
@@ -618,11 +882,29 @@ const ATTRIBUTE_ESCAPES: Readonly<Record<string, string>> = {
 };
 
 function escapeText(text: string): string {
-  return text.replace(/[&<>\r]/g, (c) => TEXT_ESCAPES[c] ?? c);
+  return escapeWith(text, TEXT_ESCAPES);
 }
 
 function escapeAttribute(text: string): string {
-  return text.replace(/[&<>"\n\r\t]/g, (c) => ATTRIBUTE_ESCAPES[c] ?? c);
+  // In attribute values the JDK serializer writes DEL and C1 controls as they are.
+  return escapeWith(text, ATTRIBUTE_ESCAPES, false);
+}
+
+/** The JDK serializer writes astral characters (and, in text, DEL and C1 controls) as references. */
+function escapeWith(
+  text: string,
+  escapes: Readonly<Record<string, string>>,
+  referenceControls = true,
+): string {
+  let out = "";
+  for (const ch of text) {
+    const cp = ch.codePointAt(0) ?? 0;
+    const named = escapes[ch];
+    if (named !== undefined) out += named;
+    else if ((referenceControls && cp >= 0x7f && cp <= 0x9f) || cp > 0xffff) out += `&#${cp};`;
+    else out += ch;
+  }
+  return out;
 }
 
 // --- equalToXml --------------------------------------------------------------------------------
@@ -682,19 +964,37 @@ export function compileXmlEquality(
   expectedText: string,
   options: XmlEqualityOptions,
 ): ((actualText: string) => boolean) | { readonly unsupported: string } {
-  const expectedDoc = parseDocument(expectedText, false);
+  const expectedDoc = parseDocument(expectedText, "equality");
   if (expectedDoc === null) return { unsupported: "expected value is not well-formed XML" };
+  // WireMock never matches an expected document with a processing instruction outside the root
+  // element (not even an identical body); report it rather than match differently.
+  for (const child of Array.from(expectedDoc.childNodes)) {
+    if (child.nodeType === PROCESSING_INSTRUCTION_NODE && child.nodeName.toLowerCase() !== "xml") {
+      return { unsupported: "processing instruction outside the root element" };
+    }
+  }
 
   let placeholderPattern: RegExp | undefined;
   if (options.enablePlaceholders) {
     try {
       const open = options.placeholderOpeningDelimiterRegex;
       const close = options.placeholderClosingDelimiterRegex;
-      placeholderPattern = new RegExp(
-        `^\\s*${open}\\s*xmlunit\\.(\\w+)(?:\\(([^)]*)\\))?\\s*${close}\\s*$`,
-      );
+      // XMLUnit reads the keyword and arguments by group number: a capturing group in a
+      // delimiter shifts them, and WireMock never matches.
+      if (/(^|[^\\])\((?!\?)/.test(open + close)) {
+        return { unsupported: "placeholder delimiters with capturing groups" };
+      }
+      // The delimiters are Java regexes, and XMLUnit compiles the whole pattern with Java.
+      placeholderPattern =
+        javaRegex(
+          `\\s*${open}\\s*xmlunit\\.(?<keyword>\\w+)(?:\\((?<args>[^)]*)\\))?\\s*${close}\\s*`,
+          { mode: "full", dotAll: false },
+        ) ?? undefined;
     } catch {
-      return { unsupported: "placeholder delimiters are not valid JavaScript regexes" };
+      placeholderPattern = undefined;
+    }
+    if (placeholderPattern === undefined) {
+      return { unsupported: "placeholder delimiters cannot be translated from Java regexes" };
     }
   }
 
@@ -708,13 +1008,14 @@ export function compileXmlEquality(
     let result: Placeholder | null = null;
     const match = placeholderPattern.exec(text);
     if (match !== null) {
-      const name = match[1] ?? "";
-      const args = match[2] === undefined ? [] : match[2].split(",");
+      const name = match.groups?.["keyword"] ?? "";
+      const rawArgs = match.groups?.["args"];
+      const args = rawArgs === undefined ? [] : rawArgs.split(",");
       // ignore and isNumber take no arguments; XMLUnit rejects any, even empty parentheses.
       if (name === "ignore")
-        result = match[2] === undefined ? { kind: "ignore" } : { kind: "never" };
+        result = match.groups?.["args"] === undefined ? { kind: "ignore" } : { kind: "never" };
       else if (name === "isNumber")
-        result = match[2] === undefined ? { kind: "isNumber" } : { kind: "never" };
+        result = match.groups?.["args"] === undefined ? { kind: "isNumber" } : { kind: "never" };
       else if (name === "matchesRegex") {
         if (args.length !== 1) result = { kind: "never" };
         else {
@@ -764,8 +1065,13 @@ export function compileXmlEquality(
   const context: CompareContext = { options, placeholderFor };
   return (actualText) => {
     try {
-      const actualDoc = parseDocument(actualText, false);
-      return actualDoc !== null && childrenEqual(expected, comparable(actualDoc), context);
+      const actualDoc = parseDocument(actualText, "equality");
+      if (actualDoc === null) return false;
+      const actual = comparable(actualDoc);
+      // At document level the root's position relative to processing instructions counts.
+      const rootIndex = (nodes: readonly CNode[]): number =>
+        nodes.findIndex((n) => n.kind === "element");
+      return rootIndex(expected) === rootIndex(actual) && childrenEqual(expected, actual, context);
     } catch {
       return false;
     }
@@ -800,7 +1106,7 @@ function comparable(doc: Document): CNode[] {
           break;
         case CDATA_SECTION_NODE: {
           flushText();
-          const value = javaTrim(child.nodeValue ?? "");
+          const value = child.nodeValue === EMPTY_CDATA ? "" : javaTrim(child.nodeValue ?? "");
           if (value !== "") into.push({ kind: "cdata", value });
           break;
         }
@@ -839,9 +1145,17 @@ function attributesOf(element: Element): CAttr[] {
   if (element.attributes.length > MAX_ATTRIBUTES_PER_ELEMENT)
     throw new Error("too many attributes");
   const result: CAttr[] = [];
+  const names = new Set<string>();
   for (let i = 0; i < element.attributes.length; i++) {
     const attr = element.attributes.item(i);
-    if (attr === null || isNamespaceDeclaration(attr)) continue;
+    if (attr === null) continue;
+    if (isNamespaceDeclaration(attr)) {
+      if (attr.nodeName !== "xmlns" && attr.value === XMLNS_URI) throw new Error("namespace error");
+      continue;
+    }
+    const name = `{${attr.namespaceURI ?? ""}}${attr.localName ?? attr.nodeName}`;
+    if (names.has(name)) throw new Error("duplicate attribute");
+    names.add(name);
     result.push({
       ns: attr.namespaceURI ?? null,
       local: attr.localName ?? attr.nodeName,
@@ -909,8 +1223,8 @@ function childrenEqual(
   const controlElements = sort(control);
   const actualElements = sort(actual);
 
-  // XMLUnit's DefaultNodeMatcher: same qualified name, searching after the last match and
-  // wrapping around; the elements left over pair up in order.
+  // XMLUnit's DefaultNodeMatcher: same local name, searching after the last match and wrapping
+  // around; the elements left over pair up in order.
   const pairs = new Map<number, number>();
   const used = new Set<number>();
   let last = -1;
@@ -918,12 +1232,8 @@ function childrenEqual(
     for (let k = 1; k <= actualElements.length; k++) {
       const ti = (last + k) % actualElements.length;
       const candidate = actualElements[ti];
-      if (
-        candidate !== undefined &&
-        !used.has(ti) &&
-        candidate.local === element.local &&
-        candidate.ns === element.ns
-      ) {
+      // WireMock pairs by local name; a namespace difference is then counted (or not) below.
+      if (candidate !== undefined && !used.has(ti) && candidate.local === element.local) {
         pairs.set(ci, ti);
         used.add(ti);
         last = ti;
@@ -951,23 +1261,37 @@ function elementEqual(expected: CElement, actual: CElement, context: CompareCont
   if (expected.ns !== null && expected.ns !== actual.ns) return false;
 
   const actualAttrs = new Map(actual.attrs.map((a) => [`{${a.ns ?? ""}}${a.local}`, a]));
-  let compared = 0;
+  let missingIgnored = 0;
   for (const attr of expected.attrs) {
     const other = actualAttrs.get(`{${attr.ns ?? ""}}${attr.local}`);
     const placeholder = context.placeholderFor(attr.value);
     if (other === undefined) {
-      if (placeholder?.kind === "ignore") continue; // ${xmlunit.ignore} accepts a missing attribute
+      // ${xmlunit.ignore} accepts a missing attribute.
+      if (placeholder?.kind === "ignore") {
+        if (!isSchemaLocation(attr)) missingIgnored++;
+        continue;
+      }
       return false;
     }
-    compared++;
     if (attr.ns === XSI_URI && attr.local === "type") {
       if (!qnameEqual(attr.value, expected.dom, other.value, actual.dom)) return false;
     } else if (!valueEqual(javaTrim(attr.value), javaTrim(other.value), placeholder)) {
       return false;
     }
   }
-  if (compared !== actual.attrs.length) return false;
+  // XMLUnit compares attribute counts without xsi:schemaLocation / noNamespaceSchemaLocation
+  // (those are only compared when expected has them); a missing ${xmlunit.ignore} is forgiven.
+  const expectedCount = expected.attrs.filter((a) => !isSchemaLocation(a)).length;
+  const actualCount = actual.attrs.filter((a) => !isSchemaLocation(a)).length;
+  if (actualCount !== expectedCount && actualCount !== expectedCount - missingIgnored) return false;
   return childrenEqual(expected.children, actual.children, context);
+}
+
+function isSchemaLocation(attr: CAttr): boolean {
+  return (
+    attr.ns === XSI_URI &&
+    (attr.local === "schemaLocation" || attr.local === "noNamespaceSchemaLocation")
+  );
 }
 
 function leafEqual(expected: CNode, actual: CNode, context: CompareContext): boolean {
@@ -979,13 +1303,19 @@ function leafEqual(expected: CNode, actual: CNode, context: CompareContext): boo
   if (expected.kind === "element" || actual.kind === "element" || actual.kind === "pi")
     return false;
   const placeholder = context.placeholderFor(expected.value);
-  // A placeholder also accepts CDATA for text and vice versa; otherwise the node type counts.
-  if (placeholder === null && expected.kind !== actual.kind) return false;
-  return valueEqual(expected.value, actual.value, placeholder);
+  if (expected.kind === actual.kind) return valueEqual(expected.value, actual.value, placeholder);
+  // Text against CDATA: the node type differs, which only a placeholder can forgive — and then
+  // only by the placeholder's own verdict, never by the text being equal.
+  return placeholder !== null && placeholderAccepts(placeholder, actual.value);
 }
 
 function valueEqual(expected: string, actual: string, placeholder: Placeholder | null): boolean {
-  if (placeholder === null) return expected === actual;
+  // Equal text is no difference, so XMLUnit never consults the placeholder.
+  if (expected === actual || placeholder === null) return expected === actual;
+  return placeholderAccepts(placeholder, actual);
+}
+
+function placeholderAccepts(placeholder: Placeholder, actual: string): boolean {
   const value = javaTrim(actual);
   switch (placeholder.kind) {
     case "ignore":
@@ -1009,7 +1339,9 @@ function qnameEqual(
   const resolve = (value: string, scope: Element): string => {
     const colon = value.indexOf(":");
     const prefix = colon === -1 ? null : value.slice(0, colon);
-    return `{${scope.lookupNamespaceURI(prefix) ?? ""}}${colon === -1 ? value : value.slice(colon + 1)}`;
+    // xmldom resolves the default namespace for "", not for null.
+    const uri = scope.lookupNamespaceURI(prefix ?? "") ?? "";
+    return `{${uri}}${colon === -1 ? value : value.slice(colon + 1)}`;
   };
   return resolve(javaTrim(expected), expectedScope) === resolve(javaTrim(actual), actualScope);
 }
