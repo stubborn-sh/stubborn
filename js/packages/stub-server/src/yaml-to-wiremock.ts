@@ -26,7 +26,7 @@ import {
   unescapeEcmaScript,
 } from "./java-values.js";
 import { javaFullMatchRegex } from "./java-regex.js";
-import { evaluateJsonPath, jsonPathLocations } from "./json-path.js";
+import { evaluateJsonPath, jsonPathLocations, JsonPathSyntaxError } from "./json-path.js";
 import { stubSideJsonPaths } from "./json-to-json-paths.js";
 import { PREDEFINED_PATTERNS, ISO_DATE, ISO_DATE_TIME, ISO_TIME } from "./predefined-patterns.js";
 import { loadYamlDocuments } from "./snake-yaml.js";
@@ -383,8 +383,6 @@ function readBodyMatcher(value: unknown, where: string, types: readonly string[]
 }
 
 function readValueMatcher(value: unknown, where: string): ValueMatcher | null {
-  // `ValueMatcher(String regex)` makes a plain string a regex.
-  if (typeof value === "string") return { regex: value, predefined: null };
   const r = Reader.of(value, where, ["regex", "predefined"]);
   if (r === null) return null;
   return { regex: r.string("regex"), predefined: r.enumValue("predefined", PREDEFINED) };
@@ -1030,13 +1028,11 @@ class StubConverter {
         });
       } else {
         for (const v of values) {
-          if (!v.assertsSize) out.push({ matchesJsonPath: v.jsonPath.replaceAll("\\\\", "\\") });
+          if (!v.assertsSize) out.push(matchingJsonPath(v.jsonPath.replaceAll("\\\\", "\\")));
         }
       }
       for (const matcher of dsl.bodyMatchers) {
-        out.push({
-          matchesJsonPath: jsonPathForMatcher(matcher, originalBody).replaceAll("\\\\", "\\"),
-        });
+        out.push(matchingJsonPath(jsonPathForMatcher(matcher, originalBody).replaceAll("\\\\", "\\")));
       }
       return;
     }
@@ -1676,6 +1672,18 @@ function removeTrailingContainers(matcherPath: string, context: JsonDocument): b
   }
 }
 
+/** `WireMock.matchingJsonPath`: Jayway compiles the expression, refusing an invalid one. */
+function matchingJsonPath(path: string): Record<string, unknown> {
+  try {
+    evaluateJsonPath(null, path);
+  } catch (err: unknown) {
+    if (err instanceof JsonPathSyntaxError) {
+      throw new YamlConversionError(`Invalid JSONPath generated for the request body: ${err.message}`);
+    }
+  }
+  return { matchesJsonPath: path };
+}
+
 /** `JsonPathMatcherUtils.convertJsonPathAndRegexToAJsonPath`. */
 function jsonPathForMatcher(matcher: BodyMatcher, body: unknown): string {
   const path = matcher.path;
@@ -1695,7 +1703,12 @@ function jsonPathForMatcher(matcher: BodyMatcher, body: unknown): string {
     if (value === null || value === undefined) {
       throw new YamlConversionError(`Value [${path}] is null in the request body`);
     }
-    comparison = `${property} == ${isJavaNumber(value) ? value.toString() : `'${javaToString(value)}'`}`;
+    // An indefinite path reads a json-smart JSONArray, whose toString() is JSON.
+    const text =
+      Array.isArray(value) && !evaluateJsonPath(null, path).definite
+        ? jsonSmartWrite(value)
+        : javaToString(value);
+    comparison = `${property} == ${isJavaNumber(value) ? value.toString() : `'${text}'`}`;
   } else if (matcher.type === "TYPE") {
     const parts: string[] = [];
     if (matcher.min !== null) parts.push(`${property}.size() >= ${matcher.min}`);
@@ -1712,6 +1725,48 @@ function jsonPathForMatcher(matcher: BodyMatcher, body: unknown): string {
     comparison = `${property} =~ /(${converted})/`;
   }
   return `${toLastDot}[?(${comparison})]`;
+}
+
+/** json-smart's `JSONValue.toJSONString` (its default style, which escapes `/`). */
+function jsonSmartWrite(value: unknown): string {
+  if (value === null || value === undefined) return "null";
+  if (typeof value === "string") return jsonSmartString(value);
+  if (typeof value === "boolean") return value ? "true" : "false";
+  if (value instanceof JavaDouble) return Number.isFinite(value.value) ? value.toString() : "null";
+  if (value instanceof JavaInt) return value.toString();
+  if (value instanceof Map) {
+    const entries = [...(value as JMap)].map(
+      ([k, v]) => `${jsonSmartString(String(k))}:${jsonSmartWrite(v)}`,
+    );
+    return `{${entries.join(",")}}`;
+  }
+  if (Array.isArray(value)) return `[${value.map(jsonSmartWrite).join(",")}]`;
+  return jsonSmartString(javaToString(value));
+}
+
+const JSON_SMART_ESCAPES: Readonly<Record<string, string>> = {
+  '"': '\\"',
+  "\\": "\\\\",
+  "\b": "\\b",
+  "\f": "\\f",
+  "\n": "\\n",
+  "\r": "\\r",
+  "\t": "\\t",
+  "/": "\\/",
+};
+
+function jsonSmartString(text: string): string {
+  let out = '"';
+  for (let i = 0; i < text.length; i++) {
+    const ch = text.charAt(i);
+    const c = text.charCodeAt(i);
+    const escape = JSON_SMART_ESCAPES[ch];
+    if (escape !== undefined) out += escape;
+    else if (c <= 0x1f || (c >= 0x7f && c <= 0x9f) || (c >= 0x2000 && c <= 0x20ff)) {
+      out += `\\u${c.toString(16).toUpperCase().padStart(4, "0")}`;
+    } else out += ch;
+  }
+  return `${out}"`;
 }
 
 function findLastDotIndex(path: string): number {
