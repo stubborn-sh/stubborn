@@ -1,0 +1,20 @@
+request:
+  method: GET
+  url: /q
+  queryParameters:
+    present: x
+    gone: y
+    eq: 5
+    js: '{"a":1}'
+  matchers:
+    queryParameters:
+      - key: gone
+        type: absent
+      - key: eq
+        type: equal_to
+        value: 6
+      - key: js
+        type: equal_to_json
+        value: '{"a":1}'
+response:
+  status: 200

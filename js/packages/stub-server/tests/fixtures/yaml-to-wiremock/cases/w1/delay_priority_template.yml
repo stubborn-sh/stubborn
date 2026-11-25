@@ -1,0 +1,19 @@
+priority: 3
+request:
+  method: POST
+  url: /tpl
+  body:
+    id: 7
+    name: n
+response:
+  status: 200
+  fixedDelayMilliseconds: 250
+  headers:
+    Content-Type: application/json
+    Location: "{{{ request.url }}}"
+  body:
+    url: "{{{ request.url }}}"
+    id: "{{{jsonPath request.body '$.id'}}}"
+    name: "{{{jsonPath request.body '$.name'}}}"
+    legacy: "{{{jsonpath this '$.id'}}}"
+    missing: "{{{jsonPath request.body '$.nope'}}}"

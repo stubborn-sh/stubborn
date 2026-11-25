@@ -1,0 +1,8 @@
+request:
+  method: GET
+  url: /x/123
+  matchers:
+    url:
+      command: foo($it)
+response:
+  status: 200

@@ -9,14 +9,19 @@ vi.mock("node:fs/promises", () => ({
 }));
 
 vi.mock("@stubborn-sh/stub-server", () => ({
-  parseContract: vi.fn().mockImplementation((name: string) => ({
-    name,
-    request: { method: "GET", urlPath: "/api" },
-    response: { status: 200 },
-  })),
+  parseContracts: vi.fn().mockImplementation((name: string) => [
+    {
+      name,
+      request: { method: "GET", urlPath: "/api" },
+      response: { status: 200 },
+    },
+  ]),
+  contractFileReader: vi.fn().mockReturnValue(() => undefined),
 }));
 
-vi.mock("@stubborn-sh/broker-client", () => ({
+vi.mock("@stubborn-sh/broker-client", async () => ({
+  // The real content-type check, so loaders are tested against the broker's actual types.
+  isYamlContract: (await import("../../../broker-client/src/content-types.js")).isYamlContract,
   fetchAllPages: vi.fn().mockResolvedValue([
     {
       contractName: "contract1.yaml",
@@ -27,6 +32,12 @@ vi.mock("@stubborn-sh/broker-client", () => ({
       contractName: "contract2.json",
       content: "{}",
       contentType: "application/json",
+    },
+    {
+      // What the Java (Maven/Gradle) publisher sends.
+      contractName: "published-from-jvm",
+      content: "request:\n  method: GET\n  url: /api\nresponse:\n  status: 200",
+      contentType: "application/x-spring-cloud-contract+yaml",
     },
   ]),
 }));
@@ -96,8 +107,7 @@ describe("loadFromBroker", () => {
     const client = {} as BrokerClient;
     const contracts = await loadFromBroker(client, "my-app", "1.0.0");
 
-    // Only the YAML contract should be loaded (not the JSON one)
-    expect(contracts).toHaveLength(1);
-    expect(contracts[0]?.name).toBe("contract1.yaml");
+    // The YAML contracts are loaded — including the one the Java publisher stored — but not JSON.
+    expect(contracts.map((c) => c.name)).toEqual(["contract1.yaml", "published-from-jvm"]);
   });
 });

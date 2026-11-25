@@ -3,6 +3,7 @@ import type { ParsedContract } from "@stubborn-sh/stub-server";
 import { loadFromDirectory, loadFromBroker } from "./contract-loader.js";
 import { executeRequest } from "./request-executor.js";
 import { validateResponse, type ValidationResult } from "./response-validator.js";
+import type { Commands } from "./body-matchers.js";
 import { reportResults } from "./reporter.js";
 
 /** Configuration for contract verification. */
@@ -29,6 +30,13 @@ export interface VerifierConfig {
   readonly reportToBroker?: BrokerClient;
   /** Custom fetch implementation. */
   readonly fetch?: typeof globalThis.fetch;
+  /**
+   * JS stand-ins for the test base-class methods that `by_command` matchers (and header/cookie
+   * `command`s) call on the JVM, by method name or full command text. For
+   * `value: assertThatIdIsPositive($it)`, register `{ assertThatIdIsPositive: (id) => … }`;
+   * throw or return false to fail. A command without a handler fails the contract.
+   */
+  readonly commands?: Commands;
 }
 
 /** Full verification result. */
@@ -55,7 +63,11 @@ export class ContractVerifier {
 
     for (const contract of contracts) {
       const actual = await executeRequest(this.config.providerBaseUrl, contract, this.config.fetch);
-      const result = validateResponse(contract, actual);
+      const result = validateResponse(
+        contract,
+        actual,
+        this.config.commands !== undefined ? { commands: this.config.commands } : undefined,
+      );
       results.push(result);
     }
 

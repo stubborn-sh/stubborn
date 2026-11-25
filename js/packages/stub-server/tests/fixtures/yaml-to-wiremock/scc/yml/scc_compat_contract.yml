@@ -1,0 +1,24 @@
+description: "SCC 5.x style contract — should grant beer for an adult"
+name: shouldGrantBeer
+request:
+  method: POST
+  url: /check
+  headers:
+    Content-Type: application/json
+  body:
+    age: 22
+  matchers:
+    body:
+      - path: $.age
+        type: by_regex
+        value: "[0-9]+"
+response:
+  status: 200
+  headers:
+    Content-Type: text/plain
+  body: "OK"
+  matchers:
+    body:
+      - path: $
+        type: by_regex
+        value: "OK"

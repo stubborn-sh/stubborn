@@ -1,0 +1,14 @@
+request:
+  method: POST
+  url: /bt
+  body:
+    a: [1]
+    b: x
+  matchers:
+    body:
+      - path: $.a
+        type: by_type
+      - path: $.b
+        type: by_null
+response:
+  status: 200

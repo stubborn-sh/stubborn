@@ -1,0 +1,8 @@
+metadata:
+  verifier:
+    tool: foo
+request:
+  method: GET
+  url: /md
+response:
+  status: 200

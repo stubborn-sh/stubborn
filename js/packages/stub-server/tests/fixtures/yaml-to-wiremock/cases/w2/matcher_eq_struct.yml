@@ -1,0 +1,26 @@
+request:
+  method: POST
+  url: /eq
+  body:
+    m:
+      x: 1
+    l: [1, 2]
+    d: 1.5
+    t: true
+    q: "it's"
+  matchers:
+    body:
+      - path: $.m
+        type: by_equality
+      - path: $.l
+        type: by_equality
+      - path: $.d
+        type: by_equality
+      - path: $.t
+        type: by_equality
+      - path: $.q
+        type: by_equality
+      - path: "$.l[*]"
+        type: by_equality
+response:
+  status: 200

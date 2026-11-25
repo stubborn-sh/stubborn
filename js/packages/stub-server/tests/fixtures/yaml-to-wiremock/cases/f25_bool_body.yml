@@ -1,0 +1,7 @@
+request:
+  method: POST
+  url: /bool
+  body: true
+response:
+  status: 200
+  body: false

@@ -1,0 +1,11 @@
+request:
+  method: POST
+  url: /eq
+  body:
+    a: 1
+  matchers:
+    body:
+      - path: $.b
+        type: by_equality
+response:
+  status: 200

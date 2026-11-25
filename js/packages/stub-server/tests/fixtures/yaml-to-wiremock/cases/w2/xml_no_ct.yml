@@ -1,0 +1,7 @@
+request:
+  method: POST
+  url: /xml
+  body: "<root xmlns='urn:x'><id>12</id><sub><v>1</v><v>2</v></sub></root>"
+response:
+  status: 200
+  body: "<ok/>"

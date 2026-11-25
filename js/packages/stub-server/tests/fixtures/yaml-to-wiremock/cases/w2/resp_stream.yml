@@ -1,0 +1,9 @@
+request:
+  method: GET
+  url: /stream
+response:
+  status: 200
+  headers:
+    Content-Type: application/stream+json
+  body:
+    a: '{"b": 1}'

@@ -1,10 +1,10 @@
 import {
   StubServer,
-  parseContract,
+  parseContracts,
   loadFromDirectory,
   type ParsedContract,
 } from "@stubborn-sh/stub-server";
-import { BrokerClient, fetchAllPages } from "@stubborn-sh/broker-client";
+import { BrokerClient, fetchAllPages, isYamlContract } from "@stubborn-sh/broker-client";
 import { fetchStubsJar, loadLocalJar, type MavenStubsJar } from "./jar-fetcher.js";
 
 /** Configuration for setting up stubs from the broker. */
@@ -136,8 +136,8 @@ async function loadFromBroker(config: BrokerStubsConfig): Promise<readonly Parse
   );
 
   return contractResponses
-    .filter((c) => c.contentType === "application/x-yaml")
-    .map((c) => parseContract(c.contractName, c.content));
+    .filter(isYamlContract)
+    .flatMap((c) => parseContracts(c.contractName, c.content));
 }
 
 function isBrokerConfig(config: SetupStubsConfig): config is BrokerStubsConfig {

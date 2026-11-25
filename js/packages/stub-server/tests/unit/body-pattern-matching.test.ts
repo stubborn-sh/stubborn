@@ -73,14 +73,15 @@ describe("matchesJsonPath body patterns", () => {
     expect(result.matched).toBe(true);
   });
 
-  it("should_not_match_numeric_string_vs_number", () => {
+  it("should_match_numeric_string_against_number_literal_as_text", () => {
     const c = contract({
       bodyPatterns: [{ matchesJsonPath: "$[?(@.['amount'] == 999.99)]" }],
     });
-    // String "999.99" should NOT match number 999.99 — strict typing
-    const body = { amount: "999.99" };
-    const result = matchRequest("POST", "/api/test", {}, body, [c]);
-    expect(result.matched).toBe(false);
+    // Jayway (and so WireMock) compares a JSON string with a number literal as written.
+    const result = matchRequest("POST", "/api/test", {}, { amount: "999.99" }, [c]);
+    expect(result.matched).toBe(true);
+    const other = matchRequest("POST", "/api/test", {}, { amount: "999.990" }, [c]);
+    expect(other.matched).toBe(false);
   });
 
   // --- Boolean and null ---

@@ -16,8 +16,8 @@
     "packages/messaging-rabbit"
   ],
   "scripts": {
-    "lint": "eslint packages/*/src/**/*.ts && prettier --check \"packages/*/src/**/*.ts\" \"packages/*/tests/**/*.ts\"",
-    "lint:fix": "eslint --fix packages/*/src/**/*.ts && prettier --write \"packages/*/src/**/*.ts\" \"packages/*/tests/**/*.ts\"",
+    "lint": "eslint \"packages/*/src/**/*.ts\" && prettier --check \"packages/*/src/**/*.ts\" \"packages/*/tests/**/*.ts\"",
+    "lint:fix": "eslint --fix \"packages/*/src/**/*.ts\" && prettier --write \"packages/*/src/**/*.ts\" \"packages/*/tests/**/*.ts\"",
     "typecheck": "tsc -b",
     "build": "npm run --workspaces build",
     "test": "vitest run",

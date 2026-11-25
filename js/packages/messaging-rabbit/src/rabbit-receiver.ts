@@ -57,19 +57,28 @@ export class RabbitReceiver implements MessageReceiver {
 function toReceivedMessage(destination: string, msg: ConsumeMessage): ReceivedMessage {
   const headers: Record<string, string> = {};
   if (msg.properties.headers !== undefined) {
-    for (const [key, value] of Object.entries(msg.properties.headers as Record<string, unknown>)) {
+    for (const [key, value] of Object.entries(msg.properties.headers)) {
       if (value !== undefined) {
         headers[key] = typeof value === "string" ? value : JSON.stringify(value);
       }
     }
   }
 
+  // As the JVM building block: a binary (application/octet-stream) payload is kept as bytes.
   let parsedPayload: unknown;
-  const raw = msg.content.toString();
-  try {
-    parsedPayload = JSON.parse(raw);
-  } catch {
-    parsedPayload = raw;
+  const contentType: unknown = msg.properties.contentType ?? headers["contentType"];
+  if (
+    typeof contentType === "string" &&
+    contentType.trim().toLowerCase() === "application/octet-stream"
+  ) {
+    parsedPayload = msg.content;
+  } else {
+    const raw = msg.content.toString();
+    try {
+      parsedPayload = JSON.parse(raw);
+    } catch {
+      parsedPayload = raw;
+    }
   }
 
   return {

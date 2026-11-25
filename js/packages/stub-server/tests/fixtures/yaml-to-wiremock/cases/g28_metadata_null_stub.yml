@@ -1,0 +1,8 @@
+request:
+  method: GET
+  url: /meta-null
+response:
+  status: 200
+metadata:
+  wiremock:
+    stubMapping: null

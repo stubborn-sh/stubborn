@@ -1,0 +1,8 @@
+request:
+  method: GET
+  url: /u/1
+  matchers:
+    url:
+      regex: /u/[0-9]
+response:
+  status: 200

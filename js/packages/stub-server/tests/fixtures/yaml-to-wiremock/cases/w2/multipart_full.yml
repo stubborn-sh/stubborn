@@ -1,0 +1,34 @@
+request:
+  method: POST
+  url: /upload
+  headers:
+    Content-Type: multipart/form-data
+  multipart:
+    params:
+      name: John
+      age: 42
+    named:
+      - paramName: file1
+        fileName: upload.csv
+        fileContent: "a,b"
+        contentType: text/csv
+      - paramName: file2
+        fileName: data.bin
+        fileContentFromFileAsBytes: files/bin.dat
+      - paramName: file3
+        fileName: x.txt
+        fileContent: hello
+  matchers:
+    multipart:
+      params:
+        - key: age
+          regex: "[0-9]+"
+      named:
+        - paramName: file2
+          fileName:
+            regex: ".+\\.bin"
+          fileContent:
+            predefined: non_empty
+          contentType: "application/.*"
+response:
+  status: 201

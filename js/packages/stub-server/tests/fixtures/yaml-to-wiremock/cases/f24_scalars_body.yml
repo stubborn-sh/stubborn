@@ -1,0 +1,7 @@
+request:
+  method: POST
+  url: /num
+  body: 42
+response:
+  status: 200
+  body: 3.14

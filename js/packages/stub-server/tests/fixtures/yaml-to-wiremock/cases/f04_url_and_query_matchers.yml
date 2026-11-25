@@ -1,0 +1,45 @@
+request:
+  method: GET
+  url: /users/42
+  queryParameters:
+    page: 1
+    name: Bob
+    code: abc
+    q: x
+    j: '{"a":1}'
+    xml: '<a>1</a>'
+    gone: zzz
+  headers:
+    X-Id: 42
+    Accept: application/json
+  matchers:
+    url:
+      regex: /users/[0-9]+
+    queryParameters:
+      - key: page
+        type: matching
+        value: '[0-9]+'
+      - key: name
+        type: equal_to
+        value: Bob
+      - key: code
+        type: not_matching
+        value: '[0-9]+'
+      - key: q
+        type: containing
+        value: x
+      - key: j
+        type: equal_to_json
+        value: '{"a":1}'
+      - key: xml
+        type: equal_to_xml
+        value: '<a>1</a>'
+      - key: gone
+        type: absent
+    headers:
+      - key: X-Id
+        regex: '[0-9]+'
+      - key: Accept
+        predefined: non_blank
+response:
+  status: 200

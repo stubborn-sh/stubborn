@@ -1,0 +1,56 @@
+request:
+  method: POST
+  urlPath: /p
+  headers:
+    Content-Type: application/json
+    h1: abc
+    h2: "1.5"
+    h3: "true"
+    h4: "1.2.3.4"
+    h5: "http://foo.com"
+    h6: "a@b.com"
+    h7: "https://foo.com/x"
+    h8: "123e4567-e89b-12d3-a456-426614174000"
+    h9: "2020-01-02"
+    h10: "2020-01-02T10:11:12"
+    h11: "10:11:12"
+    h12: "2020-01-02T10:11:12Z"
+    h13: "x"
+    h14: "y"
+    h15: "42"
+  matchers:
+    headers:
+      - key: h1
+        predefined: only_alpha_unicode
+      - key: h2
+        predefined: any_double
+      - key: h3
+        predefined: any_boolean
+      - key: h4
+        predefined: ip_address
+      - key: h5
+        predefined: hostname
+      - key: h6
+        predefined: email
+      - key: h7
+        predefined: url
+      - key: h8
+        predefined: uuid
+      - key: h9
+        predefined: iso_date
+      - key: h10
+        predefined: iso_date_time
+      - key: h11
+        predefined: iso_time
+      - key: h12
+        predefined: iso_8601_with_offset
+      - key: h13
+        predefined: non_empty
+      - key: h14
+        predefined: non_blank
+      - key: h15
+        predefined: number
+  body:
+    a: 1
+response:
+  status: 201

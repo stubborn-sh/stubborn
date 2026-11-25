@@ -1,0 +1,18 @@
+request:
+  method: GET
+  url: /c
+  cookies:
+    session: abc123
+    count: 5
+    theme: dark
+    lang: en
+  matchers:
+    cookies:
+      - key: session
+        regex: '[a-z0-9]+'
+      - key: lang
+        predefined: only_alpha_unicode
+      - key: theme
+        command: 'x($it)'
+response:
+  status: 200

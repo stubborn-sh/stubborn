@@ -1,0 +1,8 @@
+request:
+  method: GET
+  urlPath: /p/123
+  matchers:
+    url:
+      regex: /p/[0-9]+
+response:
+  status: 200

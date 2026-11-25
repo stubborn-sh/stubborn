@@ -1,162 +1,102 @@
+import { posix } from "node:path";
 import type { ScannedContract } from "@stubborn-sh/publisher";
-import yaml from "js-yaml";
+import { parseContracts } from "@stubborn-sh/stub-server";
 
-/** Raw WireMock mapping JSON structure for serialization. */
-interface WireMockMapping {
-  readonly request: WireMockRequest;
-  readonly response: WireMockResponse;
-  readonly priority?: number;
+/** Options for {@link convertContract} and {@link contractToWireMock}. */
+export interface ContractToWireMockOptions {
+  /**
+   * Reads a file the contract references (`bodyFromFile`, `bodyFromFileAsBytes`,
+   * `fileContentFromFileAsBytes`), given its path relative to the contract file; returns
+   * undefined when it does not exist. Without it, a contract referencing a file cannot be
+   * converted.
+   */
+  readonly readFile?: (relativePath: string) => Uint8Array | undefined;
 }
 
-interface WireMockRequest {
-  readonly method: string;
-  readonly url?: string;
-  readonly urlPath?: string;
-  readonly headers?: Record<string, WireMockMatcher>;
-  readonly queryParameters?: Record<string, WireMockMatcher>;
-  readonly bodyPatterns?: readonly WireMockBodyPattern[];
+/** A WireMock mapping generated for one contract. */
+export interface WireMockStub {
+  /** The mapping's file name as the JVM names it: the contract's name plus `.json`. */
+  readonly fileName: string;
+  /** The mapping, as JSON. */
+  readonly json: string;
 }
 
-interface WireMockMatcher {
-  readonly equalTo: string;
-}
-
-interface WireMockBodyPattern {
-  readonly equalToJson?: string;
-  readonly matchesJsonPath?: string;
-  readonly matches?: string;
-}
-
-interface WireMockResponse {
-  readonly status: number;
-  readonly headers?: Record<string, string>;
-  readonly body?: string;
-  readonly jsonBody?: unknown;
-}
-
-interface ParsedYamlContract {
-  request?: {
-    method?: string;
-    url?: string;
-    urlPath?: string;
-    headers?: Record<string, string>;
-    body?: unknown;
-    queryParameters?: Record<string, string>;
-  };
-  response?: {
-    status?: number;
-    headers?: Record<string, string>;
-    body?: unknown;
-  };
-  priority?: number;
+/** The result of converting one contract file. */
+export interface ContractConversion {
+  /** One mapping per HTTP contract of the file the JVM generates a stub for. */
+  readonly stubs: readonly WireMockStub[];
+  /** The files the contracts reference, by their path relative to the contract file. */
+  readonly files: ReadonlyMap<string, Uint8Array>;
+  /** Contracts the JVM generates no stub for (messaging-only files, ignored contracts), and why. */
+  readonly skipped: readonly string[];
 }
 
 /**
- * Convert a scanned YAML contract to a WireMock JSON mapping string.
- *
- * This is the reverse of `parseWireMockMapping` from the stub-server package.
- * The output is compatible with Java Stub Runner (WireMock format).
+ * Convert a YAML contract file to the WireMock mappings the JVM (the Maven/Gradle plugins)
+ * generates for it: one per HTTP contract (a file can hold several documents, and a document
+ * can be a list), with the files the contracts reference read through `options.readFile` and
+ * inlined. Messaging contracts and ignored contracts get no mapping. Throws when the JVM would
+ * fail the build on the file, or when stub-server cannot reproduce the JVM's mapping.
  */
-export function contractToWireMock(contract: ScannedContract): string {
-  let raw: unknown;
-  try {
-    raw = yaml.load(contract.content, { schema: yaml.JSON_SCHEMA });
-  } catch (err: unknown) {
+export function convertContract(
+  contract: ScannedContract,
+  options?: ContractToWireMockOptions,
+): ContractConversion {
+  const fileName = posix.basename(contract.contractName);
+  const parsed = parseContracts(
+    fileName,
+    contract.content,
+    options?.readFile !== undefined ? { readFile: options.readFile } : undefined,
+  );
+  const files = new Map<string, Uint8Array>();
+  const stubs: WireMockStub[] = [];
+  const skipped: string[] = [];
+  if (parsed.length === 0) {
+    skipped.push(`${contract.contractName}: no HTTP contract (a messaging contract)`);
+  }
+  const base = fileName.replace(/\.[^.]*$/, "");
+  for (const c of parsed) {
+    for (const [path, content] of c.files ?? []) files.set(path, content);
+    // RecursiveFilesConverter: the contract's name (the YAML `name`, else the JVM's default
+    // name, which parseContracts gives a contract of a file holding several) plus `.json`.
+    const ownName = c.source?.["name"];
+    const name =
+      typeof ownName === "string" && ownName.trim() !== ""
+        ? ownName
+        : parsed.length === 1
+          ? base
+          : c.name;
+    if (c.ignored === true) {
+      skipped.push(`${contract.contractName} (${name}): ignored`);
+      continue;
+    }
+    if (c.wireMockMapping === undefined) {
+      throw new Error(
+        `Cannot convert contract "${name}" of ${contract.contractName} to a WireMock stub: ${(c.unsupportedMatchers ?? []).join("; ")}`,
+      );
+    }
+    stubs.push({
+      fileName: `${name.replace(/[/\\]/g, "_")}.json`,
+      json: JSON.stringify(c.wireMockMapping, null, 2),
+    });
+  }
+  return { stubs, files, skipped };
+}
+
+/**
+ * Convert a YAML contract file holding a single HTTP contract to the WireMock mapping the JVM
+ * generates for it (see {@link convertContract}). Throws when the file holds no stub or several.
+ */
+export function contractToWireMock(
+  contract: ScannedContract,
+  options?: ContractToWireMockOptions,
+): string {
+  const { stubs } = convertContract(contract, options);
+  const [stub] = stubs;
+  if (stub === undefined || stubs.length > 1) {
     throw new Error(
-      `Failed to parse YAML contract "${contract.contractName}": ${err instanceof Error ? err.message : String(err)}`,
+      `Contract "${contract.contractName}" generates ${stubs.length} WireMock stubs, not one (use convertContract)`,
     );
   }
-
-  if (typeof raw !== "object" || raw === null) {
-    throw new Error(`Contract "${contract.contractName}" is not a valid object`);
-  }
-
-  const parsed = raw as ParsedYamlContract;
-
-  if (parsed.request === undefined) {
-    throw new Error(`Contract "${contract.contractName}" is missing required "request" field`);
-  }
-
-  if (parsed.response === undefined) {
-    throw new Error(`Contract "${contract.contractName}" is missing required "response" field`);
-  }
-
-  if (parsed.request.method === undefined || parsed.request.method === "") {
-    throw new Error(
-      `Contract "${contract.contractName}" request is missing required "method" field`,
-    );
-  }
-
-  const mapping = buildMapping(parsed);
-  return JSON.stringify(mapping, null, 2);
-}
-
-function buildMapping(parsed: ParsedYamlContract): WireMockMapping {
-  // Safe: validated in contractToWireMock before calling buildMapping
-  const req = parsed.request as NonNullable<ParsedYamlContract["request"]>;
-  const res = parsed.response as NonNullable<ParsedYamlContract["response"]>;
-
-  const request = buildWireMockRequest(req);
-  const response = buildWireMockResponse(res);
-
-  return {
-    request,
-    response,
-    ...(parsed.priority !== undefined ? { priority: parsed.priority } : {}),
-  };
-}
-
-function buildWireMockRequest(req: NonNullable<ParsedYamlContract["request"]>): WireMockRequest {
-  const result: Record<string, unknown> = {
-    method: (req.method ?? "").toUpperCase(),
-  };
-
-  if (req.urlPath !== undefined) {
-    result["urlPath"] = req.urlPath;
-  } else if (req.url !== undefined) {
-    result["url"] = req.url;
-  }
-
-  if (req.headers !== undefined && Object.keys(req.headers).length > 0) {
-    const wireMockHeaders: Record<string, WireMockMatcher> = {};
-    for (const [key, value] of Object.entries(req.headers)) {
-      wireMockHeaders[key] = { equalTo: value };
-    }
-    result["headers"] = wireMockHeaders;
-  }
-
-  if (req.queryParameters !== undefined && Object.keys(req.queryParameters).length > 0) {
-    const wireMockParams: Record<string, WireMockMatcher> = {};
-    for (const [key, value] of Object.entries(req.queryParameters)) {
-      wireMockParams[key] = { equalTo: value };
-    }
-    result["queryParameters"] = wireMockParams;
-  }
-
-  if (req.body !== undefined) {
-    const bodyStr = typeof req.body === "string" ? req.body : JSON.stringify(req.body);
-    result["bodyPatterns"] = [{ equalToJson: bodyStr }];
-  }
-
-  return result as unknown as WireMockRequest;
-}
-
-function buildWireMockResponse(res: NonNullable<ParsedYamlContract["response"]>): WireMockResponse {
-  const result: Record<string, unknown> = {
-    status: res.status ?? 200,
-  };
-
-  if (res.headers !== undefined && Object.keys(res.headers).length > 0) {
-    result["headers"] = res.headers;
-  }
-
-  if (res.body !== undefined) {
-    if (typeof res.body === "object" && res.body !== null) {
-      result["jsonBody"] = res.body;
-    } else {
-      result["body"] = typeof res.body === "string" ? res.body : JSON.stringify(res.body);
-    }
-  }
-
-  return result as unknown as WireMockResponse;
+  return stub.json;
 }

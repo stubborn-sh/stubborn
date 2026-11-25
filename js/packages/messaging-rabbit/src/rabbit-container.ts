@@ -29,9 +29,11 @@ export async function startRabbitContainer(
   config?: RabbitContainerConfig,
 ): Promise<StartedRabbitContext> {
   // Dynamic import — @testcontainers/rabbitmq is an optional peer dependency
+  // A non-literal specifier keeps TypeScript from resolving the optional module.
+  const moduleName: string = "@testcontainers/rabbitmq";
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const mod: { RabbitMQContainer: new (image: string) => RabbitContainerLike } = await import(
-    "@testcontainers/rabbitmq" as string
+    moduleName
   );
 
   const image = config?.image ?? "rabbitmq:4.0-management";

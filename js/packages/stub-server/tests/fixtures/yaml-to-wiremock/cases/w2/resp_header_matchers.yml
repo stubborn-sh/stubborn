@@ -1,0 +1,20 @@
+request:
+  method: GET
+  url: /rh
+response:
+  status: 200
+  headers:
+    Content-Type: application/json;charset=UTF-8
+    X-Id: "123"
+    X-Cmd: abc
+  matchers:
+    headers:
+      - key: Content-Type
+        regex: "application/json.*"
+      - key: X-Id
+        predefined: number
+      - key: X-Cmd
+        command: check($it)
+  body:
+    a: [[1, 2], [3]]
+    b: "{\"c\": 1}"

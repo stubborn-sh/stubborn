@@ -23,6 +23,7 @@ import java.nio.file.Path;
 import java.util.AbstractMap;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import com.github.tomakehurst.wiremock.common.Json;
@@ -136,9 +137,14 @@ class SccBrokerStubDownloader implements StubDownloader {
 				String name = (String) contract.get("contractName");
 				String content = (String) contract.get("content");
 				if (name != null && content != null) {
-					String yamlFileName = name.endsWith(".yaml") || name.endsWith(".yml") || name.endsWith(".groovy")
-							? name : name + ".yaml";
-					Path contractFile = contractsDir.resolve(yamlFileName);
+					Path contractFile = contractsDir
+						.resolve(contractFileName(name, (String) contract.get("contentType")));
+					// contractName may carry a subdirectory (e.g.
+					// "order/shouldCreateOrder").
+					Path contractParent = contractFile.getParent();
+					if (contractParent != null) {
+						Files.createDirectories(contractParent);
+					}
 					Files.writeString(contractFile, content, StandardCharsets.UTF_8);
 					convertToWireMockMapping(contractFile, name, mappingsDir);
 				}
@@ -230,6 +236,22 @@ class SccBrokerStubDownloader implements StubDownloader {
 			log.warn("Failed to resolve latest version for {}", config.getArtifactId(), ex);
 			return null;
 		}
+	}
+
+	/**
+	 * The file a downloaded contract is written to. Publishers send the contract name
+	 * without its extension, so the content type decides it: a Groovy contract must stay
+	 * {@code .groovy} to be read as Groovy, everything else is YAML.
+	 * @param name the contract name from the broker
+	 * @param contentType the contract's content type, if any
+	 * @return the file name, relative to the contracts directory
+	 */
+	static String contractFileName(String name, @Nullable String contentType) {
+		if (name.endsWith(".yaml") || name.endsWith(".yml") || name.endsWith(".groovy")) {
+			return name;
+		}
+		boolean groovy = contentType != null && contentType.toLowerCase(Locale.ROOT).contains("groovy");
+		return name + (groovy ? ".groovy" : ".yaml");
 	}
 
 }

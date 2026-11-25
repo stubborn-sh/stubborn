@@ -1,0 +1,7 @@
+request:
+  method: POST
+  url: /eb
+  body: ""
+response:
+  status: 200
+  body: ""

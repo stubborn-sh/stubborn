@@ -1,0 +1,10 @@
+request:
+  method: GET
+  urlPath: /p/1
+  queryParameters:
+    a: 1
+  matchers:
+    url:
+      predefined: non_empty
+response:
+  status: 200

@@ -15,7 +15,7 @@
 /** The slice of a supertest response this adapter reads. */
 interface SupertestResponse {
   readonly status: number;
-  readonly headers: Record<string, string>;
+  readonly headers: Record<string, string | readonly string[]>;
   readonly text?: string;
   readonly body?: unknown;
 }
@@ -38,10 +38,10 @@ type FetchInit = Parameters<typeof globalThis.fetch>[1];
 
 async function loadSupertest(): Promise<SupertestFactory> {
   try {
-    const module = (await import(SUPERTEST_MODULE as string)) as {
+    const module = (await import(SUPERTEST_MODULE)) as {
       default?: SupertestFactory;
     } & SupertestFactory;
-    return module.default ?? (module as SupertestFactory);
+    return module.default ?? module;
   } catch (cause) {
     throw new Error(
       "fetchFromSupertest needs the optional peer dependency 'supertest'. " +
@@ -73,12 +73,13 @@ export function fetchFromSupertest(
   app: unknown,
   factory?: SupertestFactory,
 ): typeof globalThis.fetch {
-  return (async (input: FetchInput, init: FetchInit): Promise<Response> => {
+  return async (input: FetchInput, init: FetchInit): Promise<Response> => {
     const request = factory ?? (await loadSupertest());
 
     // The verifier builds an absolute URL from providerBaseUrl; supertest wants
     // the path, and the host is meaningless when nothing is on the wire.
-    const { pathname, search } = new URL(String(input));
+    const href = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
+    const { pathname, search } = new URL(href);
     const method = (init?.method ?? "GET").toLowerCase();
 
     const call = request(app)[method];
@@ -95,23 +96,33 @@ export function fetchFromSupertest(
     }
 
     return toResponse(await pending);
-  }) as typeof globalThis.fetch;
+  };
 }
 
 /** Normalise the several shapes the `headers` init can take. */
 function headersOf(init: FetchInit): Record<string, string> {
   const headers = init?.headers;
   if (headers === undefined) return {};
-  if (headers instanceof Headers) return Object.fromEntries(headers.entries());
+  if (headers instanceof Headers) {
+    const copy: Record<string, string> = {};
+    headers.forEach((value, key) => {
+      copy[key] = value;
+    });
+    return copy;
+  }
 
   const entries: Array<[string, string]> = Array.isArray(headers)
-    ? (headers as string[][]).map((pair) => [pair[0] ?? "", String(pair[1] ?? "")])
-    : Object.entries(headers as Record<string, string>).map(([key, value]) => [key, String(value)]);
+    ? headers.map((pair) => [pair[0] ?? "", String(pair[1] ?? "")])
+    : Object.entries(headers).map(([key, value]) => [key, String(value)]);
   return Object.fromEntries(entries);
 }
 
-/** supertest serialises for us, so hand it an object when the body is JSON. */
+/**
+ * supertest serialises for us, so hand it an object when the body is JSON. A binary body
+ * (a contract's `bodyFromFileAsBytes`) goes as a Buffer, which superagent sends unchanged.
+ */
 function parseBody(body: unknown): unknown {
+  if (body instanceof Uint8Array) return Buffer.from(body);
   if (typeof body !== "string") return body;
   try {
     return JSON.parse(body);
@@ -129,9 +140,15 @@ function toResponse(response: SupertestResponse): Response {
         ? JSON.stringify(response.body)
         : "";
 
+  // Node gives repeated headers (Set-Cookie) as arrays: keep each value.
+  const headers = new Headers();
+  for (const [key, value] of Object.entries(response.headers)) {
+    for (const v of typeof value === "string" ? [value] : value) headers.append(key, v);
+  }
+
   return {
     status: response.status,
-    headers: new Headers(response.headers),
-    text: async () => text,
+    headers,
+    text: () => Promise.resolve(text),
   } as Response;
 }

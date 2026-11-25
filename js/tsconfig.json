@@ -1,12 +1,35 @@
 {
   "files": [],
   "references": [
-    { "path": "packages/broker-client" },
-    { "path": "packages/publisher" },
-    { "path": "packages/stub-server" },
-    { "path": "packages/verifier" },
-    { "path": "packages/cli" },
-    { "path": "packages/jest" },
-    { "path": "packages/stubs-packager" }
+    {
+      "path": "packages/broker-client"
+    },
+    {
+      "path": "packages/publisher"
+    },
+    {
+      "path": "packages/stub-server"
+    },
+    {
+      "path": "packages/verifier"
+    },
+    {
+      "path": "packages/cli"
+    },
+    {
+      "path": "packages/jest"
+    },
+    {
+      "path": "packages/stubs-packager"
+    },
+    {
+      "path": "packages/messaging"
+    },
+    {
+      "path": "packages/messaging-kafka"
+    },
+    {
+      "path": "packages/messaging-rabbit"
+    }
   ]
 }

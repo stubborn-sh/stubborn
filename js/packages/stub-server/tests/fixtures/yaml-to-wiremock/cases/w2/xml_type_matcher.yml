@@ -1,0 +1,12 @@
+request:
+  method: POST
+  url: /xml
+  headers:
+    Content-Type: text/xml
+  body: "<root><id>12</id></root>"
+  matchers:
+    body:
+      - path: /root/id/text()
+        type: by_type
+response:
+  status: 200

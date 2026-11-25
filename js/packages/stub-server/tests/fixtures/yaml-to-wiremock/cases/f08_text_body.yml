@@ -1,0 +1,11 @@
+request:
+  method: POST
+  url: /text
+  headers:
+    Content-Type: text/plain
+  body: "hello world"
+response:
+  status: 200
+  headers:
+    Content-Type: text/plain
+  body: "plain text response"

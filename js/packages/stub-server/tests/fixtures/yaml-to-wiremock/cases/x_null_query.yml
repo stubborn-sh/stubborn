@@ -1,0 +1,7 @@
+request:
+  method: GET
+  urlPath: /n
+  queryParameters:
+    tilde: ~
+response:
+  status: 200

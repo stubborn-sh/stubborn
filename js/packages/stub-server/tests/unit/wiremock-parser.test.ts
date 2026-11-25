@@ -74,7 +74,8 @@ describe("parseWireMockMapping", () => {
     expect(contract.response.body).toEqual({ status: "UP", version: "1.0.0" });
   });
 
-  it("should_prefer_jsonBody_over_body_string", () => {
+  it("should_prefer_body_string_over_jsonBody_like_wiremock", () => {
+    // WireMock's ResponseDefinition: Body.fromOneOf(null, body, jsonBody, base64Body).
     const json = JSON.stringify({
       request: { method: "GET", urlPath: "/api" },
       response: {
@@ -86,7 +87,8 @@ describe("parseWireMockMapping", () => {
 
     const contract = parseWireMockMapping("test.json", json);
 
-    expect(contract.response.body).toEqual({ new: "value" });
+    expect(contract.response.body).toEqual({ old: "value" });
+    expect(contract.response.rawBody).toBe('{"old":"value"}');
   });
 
   it("should_filter_out_csrf_query_parameters", () => {
@@ -367,9 +369,13 @@ describe("parseWireMockMapping", () => {
     ).toThrow('missing "method"');
   });
 
-  it("should_throw_when_url_and_urlPath_are_missing", () => {
-    expect(() =>
-      parseWireMockMapping("bad.json", '{"request":{"method":"GET"},"response":{"status":200}}'),
-    ).toThrow('must have "url" or "urlPath"');
+  it("should_accept_a_mapping_without_url_like_wiremock", () => {
+    // WireMock treats a request pattern without any URL as matching every URL.
+    const contract = parseWireMockMapping(
+      "any-url.json",
+      '{"request":{"method":"GET"},"response":{"status":200}}',
+    );
+    expect(contract.request.url).toBeUndefined();
+    expect(contract.request.urlPath).toBeUndefined();
   });
 });

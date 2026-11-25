@@ -1,0 +1,6 @@
+request:
+  method: POST
+  url: /m
+  bodyFromFile: files/nope.json
+response:
+  status: 200

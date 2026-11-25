@@ -6,6 +6,7 @@
   },
   "include": ["src"],
   "references": [
-    { "path": "../publisher" }
+    { "path": "../publisher" },
+    { "path": "../stub-server" }
   ]
 }

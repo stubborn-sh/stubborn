@@ -1,0 +1,7 @@
+request:
+  method: PUT
+  url: /bytes
+  bodyFromFileAsBytes: files/blob.bin
+response:
+  status: 200
+  bodyFromFileAsBytes: files/blob.bin

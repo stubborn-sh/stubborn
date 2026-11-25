@@ -1,0 +1,8 @@
+description: "SCC-style stub published under META-INF/<group>/<artifact>/<version>/contracts/"
+request:
+  method: GET
+  url: /greeting
+response:
+  status: 200
+  body:
+    message: "hello meta-inf"

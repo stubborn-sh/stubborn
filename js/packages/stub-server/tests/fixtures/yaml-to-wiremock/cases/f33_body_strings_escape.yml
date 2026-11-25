@@ -1,0 +1,15 @@
+request:
+  method: PUT
+  url: /esc
+  body:
+    path: "C:\\dir\\file"
+    quote: 'it''s'
+    unicode: "zażółć ✓"
+    newline: "a\nb"
+    regexy: "a.b*c"
+response:
+  status: 200
+  body:
+    path: "C:\\dir\\file"
+    url: "http://a/b"
+    unicode: "zażółć ✓"

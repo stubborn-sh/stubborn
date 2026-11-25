@@ -1,0 +1,8 @@
+request:
+  method: GET
+  url: /st
+response:
+  status: 200
+  headers:
+    Content-Type: application/x-ndjson+stream/x
+  body: '{"a": 1.50}'

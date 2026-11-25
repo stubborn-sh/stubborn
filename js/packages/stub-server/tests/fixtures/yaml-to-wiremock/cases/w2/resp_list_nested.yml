@@ -1,0 +1,10 @@
+request:
+  method: GET
+  url: /ln
+response:
+  status: 200
+  body:
+    - [1, 2]
+    - "str"
+    - 1.50
+    - {"a": "{\"b\": 2}"}

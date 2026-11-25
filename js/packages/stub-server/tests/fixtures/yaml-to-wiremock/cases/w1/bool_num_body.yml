@@ -1,0 +1,9 @@
+request:
+  method: POST
+  url: /b
+  headers:
+    Content-Type: application/json
+  body: 42
+response:
+  status: 200
+  body: true

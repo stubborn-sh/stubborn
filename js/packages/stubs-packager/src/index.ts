@@ -1,4 +1,9 @@
-export { contractToWireMock } from "./contract-to-wiremock.js";
+export { contractToWireMock, convertContract } from "./contract-to-wiremock.js";
+export type {
+  ContractConversion,
+  ContractToWireMockOptions,
+  WireMockStub,
+} from "./contract-to-wiremock.js";
 export { packageStubsJar } from "./packager.js";
 export type { MavenCoordinates, PackageOptions, PackageResult } from "./packager.js";
 export { deployStubsJar } from "./deployer.js";

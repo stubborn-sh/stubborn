@@ -1,0 +1,7 @@
+priority: "4"
+request:
+  method: GET
+  url: /ss
+response:
+  status: "201"
+  fixedDelayMilliseconds: "10"

@@ -1,0 +1,20 @@
+request:
+  method: GET
+  urlPath: /items
+  queryParameters:
+    limit: 10
+    active: true
+    ratio: 1.5
+    big: 12345678901
+    yes_value: yes
+    off_value: off
+    hex: 0x1F
+    under: 1_000
+    exp: 1e3
+    date: 2017-01-01
+    list:
+      - 1
+      - two
+response:
+  status: 200
+  body: "ok"

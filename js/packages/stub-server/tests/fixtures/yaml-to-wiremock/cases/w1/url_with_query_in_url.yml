@@ -1,0 +1,5 @@
+request:
+  method: GET
+  url: /foo?a=b
+response:
+  status: 200

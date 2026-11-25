@@ -1,0 +1,25 @@
+request:
+  method: GET
+  url: /dup
+  headers:
+    Accept:
+      - text/plain
+      - text/plain
+    X-Num:
+      - 1
+      - 1
+  matchers:
+    headers:
+      - key: X-Num
+        regex: '[0-9]'
+response:
+  status: 200
+  headers:
+    X-Multi:
+      - a
+      - a
+      - b
+    X-Same:
+      - 1
+      - '1'
+  body: dup

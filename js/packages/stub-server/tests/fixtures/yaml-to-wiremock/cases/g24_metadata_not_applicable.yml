@@ -1,0 +1,11 @@
+request:
+  method: GET
+  url: /meta-list
+response:
+  status: 200
+  body: list
+metadata:
+  wiremock:
+    stubMapping:
+      - 1
+      - 2

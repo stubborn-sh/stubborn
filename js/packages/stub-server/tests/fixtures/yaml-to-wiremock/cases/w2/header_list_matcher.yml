@@ -1,0 +1,24 @@
+request:
+  method: GET
+  url: /hl
+  headers:
+    Accept: [application/json, text/plain]
+    X-Twice: abc
+  cookies:
+    c: [1, 2]
+  queryParameters:
+    q: [a1, b2]
+  matchers:
+    headers:
+      - key: Accept
+        regex: ".*/.*"
+      - key: X-Twice
+        regex: "a.*"
+      - key: X-Twice
+        command: x($it)
+    queryParameters:
+      - key: q
+        type: matching
+        value: "[a-z][0-9]"
+response:
+  status: 200

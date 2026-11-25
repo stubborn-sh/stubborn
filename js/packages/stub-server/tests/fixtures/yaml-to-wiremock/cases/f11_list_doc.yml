@@ -1,0 +1,11 @@
+- request:
+    method: GET
+    url: /l1
+  response:
+    status: 200
+- name: named
+  request:
+    method: DELETE
+    url: /l2
+  response:
+    status: 204

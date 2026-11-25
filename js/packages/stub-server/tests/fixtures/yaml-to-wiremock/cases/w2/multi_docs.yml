@@ -1,0 +1,21 @@
+name: first
+request:
+  method: GET
+  url: /one
+response:
+  status: 200
+---
+request:
+  method: GET
+  url: /two
+response:
+  status: 201
+---
+description: messaging
+label: some_label
+input:
+  triggeredBy: trigger()
+outputMessage:
+  sentTo: topic
+  body:
+    a: 1

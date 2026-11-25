@@ -1,7 +1,7 @@
 [versions]
 spring-boot = "4.0.3"
 springCloudBom = "2025.1.1"
-stubbornContract = "0.1.0-SNAPSHOT"
+stubbornContract = "0.1.2"
 
 [libraries]
 spring-boot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web" }

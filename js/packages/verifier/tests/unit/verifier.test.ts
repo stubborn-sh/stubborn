@@ -194,6 +194,22 @@ describe("ContractVerifier", () => {
     expect(mockExecuteRequest).toHaveBeenCalledWith("http://localhost:8080", contract, customFetch);
   });
 
+  it("should_pass_commands_to_validateResponse", async () => {
+    const commands = { assertThatIdIsPositive: (): boolean => true };
+
+    await new ContractVerifier({
+      providerBaseUrl: "http://localhost:8080",
+      providerName: "p",
+      providerVersion: "1",
+      consumerName: "c",
+      consumerVersion: "1",
+      contractsDir: "/dir",
+      commands,
+    }).verify();
+
+    expect(mockValidateResponse).toHaveBeenCalledWith(contract, expect.anything(), { commands });
+  });
+
   it("should_handle_empty_contracts", async () => {
     mockLoadFromDirectory.mockResolvedValue([]);
 

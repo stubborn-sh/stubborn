@@ -1,0 +1,29 @@
+description: "Return fraud check result for high loan amounts"
+priority: 1
+request:
+  method: PUT
+  url: /fraudcheck
+  headers:
+    Content-Type: application/json
+  body:
+    clientId: 1234567890
+    loanAmount: 99999
+  matchers:
+    body:
+      - path: $.clientId
+        type: by_regex
+        predefined: number
+      - path: $.loanAmount
+        type: by_type
+response:
+  status: 200
+  headers:
+    Content-Type: application/json
+  body:
+    fraudCheckStatus: "FRAUD"
+    rejectionReason: "Amount too high"
+  matchers:
+    body:
+      - path: $.fraudCheckStatus
+        type: by_regex
+        value: "FRAUD|OK"

@@ -1,0 +1,10 @@
+request:
+  method: POST
+  url: /form
+  headers:
+    Content-Type: application/x-www-form-urlencoded
+  body:
+    a: 3
+    b: x y
+response:
+  status: 200

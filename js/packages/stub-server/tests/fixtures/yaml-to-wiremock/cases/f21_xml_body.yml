@@ -1,0 +1,17 @@
+request:
+  method: POST
+  url: /xml
+  headers:
+    Content-Type: application/xml
+  body: |
+    <order id="5"><item qty="2">apple</item><item qty="3">pear</item><note>hi</note></order>
+  matchers:
+    body:
+      - path: /order/note/text()
+        type: by_regex
+        value: '[a-z]+'
+response:
+  status: 200
+  headers:
+    Content-Type: application/xml
+  body: "<ok/>"

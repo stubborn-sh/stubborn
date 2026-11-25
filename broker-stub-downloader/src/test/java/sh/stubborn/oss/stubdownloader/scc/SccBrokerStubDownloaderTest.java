@@ -208,4 +208,17 @@ class SccBrokerStubDownloaderTest {
 		return new SccBrokerStubDownloader(options, resource);
 	}
 
+	@Test
+	void should_name_downloaded_contracts_after_their_content_type() {
+		// Publishers strip the extension: the content type keeps a Groovy contract
+		// Groovy.
+		assertThat(SccBrokerStubDownloader.contractFileName("orders/get", "application/x-spring-cloud-contract+groovy"))
+			.isEqualTo("orders/get.groovy");
+		assertThat(SccBrokerStubDownloader.contractFileName("get", "application/x-spring-cloud-contract+yaml"))
+			.isEqualTo("get.yaml");
+		assertThat(SccBrokerStubDownloader.contractFileName("get", null)).isEqualTo("get.yaml");
+		assertThat(SccBrokerStubDownloader.contractFileName("get.yml", "application/x-spring-cloud-contract+groovy"))
+			.isEqualTo("get.yml");
+	}
+
 }

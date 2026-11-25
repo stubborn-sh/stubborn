@@ -1,0 +1,9 @@
+request:
+  method: POST
+  url: /text
+  headers:
+    Content-Type: text/plain
+  body:
+    a: 1
+response:
+  status: 200

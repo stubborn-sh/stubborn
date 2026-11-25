@@ -1,0 +1,27 @@
+request:
+  method: POST
+  url: /upload
+  headers:
+    Content-Type: multipart/form-data
+  multipart:
+    params:
+      description: some text
+      count: 3
+    named:
+      - paramName: file1
+        fileName: a.txt
+        fileContent: hello
+        contentType: text/plain
+      - paramName: file2
+        fileName: b.bin
+        fileContent: data
+  matchers:
+    multipart:
+      named:
+        - paramName: file2
+          fileContent:
+            regex: '.+'
+          contentType:
+            predefined: non_empty
+response:
+  status: 201

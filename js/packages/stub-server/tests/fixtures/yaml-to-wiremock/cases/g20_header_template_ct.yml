@@ -1,0 +1,9 @@
+request:
+  method: POST
+  url: /htc
+  headers:
+    Content-Type: "{{{ request.headers.X }}}"
+  body:
+    a: 1
+response:
+  status: 200

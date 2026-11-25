@@ -1,0 +1,13 @@
+request:
+  method: GET
+  url: /meta-proxy
+response:
+  status: 200
+metadata:
+  wiremock:
+    stubMapping:
+      response:
+        proxyBaseUrl: " http://example.invalid "
+        proxyUrlPrefixToRemove: /meta
+        fault: CONNECTION_RESET_BY_PEER
+        transformerParameters: {}

@@ -1,0 +1,19 @@
+request:
+  method: POST
+  url: /rn
+  body:
+    n: 5
+    s: str
+    l: [1]
+response:
+  status: "201"
+  body:
+    big: 1e20
+    small: 0.0001
+    neg0: -0.0
+    n: "{{{jsonPath request.body '$.n'}}}"
+    l: "{{{jsonPath request.body '$.l'}}}"
+    s: "{{{jsonPath request.body '$.s'}}}"
+    esc: "a\\\"b"
+    sl: "a\\/b"
+    date: 2020-02-03T04:05:06.789+02:00

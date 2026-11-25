@@ -1,0 +1,6 @@
+request:
+  method: GET
+  url: /nq?x=1
+  queryParameters:
+response:
+  status: 200

@@ -1,0 +1,24 @@
+priority: 2
+request:
+  method: GET
+  url: /meta-string
+response:
+  status: 200
+  headers:
+    X-A: one
+  body: text
+metadata:
+  wiremock:
+    stubMapping: |
+      {
+        "response": {
+          "chunkedDribbleDelay": {"numberOfChunks": 5, "totalDuration": 1000},
+          "fixedDelayMilliseconds": "250",
+          "fault": "EMPTY_RESPONSE"
+        },
+        "postServeActions": [
+          {"name": "webhook", "parameters": {"url": "http://localhost:1/x", "method": "GET"}}
+        ],
+        "serveEventListeners": [{"name": "ignored"}],
+        "metadata": {"m": [1]}
+      }

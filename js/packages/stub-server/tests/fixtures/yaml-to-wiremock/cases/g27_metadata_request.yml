@@ -1,0 +1,12 @@
+request:
+  method: GET
+  url: /meta-request
+response:
+  status: 200
+metadata:
+  wiremock:
+    stubMapping:
+      request:
+        method: POST
+      response:
+        fixedDelayMilliseconds: 5

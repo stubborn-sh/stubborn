@@ -1,0 +1,13 @@
+request:
+  method: GET
+  url: /q
+  queryParameters:
+    j: x
+  matchers:
+    queryParameters:
+      - key: j
+        type: equal_to_json
+        value: '{ "a" : 1 }'
+response:
+  status: 200
+  body: ' [1, 2] '

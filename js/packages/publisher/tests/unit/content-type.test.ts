@@ -1,10 +1,10 @@
 import { describe, it, expect } from "vitest";
-import { detectContentType, knownExtensions } from "../../src/content-type.js";
+import { brokerContractName, detectContentType, knownExtensions } from "../../src/content-type.js";
 
 describe("detectContentType", () => {
   it("should_detect_yaml_files", () => {
-    expect(detectContentType("contract.yaml")).toBe("application/x-yaml");
-    expect(detectContentType("contract.yml")).toBe("application/x-yaml");
+    expect(detectContentType("contract.yaml")).toBe("application/x-spring-cloud-contract+yaml");
+    expect(detectContentType("contract.yml")).toBe("application/x-spring-cloud-contract+yaml");
   });
 
   it("should_detect_json_files", () => {
@@ -12,16 +12,13 @@ describe("detectContentType", () => {
   });
 
   it("should_detect_groovy_files", () => {
-    expect(detectContentType("Contract.groovy")).toBe("application/x-groovy");
+    expect(detectContentType("Contract.groovy")).toBe("application/x-spring-cloud-contract+groovy");
   });
 
-  it("should_detect_kotlin_files", () => {
-    expect(detectContentType("Contract.kts")).toBe("application/x-kotlin");
-    expect(detectContentType("Contract.kt")).toBe("application/x-kotlin");
-  });
-
-  it("should_detect_java_files", () => {
-    expect(detectContentType("Contract.java")).toBe("text/x-java-source");
+  it("should_not_publish_kotlin_or_java_files_as_the_jvm_publisher", () => {
+    expect(detectContentType("Contract.kts")).toBeNull();
+    expect(detectContentType("Contract.kt")).toBeNull();
+    expect(detectContentType("Contract.java")).toBeNull();
   });
 
   it("should_return_null_for_unknown_extensions", () => {
@@ -39,12 +36,14 @@ describe("detectContentType", () => {
   });
 
   it("should_be_case_insensitive", () => {
-    expect(detectContentType("CONTRACT.YAML")).toBe("application/x-yaml");
+    expect(detectContentType("CONTRACT.YAML")).toBe("application/x-spring-cloud-contract+yaml");
     expect(detectContentType("contract.JSON")).toBe("application/json");
   });
 
   it("should_handle_nested_dots_in_filename", () => {
-    expect(detectContentType("my.contract.v2.yaml")).toBe("application/x-yaml");
+    expect(detectContentType("my.contract.v2.yaml")).toBe(
+      "application/x-spring-cloud-contract+yaml",
+    );
   });
 });
 
@@ -55,6 +54,24 @@ describe("knownExtensions", () => {
     expect(exts).toContain(".yml");
     expect(exts).toContain(".json");
     expect(exts).toContain(".groovy");
-    expect(exts.length).toBeGreaterThanOrEqual(6);
+    expect(exts).toHaveLength(4);
+  });
+});
+
+describe("brokerContractName", () => {
+  it("should_strip_the_extension_as_the_jvm_publisher", () => {
+    expect(brokerContractName("shouldReturnOrder.yaml")).toBe("shouldReturnOrder");
+    expect(brokerContractName("Contract.groovy")).toBe("Contract");
+    expect(brokerContractName("my.contract.v2.yml")).toBe("my.contract.v2");
+  });
+
+  it("should_keep_the_directory", () => {
+    expect(brokerContractName("orders/get.yaml")).toBe("orders/get");
+    expect(brokerContractName("v1.0/get")).toBe("v1.0/get");
+  });
+
+  it("should_keep_a_name_that_is_only_an_extension", () => {
+    expect(brokerContractName(".yaml")).toBe(".yaml");
+    expect(brokerContractName("orders/.yaml")).toBe("orders/.yaml");
   });
 });

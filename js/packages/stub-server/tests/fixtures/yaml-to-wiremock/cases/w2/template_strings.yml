@@ -1,0 +1,25 @@
+request:
+  method: POST
+  url: /ts
+  headers:
+    Content-Type: application/json
+  body:
+    s: text
+    n: 1
+    l: [1, 2]
+    nul: null
+response:
+  status: 200
+  headers:
+    Content-Type: application/json
+  body:
+    s: "{{{jsonPath request.body '$.s'}}}"
+    n: "{{{jsonPath request.body '$.n'}}}"
+    l: "{{{jsonPath request.body '$.l'}}}"
+    nul: "{{{jsonPath request.body '$.nul'}}}"
+    all: "{{{jsonPath request.body '$.l[*]'}}}"
+    esc: "{{{escapejsonbody}}}"
+    two: "{{jsonPath request.body '$.n'}}"
+    inner:
+      deep: "{{{jsonPath request.body '$.n'}}}"
+    arr: ["{{{jsonPath request.body '$.n'}}}"]

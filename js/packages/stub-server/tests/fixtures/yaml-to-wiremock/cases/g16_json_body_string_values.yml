@@ -1,0 +1,13 @@
+request:
+  method: POST
+  url: /jsv
+  headers:
+    Content-Type: application/json
+  body:
+    inner: '{"x": [1, {"y": 2}]}'
+    arr: '[1,2]'
+    num: "42"
+    t: "true"
+    rx: "REGEXP>>[a-z]+<<"
+response:
+  status: 200

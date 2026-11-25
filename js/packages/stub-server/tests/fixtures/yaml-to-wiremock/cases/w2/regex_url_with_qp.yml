@@ -1,0 +1,20 @@
+request:
+  method: GET
+  url: /users
+  queryParameters:
+    id: "42"
+    flag: false
+  matchers:
+    url:
+      regex: /us.rs
+    queryParameters:
+      - key: id
+        type: matching
+        value: "[0-9]+"
+      - key: flag
+        type: containing
+        value: fa
+response:
+  status: 200
+  body:
+    ok: true

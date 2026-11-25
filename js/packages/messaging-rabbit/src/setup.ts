@@ -3,14 +3,16 @@ import type { ChannelModel } from "amqplib";
 import {
   type MessagingStubConfig,
   type MessagingContract,
-  parseMessagingContract,
+  parseMessagingContracts,
   isMessagingContract,
+  messageBody,
 } from "@stubborn-sh/messaging";
 import {
   BrokerClient,
   fetchAllPages,
   type PageParams,
   type ContractResponse,
+  isYamlContract,
 } from "@stubborn-sh/broker-client";
 import { RabbitSender } from "./rabbit-sender.js";
 import { RabbitReceiver } from "./rabbit-receiver.js";
@@ -89,7 +91,7 @@ export async function setupRabbitStubs(config: SetupRabbitStubsConfig): Promise<
           `No messaging contract found with label "${label}". Available: [${available}]`,
         );
       }
-      await sender.send(contract.destination, contract.body, contract.headers);
+      await sender.send(contract.destination, messageBody(contract), contract.headers);
     },
   };
 
@@ -126,7 +128,14 @@ async function loadMessagingContracts(config: MessagingStubConfig): Promise<Mess
   );
 
   return contractResponses
-    .filter((c: ContractResponse) => c.contentType === "application/x-yaml")
+    .filter((c: ContractResponse) => isYamlContract(c))
     .filter((c: ContractResponse) => isMessagingContract(c.content))
-    .map((c: ContractResponse) => parseMessagingContract(c.contractName, c.content));
+    .flatMap((c: ContractResponse) => {
+      const read = config.readContractFile;
+      return parseMessagingContracts(
+        c.contractName,
+        c.content,
+        read !== undefined ? { readFile: (path) => read(c.contractName, path) } : undefined,
+      );
+    });
 }

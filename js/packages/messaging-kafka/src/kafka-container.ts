@@ -29,9 +29,11 @@ export async function startKafkaContainer(
   config?: KafkaContainerConfig,
 ): Promise<StartedKafkaContext> {
   // Dynamic import — @testcontainers/kafka is an optional peer dependency
+  // A non-literal specifier keeps TypeScript from resolving the optional module.
+  const moduleName: string = "@testcontainers/kafka";
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const mod: { KafkaContainer: new (image: string) => KafkaContainerLike } = await import(
-    "@testcontainers/kafka" as string
+    moduleName
   );
 
   const image = config?.image ?? "confluentinc/cp-kafka:7.6.0";

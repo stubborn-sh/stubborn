@@ -1,0 +1,8 @@
+request:
+  method: GET
+  url: /mn
+  headers:
+    a: b
+  matchers:
+response:
+  status: 200

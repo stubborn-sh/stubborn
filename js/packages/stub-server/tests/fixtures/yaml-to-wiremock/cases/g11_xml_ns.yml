@@ -1,0 +1,8 @@
+request:
+  method: POST
+  url: /ns
+  headers:
+    Content-Type: application/xml
+  body: '<r xmlns="urn:d" xmlns:p="urn:p"><p:a>1</p:a><b x="y">2</b><!-- note --><c><![CDATA[cd]]></c></r>'
+response:
+  status: 200

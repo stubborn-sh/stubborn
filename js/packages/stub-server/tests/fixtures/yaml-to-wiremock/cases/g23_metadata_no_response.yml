@@ -1,0 +1,10 @@
+request:
+  method: GET
+  url: /meta-no-response
+response:
+  status: 200
+metadata:
+  wiremock:
+    stubMapping:
+      metadata:
+        k: v

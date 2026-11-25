@@ -1,0 +1,21 @@
+request:
+  method: GET
+  url: /v
+  queryParameters:
+    n: 10
+    d: 1.5
+    b: true
+    l: [1, two]
+    y: yes
+  headers:
+    X-Num: 5
+    X-List: [a, b]
+    X-Bool: false
+response:
+  status: 201
+  headers:
+    X-Num: 5
+    X-Double: 2.50
+    X-List: [a, b]
+    X-Json: '{"a": 1}'
+  body: 123

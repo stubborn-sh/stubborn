@@ -1,0 +1,11 @@
+request:
+  method: POST
+  url: /files/1
+  headers:
+    Content-Type: application/json
+  bodyFromFile: files/req.json
+response:
+  status: 200
+  headers:
+    Content-Type: application/json
+  bodyFromFile: files/res.json

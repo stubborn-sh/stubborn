@@ -1,0 +1,7 @@
+request:
+  method: POST
+  url: /t
+  body: hello world
+response:
+  status: 200
+  body: plain text

@@ -1,0 +1,11 @@
+request:
+  method: POST
+  url: /tm
+  headers:
+    Content-Type: text/plain
+  body:
+    a: 1
+    b: [x, y]
+response:
+  status: 200
+  body: '{"a":1,"a":2}'
