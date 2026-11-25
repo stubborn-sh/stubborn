@@ -10,6 +10,10 @@ import { parseContracts } from "../../src/contract-parser.js";
  * `fixtures/yaml-to-wiremock/`: the stubborn-contract test and docs contracts (`scc/`) and a
  * feature corpus (`cases/`). `mappings` has one entry per HTTP contract, `null` for one it
  * generates no stub for (an ignored contract); `error` is set when the JVM rejects the file.
+ * They were written by `YamlContractConverter.INSTANCE.convertFrom(file)` then
+ * `new DslToWireMockClientConverter().convertContents(...)` (stubborn-contract 0.2.4-SNAPSHOT),
+ * the JSON parsed as is; `<fixtures>` stands for the fixture directory where the JVM embedded
+ * its absolute path.
  */
 type JvmResult =
   { readonly mappings: readonly (Record<string, unknown> | null)[] } | { readonly error: string };
