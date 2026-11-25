@@ -105,7 +105,16 @@ export function javaToString(value: unknown): string {
   }
   if (Array.isArray(value)) return `[${value.map(javaToString).join(", ")}]`;
   if (value instanceof Uint8Array) return `[B@${(javaHashCode(value) >>> 0).toString(16)}`;
-  return String(value);
+  return objectText(value);
+}
+
+/**
+ * `String(value)` for the other values a contract holds: numbers, and the classes standing for
+ * Java objects (`JavaInt`, `JavaPattern`, `DslProperty`...), whose `toString()` is the Java one.
+ */
+export function objectText(value: unknown): string {
+  if (value === null || value === undefined) return String(value);
+  return (value as { toString(): string }).toString();
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -358,7 +367,7 @@ export function jacksonWrite(value: unknown): string {
   }
   if (Array.isArray(value)) return `[${value.map(jacksonWrite).join(",")}]`;
   if (value instanceof Uint8Array) return jacksonString(Buffer.from(value).toString("base64"));
-  return jacksonString(String(value));
+  return jacksonString(objectText(value));
 }
 
 /** A JSON string literal as Jackson writes it (`\uXXXX` in upper case for control characters). */
@@ -467,5 +476,11 @@ export function patternQuote(text: string): string {
 
 /** `Character.isWhitespace`-based `StringUtils.isBlank`. */
 export function isBlank(text: string | null | undefined): boolean {
-  return text === null || text === undefined || /^[\s\u001c-\u001f]*$/.test(text);
+  if (text === null || text === undefined) return true;
+  for (const c of text) {
+    const code = c.charCodeAt(0);
+    // The information separators U+001C..U+001F are whitespace to Java too.
+    if (!/\s/.test(c) && (code < 0x1c || code > 0x1f)) return false;
+  }
+  return true;
 }

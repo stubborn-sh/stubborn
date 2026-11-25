@@ -218,13 +218,14 @@ export function xPathString(doc: Document, path: string): string {
   const root = doc.documentElement;
   if (root === null) return "";
   try {
-    return String(
-      xpath.useNamespaces(namespaces(doc))(
-        `string(${path})`,
-        root as unknown as globalThis.Node,
-        true,
-      ),
+    // `string(...)` evaluates to a string.
+    const value: unknown = xpath.useNamespaces(namespaces(doc))(
+      `string(${path})`,
+      root as unknown as globalThis.Node,
+      true,
     );
+    if (typeof value === "number" || typeof value === "boolean") return String(value);
+    return typeof value === "string" ? value : "";
   } catch (err: unknown) {
     throw new XmlConversionError(`Invalid XPath [${path}]: ${String(err)}`);
   }

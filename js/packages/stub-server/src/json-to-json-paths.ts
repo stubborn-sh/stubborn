@@ -12,6 +12,7 @@ import {
   JavaDouble,
   JavaInt,
   JavaPattern,
+  objectText,
   type JavaNumber,
 } from "./java-values.js";
 
@@ -76,7 +77,7 @@ class Asserter {
       return asserter;
     }
     const asserter = new Asserter("array", this.buffer, value);
-    asserter.buffer.push(`.${String(value)}[*]`);
+    asserter.buffer.push(`.${objectText(value)}[*]`);
     return asserter;
   }
 
@@ -139,7 +140,7 @@ class Asserter {
     if (isJavaNumber(value)) return this.isEqualToNumber(value);
     if (typeof value === "boolean") return this.isEqualToBoolean(value);
     if (value instanceof JavaPattern) return this.matches(value.pattern);
-    return this.isEqualToString(String(value));
+    return this.isEqualToString(objectText(value));
   }
 
   isNull(): Asserter {
@@ -297,7 +298,7 @@ class Verifiable {
 
   isEqualToObject(value: unknown): Verifiable {
     if (value === null || value === undefined) return this.isNull();
-    return this.isEqualToString(String(value));
+    return this.isEqualToString(objectText(value));
   }
 
   isEqualToNumber(value: JavaNumber): Verifiable {
@@ -366,7 +367,7 @@ class Verifiable {
 
 function wrapValueWithQuotes(value: unknown): string {
   if (value === null || value === undefined) return "null";
-  return typeof value === "string" ? `"${value.replaceAll('"', '\\"')}"` : String(value);
+  return typeof value === "string" ? `"${value.replaceAll('"', '\\"')}"` : objectText(value);
 }
 
 function escapedHackedJavaText(value: string): string {

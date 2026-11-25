@@ -721,7 +721,7 @@ function postProcessStubMapping(
     if (value === undefined || value === null) continue;
     // @JsonInclude(NON_EMPTY) on the transformers and their parameters.
     if (key === "transformers" && (value as unknown[]).length === 0) continue;
-    if (key === "transformerParameters" && Object.keys(value as object).length === 0) continue;
+    if (key === "transformerParameters" && Object.keys(value).length === 0) continue;
     response[key] = value;
   }
 
@@ -1906,7 +1906,7 @@ class JsonDocument {
       const values = found.locations.map(({ parent, key }) => {
         const target = back.get(parent);
         return target instanceof Map
-          ? target.get(String(key))
+          ? (target as Map<string, unknown>).get(String(key))
           : (target as unknown[])[key as number];
       });
       if (result.definite) {
