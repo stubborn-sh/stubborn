@@ -45,6 +45,11 @@ function matchesSingle(
   rawBody: string | undefined,
   contract: ParsedContract,
 ): boolean {
+  // A stub with matchers that cannot be evaluated (or that the JVM would not generate) never
+  // matches, rather than matching requests WireMock would reject.
+  if (contract.unsupportedMatchers !== undefined && contract.unsupportedMatchers.length > 0) {
+    return false;
+  }
   if (contract.request.wireMock !== undefined) {
     return compiledRequestPattern(contract.request.wireMock).matches({
       method,

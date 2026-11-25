@@ -29,7 +29,11 @@ export function buildResponse(
 
   if (contractResponse.headers !== undefined) {
     for (const [key, value] of Object.entries(contractResponse.headers)) {
-      headers[key] = render(value);
+      // A WireMock header with several values is an array.
+      const values: unknown = value;
+      headers[key] = Array.isArray(values)
+        ? (values.map((v) => render(String(v))) as unknown as string)
+        : render(value);
     }
   }
 

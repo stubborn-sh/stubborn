@@ -1,4 +1,10 @@
 import yaml from "js-yaml";
+import { parseWireMockMapping } from "./wiremock-parser.js";
+import {
+  loadYamlContracts,
+  yamlContractToWireMock,
+  type WireMockMappingJson,
+} from "./yaml-to-wiremock.js";
 
 /** WireMock body pattern for request matching. */
 export interface RequestBodyPattern {
@@ -117,9 +123,15 @@ export interface ParsedContract {
   readonly source?: Readonly<Record<string, unknown>>;
   /**
    * Contents of the files the YAML document references (`bodyFromFile`,
-   * `bodyFromFileAsBytes`), keyed by the path as written in the contract.
+   * `bodyFromFileAsBytes`, `fileContentFromFileAsBytes`), keyed by the path as written in the
+   * contract.
    */
   readonly files?: ReadonlyMap<string, Uint8Array>;
+  /**
+   * The WireMock mapping the JVM generates for this YAML contract (without its `id`), which
+   * stub-server serves; absent when the JVM generates none (see {@link unsupportedMatchers}).
+   */
+  readonly wireMockMapping?: WireMockMappingJson;
 }
 
 /** Options for {@link parseContracts}. */
@@ -204,10 +216,20 @@ export function parseContracts(
       }
     });
   if (entries.length === 0) throw new Error(`Contract "${name}" is not a valid object`);
+  // The same documents as the JVM reads them (SnakeYAML's YAML 1.1 types), for the conversion to
+  // the WireMock mapping it generates.
+  let javaContracts: readonly unknown[] | string;
+  try {
+    const loaded = loadYamlContracts(yamlContent).map((c) => c.contract);
+    javaContracts =
+      loaded.length === entries.length ? loaded : "the JVM reads a different number of contracts";
+  } catch (err: unknown) {
+    javaContracts = `the JVM cannot read the YAML: ${err instanceof Error ? err.message : String(err)}`;
+  }
   const base = name.replace(/\.[^./]*$/, "");
   const contracts: ParsedContract[] = [];
   const several = entries.length > 1;
-  for (const { document, index, suffix } of entries) {
+  for (const [position, { document, index, suffix }] of entries.entries()) {
     if (typeof document !== "object" || document === null || Array.isArray(document)) {
       throw new Error(`Contract "${name}" is not a valid object`);
     }
@@ -222,30 +244,50 @@ export function parseContracts(
         : suffix
           ? `${base}_${index}`
           : base;
-    contracts.push(parseDocument(contractName, source, options));
+    const javaContract =
+      typeof javaContracts === "string" ? new Error(javaContracts) : javaContracts[position];
+    contracts.push(parseDocument(contractName, source, options, javaContract));
   }
   return contracts;
 }
 
 const FILE_KEYS = ["bodyFromFile", "bodyFromFileAsBytes"] as const;
 
+/** The files a contract references: `[key, path]` pairs. */
+function referencedFiles(source: Record<string, unknown>): [string, string][] {
+  const out: [string, string][] = [];
+  const field = (value: unknown, key: string): unknown =>
+    typeof value === "object" && value !== null ? (value as Record<string, unknown>)[key] : undefined;
+  for (const part of [source["request"], source["response"]]) {
+    for (const key of FILE_KEYS) {
+      const path = field(part, key);
+      if (typeof path === "string") out.push([key, path]);
+    }
+  }
+  const named = field(field(source["request"], "multipart"), "named");
+  if (Array.isArray(named)) {
+    for (const part of named) {
+      const path = field(part, "fileContentFromFileAsBytes");
+      if (typeof path === "string") out.push(["fileContentFromFileAsBytes", path]);
+    }
+  }
+  return out;
+}
+
 function parseDocument(
   name: string,
   source: Record<string, unknown>,
   options: ParseContractOptions | undefined,
+  javaContract: unknown,
 ): ParsedContract {
   const contract = source as RawContract;
   const files = new Map<string, Uint8Array>();
   const missing: string[] = [];
-  for (const part of [source["request"], source["response"]]) {
-    if (typeof part !== "object" || part === null) continue;
-    for (const key of FILE_KEYS) {
-      const path = (part as Record<string, unknown>)[key];
-      if (typeof path !== "string") continue;
-      const content = options?.readFile?.(path);
-      if (content === undefined) missing.push(`${key}: ${path}`);
-      else files.set(path, content);
-    }
+  for (const [key, path] of referencedFiles(source)) {
+    if (files.has(path)) continue;
+    const content = options?.readFile?.(path);
+    if (content === undefined) missing.push(`${key}: ${path}`);
+    else files.set(path, content);
   }
 
   if (contract.request === undefined) {
@@ -300,14 +342,45 @@ function parseDocument(
     ...(matchers !== undefined ? { matchers } : {}),
   };
 
+  const unsupported = missing.map((m) => `file not found next to the contract (${m})`);
+  let mapping: WireMockMappingJson | undefined;
+  if (unsupported.length === 0) {
+    try {
+      if (javaContract instanceof Error) throw javaContract;
+      mapping = yamlContractToWireMock(javaContract, { files });
+      if (mapping === undefined) {
+        unsupported.push("ignored: the JVM generates no stub for an ignored contract");
+      }
+    } catch (err: unknown) {
+      unsupported.push(
+        `the JVM cannot convert this contract to a stub: ${err instanceof Error ? err.message : String(err)}`,
+      );
+    }
+  }
+
+  const base = { name, source, ...(files.size > 0 ? { files } : {}) };
+  if (mapping === undefined) {
+    return { ...base, request, response, unsupportedMatchers: unsupported };
+  }
+
+  // Served like the WireMock mapping the JVM generates; the YAML's own fields stay for the
+  // callers that read them.
+  const stub = parseWireMockMapping(name, JSON.stringify(mapping));
   return {
-    name,
-    request,
-    response,
-    source,
-    ...(files.size > 0 ? { files } : {}),
-    ...(missing.length > 0
-      ? { unsupportedMatchers: missing.map((m) => `file not found next to the contract (${m})`) }
+    ...base,
+    request: {
+      ...request,
+      ...(stub.request.wireMock !== undefined ? { wireMock: stub.request.wireMock } : {}),
+    },
+    response: {
+      ...stub.response,
+      ...(response.body !== undefined ? { body: response.body } : {}),
+      ...(matchers !== undefined ? { matchers } : {}),
+    },
+    ...(stub.priority !== undefined ? { priority: stub.priority } : {}),
+    ...(stub.unsupportedMatchers !== undefined
+      ? { unsupportedMatchers: stub.unsupportedMatchers }
       : {}),
+    wireMockMapping: mapping,
   };
 }
