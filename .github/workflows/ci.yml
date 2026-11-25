@@ -18,7 +18,9 @@ env:
 jobs:
   build:
     name: Build & Test
-    runs-on: ubuntu-latest
+    # Pinned: ubuntu-latest is now Ubuntu 26.04, for which Playwright 1.58 ships no Chromium,
+    # so every E2E test fails to install its browser.
+    runs-on: ubuntu-24.04
 
     services:
       postgres:
