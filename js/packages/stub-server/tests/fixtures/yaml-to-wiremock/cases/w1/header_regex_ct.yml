@@ -1,0 +1,19 @@
+request:
+  method: POST
+  url: /h
+  headers:
+    Content-Type: application/vnd.foo+json
+    Accept: text/plain
+  body:
+    a: b
+  matchers:
+    headers:
+      - key: Accept
+        predefined: non_empty
+      - key: Accept
+        regex: "text/.*"
+response:
+  status: 200
+  headers:
+    Content-Type: text/plain
+  body: '{"a":1}'

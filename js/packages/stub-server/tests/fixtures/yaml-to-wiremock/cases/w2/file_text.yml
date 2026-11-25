@@ -1,0 +1,7 @@
+request:
+  method: POST
+  url: /t
+  bodyFromFile: files/req.txt
+response:
+  status: 200
+  bodyFromFile: files/res.xml

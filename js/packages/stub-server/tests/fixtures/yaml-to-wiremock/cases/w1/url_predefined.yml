@@ -1,0 +1,8 @@
+request:
+  method: GET
+  url: /x/123
+  matchers:
+    url:
+      predefined: number
+response:
+  status: 200

@@ -1,0 +1,8 @@
+request:
+  method: POST
+  url: /pdf
+  headers:
+    Content-Type: application/pdf
+  body: "%PDF-1.4"
+response:
+  status: 200

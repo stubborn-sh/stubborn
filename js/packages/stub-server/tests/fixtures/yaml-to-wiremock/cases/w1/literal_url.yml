@@ -1,0 +1,5 @@
+request:
+  method: GET
+  url: /files/a+b
+response:
+  status: 200

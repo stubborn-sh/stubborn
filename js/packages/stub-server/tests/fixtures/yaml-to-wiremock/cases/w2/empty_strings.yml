@@ -1,0 +1,9 @@
+request:
+  method: POST
+  url: /es
+  body:
+    e: ""
+    sp: " "
+response:
+  status: 200
+  body: ""

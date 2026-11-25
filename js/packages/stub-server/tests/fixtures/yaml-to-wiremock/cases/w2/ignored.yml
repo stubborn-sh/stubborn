@@ -1,0 +1,6 @@
+ignored: true
+request:
+  method: GET
+  url: /ig
+response:
+  status: 200

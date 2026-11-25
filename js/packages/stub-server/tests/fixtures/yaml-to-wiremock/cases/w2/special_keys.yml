@@ -1,0 +1,12 @@
+request:
+  method: POST
+  url: /sk
+  body:
+    "a.b": 1
+    "it's": 2
+    "c d": 3
+    "[x]": 4
+    "2": 5
+    "1": 6
+response:
+  status: 200

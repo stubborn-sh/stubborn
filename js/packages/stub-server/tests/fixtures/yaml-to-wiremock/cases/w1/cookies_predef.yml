@@ -1,0 +1,15 @@
+request:
+  method: GET
+  url: /c
+  cookies:
+    a: "1"
+    b: "abc"
+    c: 5
+  matchers:
+    cookies:
+      - key: a
+        predefined: number
+      - key: b
+        regex: "[a-c]+"
+response:
+  status: 200

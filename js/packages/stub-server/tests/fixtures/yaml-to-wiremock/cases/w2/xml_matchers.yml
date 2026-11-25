@@ -1,0 +1,17 @@
+request:
+  method: POST
+  url: /xml
+  headers:
+    Content-Type: application/xml
+  body: "<root><id>12</id><name>abc</name><when>2020-01-01</when><x a='1'>t</x></root>"
+  matchers:
+    body:
+      - path: /root/id/text()
+        type: by_regex
+        value: "[0-9]+"
+      - path: /root/name/text()
+        type: by_equality
+      - path: /root/when/text()
+        type: by_date
+response:
+  status: 200

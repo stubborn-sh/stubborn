@@ -1,0 +1,9 @@
+request:
+  method: POST
+  url: /t
+  body:
+    a: []
+    b: {}
+response:
+  status: 200
+  body: []

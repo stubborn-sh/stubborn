@@ -1,0 +1,12 @@
+request:
+  method: POST
+  url: /tm
+  body:
+    a: [1, 2]
+    s: str
+  matchers:
+    body:
+      - path: $.a
+        type: by_type
+response:
+  status: 200

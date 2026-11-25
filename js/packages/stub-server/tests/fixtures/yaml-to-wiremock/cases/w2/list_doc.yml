@@ -1,0 +1,11 @@
+- request:
+    method: GET
+    url: /a
+  response:
+    status: 200
+- request:
+    method: GET
+    url: /b
+  response:
+    status: 200
+    body: b

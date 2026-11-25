@@ -1,0 +1,9 @@
+request:
+  method: POST
+  url: /ao
+  body:
+    - [1, 2]
+    - [{"x": 1}]
+    - {"y": [true, null]}
+response:
+  status: 200

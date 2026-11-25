@@ -1,0 +1,10 @@
+request:
+  method: GET
+  url: /x/123
+  queryParameters:
+    q: 1
+  matchers:
+    url:
+      regex: /x/[0-9]+
+response:
+  status: 200

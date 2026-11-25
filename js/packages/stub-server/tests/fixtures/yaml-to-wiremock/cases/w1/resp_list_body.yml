@@ -1,0 +1,10 @@
+request:
+  method: GET
+  url: /l
+response:
+  status: 200
+  body:
+    - a: 1
+    - b: [1, 2.0, "x"]
+    - 3
+    - null

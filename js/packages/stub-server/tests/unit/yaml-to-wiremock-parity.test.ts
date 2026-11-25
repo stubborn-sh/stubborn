@@ -44,14 +44,59 @@ function normalize(mapping: Record<string, unknown>): Record<string, unknown> {
   return { ...rest, request: { ...request, cookies: sorted } };
 }
 
+/**
+ * Contracts the JVM generates a mapping for that stub-server cannot reproduce: they are reported
+ * through `unsupportedMatchers` instead, so the stub never matches.
+ */
+const NOT_CONVERTED: Readonly<Record<string, string>> = {
+  // The JVM serializes the FromFileProperty object itself (its absolute path, its class...) as
+  // the expected JSON: a stub only a request carrying that description would match.
+  "cases/w2/file_bytes_json.yml": "a .json request body read as bytes",
+  // The JVM swaps WireMock's matching for its own request matcher (a WireMock extension).
+  "cases/w2/metadata_verifier.yml": "metadata.verifier (the stubborn-contract customMatcher)",
+};
+
+/**
+ * Contracts converted to exactly the JVM's mapping, but with a matcher stub-server cannot
+ * evaluate: reported through `unsupportedMatchers`, so the stub never matches.
+ */
+const NOT_EVALUATED: Readonly<Record<string, string>> = {
+  "cases/g11_xml_ns.yml": "matchesXPath using the namespace axis",
+  "scc/yml/contract_rest_named_xml.yml": "matchesXPath with an undeclared namespace prefix",
+};
+
 const files = Object.keys(jvm).sort();
 
 describe("YAML to WireMock: the mapping the JVM generates", () => {
   it("covers the whole corpus", () => {
-    expect(files.length).toBeGreaterThanOrEqual(99);
+    expect(files.length).toBeGreaterThanOrEqual(159);
   });
 
-  const generated = files.filter((f) => "mappings" in (jvm[f] as JvmResult));
+  it.each(Object.entries(NOT_CONVERTED))("%s: not converted (%s)", (file) => {
+    expect("mappings" in (jvm[file] as JvmResult)).toBe(true);
+    const contracts = convert(file);
+    expect(contracts.length).toBeGreaterThan(0);
+    for (const c of contracts) {
+      expect(c.wireMockMapping).toBeUndefined();
+      expect(c.unsupportedMatchers?.length ?? 0).toBeGreaterThan(0);
+    }
+  });
+
+  it("reports the matchers stub-server cannot evaluate, and only those", () => {
+    const reported = files.filter(
+      (f) =>
+        "mappings" in (jvm[f] as JvmResult) &&
+        !(f in NOT_CONVERTED) &&
+        convert(f).some(
+          (c) => c.wireMockMapping !== undefined && c.unsupportedMatchers !== undefined,
+        ),
+    );
+    expect(reported).toEqual(Object.keys(NOT_EVALUATED).sort());
+  });
+
+  const generated = files.filter(
+    (f) => "mappings" in (jvm[f] as JvmResult) && !(f in NOT_CONVERTED),
+  );
   it.each(generated)("%s", (file) => {
     const expected = (jvm[file] as { mappings: readonly (Record<string, unknown> | null)[] })
       .mappings;

@@ -1,0 +1,16 @@
+request:
+  method: POST
+  url: /n
+  body:
+    items:
+      - id: 1
+        tags: [a, b]
+      - id: 2
+        tags: []
+    matrix: [[1, 2], [3, 4]]
+    objs: [[{"x": 1}], [{"y": 2}]]
+    root:
+      deep:
+        deeper: "it's"
+response:
+  status: 200

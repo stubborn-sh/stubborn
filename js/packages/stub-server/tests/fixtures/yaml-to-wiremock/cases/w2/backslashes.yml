@@ -1,0 +1,16 @@
+request:
+  method: POST
+  url: /bs
+  body:
+    path: 'C:\temp\x'
+    re: '\d+'
+    quote: 'say "hi"'
+    uni: "caf\u00e9 \u2028"
+    slash: "a\\/b"
+response:
+  status: 200
+  body:
+    path: 'C:\temp\x'
+    three: 'a\\\b'
+    slash: "a\\/b"
+    uni: "caf\u00e9"

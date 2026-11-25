@@ -1,0 +1,7 @@
+request:
+  method: POST
+  url: /t
+  body: '{"a": 1, "b": [1, 2], "c": {"d": "e"}}'
+response:
+  status: 200
+  body: '{"x": 1,  "y": "z"}'

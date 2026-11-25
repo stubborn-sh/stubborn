@@ -1,0 +1,7 @@
+request:
+  method: POST
+  url: /bin
+  bodyFromFileAsBytes: files/req.json
+response:
+  status: 200
+  bodyFromFileAsBytes: files/res.json

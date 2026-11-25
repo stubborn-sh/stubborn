@@ -1,0 +1,22 @@
+request:
+  method: POST
+  url: /y
+  body:
+    on: yes
+    off: no
+    hex: 0x1F
+    oct: 012
+    sci: 1e3
+    flt: 1.0
+    big: 123456789012345678901234567890
+    neg: -0.0
+    date: 2017-01-01
+    ts: 2017-01-01T10:00:00Z
+    tilde: ~
+response:
+  status: 200
+  body:
+    flt: 1.0
+    sci: 1e3
+    big: 123456789012345678901234567890
+    date: 2017-01-01

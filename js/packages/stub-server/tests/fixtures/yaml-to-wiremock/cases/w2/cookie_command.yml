@@ -1,0 +1,17 @@
+request:
+  method: GET
+  url: /cc
+  cookies:
+    s: abc
+  matchers:
+    cookies:
+      - key: s
+        command: foo($it)
+response:
+  status: 200
+  cookies:
+    r: 1
+  matchers:
+    cookies:
+      - key: r
+        regex: "[a-z]"

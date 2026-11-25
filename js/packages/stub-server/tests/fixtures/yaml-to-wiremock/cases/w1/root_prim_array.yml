@@ -1,0 +1,6 @@
+request:
+  method: POST
+  url: /r
+  body: [1, 2, "x"]
+response:
+  status: 200
