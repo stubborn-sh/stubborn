@@ -1,0 +1,2698 @@
+{
+  "cases/f01_query_types.yml": {
+    "mappings": [
+      {
+        "id": "a771e042-4867-4906-8e49-1cbcfe95ea51",
+        "request": {
+          "urlPath": "/items",
+          "method": "GET",
+          "queryParameters": {
+            "limit": {
+              "equalTo": "10"
+            },
+            "active": {
+              "equalTo": "true"
+            },
+            "ratio": {
+              "equalTo": "1.5"
+            },
+            "big": {
+              "equalTo": "12345678901"
+            },
+            "yes_value": {
+              "equalTo": "true"
+            },
+            "off_value": {
+              "equalTo": "false"
+            },
+            "hex": {
+              "equalTo": "31"
+            },
+            "under": {
+              "equalTo": "1000"
+            },
+            "exp": {
+              "equalTo": "1000.0"
+            },
+            "date": {
+              "equalTo": "2017-01-01T00:00:00.000Z"
+            },
+            "list": {
+              "equalTo": "two"
+            }
+          }
+        },
+        "response": {
+          "status": 200,
+          "body": "ok",
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "a771e042-4867-4906-8e49-1cbcfe95ea51"
+      }
+    ]
+  },
+  "cases/f02_url_literal.yml": {
+    "mappings": [
+      {
+        "id": "fab6ac5c-ddd5-4de6-ab82-73dc020bebd7",
+        "request": {
+          "urlPath": "/files/a+b",
+          "method": "GET"
+        },
+        "response": {
+          "status": 200,
+          "body": "plus",
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "fab6ac5c-ddd5-4de6-ab82-73dc020bebd7"
+      }
+    ]
+  },
+  "cases/f03_url_query.yml": {
+    "mappings": [
+      {
+        "id": "34b72167-3dc4-418d-9be1-06c44d64dade",
+        "request": {
+          "urlPath": "/search?q=a&b=1",
+          "method": "GET"
+        },
+        "response": {
+          "status": 200,
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "34b72167-3dc4-418d-9be1-06c44d64dade"
+      }
+    ]
+  },
+  "cases/f04_url_and_query_matchers.yml": {
+    "mappings": [
+      {
+        "id": "90a97e48-24e5-4bb2-a818-eb20f21f2ada",
+        "request": {
+          "urlPathPattern": "/users/[0-9]+",
+          "method": "GET",
+          "headers": {
+            "X-Id": {
+              "matches": "[0-9]+"
+            },
+            "Accept": {
+              "matches": "^\\s*\\S[\\S\\s]*"
+            }
+          },
+          "queryParameters": {
+            "page": {
+              "matches": "[0-9]+"
+            },
+            "name": {
+              "equalTo": "Bob"
+            },
+            "code": {
+              "doesNotMatch": "[0-9]+"
+            },
+            "q": {
+              "contains": "x"
+            },
+            "j": {
+              "equalToJson": "{\"a\":1}"
+            },
+            "xml": {
+              "equalToXml": "<a>1</a>"
+            },
+            "gone": {
+              "absent": true
+            }
+          }
+        },
+        "response": {
+          "status": 200,
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "90a97e48-24e5-4bb2-a818-eb20f21f2ada"
+      }
+    ]
+  },
+  "cases/f05_predefined.yml": {
+    "mappings": [
+      {
+        "id": "d2debc71-6c4f-4842-9ebd-2e53b2c0b8ac",
+        "request": {
+          "urlPath": "/p",
+          "method": "POST",
+          "headers": {
+            "Content-Type": {
+              "equalTo": "application/json"
+            },
+            "h1": {
+              "matches": "[\\p{L}]*"
+            },
+            "h2": {
+              "matches": "-?(\\d*\\.\\d+)"
+            },
+            "h3": {
+              "matches": "(true|false)"
+            },
+            "h4": {
+              "matches": "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])"
+            },
+            "h5": {
+              "matches": "((http[s]?|ftp):/)/?([^:/\\s]+)(:[0-9]{1,5})?"
+            },
+            "h6": {
+              "matches": "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}"
+            },
+            "h7": {
+              "matches": "^(?:(?:[A-Za-z][+-.\\w^_]*:/{2})?(?:\\S+(?::\\S*)?@)?(?:(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)|(?:(?:[a-z\\u00a1-\\uffff0-9]-*)*[a-z\\u00a1-\\uffff0-9]+)(?:\\.(?:[a-z\\u00a1-\\uffff0-9]-*)*[a-z\\u00a1-\\uffff0-9]+)*(?:\\.(?:[a-z\\u00a1-\\uffff]{2,}))|(?:localhost))(?::\\d{2,5})?(?:/\\S*)?)$"
+            },
+            "h8": {
+              "matches": "[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"
+            },
+            "h9": {
+              "matches": "(\\d\\d\\d\\d)-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])"
+            },
+            "h10": {
+              "matches": "([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])"
+            },
+            "h11": {
+              "matches": "(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])"
+            },
+            "h12": {
+              "matches": "([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\\.\\d+)?(Z|[+-][01]\\d:[0-5]\\d)"
+            },
+            "h13": {
+              "matches": "[\\S\\s]+"
+            },
+            "h14": {
+              "matches": "^\\s*\\S[\\S\\s]*"
+            },
+            "h15": {
+              "matches": "-?(\\d*\\.\\d+|\\d+)"
+            }
+          },
+          "bodyPatterns": [
+            {
+              "matchesJsonPath": "$[?(@.['a'] == 1)]"
+            }
+          ]
+        },
+        "response": {
+          "status": 201,
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "d2debc71-6c4f-4842-9ebd-2e53b2c0b8ac"
+      }
+    ]
+  },
+  "cases/f06_json_body_shapes.yml": {
+    "mappings": [
+      {
+        "id": "4e77d27b-1cda-465d-b252-c7ec480396fe",
+        "request": {
+          "urlPath": "/orders",
+          "method": "POST",
+          "headers": {
+            "Content-Type": {
+              "equalTo": "application/json"
+            }
+          },
+          "bodyPatterns": [
+            {
+              "matchesJsonPath": "$[?(@.['id'] == 1)]"
+            },
+            {
+              "matchesJsonPath": "$[?(@.['price'] == 9.99)]"
+            },
+            {
+              "matchesJsonPath": "$[?(@.['big'] == 1.0)]"
+            },
+            {
+              "matchesJsonPath": "$[?(@.['neg'] == -5)]"
+            },
+            {
+              "matchesJsonPath": "$[?(@.['flag'] == false)]"
+            },
+            {
+              "matchesJsonPath": "$[?(@.['nothing'] == null)]"
+            },
+            {
+              "matchesJsonPath": "$[?(@.['name'] == 'O\\'Brien \"quoted\" back\\slash')]"
+            },
+            {
+              "matchesJsonPath": "$[?(@.['slash'] == 'a/b')]"
+            },
+            {
+              "matchesJsonPath": "$.['tags'][?(@ == 'a')]"
+            },
+            {
+              "matchesJsonPath": "$.['tags'][?(@ == 'b')]"
+            },
+            {
+              "matchesJsonPath": "$.['tags'][?(@ == 'c')]"
+            },
+            {
+              "matchesJsonPath": "$.['nums'][?(@ == 1)]"
+            },
+            {
+              "matchesJsonPath": "$.['nums'][?(@ == 2.5)]"
+            },
+            {
+              "matchesJsonPath": "$.['nums'][?(@ == 3)]"
+            },
+            {
+              "matchesJsonPath": "$.['nested'].['deep'][?(@.['deeper'] == 'value')]"
+            },
+            {
+              "matchesJsonPath": "$.['nested'].['list'][*][?(@.['x'] == 1)]"
+            },
+            {
+              "matchesJsonPath": "$.['nested'].['list'][*].['y'][?(@ == 1)]"
+            },
+            {
+              "matchesJsonPath": "$.['nested'].['list'][*].['y'][?(@ == 2)]"
+            },
+            {
+              "matchesJsonPath": "$.['nested'].['list'][*][?(@.['x'] == 2)]"
+            },
+            {
+              "matchesJsonPath": "$.['matrix'][*][?(@ == 1)]"
+            },
+            {
+              "matchesJsonPath": "$.['matrix'][*][?(@ == 2)]"
+            },
+            {
+              "matchesJsonPath": "$.['matrix'][*][?(@ == 3)]"
+            },
+            {
+              "matchesJsonPath": "$.['matrix'][*][?(@ == 4)]"
+            },
+            {
+              "matchesJsonPath": "$.['objs'][*][?(@.['name'] == 'a')]"
+            },
+            {
+              "matchesJsonPath": "$.['objs'][*].['sub'][*][?(@.['k'] == 'v')]"
+            },
+            {
+              "matchesJsonPath": "$.['mixed'][?(@ == 'str')]"
+            },
+            {
+              "matchesJsonPath": "$.['mixed'][?(@.['k'] == 'v')]"
+            }
+          ]
+        },
+        "response": {
+          "status": 201,
+          "body": "{\"ok\":true}",
+          "headers": {
+            "Content-Type": "application/json"
+          },
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "4e77d27b-1cda-465d-b252-c7ec480396fe"
+      }
+    ]
+  },
+  "cases/f07_json_body_no_content_type.yml": {
+    "mappings": [
+      {
+        "id": "ea63e7f2-1012-4f20-b3ff-3c56c879699d",
+        "request": {
+          "urlPath": "/nocontenttype",
+          "method": "POST",
+          "bodyPatterns": [
+            {
+              "matchesJsonPath": "$[?(@.['a'] == 'b')]"
+            },
+            {
+              "matchesJsonPath": "$[?(@.['n'] == 2)]"
+            }
+          ]
+        },
+        "response": {
+          "status": 200,
+          "body": "[1,\"two\",{\"k\":\"v\"}]",
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "ea63e7f2-1012-4f20-b3ff-3c56c879699d"
+      }
+    ]
+  },
+  "cases/f08_text_body.yml": {
+    "mappings": [
+      {
+        "id": "0349c6d4-8896-40db-b6e8-131d879f78aa",
+        "request": {
+          "urlPath": "/text",
+          "method": "POST",
+          "headers": {
+            "Content-Type": {
+              "equalTo": "text/plain"
+            }
+          },
+          "bodyPatterns": [
+            {
+              "equalTo": "hello world"
+            }
+          ]
+        },
+        "response": {
+          "status": 200,
+          "body": "plain text response",
+          "headers": {
+            "Content-Type": "text/plain"
+          },
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "0349c6d4-8896-40db-b6e8-131d879f78aa"
+      }
+    ]
+  },
+  "cases/f09_string_json_body.yml": {
+    "mappings": [
+      {
+        "id": "58ecf7f0-358e-46ff-909f-bb5d7063eab8",
+        "request": {
+          "urlPath": "/strjson",
+          "method": "POST",
+          "bodyPatterns": [
+            {
+              "matchesJsonPath": "$[?(@.['a'] == 1)]"
+            },
+            {
+              "matchesJsonPath": "$.['b'][?(@ == 1)]"
+            },
+            {
+              "matchesJsonPath": "$.['b'][?(@ == 2)]"
+            },
+            {
+              "matchesJsonPath": "$.['c'][?(@.['d'] == 'e')]"
+            }
+          ]
+        },
+        "response": {
+          "status": 200,
+          "body": "{\"x\":1.5,\"y\":\"z\"}",
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "58ecf7f0-358e-46ff-909f-bb5d7063eab8"
+      }
+    ]
+  },
+  "cases/f10_multi_doc.yml": {
+    "mappings": [
+      {
+        "id": "cf0dc459-d4c1-4f3d-bf0e-89b42885b181",
+        "request": {
+          "urlPath": "/one",
+          "method": "GET"
+        },
+        "response": {
+          "status": 200,
+          "body": "one",
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "cf0dc459-d4c1-4f3d-bf0e-89b42885b181"
+      },
+      {
+        "id": "879810e8-29eb-400b-bf84-e0cd8a3366bb",
+        "request": {
+          "urlPath": "/two",
+          "method": "GET"
+        },
+        "response": {
+          "status": 201,
+          "body": "two",
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "879810e8-29eb-400b-bf84-e0cd8a3366bb"
+      },
+      {
+        "id": "90b5b6bc-e393-4a39-8173-a76cb1dc355d",
+        "request": {
+          "urlPath": "/four",
+          "method": "GET"
+        },
+        "response": {
+          "status": 204,
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "90b5b6bc-e393-4a39-8173-a76cb1dc355d"
+      }
+    ]
+  },
+  "cases/f11_list_doc.yml": {
+    "mappings": [
+      {
+        "id": "3eab4423-4dd7-4918-af08-43f6ff277728",
+        "request": {
+          "urlPath": "/l1",
+          "method": "GET"
+        },
+        "response": {
+          "status": 200,
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "3eab4423-4dd7-4918-af08-43f6ff277728"
+      },
+      {
+        "id": "888a384c-375e-447f-a175-1208cd338495",
+        "request": {
+          "urlPath": "/l2",
+          "method": "DELETE"
+        },
+        "response": {
+          "status": 204,
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "888a384c-375e-447f-a175-1208cd338495"
+      }
+    ]
+  },
+  "cases/f12_templating.yml": {
+    "mappings": [
+      {
+        "id": "0f18a083-dc2c-4115-aef6-7bdb0ea6fd0c",
+        "request": {
+          "urlPath": "/tpl",
+          "method": "POST",
+          "headers": {
+            "Content-Type": {
+              "equalTo": "application/json"
+            }
+          },
+          "bodyPatterns": [
+            {
+              "matchesJsonPath": "$[?(@.['id'] == 7)]"
+            },
+            {
+              "matchesJsonPath": "$[?(@.['name'] == 'n')]"
+            },
+            {
+              "matchesJsonPath": "$.['nested'][?(@.['v'] == true)]"
+            }
+          ]
+        },
+        "response": {
+          "status": 200,
+          "body": "{\"url\":\"{{{ request.url }}}\",\"id\":{{{jsonPath request.body '$.id'}}} ,\"name\":\"{{{jsonPath request.body '$.name'}}}\",\"v\":{{{jsonPath request.body '$.nested.v'}}} ,\"legacy\":{{{jsonpath this '$.id'}}} ,\"missing\":\"{{{jsonPath request.body '$.nope'}}}\",\"whole\":\"{{{escapejsonbody}}}\"}",
+          "headers": {
+            "Content-Type": "application/json",
+            "X-Url": "{{{ request.url }}}"
+          },
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "0f18a083-dc2c-4115-aef6-7bdb0ea6fd0c"
+      }
+    ]
+  },
+  "cases/f13_priority_delay.yml": {
+    "mappings": [
+      {
+        "id": "14b96421-032f-4505-bcf0-051d63673986",
+        "request": {
+          "urlPath": "/slow",
+          "method": "GET"
+        },
+        "response": {
+          "status": 200,
+          "body": "slow",
+          "fixedDelayMilliseconds": 800,
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "14b96421-032f-4505-bcf0-051d63673986",
+        "priority": 3
+      }
+    ]
+  },
+  "cases/f14_body_from_file.yml": {
+    "mappings": [
+      {
+        "id": "12317644-72e7-4183-9270-ed848051a1fb",
+        "request": {
+          "urlPath": "/file",
+          "method": "POST",
+          "headers": {
+            "Content-Type": {
+              "equalTo": "application/json"
+            }
+          },
+          "bodyPatterns": [
+            {
+              "matchesJsonPath": "$[?(@.['fromFile'] == 'request')]"
+            },
+            {
+              "matchesJsonPath": "$[?(@.['n'] == 1)]"
+            }
+          ]
+        },
+        "response": {
+          "status": 200,
+          "body": "{\"fromFile\":\"response\"}",
+          "headers": {
+            "Content-Type": "application/json"
+          },
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "12317644-72e7-4183-9270-ed848051a1fb"
+      }
+    ]
+  },
+  "cases/f15_body_from_file_bytes.yml": {
+    "mappings": [
+      {
+        "id": "e178a8af-20b5-42ad-9122-1ddd8011ab16",
+        "request": {
+          "urlPath": "/bytes",
+          "method": "PUT",
+          "bodyPatterns": [
+            {
+              "binaryEqualTo": "AAECYmluYXJ5/w=="
+            }
+          ]
+        },
+        "response": {
+          "status": 200,
+          "base64Body": "AAECYmluYXJ5/w==",
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "e178a8af-20b5-42ad-9122-1ddd8011ab16"
+      }
+    ]
+  },
+  "cases/f16_text_file_response.yml": {
+    "mappings": [
+      {
+        "id": "91642e6d-5aeb-4fee-b1c2-704a9181f936",
+        "request": {
+          "urlPath": "/textfile",
+          "method": "GET"
+        },
+        "response": {
+          "status": 200,
+          "body": "line one\nline two",
+          "headers": {
+            "Content-Type": "text/plain"
+          },
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "91642e6d-5aeb-4fee-b1c2-704a9181f936"
+      }
+    ]
+  },
+  "cases/f17_cookies.yml": {
+    "mappings": [
+      {
+        "id": "eb00c9b4-4e1b-4736-9bd8-f6bc2e5ec7d5",
+        "request": {
+          "urlPath": "/c",
+          "method": "GET",
+          "cookies": {
+            "session": {
+              "matches": "[a-z0-9]+"
+            },
+            "count": {
+              "equalTo": "5"
+            },
+            "theme": {
+              "equalTo": "dark"
+            },
+            "lang": {
+              "matches": "[\\p{L}]*"
+            }
+          }
+        },
+        "response": {
+          "status": 200,
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "eb00c9b4-4e1b-4736-9bd8-f6bc2e5ec7d5"
+      }
+    ]
+  },
+  "cases/f18_multipart.yml": {
+    "mappings": [
+      {
+        "id": "92d8c696-923b-480f-886f-5dd277b3b3b6",
+        "request": {
+          "urlPath": "/upload",
+          "method": "POST",
+          "headers": {
+            "Content-Type": {
+              "matches": "\\Qmultipart/form-data\\E.*"
+            }
+          },
+          "bodyPatterns": [
+            {
+              "matches": ".*--(.*)\r?\nContent-Disposition: form-data; name=\"count\"\r?\n(Content-Type: .*\r?\n)?(Content-Transfer-Encoding: .*\r?\n)?(Content-Length: \\d+\r?\n)?\r?\n3\r?\n--.*"
+            },
+            {
+              "matches": ".*--(.*)\r?\nContent-Disposition: form-data; name=\"file2\"; filename=\"b.bin\"\r?\n(Content-Type: [\\S\\s]+\r?\n)?(Content-Transfer-Encoding: .*\r?\n)?(Content-Length: \\d+\r?\n)?\r?\n.+\r?\n--.*"
+            },
+            {
+              "matches": ".*--(.*)\r?\nContent-Disposition: form-data; name=\"description\"\r?\n(Content-Type: .*\r?\n)?(Content-Transfer-Encoding: .*\r?\n)?(Content-Length: \\d+\r?\n)?\r?\nsome text\r?\n--.*"
+            },
+            {
+              "matches": ".*--(.*)\r?\nContent-Disposition: form-data; name=\"file1\"; filename=\"a.txt\"\r?\n(Content-Type: text/plain\r?\n)?(Content-Transfer-Encoding: .*\r?\n)?(Content-Length: \\d+\r?\n)?\r?\nhello\r?\n--.*"
+            }
+          ]
+        },
+        "response": {
+          "status": 201,
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "92d8c696-923b-480f-886f-5dd277b3b3b6"
+      }
+    ]
+  },
+  "cases/f19_header_lists.yml": {
+    "mappings": [
+      {
+        "id": "49e80b28-8a29-477a-8560-044a7a1178ce",
+        "request": {
+          "urlPath": "/hl",
+          "method": "GET",
+          "headers": {
+            "Accept": {
+              "equalTo": "[application/json, text/plain]"
+            },
+            "X-Num": {
+              "equalTo": "5"
+            },
+            "X-Bool": {
+              "equalTo": "true"
+            },
+            "X-Rx": {
+              "matches": "[a-z][0-9]"
+            }
+          }
+        },
+        "response": {
+          "status": 200,
+          "headers": {
+            "X-Multi": [
+              "one",
+              "two"
+            ],
+            "X-Num": "3"
+          },
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "49e80b28-8a29-477a-8560-044a7a1178ce"
+      }
+    ]
+  },
+  "cases/f20_form_body.yml": {
+    "mappings": [
+      {
+        "id": "2dc611db-c1b7-44f7-ac81-43578b144484",
+        "request": {
+          "urlPath": "/form",
+          "method": "POST",
+          "headers": {
+            "Content-Type": {
+              "equalTo": "application/x-www-form-urlencoded"
+            }
+          },
+          "bodyPatterns": [
+            {
+              "equalTo": "a=1&b=two"
+            }
+          ]
+        },
+        "response": {
+          "status": 200,
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "2dc611db-c1b7-44f7-ac81-43578b144484"
+      }
+    ]
+  },
+  "cases/f21_xml_body.yml": {
+    "mappings": [
+      {
+        "id": "64daa4a9-add4-4b17-a4ac-2f9419706827",
+        "request": {
+          "urlPath": "/xml",
+          "method": "POST",
+          "headers": {
+            "Content-Type": {
+              "equalTo": "application/xml"
+            }
+          },
+          "bodyPatterns": [
+            {
+              "matchesXPath": {
+                "expression": "/order/item/text()",
+                "equalTo": "apple"
+              }
+            },
+            {
+              "matchesXPath": {
+                "expression": "/order/item[2]/text()",
+                "equalTo": "pear"
+              }
+            },
+            {
+              "matchesXPath": {
+                "expression": "/order/@id",
+                "equalTo": "5"
+              }
+            },
+            {
+              "matchesXPath": {
+                "expression": "/order/item/@qty",
+                "equalTo": "2"
+              }
+            },
+            {
+              "matchesXPath": {
+                "expression": "/order/item/@qty",
+                "equalTo": "3"
+              }
+            },
+            {
+              "matchesXPath": {
+                "expression": "/order/note/text()",
+                "matches": "[a-z]+"
+              }
+            }
+          ]
+        },
+        "response": {
+          "status": 200,
+          "body": "<ok/>",
+          "headers": {
+            "Content-Type": "application/xml"
+          },
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "64daa4a9-add4-4b17-a4ac-2f9419706827"
+      }
+    ]
+  },
+  "cases/f22_body_matchers.yml": {
+    "mappings": [
+      {
+        "id": "ac0957d1-5363-4b81-9860-3ec0f869b417",
+        "request": {
+          "urlPath": "/bm",
+          "method": "POST",
+          "headers": {
+            "Content-Type": {
+              "equalTo": "application/json"
+            }
+          },
+          "bodyPatterns": [
+            {
+              "matchesJsonPath": "$.['items'][*][?(@.['qty'] == 1)]"
+            },
+            {
+              "matchesJsonPath": "$.['items'][*][?(@.['qty'] == 2)]"
+            },
+            {
+              "matchesJsonPath": "$[?(@.id =~ /(-?(\\d*\\.\\d+|\\d+))/)]"
+            },
+            {
+              "matchesJsonPath": "$[?(@.email =~ /([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6})/)]"
+            },
+            {
+              "matchesJsonPath": "$.items[*][?(@.sku =~ /([A-Z][0-9])/)]"
+            },
+            {
+              "matchesJsonPath": "$.meta[?(@.created =~ /(([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9]))/)]"
+            },
+            {
+              "matchesJsonPath": "$.meta[?(@.tags.size() >= 1)]"
+            },
+            {
+              "matchesJsonPath": "$[?(@.flag == 'true')]"
+            },
+            {
+              "matchesJsonPath": "$[?(@.url =~ /(http:\\/\\/x\\/y)/)]"
+            }
+          ]
+        },
+        "response": {
+          "status": 200,
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "ac0957d1-5363-4b81-9860-3ec0f869b417"
+      }
+    ]
+  },
+  "cases/f23_response_regex_body.yml": {
+    "mappings": [
+      {
+        "id": "5a830ac5-5d9c-434b-b617-acc0b2c1bb98",
+        "request": {
+          "urlPath": "/rr",
+          "method": "GET"
+        },
+        "response": {
+          "status": 200,
+          "body": "abc123",
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "5a830ac5-5d9c-434b-b617-acc0b2c1bb98"
+      }
+    ]
+  },
+  "cases/f24_scalars_body.yml": {
+    "mappings": [
+      {
+        "id": "9bb8f437-bf1c-4404-9fa4-fcce7b878f0b",
+        "request": {
+          "urlPath": "/num",
+          "method": "POST",
+          "bodyPatterns": [
+            {
+              "equalTo": "42"
+            }
+          ]
+        },
+        "response": {
+          "status": 200,
+          "body": "3.14",
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "9bb8f437-bf1c-4404-9fa4-fcce7b878f0b"
+      }
+    ]
+  },
+  "cases/f25_bool_body.yml": {
+    "mappings": [
+      {
+        "id": "4b418a6e-9b81-4a0b-a198-b145a1e72456",
+        "request": {
+          "urlPath": "/bool",
+          "method": "POST",
+          "bodyPatterns": [
+            {
+              "equalTo": "true"
+            }
+          ]
+        },
+        "response": {
+          "status": 200,
+          "body": "false",
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "4b418a6e-9b81-4a0b-a198-b145a1e72456"
+      }
+    ]
+  },
+  "cases/f26_list_body.yml": {
+    "mappings": [
+      {
+        "id": "caad2b40-4006-42b7-983d-599a51660424",
+        "request": {
+          "urlPath": "/list",
+          "method": "POST",
+          "headers": {
+            "Content-Type": {
+              "equalTo": "application/json"
+            }
+          },
+          "bodyPatterns": [
+            {
+              "matchesJsonPath": "$[?(@ == 1)]"
+            },
+            {
+              "matchesJsonPath": "$[?(@ == 2)]"
+            },
+            {
+              "matchesJsonPath": "$[*][?(@.['a'] == 'b')]"
+            }
+          ]
+        },
+        "response": {
+          "status": 200,
+          "body": "[\"x\",\"y\"]",
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "caad2b40-4006-42b7-983d-599a51660424"
+      }
+    ]
+  },
+  "cases/f27_ignored_inprogress.yml": {
+    "mappings": [
+      {
+        "id": "b981aa23-026f-4bfd-ba99-4b60b968e8d9",
+        "request": {
+          "urlPath": "/inprogress",
+          "method": "GET"
+        },
+        "response": {
+          "status": 200,
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "b981aa23-026f-4bfd-ba99-4b60b968e8d9"
+      },
+      null
+    ]
+  },
+  "cases/f28_metadata_wiremock.yml": {
+    "mappings": [
+      {
+        "id": "571bede1-d8de-449b-9221-4639763582eb",
+        "request": {
+          "urlPath": "/meta",
+          "method": "GET"
+        },
+        "response": {
+          "status": 200,
+          "body": "m",
+          "removeProxyRequestHeaders": [],
+          "fixedDelayMilliseconds": 2000,
+          "transformers": [
+            "foo"
+          ]
+        },
+        "uuid": "571bede1-d8de-449b-9221-4639763582eb",
+        "metadata": {
+          "k": "v"
+        }
+      }
+    ]
+  },
+  "cases/f29_method_lower.yml": {
+    "mappings": [
+      {
+        "id": "770bccb9-a214-4d19-8562-3d90f364f6b4",
+        "request": {
+          "urlPath": "/lower",
+          "method": "post",
+          "queryParameters": {
+            "a": {
+              "equalTo": "1"
+            }
+          },
+          "bodyPatterns": [
+            {
+              "equalTo": "plain"
+            }
+          ]
+        },
+        "response": {
+          "status": 202,
+          "headers": {
+            "Location": "/x"
+          },
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "770bccb9-a214-4d19-8562-3d90f364f6b4"
+      }
+    ]
+  },
+  "cases/f30_multipart_ct_boundary.yml": {
+    "mappings": [
+      {
+        "id": "f4012db2-8d7e-4e06-a20e-2cc739d63575",
+        "request": {
+          "urlPath": "/mp2",
+          "method": "POST",
+          "headers": {
+            "content-type": {
+              "matches": "\\Qmultipart/form-data\\E.*"
+            }
+          },
+          "bodyPatterns": [
+            {
+              "matches": ".*--(.*)\r?\nContent-Disposition: form-data; name=\"p\"\r?\n(Content-Type: .*\r?\n)?(Content-Transfer-Encoding: .*\r?\n)?(Content-Length: \\d+\r?\n)?\r?\nv\r?\n--.*"
+            }
+          ]
+        },
+        "response": {
+          "status": 200,
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "f4012db2-8d7e-4e06-a20e-2cc739d63575"
+      }
+    ]
+  },
+  "cases/f31_unknown_key.yml": {
+    "error": "java.lang.IllegalStateException: Exception occurred while processing the file [cases/f31_unknown_key.yml] | tools.jackson.databind.exc.UnrecognizedPropertyException: Unrecognized property \"bogus\" (class sh.stubborn.contract.verifier.converter.YamlContract$Request), not marked as ignorable (11 known properties: \"body\", \"bodyFromFile\", \"bodyFromFileAsBytes\", \"cookies\", \"headers\", \"matchers\", \"method\", \"multipart\", \"queryParameters\", \"url\", \"urlPath\")\n at [No location information] (through reference chain: sh.stubborn.contract.verifier.converter.YamlContract[\"request\"]->sh.stubborn.contract.verifier.converter.YamlContract$Request[\"bogus\"])"
+  },
+  "cases/f32_regex_url_urlpath_query.yml": {
+    "mappings": [
+      {
+        "id": "5fb6f32f-b7f7-4c67-87d8-ecf6eebf52f3",
+        "request": {
+          "urlPathPattern": "[\\S\\s]+",
+          "method": "GET",
+          "queryParameters": {
+            "a": {
+              "equalTo": "1"
+            }
+          }
+        },
+        "response": {
+          "status": 200,
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "5fb6f32f-b7f7-4c67-87d8-ecf6eebf52f3"
+      }
+    ]
+  },
+  "cases/f33_body_strings_escape.yml": {
+    "mappings": [
+      {
+        "id": "2667f6dd-7201-4eff-9331-845284a7f63a",
+        "request": {
+          "urlPath": "/esc",
+          "method": "PUT",
+          "bodyPatterns": [
+            {
+              "matchesJsonPath": "$[?(@.['path'] == 'C:\\dir\\file')]"
+            },
+            {
+              "matchesJsonPath": "$[?(@.['quote'] == 'it\\'s')]"
+            },
+            {
+              "matchesJsonPath": "$[?(@.['unicode'] == 'zażółć ✓')]"
+            },
+            {
+              "matchesJsonPath": "$[?(@.['newline'] == 'a\nb')]"
+            },
+            {
+              "matchesJsonPath": "$[?(@.['regexy'] == 'a.b*c')]"
+            }
+          ]
+        },
+        "response": {
+          "status": 200,
+          "body": "{\"path\":\"C:\\\\dir\\\\file\",\"url\":\"http://a/b\",\"unicode\":\"zażółć ✓\"}",
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "2667f6dd-7201-4eff-9331-845284a7f63a"
+      }
+    ]
+  },
+  "cases/f34_anchors.yml": {
+    "mappings": [
+      {
+        "id": "8bc1e3e6-e6f3-4a60-b4bc-c1b487f35cc7",
+        "request": {
+          "urlPath": "/anchor",
+          "method": "POST",
+          "headers": {
+            "Content-Type": {
+              "equalTo": "application/json"
+            }
+          },
+          "bodyPatterns": [
+            {
+              "matchesJsonPath": "$.['base'][?(@.['x'] == 1)]"
+            },
+            {
+              "matchesJsonPath": "$.['copy'][?(@.['x'] == 1)]"
+            },
+            {
+              "matchesJsonPath": "$.['merged'][?(@.['x'] == 1)]"
+            },
+            {
+              "matchesJsonPath": "$.['merged'][?(@.['y'] == 2)]"
+            }
+          ]
+        },
+        "response": {
+          "status": 200,
+          "body": "{\"done\":true}",
+          "headers": {
+            "Content-Type": "application/json"
+          },
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "8bc1e3e6-e6f3-4a60-b4bc-c1b487f35cc7"
+      }
+    ]
+  },
+  "cases/g01_empty_json_body.yml": {
+    "mappings": [
+      {
+        "id": "6b3f7cd5-76fc-47af-8f7b-93f2152b0e81",
+        "request": {
+          "urlPath": "/e",
+          "method": "POST",
+          "headers": {
+            "Content-Type": {
+              "equalTo": "application/json"
+            }
+          },
+          "bodyPatterns": [
+            {
+              "equalToJson": "{}",
+              "ignoreArrayOrder": false,
+              "ignoreExtraElements": false
+            }
+          ]
+        },
+        "response": {
+          "status": 200,
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "6b3f7cd5-76fc-47af-8f7b-93f2152b0e81"
+      }
+    ]
+  },
+  "cases/g02_scalar_json_body.yml": {
+    "mappings": [
+      {
+        "id": "8b92aaff-8d7a-4852-9e7e-db5a2603bda4",
+        "request": {
+          "urlPath": "/s",
+          "method": "POST",
+          "headers": {
+            "Content-Type": {
+              "equalTo": "application/json"
+            }
+          },
+          "bodyPatterns": [
+            {
+              "equalToJson": "\"123\"",
+              "ignoreArrayOrder": false,
+              "ignoreExtraElements": false
+            }
+          ]
+        },
+        "response": {
+          "status": 200,
+          "body": "{\"a\":1} x",
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "8b92aaff-8d7a-4852-9e7e-db5a2603bda4"
+      }
+    ]
+  },
+  "cases/g03_spaced_equal_json.yml": {
+    "mappings": [
+      {
+        "id": "5c1e231e-c8d2-4e3d-b641-670acc246f59",
+        "request": {
+          "urlPath": "/q",
+          "method": "GET",
+          "queryParameters": {
+            "j": {
+              "equalToJson": "{ \"a\" : 1 }"
+            }
+          }
+        },
+        "response": {
+          "status": 200,
+          "body": "[1,2]",
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "5c1e231e-c8d2-4e3d-b641-670acc246f59"
+      }
+    ]
+  },
+  "cases/g04_null_query_params.yml": {
+    "mappings": [
+      {
+        "id": "cce9f93a-b933-478b-ba73-9df3c3e5c188",
+        "request": {
+          "url": "/nq?x=1",
+          "method": "GET"
+        },
+        "response": {
+          "status": 200,
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "cce9f93a-b933-478b-ba73-9df3c3e5c188"
+      }
+    ]
+  },
+  "cases/g05_url_regex.yml": {
+    "mappings": [
+      {
+        "id": "3dc64e69-9062-4d57-a8f3-6618a09939ac",
+        "request": {
+          "urlPathPattern": "/u/[0-9]",
+          "method": "GET"
+        },
+        "response": {
+          "status": 200,
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "3dc64e69-9062-4d57-a8f3-6618a09939ac"
+      }
+    ]
+  },
+  "cases/g06_dup_header_matchers.yml": {
+    "mappings": [
+      {
+        "id": "dbd1b775-bc3d-4712-8e8b-6f39c692171f",
+        "request": {
+          "urlPath": "/dh",
+          "method": "GET",
+          "headers": {
+            "foo": {
+              "matches": "ba."
+            },
+            "zed": {
+              "equalTo": "1"
+            }
+          }
+        },
+        "response": {
+          "status": 200,
+          "body": "[\"[1,2]\",3,{\"k\":[4]}]",
+          "headers": {
+            "J": "{a=1}",
+            "D": "x"
+          },
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "dbd1b775-bc3d-4712-8e8b-6f39c692171f"
+      }
+    ]
+  },
+  "cases/g07_response_numbers.yml": {
+    "mappings": [
+      {
+        "id": "6500cef3-f950-4626-877b-ca4b17af51d2",
+        "request": {
+          "urlPath": "/rn",
+          "method": "POST",
+          "bodyPatterns": [
+            {
+              "matchesJsonPath": "$[?(@.['n'] == 5)]"
+            },
+            {
+              "matchesJsonPath": "$[?(@.['s'] == 'str')]"
+            },
+            {
+              "matchesJsonPath": "$.['l'][?(@ == 1)]"
+            }
+          ]
+        },
+        "response": {
+          "status": 201,
+          "body": "{\"big\":1.0E20,\"small\":1.0E-4,\"neg0\":-0.0,\"n\":{{{jsonPath request.body '$.n'}}} ,\"l\":{{{jsonPath request.body '$.l'}}} ,\"s\":\"{{{jsonPath request.body '$.s'}}}\",\"esc\":\"a\\\"b\",\"sl\":\"a\\/b\",\"date\":\"2020-02-03T02:05:06.789Z\"}",
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "6500cef3-f950-4626-877b-ca4b17af51d2"
+      }
+    ]
+  },
+  "cases/g08_text_with_map.yml": {
+    "mappings": [
+      {
+        "id": "7060f396-325a-4fdd-81ac-4c7b43359540",
+        "request": {
+          "urlPath": "/tm",
+          "method": "POST",
+          "headers": {
+            "Content-Type": {
+              "equalTo": "text/plain"
+            }
+          },
+          "bodyPatterns": [
+            {
+              "equalTo": "{a=1, b=[x, y]}"
+            }
+          ]
+        },
+        "response": {
+          "status": 200,
+          "body": "{\"a\":2}",
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "7060f396-325a-4fdd-81ac-4c7b43359540"
+      }
+    ]
+  },
+  "cases/g09_by_type_no_minmax.yml": {
+    "error": "com.jayway.jsonpath.InvalidPathException: Failed to parse filter: [?()], error on position: 3, char: )"
+  },
+  "cases/g10_equality_missing.yml": {
+    "error": "java.lang.IllegalStateException: Value [$.zzz] not found in JSON [{\"a\":1}] | com.jayway.jsonpath.PathNotFoundException: No results for path: $['zzz']"
+  },
+  "cases/g11_xml_ns.yml": {
+    "mappings": [
+      {
+        "id": "44328b72-3585-4cf2-9929-e6bb0d22cb87",
+        "request": {
+          "urlPath": "/ns",
+          "method": "POST",
+          "headers": {
+            "Content-Type": {
+              "equalTo": "application/xml"
+            }
+          },
+          "bodyPatterns": [
+            {
+              "matchesXPath": {
+                "expression": "/*[local-name()='r' and namespace-uri()='urn:d']/p:a/text()",
+                "equalTo": "1"
+              }
+            },
+            {
+              "matchesXPath": {
+                "expression": "/*[local-name()='r' and namespace-uri()='urn:d']/*[local-name()='b']/text()",
+                "equalTo": "2"
+              }
+            },
+            {
+              "matchesXPath": {
+                "expression": "/*[local-name()='r' and namespace-uri()='urn:d']/text()",
+                "equalTo": " note "
+              }
+            },
+            {
+              "matchesXPath": {
+                "expression": "/*[local-name()='r' and namespace-uri()='urn:d']/*[local-name()='c']/text()",
+                "equalTo": "cd"
+              }
+            },
+            {
+              "matchesXPath": {
+                "expression": "/*[local-name()='r' and namespace-uri()='urn:d']/namespace::p",
+                "equalTo": "urn:p"
+              }
+            },
+            {
+              "matchesXPath": {
+                "expression": "/*[local-name()='r' and namespace-uri()='urn:d']/*[local-name()='b']/@x",
+                "equalTo": "y"
+              }
+            }
+          ]
+        },
+        "response": {
+          "status": 200,
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "44328b72-3585-4cf2-9929-e6bb0d22cb87"
+      }
+    ]
+  },
+  "cases/g12_form_list.yml": {
+    "mappings": [
+      {
+        "id": "c55c0778-e2dc-40cf-8433-bf2e4d5cdf04",
+        "request": {
+          "urlPath": "/fl",
+          "method": "POST",
+          "headers": {
+            "Content-Type": {
+              "equalTo": "application/x-www-form-urlencoded"
+            }
+          },
+          "bodyPatterns": [
+            {
+              "equalTo": "a=1&b=A"
+            }
+          ]
+        },
+        "response": {
+          "status": 200,
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "c55c0778-e2dc-40cf-8433-bf2e4d5cdf04"
+      }
+    ]
+  },
+  "cases/g13_empty_body.yml": {
+    "mappings": [
+      {
+        "id": "3a6031a1-dcd5-4921-a7f4-43630b453d14",
+        "request": {
+          "urlPath": "/eb",
+          "method": "POST",
+          "bodyPatterns": [
+            {
+              "equalTo": ""
+            }
+          ]
+        },
+        "response": {
+          "status": 200,
+          "body": "",
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "3a6031a1-dcd5-4921-a7f4-43630b453d14"
+      }
+    ]
+  },
+  "cases/g14_mp_bytes.yml": {
+    "error": "java.lang.NullPointerException: null"
+  },
+  "cases/g15_query_list_matcher.yml": {
+    "mappings": [
+      {
+        "id": "0ec91985-f1d5-4d0f-a835-4d47abea9756",
+        "request": {
+          "urlPath": "/ql",
+          "method": "GET",
+          "queryParameters": {
+            "a": {
+              "matches": "[0-9]"
+            },
+            "m": {
+              "equalTo": "{k=v}"
+            }
+          },
+          "cookies": {
+            "c": {
+              "equalTo": "[x, y]"
+            }
+          }
+        },
+        "response": {
+          "status": 200,
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "0ec91985-f1d5-4d0f-a835-4d47abea9756"
+      }
+    ]
+  },
+  "cases/g16_json_body_string_values.yml": {
+    "mappings": [
+      {
+        "id": "72a745e9-891e-4329-95c6-a44fccf347ce",
+        "request": {
+          "urlPath": "/jsv",
+          "method": "POST",
+          "headers": {
+            "Content-Type": {
+              "equalTo": "application/json"
+            }
+          },
+          "bodyPatterns": [
+            {
+              "matchesJsonPath": "$.['inner'].['x'][?(@ == 1)]"
+            },
+            {
+              "matchesJsonPath": "$.['inner'].['x'][?(@.['y'] == 2)]"
+            },
+            {
+              "matchesJsonPath": "$.['arr'][?(@ == 1)]"
+            },
+            {
+              "matchesJsonPath": "$.['arr'][?(@ == 2)]"
+            },
+            {
+              "matchesJsonPath": "$[?(@.['num'] == '42')]"
+            },
+            {
+              "matchesJsonPath": "$[?(@.['t'] == 'true')]"
+            },
+            {
+              "matchesJsonPath": "$[?(@.['rx'] =~ /[a-z]+/)]"
+            }
+          ]
+        },
+        "response": {
+          "status": 200,
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "72a745e9-891e-4329-95c6-a44fccf347ce"
+      }
+    ]
+  },
+  "cases/g17_response_stream.yml": {
+    "mappings": [
+      {
+        "id": "e8d63265-ca23-40ae-8fd9-008a6ad640c7",
+        "request": {
+          "urlPath": "/st",
+          "method": "GET"
+        },
+        "response": {
+          "status": 200,
+          "body": "{\"a\":1.5}",
+          "headers": {
+            "Content-Type": "application/x-ndjson+stream/x"
+          },
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "e8d63265-ca23-40ae-8fd9-008a6ad640c7"
+      }
+    ]
+  },
+  "cases/g18_request_no_response.yml": {
+    "error": "java.lang.NullPointerException: null"
+  },
+  "cases/g19_status_missing.yml": {
+    "error": "java.lang.IllegalStateException: Exception occurred while processing the file [cases/g19_status_missing.yml] | java.lang.NullPointerException: null"
+  },
+  "cases/g20_header_template_ct.yml": {
+    "mappings": [
+      {
+        "id": "e3b46ae2-94ce-436a-abad-d58cdf0e7f33",
+        "request": {
+          "urlPath": "/htc",
+          "method": "POST",
+          "headers": {
+            "Content-Type": {
+              "equalTo": "{{{ request.headers.X }}}"
+            }
+          },
+          "bodyPatterns": [
+            {
+              "matchesJsonPath": "$[?(@.['a'] == 1)]"
+            }
+          ]
+        },
+        "response": {
+          "status": 200,
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "e3b46ae2-94ce-436a-abad-d58cdf0e7f33"
+      }
+    ]
+  },
+  "cases/g21_metadata_wiremock_map.yml": {
+    "mappings": [
+      {
+        "id": "c10bc7bf-4f9b-4c8b-8730-0d0bb55366cd",
+        "request": {
+          "urlPath": "/meta-map",
+          "method": "POST",
+          "headers": {
+            "Content-Type": {
+              "equalTo": "application/json"
+            }
+          },
+          "bodyPatterns": [
+            {
+              "matchesJsonPath": "$[?(@.['a'] == 1)]"
+            }
+          ]
+        },
+        "response": {
+          "status": 201,
+          "body": "{\"ok\":true}",
+          "headers": {
+            "Content-Type": "application/json"
+          },
+          "removeProxyRequestHeaders": [],
+          "fixedDelayMilliseconds": 100,
+          "delayDistribution": {
+            "type": "lognormal",
+            "median": 90,
+            "sigma": 0.1
+          },
+          "transformerParameters": {
+            "a": 1,
+            "nested": {
+              "b": [
+                1,
+                2.5
+              ]
+            }
+          }
+        },
+        "uuid": "c10bc7bf-4f9b-4c8b-8730-0d0bb55366cd",
+        "metadata": {
+          "team": "payments",
+          "n": 3
+        },
+        "postServeActions": [
+          {
+            "name": "webhook",
+            "parameters": {
+              "method": "POST",
+              "url": "http://localhost:1/callback"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "cases/g22_metadata_string_list.yml": {
+    "mappings": [
+      {
+        "id": "a9712fe7-bdbc-49a1-92e6-c91aaa5f5bae",
+        "request": {
+          "urlPath": "/meta-string",
+          "method": "GET"
+        },
+        "response": {
+          "status": 200,
+          "body": "text",
+          "headers": {
+            "X-A": "one"
+          },
+          "removeProxyRequestHeaders": [],
+          "fixedDelayMilliseconds": 250,
+          "chunkedDribbleDelay": {
+            "numberOfChunks": 5,
+            "totalDuration": 1000
+          },
+          "proxyBaseUrl": "http://example.invalid",
+          "fault": "EMPTY_RESPONSE",
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "a9712fe7-bdbc-49a1-92e6-c91aaa5f5bae",
+        "priority": 2,
+        "metadata": {
+          "m": [
+            1
+          ]
+        },
+        "postServeActions": [
+          {
+            "name": "webhook",
+            "parameters": {
+              "url": "http://localhost:1/x",
+              "method": "GET"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "cases/g23_metadata_no_response.yml": {
+    "mappings": [
+      {
+        "id": "febfbda3-00da-4f3b-8f16-68e2d45720c0",
+        "request": {
+          "urlPath": "/meta-no-response",
+          "method": "GET"
+        },
+        "response": {
+          "status": 200,
+          "removeProxyRequestHeaders": []
+        },
+        "uuid": "febfbda3-00da-4f3b-8f16-68e2d45720c0",
+        "metadata": {
+          "k": "v"
+        }
+      }
+    ]
+  },
+  "cases/g24_metadata_not_applicable.yml": {
+    "mappings": [
+      {
+        "id": "f15daec3-d393-4fdf-b64e-ac6755c70843",
+        "request": {
+          "urlPath": "/meta-list",
+          "method": "GET"
+        },
+        "response": {
+          "status": 200,
+          "body": "list",
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "f15daec3-d393-4fdf-b64e-ac6755c70843"
+      }
+    ]
+  },
+  "cases/g25_metadata_uniform.yml": {
+    "mappings": [
+      {
+        "id": "fc62a838-6dd7-4e6b-bcce-5ea285ccc37a",
+        "request": {
+          "urlPath": "/meta-uniform",
+          "method": "GET"
+        },
+        "response": {
+          "status": 200,
+          "body": "u",
+          "removeProxyRequestHeaders": [],
+          "delayDistribution": {
+            "type": "uniform",
+            "lower": 10,
+            "upper": 20
+          },
+          "transformers": [
+            "response-template"
+          ]
+        },
+        "uuid": "fc62a838-6dd7-4e6b-bcce-5ea285ccc37a"
+      }
+    ]
+  },
+  "cases/g26_dup_header_values.yml": {
+    "mappings": [
+      {
+        "id": "2a1f3145-7f4d-481c-9235-1d65112ea6e2",
+        "request": {
+          "urlPath": "/dup",
+          "method": "GET",
+          "headers": {
+            "Accept": {
+              "equalTo": "[text/plain, text/plain]"
+            },
+            "X-Num": {
+              "matches": "[0-9]"
+            }
+          }
+        },
+        "response": {
+          "status": 200,
+          "body": "dup",
+          "headers": {
+            "X-Multi": [
+              "a",
+              "b"
+            ],
+            "X-Same": [
+              "1",
+              "1"
+            ]
+          },
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "2a1f3145-7f4d-481c-9235-1d65112ea6e2"
+      }
+    ]
+  },
+  "cases/g27_metadata_request.yml": {
+    "mappings": [
+      {
+        "id": "e99cb43f-8ed5-43e0-a653-81681351b773",
+        "request": {
+          "urlPath": "/meta-request",
+          "method": "GET"
+        },
+        "response": {
+          "status": 200,
+          "removeProxyRequestHeaders": [],
+          "fixedDelayMilliseconds": 5,
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "e99cb43f-8ed5-43e0-a653-81681351b773"
+      }
+    ]
+  },
+  "cases/g28_metadata_null_stub.yml": {
+    "error": "java.lang.NullPointerException: null"
+  },
+  "cases/x_null_query.yml": {
+    "error": "java.lang.NullPointerException: null"
+  },
+  "scc/custom/custom.yml": {
+    "error": "java.lang.IllegalStateException: Exception occurred while processing the file [scc/custom/custom.yml] | tools.jackson.databind.exc.UnrecognizedPropertyException: Unrecognized property \"custom_format\" (class sh.stubborn.contract.verifier.converter.YamlContract), not marked as ignorable (11 known properties: \"description\", \"ignored\", \"inProgress\", \"input\", \"label\", \"metadata\", \"name\", \"outputMessage\", \"priority\", \"request\", \"response\")\n at [No location information] (through reference chain: sh.stubborn.contract.verifier.converter.YamlContract[\"custom_format\"])"
+  },
+  "scc/docker/health.yml": {
+    "mappings": [
+      {
+        "id": "fda7f25b-dd74-492f-8551-412471ea4324",
+        "request": {
+          "urlPath": "/health",
+          "method": "GET"
+        },
+        "response": {
+          "status": 200,
+          "body": "{\"status\":\"UP\"}",
+          "headers": {
+            "Content-Type": "application/json"
+          },
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "fda7f25b-dd74-492f-8551-412471ea4324"
+      }
+    ]
+  },
+  "scc/docs-examples/contract-http.yml": {
+    "error": "com.jayway.jsonpath.InvalidPathException: Failed to parse filter: [?()], error on position: 3, char: )"
+  },
+  "scc/docs-examples/contract-messaging.yml": {
+    "mappings": []
+  },
+  "scc/docs/contract.yml": {
+    "error": "java.lang.IllegalArgumentException: Cannot post process a null stub mapping"
+  },
+  "scc/mixed/contract.yml": {
+    "mappings": [
+      {
+        "id": "345bf99d-ffbc-4cec-95c1-9970822b8da6",
+        "request": {
+          "urlPath": "/foo",
+          "method": "PUT",
+          "headers": {
+            "foo": {
+              "equalTo": "bar"
+            }
+          },
+          "bodyPatterns": [
+            {
+              "matchesJsonPath": "$[?(@.['foo'] == 'bar')]"
+            }
+          ]
+        },
+        "response": {
+          "status": 200,
+          "body": "{\"foo2\":\"bar\"}",
+          "headers": {
+            "foo2": "bar"
+          },
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "345bf99d-ffbc-4cec-95c1-9970822b8da6"
+      }
+    ]
+  },
+  "scc/root/contract.yml": {
+    "mappings": [
+      null
+    ]
+  },
+  "scc/stub-runner/book_returned.yml": {
+    "mappings": []
+  },
+  "scc/stub-runner/direct-shouldReturnGreeting.yml": {
+    "mappings": [
+      {
+        "id": "28a4b936-c1bb-4c15-900e-3f020abae53c",
+        "request": {
+          "urlPath": "/greeting",
+          "method": "GET"
+        },
+        "response": {
+          "status": 200,
+          "body": "{\"message\":\"hello direct\"}",
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "28a4b936-c1bb-4c15-900e-3f020abae53c"
+      }
+    ]
+  },
+  "scc/stub-runner/greeting-message.yml": {
+    "mappings": []
+  },
+  "scc/stub-runner/metainf-shouldReturnGreeting.yml": {
+    "mappings": [
+      {
+        "id": "532d9975-d39a-426e-b7ea-5f00ce4417c0",
+        "request": {
+          "urlPath": "/greeting",
+          "method": "GET"
+        },
+        "response": {
+          "status": 200,
+          "body": "{\"message\":\"hello meta-inf\"}",
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "532d9975-d39a-426e-b7ea-5f00ce4417c0"
+      }
+    ]
+  },
+  "scc/stub-runner/nested-shouldReturnGreeting.yml": {
+    "mappings": [
+      {
+        "id": "03abc93d-2533-4c9d-875c-537aad66556d",
+        "request": {
+          "urlPath": "/greeting",
+          "method": "GET"
+        },
+        "response": {
+          "status": 200,
+          "body": "{\"message\":\"hello nested\"}",
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "03abc93d-2533-4c9d-875c-537aad66556d"
+      }
+    ]
+  },
+  "scc/yml/contract.yml": {
+    "mappings": [
+      null
+    ]
+  },
+  "scc/yml/contract_broken_request_headers.yml": {
+    "error": "java.lang.IllegalStateException: Broken headers! A header with key [foo] with value [bar] is not matched by regex [barrrr]"
+  },
+  "scc/yml/contract_broken_response_headers.yml": {
+    "error": "java.lang.IllegalStateException: Broken headers! A header with key [foo2] with value [bar] is not matched by regex [barrrr]"
+  },
+  "scc/yml/contract_cookies.yml": {
+    "mappings": [
+      null
+    ]
+  },
+  "scc/yml/contract_from_file.yml": {
+    "mappings": [
+      {
+        "id": "1bf729c2-ea84-496e-a39b-90f5927928c3",
+        "request": {
+          "urlPath": "/foo",
+          "method": "GET",
+          "bodyPatterns": [
+            {
+              "matchesJsonPath": "$[?(@.['hello'] == 'request')]"
+            }
+          ]
+        },
+        "response": {
+          "status": 200,
+          "body": "{\"hello\":\"response\"}",
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "1bf729c2-ea84-496e-a39b-90f5927928c3"
+      }
+    ]
+  },
+  "scc/yml/contract_matchers.yml": {
+    "mappings": [
+      {
+        "id": "8cfebcdd-c95f-4b30-a0fe-f87ed4daf505",
+        "request": {
+          "urlPathPattern": "/get/[0-9]",
+          "method": "GET",
+          "headers": {
+            "Content-Type": {
+              "matches": "application/json.*"
+            }
+          },
+          "queryParameters": {
+            "limit": {
+              "equalTo": "20"
+            },
+            "offset": {
+              "contains": "20"
+            },
+            "filter": {
+              "equalTo": "email"
+            },
+            "sort": {
+              "equalTo": "name"
+            },
+            "search": {
+              "doesNotMatch": "^[0-9]{2}$"
+            },
+            "age": {
+              "doesNotMatch": "^\\\\w*$"
+            },
+            "name": {
+              "matches": "John.*"
+            },
+            "email": {
+              "equalTo": "bob@email.com"
+            }
+          },
+          "cookies": {
+            "bar": {
+              "equalTo": "3"
+            },
+            "foo": {
+              "matches": "[0-9]"
+            }
+          },
+          "bodyPatterns": [
+            {
+              "matchesJsonPath": "$[?(@.['valueWithoutAMatcher'] == 'foo')]"
+            },
+            {
+              "matchesJsonPath": "$[?(@.['valueWithTypeMatch'] == 'string')]"
+            },
+            {
+              "matchesJsonPath": "$[?(@.['nullValue'] == null)]"
+            },
+            {
+              "matchesJsonPath": "$[?(@.duck =~ /([0-9]{3})/)]"
+            },
+            {
+              "matchesJsonPath": "$[?(@.duck == 123)]"
+            },
+            {
+              "matchesJsonPath": "$[?(@.alpha =~ /([\\p{L}]*)/)]"
+            },
+            {
+              "matchesJsonPath": "$[?(@.alpha == 'abc')]"
+            },
+            {
+              "matchesJsonPath": "$[?(@.number =~ /(-?(\\d*\\.\\d+|\\d+))/)]"
+            },
+            {
+              "matchesJsonPath": "$[?(@.aBoolean =~ /((true|false))/)]"
+            },
+            {
+              "matchesJsonPath": "$[?(@.date =~ /((\\d\\d\\d\\d)-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01]))/)]"
+            },
+            {
+              "matchesJsonPath": "$[?(@.dateTime =~ /(([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9]))/)]"
+            },
+            {
+              "matchesJsonPath": "$[?(@.time =~ /((2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9]))/)]"
+            },
+            {
+              "matchesJsonPath": "$.['key'][?(@.['complex.key'] == 'foo')]"
+            },
+            {
+              "matchesJsonPath": "$[?(@.valueWithMin.size() >= 1)]"
+            },
+            {
+              "matchesJsonPath": "$[?(@.valueWithMax.size() <= 3)]"
+            },
+            {
+              "matchesJsonPath": "$[?(@.valueWithMinMax.size() >= 1 && @.valueWithMinMax.size() <= 3)]"
+            }
+          ]
+        },
+        "response": {
+          "status": 200,
+          "body": "{\"duck\":123,\"alpha\":\"abc\",\"number\":123,\"aBoolean\":true,\"date\":\"2017-01-01\",\"dateTime\":\"2017-01-01T01:23:45\",\"time\":\"01:02:34\",\"valueWithoutAMatcher\":\"foo\",\"valueWithTypeMatch\":\"string\",\"valueWithMin\":[1,2,3],\"valueWithMax\":[1,2,3],\"valueWithMinMax\":[1,2,3],\"valueWithMinEmpty\":[],\"valueWithMaxEmpty\":[],\"key\":{\"complex.key\":\"foo\"},\"nulValue\":null}",
+          "headers": {
+            "Content-Type": "application/json"
+          },
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "8cfebcdd-c95f-4b30-a0fe-f87ed4daf505"
+      }
+    ]
+  },
+  "scc/yml/contract_matchers_url.yml": {
+    "mappings": [
+      {
+        "id": "09722554-b906-4a3c-af19-5a246b2ead53",
+        "request": {
+          "urlPathPattern": "/get/[0-9]",
+          "method": "GET"
+        },
+        "response": {
+          "status": 200,
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "09722554-b906-4a3c-af19-5a246b2ead53"
+      }
+    ]
+  },
+  "scc/yml/contract_message.yml": {
+    "mappings": []
+  },
+  "scc/yml/contract_message_avro.yml": {
+    "mappings": []
+  },
+  "scc/yml/contract_message_matchers.yml": {
+    "mappings": []
+  },
+  "scc/yml/contract_message_method.yml": {
+    "mappings": []
+  },
+  "scc/yml/contract_message_scenario1.yml": {
+    "mappings": []
+  },
+  "scc/yml/contract_messaging_pdf.yml": {
+    "mappings": []
+  },
+  "scc/yml/contract_multipart.yml": {
+    "mappings": [
+      {
+        "id": "c171dea4-85f3-4d73-b037-2bea2da95ddb",
+        "request": {
+          "urlPath": "/multipart",
+          "method": "PUT",
+          "headers": {
+            "Content-Type": {
+              "equalTo": "multipart/form-data;boundary=AaB03x"
+            }
+          },
+          "bodyPatterns": [
+            {
+              "matches": ".*--(.*)\r?\nContent-Disposition: form-data; name=\"file\"; filename=\"[\\S\\s]+\"\r?\n(Content-Type: .*\r?\n)?(Content-Transfer-Encoding: .*\r?\n)?(Content-Length: \\d+\r?\n)?\r?\n[\\S\\s]+\r?\n--.*"
+            },
+            {
+              "matches": ".*--(.*)\r?\nContent-Disposition: form-data; name=\"someBooleanParameter\"\r?\n(Content-Type: .*\r?\n)?(Content-Transfer-Encoding: .*\r?\n)?(Content-Length: \\d+\r?\n)?\r?\n(true|false)\r?\n--.*"
+            },
+            {
+              "matches": ".*--(.*)\r?\nContent-Disposition: form-data; name=\"formParameter\"\r?\n(Content-Type: .*\r?\n)?(Content-Transfer-Encoding: .*\r?\n)?(Content-Length: \\d+\r?\n)?\r?\n.+\r?\n--.*"
+            }
+          ]
+        },
+        "response": {
+          "status": 200,
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "c171dea4-85f3-4d73-b037-2bea2da95ddb"
+      }
+    ]
+  },
+  "scc/yml/contract_pdf.yml": {
+    "mappings": [
+      {
+        "id": "d496e24e-1590-4c38-abad-391c061336a3",
+        "request": {
+          "urlPath": "/1",
+          "method": "PUT",
+          "headers": {
+            "Content-Type": {
+              "equalTo": "application/octet-stream"
+            }
+          },
+          "bodyPatterns": [
+            {
+              "binaryEqualTo": "JVBERi0xLjUKJb/3ov4KMiAwIG9iago8PCAvTGluZWFyaXplZCAxIC9MIDE0NjMxIC9IIFsgNjg3IDEyNiBdIC9PIDYgL0UgMTQzNTYgL04gMSAvVCAxNDM1NSA+PgplbmRvYmoKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKMyAwIG9iago8PCAvVHlwZSAvWFJlZiAvTGVuZ3RoIDQ5IC9GaWx0ZXIgL0ZsYXRlRGVjb2RlIC9EZWNvZGVQYXJtcyA8PCAvQ29sdW1ucyA0IC9QcmVkaWN0b3IgMTIgPj4gL1cgWyAxIDIgMSBdIC9JbmRleCBbIDIgMTUgXSAvSW5mbyAxMSAwIFIgL1Jvb3QgNCAwIFIgL1NpemUgMTcgL1ByZXYgMTQzNTYgICAgICAgICAgICAgICAgIC9JRCBbPGEyOGUxYTMyZjIzMjg4ZjI1YzRkZGRhODQ3NmQ2YjUxPjxhMjhlMWEzMmYyMzI4OGYyNWM0ZGRkYTg0NzZkNmI1MT5dID4+CnN0cmVhbQp4nGNiZOBnYGJgOAkkmJaCWEZAgrEOxFoPYoFkDXaDWHYMTIyn1UASDIzYCADyzwUwCmVuZHN0cmVhbQplbmRvYmoKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCjQgMCBvYmoKPDwgL1BhZ2VzIDEyIDAgUiAvVHlwZSAvQ2F0YWxvZyA+PgplbmRvYmoKNSAwIG9iago8PCAvRmlsdGVyIC9GbGF0ZURlY29kZSAvUyAzNiAvTGVuZ3RoIDQ5ID4+CnN0cmVhbQp4nGNgYGBlYGBazwAEJs8Z4ADKZgZiFoQoSC0YMzCsZ+BjYGDjPszQz8bCAACxBQUoCmVuZHN0cmVhbQplbmRvYmoKNiAwIG9iago8PCAvQ29udGVudHMgNyAwIFIgL01lZGlhQm94IFsgMCAwIDU5NiA4NDMgXSAvUGFyZW50IDEyIDAgUiAvUmVzb3VyY2VzIDw8IC9FeHRHU3RhdGUgPDwgL0cwIDEzIDAgUiA+PiAvRm9udCA8PCAvRjAgMTQgMCBSID4+ID4+IC9TdHJ1Y3RQYXJlbnRzIDAgL1R5cGUgL1BhZ2UgPj4KZW5kb2JqCjcgMCBvYmoKPDwgL0ZpbHRlciAvRmxhdGVEZWNvZGUgL0xlbmd0aCAyMDAgPj4Kc3RyZWFtCnicnZDPCsIwDMbvfYqchXVJ1zQtiIeB21kp+AD+A0FBfX8w69DpSbGBkn6/5ktaAtSoSLfoG9iezdUMCqeggrOJhRhue7OZwUWZFcbgkrhS93nSYoIh1j2Mye1o6h7heC+ekjwQuWawO/yt6GBFQifTJRx6jon2bLOpOwTyNnDSFSEfDE0vRchnoz4VkaY7mCO6dgH5ZAgt67NFv+JFYiHJinBA7ybQFRAtsfpI/A4aV8Ay/zYheW/Rhyj8Pik2T5OVxgMa6VrmZW5kc3RyZWFtCmVuZG9iago4IDAgb2JqCjw8IC9GaWx0ZXIgL0ZsYXRlRGVjb2RlIC9MZW5ndGgxIDI5MzgwIC9MZW5ndGggMTIxMzEgPj4Kc3RyZWFtCnic7X0JfFRF1u+putXdWSEEQgIJyU1CIhBIIOyLkEACIrIHTBAkTadJGrKR7hBxFMIIggHcZQQ3QFQEl2YRAy7griigjriBLC6jjqOgoziSkH7/qns7G4zO973v/X7vvR9p//ecqjpV59SpU6fqdgCJEVEwVZNGvR0l9vLCXeNvI4r4mKj9rY6FHn1t+fsLiYZEEVl7zy0vLKm67PFfiLoXEVm8hcWL5i6q7Ye2nH8Q8deLnPaCA4PP3o4RnwcGFKEivKTdVvA/A12LSjzXHdjkziBig4g6bCguc9gp9NQBoowrUN5cYr+uPPBQyF1ox5ikl9pLnC+xwmFEV+8iig4tr3CWf/fkgs+J0tAedJ6k7fy9f/zp5i/XzW477JeA6ACSP5u+uKyHpM9cvuPNc0+fLwwbEnAVioGQZ0oAT9vwhgk0KozOPd3QN2yIWd/4Y+kmayzd8BhBDrIQpzBKo5FEIgR6NeJWswsf3Agv/4iuFW6KAMbaulCVZTrlshU0g2+lGyS0LpQhnqAKyG5FORN0r+wL+WnACWAYMB3obNaNB+zAVFmG7B7ZF2OUy3EUddOMgDgqs0z3nYe+tZY3aC7wIPhN4gvaYh1MJShvRr99gmiglEGftdatdC/q70e7A3UPguaivBH8TPTrbfKBtjXUSVLAivruGGeVOd/LtJdogHD7TmEueRjzSuBm6JgEOhoYB5n2oCOBFewNWsne8G1COyjdBP0rZD2QZdIrMM5ytI9Av64o3wS+M+ywgrYF4oFu/AkazDvQ86BpmP/VxryBN6hIzrlxTrDftOlCGDaOaw7ofAFI5IN9X4EGNrOtNW5qhbFaX6oGnQ9EA5P5QSoRVxGDv9ZZviJNApEp/XQcuFwU0ASUGeycatlF62UZGK/g9p0X99MG7WcahLbrrWsxjwL4uw9wltL4P6iXNYmWIL6yMP5S4EGM+Y2KhwLKgf5U0L7iKxVDNwOroeu030/SNygvxbpOga56uWPQfyowButSDRRLe6A/Tfpcrjub3jAYsl9CZqYE6iMVMHcZk7KP7I+xksw43NREaRNk1sCvJ0EFECFt8EPFmQm0vY5xOgFWoAuQCnwFbALmA0OAZ4Fu0E3Qq6l4RczI2FTxgdiwvAEfwjYVs8YcHlTraeyZjeZYUk+89QmabyJejin3i4xZ2LLdP7bcUzJm/FTF93wZ9+xHOU8ZU40Ue098R2OkDWoPIrb8VO472Cz3w1o+jVaCrkcc3yRjVtrnp9IvMtaUT7AnTDqs2Vx7qz0CqhElmrF+k5/6fdFIi2gzxsy3zkFO2UBXCA9dod1Bc8QZytK6U6qlN+owH8h6+Xc0JWA/9cVaTkR5XSt6r4TtCJtn2Y95boM/j9AD8OkCcYQniCPMYtnm+9ZC7C3LNr5Y8RfQ1mD7jTZJJZq3/Vfr/zvgH1q2IWdu8/3dcsTnw3zulHvC9h3rDeh+ivodQDXQIyCF3Rswn9XaplGYFWcbUCYyaIglgwaK/VifCOR57AXUT7Ocon3aGrpFHPF9wqqpmh+hm20RZOdrkdOgi39IN0nI8UHLm8VRi5hrHUt+6o/X1lTmfDOm4kCt2H+HTHxp4izwC+LoYWboGCjzszofkKOBm4149Z1rjM+36BHQVf74bBWn81vFZ0jruGxN1dmC/O7fp7DjFv/8ZX6UOU7mSJnnZJ7xy7emzfrX8K2IY5mHD9IMc18nmLgSNn5u7n3kYaz31T6fdbTvMesu3xYt3LfFmg7+Y8Diewzzvq7xTM31NZjnaXf/WWrUU7D/HLX0pRIzn21W+eYnuludo9OVfYHWp2mJpQ7rjhyo7N1g7kH4E3bPF/nw+XpajXl00lZgP6IemCl9otaCKEqeC/JM1O6Bn+VZtIZu0o7iviD79qV26rwYQVfD9rdUHc5USWWd5WraZP2O0sU05Nr9VCDXSs5D2iPXPqCSQgMikCeOUB/xOGQiKAhyG5QPMugxFRey73zci+ALm4NsiNkJkJHjbVR9Mijc9Mdm5QvVH3cRGV/SFxjTGkFT1H3iO3rIMo2uxh7aaKumjdZp2HMRtAVjPIJ+06Qt6NdZndf30DXYXyuRm1Yi55CK/xm+Om0b5nMd8jqgVcNH2yjKUg0fzldzzxJGjl0h94+2lZJljFjvQR6W94l7qEakULZ1Pq1B3RoL8iT0rkLdMuzf3ti7t6B/nJm3CbpvQb3sO0LeZeQdQe4XWwa1t1arewApG+Q9Bfq1b2mjdiWtRBxnBtwDPyynXjgvGGIvFuhjQJUXm1htQNWFGZTFa2F0o6rvS+/zrVow4laeoXvEUnKJ6ZSu9aFOoh31Eu9hr/5G92ltabY4QPeJWloty6I9ddO8mP8u3C1l/WGaJOv5+yjfSzPEMPRfSaViNrm17Yi9DyhIzMVao5/lVsRJV/T/CeOaYF/QDG069tbN4H/zPSHllI5dvqslxBXUS/VrBmWrH61s5uPgtyuxprBX8i3sha2NdvptvIh9ap5yXPSTMuI+wjuD7xiQZNCGyXwNbQM28E9plDaeFrEtSDD302j2FXC/iSfpCkW3A5NxxvdnNwCpoj89CywF3xP0ReBpo4y7W386CizH2C+B7pTvBRJ8JA2QFHUPAvcCb/vbmkPqulh9c1iiqWX5GaqWYD/7zku0loefB0DfAHE5/AkgFm+XsC6hGbaFWL/LUB+LMVuVoSddPEPz/siePwI7TL2VDw1kNJ+jfz1AO/4HONaM6pKaZ8P/ln3/HWB9lwCzlH9/oAgzhtqwDykBdDrodK2SrpNAuRfKeX5/Mrz9Kmyhu1R94/oZ9YgVvFLS5a3rW5dbr+sflflOeqQ5/HHQGA930jIJMQLyQOtywFu0TML6Gtpeu7AsHvsDzKAe2nplE6kYa1W2TsSZCfCusLWz6rNaorF8GHsZkLKqfyitkVB7F+C7yCXR2N4f+Rto5tcB0q/Qqdr96+Nfl9brA/syxCFgBs6KQ9QbdCpopp82xreZL1rE/GQj3hvLMpd81UqmaU807Y3D8qy5+Jj/PwF75wDwBvD6/2ldMsvIHBEm88Qx3ENG4B55BPeTa+gmovPIJfVpwKPIQzmgH6EOp3dDdyAUfDvUFYI+QFT3C/gK1B8x4OMimjaY98pOqNtt9g0wx5tq9K97k+gcIurc00b/uq3APPA/AjeC/wz0JdB7If939FsG+rLRfn42yguB51H+DuViIBf87aARoD2B9kA4+q+VkPeRC95D/8fpxd8//lOKO4sDdsbJ77xAb2j9DvEfU/96/gFt/a7hX/8/os2+M2hFDT/gnelz3Pu8zd99fu8dx0+xng3NIab5zuNOGSLv0fIuK+/P6v5oUvX+pu6x0EvUwU/l3VneX+XdWd5fQTeCrrRalD3T5Hu+tIvUkaIQozYEBU5BCVxQLonAAfI7WPk1KA2ixWwJu43dyTYyLzvGfDyPv8Hf4p9pTNO0QC1RW6zVaKu1jdohESImiplitrhL/EU8IB4WO8Vz4hPxrWWP5RXL3y0/W0Os0dY46xDrFOt8a4l1gXWx9WbrvdbN1setT1vfsR6x/ha7PPY3va0eocfqCXqynqr31vvqQ/Rh+nA9Sy/Tl+ib9cf0J+It8e3jO8YnxCfHp8bnxF8bf0/8lgSeYE1omxCeEJHQOSEuoXtCSsIVCfYEZyJPDEuMT6IknhSSFJbUISkqKSapa1LPpH5Jw5KKk6qTliWtTFqddFfSxqQnknYk7U16PunVpLeTDid9kvS35GHJGckjk/OTHclzk+d/Y/km6pshZ/iZPnW8Tq8bUDesbnhdZl1W3cS6vLob61bV3VPnq59zfsT5nxrqffU+n/yGmjYoz21gT7OD7Bw89zo897FGjZ5bBs/dqj0smGgjJotrxe1irVgvNomnRK34WHxj8Vqes7xrOWN6Lt6aYc2/qOfOxFbHbtBD9PZ6pK7Dcz3guXR9sOm5efDcw/Dc1haemxp/TfztjZ5rB891Sog1PZefUKA8p/8bz01q9NztSRuStjZ67gA89zE8N6TRc87ked8w5Tl2RtQxeK5H3SB4LqNuVN3ouul119fV1N1aV19/7fnh8Fy19JzvCwTmPb4O/AB/QUvzHePvYEe0RUTeyarYfFZRvwFll4zZhpSGHg3dG7qBvYGup4VUTEV0FQ2v/6z+WP279W/Xn6x/v/6wlKxfV39v/RP1G/G5q35J/bL6P9e76vsSfTGL6PNjxrf6J5cD95y65uSyk7+d2nKyCqVnAeTVkzUnbzxVeWLeiUUn937R8+StJ7acWHt87fFNx1cRHX9U9j0ReXzBcWTm472PZxzve7zrsdHHso8NOzb42IBjfY/1Ptb9WMKx6GMdjrGjPxz97ug3R786+rnsdfT1o/uOvngUWo6+dvSRo08fzT468mjm0a5HE47GH43tvL/zuc6nwl7ETe9F26O2B2z32+6zrbets91re8v2pG2j7SGcX99ah1vwdqo55N5lA1r+noL/zUCL8hmto7+sFdDv/GgTkGku3nIr8CBuRBPEFJEPOqd5q7gWmGvg3/2ISRJiilma8Ht2tOqZLLo18l1/VzLo37Zc1aKo0cO0jJZr19Ja+hvdTLfSKnqAHqfNuCLUwK030V10hn6kNfQXWkkv0zE6TQ/SVvon/UQ/0yZ6gt6k1+lJmkMOup0K6AA56Q16iw7R2/QOHaSvaS69R4fpXXqKCukHuoM+oPfpr4jVb+k7uoXmkYvmUwmit5Q2UBktoHKqIDdVkgcxXUXf0HWI7kX0J7oRcf4sbaQltJiqaSn9nf5Be9ha9hfGmcYEs1Ad1bN72Tq2nt1H56mBWZmNBZCP3c8eYA+yh5CLNrJAFsSCWQjbxB6ms/Qr28weYY+yx9gW9jjbyraxJ9iT7CnkLC/bznawnfQvOsJq2Cq2iz3DdrNnWS0LZW3YHraXtWVhrB0Lp5N0irVnHdhz7HkWwTqy1ewF9iLbx/azl9jLLJJF0dPkZZ1YZ/YKe5VFsxjWhcWy19jr9Budo8/pCxbHdBbPEtgb7E32FjvA3mbvIGceYomsK0tiyewwe5e9x95nf2Uf4IZwGevGurMe9CV9xY7Qh3SCPqFP6Sgdp4/oM3aanWE/4qz6if2T/czOsl/Zv9hv7BxLYXWsnp1nDawnzjHijHOuccEt3MptPIAH8iDWiwfzEB7K2/C2PIy34+G8Pe/AUnkE78jSWG8eyaN4J96ZR/MY3oXH8jiu89U8niewPiydJ7K+vCtP4sn8Mt6Nd+c9eApfyW+xhFna8dPaUu0mbbm2QrtFW6Pdpt2l3aOt0x7AyfmI9ri2TXtSe1rbrj2j7dFe0F7SXtPe0g5ir76nHdE+0T7TTmlfad9q32untR/5j/wn/k/+M/+Fn+W/8n/x3/g5XsfrtSAtWAvB6cIwqc3iEfGoeExsEY+LrWKbeEI8iVPlaeEV28UOnMy7xDNit3gW58wesRfn9PPiBfGi2Cf2i5fEy+IV8ap4Tbwu3hBvirfEAfG2eEccFIfEYfGueE+8L/4qPhBHxIfiI5xSn4hPxVFxTHwmjosT4qQ4JT4XX4gvxVfib+Jr8Y34VvxdfCf+Ib4XP4jT4oz4Ufwk/il+Fr+wL9iX4qz4VfxL/CbOiTraTjt4DetHz9BuegVvRztpF71Kf6aXaAVy0URtijZJm6xN06ZrV2u52lQth35hX/P9YjE9T+voe+zMR+hONoJuY5lsIbsD58VdrIpq2Q3se/aDWCAqxFLh1vK0Gdo12kxtllgmKkWVWC4WipvFIrFCrBS3iBqxSqwW14m7xRpxq7gNJ/Id6ky+T9yPO82DuNncK9aJG8VDYoPYiJP6Ya2/NkD7pybfEa1E/l8UM44Hb5V20KgJi9UWEBgUHBLapm1Yu/D2HSI6RkZ16hwd0yU2To9PSOyalHxZt+49Unr2Sk3r3Se9b7/+AwYOGjxk6LDLh4/IyBw5Kit79Jgrxl457qrxEyZOmjxlas606Vfn5s24Zuasa2fn22mOo8A5t7DINW9+cUlpWfmCCrencmHVdYuu/9MNNy5eUr30zzctW37zipW31KxavebW226/48677r5n7V/uXbf+vvsfePChDRs3Pbz5kUcf2/L41m3aE08+9bR3+46du57Z/Wztnr3PPf/Ci/v2v/TyK6++9vobb7514O13Dh46/C699/5fPzjy4Ucff/Lp0WOfHT9x6e546e546e546e546e546e546e546e546e74n90dMzIzM0YMv3zY0CGDBw3s369vep/eaam9eqb06N7tsuSkrokJ8XpcbJeY6M6doiI7RnRoH94urG2b0JDgoMAAm9UiNM6oZ3bi6Hzdm5zvFcmJV1zRS5YT7aiwN6vI9+qoGt1SxqvnKzG9pWQGJOe2kswwJDMaJVmYPoyG9eqpZyfq3oNZiXotmzE5F/yarMQ83fu94scr/nbFh4KPj0cHPTuqKEv3snw92zt6YVFNdn4WhtseHDQqcZQzqFdP2h4UDDYYnDcysXw7ixzOFMMjs4ds5xQQCqO8nROzsr2dErOkBV4tKdte4J00OTc7Kzo+Pq9XTy8b5Uic46XEkd62KUqERik1Xusor02p0V1yNrRK395zf83q2jCak58SUpBYYJ+Z69XseVJHuxTozfJGXv9lVFMRg4ePyl3RvDVaq8mOcumyWFOzQvdumJzbvDVePvPyMAb68qTR+TWjoXo1nDhuqg5tfHlerpcth0pdzkTOypifMzFb1uTP072BiSMTi2rm5WNpOtd4acqi+B2dO2fs8Z2kztl6TU5uYrx3RHRinj0rZnsHqpmyaGenDL1Ty5ZePbeHtTMcu71NW5MJCW3OOBvbFKfEJTduSqNnmbQocSwCwqs7dFiSm4g5DZIP5yCqcQyCGH7yGHp5C7AiLm/gqPyasCGyXvb3WpJwR6z5Bbk9P/H7f7SssZs11qSwX0iyMk4aQw3tft6bkuLt0UOGiG0U1hQ2Dlfl/r16LqzliYnlYToI3EeT4Ft73pA0uD8+Xi7wqtoMmoOCt3pyrlHWaU70DspIS8nz8nzZst/fEjFNtlT7Wxq75yciknept74Ib0By439twzq2zy4a4mUdf6fZabSPm5o4bvKMXD27Jt/07bicFiWjfVBjm8l524/K1aK5yfFoTbUiKGc2CstCbohXJOE/qwrqglpbAKJS1TB9tDcs/wrjmRcUH/8fdqr1nZG9FGnqZprpHZLSsjy0RbmFeSE1GgwWyXxczoyamqAWbQg1Q+FYkyDiKSc3Xh/lpWnYmUn4r9a3f5BEXrQ3Ay4bJQUQf0aVWWwhGG3yefiR0dmr52gkupqa0Yn66Jr8Gnutr3pOoh6WWLOHv8xfrinPzvcHTq1v76po7+jVefBVERvSKzOR2mqRdBrwARrF4ZkGTARmA7cBDwFWJSdryoAlwD7gjGrJ0CJ33Nk3oxZklSI75xWnq6LdKM6cpYo7r84z6PjJBs0aa4gNMcT69DOqU0ca9LKeBg1PSq+WNCg0fX9mR1zd3wU4lePJ+KvUljGKow1aBHkBrlnNmgwtfGfX5PSH9mmCcB3QGK6lcb79GtsR2i49M4j7+GkKpzj+A//eaOHf72zTLv2hzCv55/Q0sA/Q+Of4nOKnaAk/iR3QFs8RwEPAPuAwcBqw8pP4nMDnOD8Oqc8oDRgBzAYeAvYBpwEb/wzPMH5M7if1lPwIgPNjeIbxo5jWUTzb8k/Bfco/hWl/3TFwcPoexaSkmUxckslERptMeMf0Wv7+jt+6x9XyL3bqKXEbMnvzD8gLcCj7AIN/QDowCcgHygEruA/BfUjVwO3ABsALWNHnQ/T5EH0OAO8AH1JvIAOYBATwd3dATS0/vCN5ZFxmR36Iv0GRcOpB/qai7/DXFX2bv6boW6CxoAf46zti4ygzGO2EPmGgYaBpaLfwl3Z2DY/zZbbj++CeODzTgBHARGA2cBtg5ft4wo6CuHAM8hwdCCBI7qBvFX2UNgVQxry4jORRiDFdPpKHXA4Oj4f0h5J5RvLadSjKR/Ktd4KTj+Rlq8HJR/L1S8HJR3LxQnDykVwwD5x8JM+YDU4+kifmgMOjlj/4bNfL4gZOnM/0zLa8Cl6qgpeq4KUqErxKfug3IW27b0ePHvDY+oyU7j3iqvey6udZ9RRWvYlVO1n1Yla9lFUPY9XXsuoUVh3DqmNZdQarfo4NgiuqWcauFsXBGVGs+gCrfpJVu1l1MqtOYtVdWbXOBmbU8vgdY/sqkq3Izky5r0AvH57eFjbGw6PxCOt4bPt9eB4GfKqUASE9wRDuFCtpws4eI4xy6pD0sswr+Cvo+AqW4RU6AQgs0CsIo1cwyCsYoC2eI4DZwH7gNOADrJBOgOG3qWdbPNOAEcBsYAlwGrAqc04DnMpME59WhqWZRk+UJf4KPgn4xPP4jC5hMWEpYVdot8WwtrFsYqwvlg+kjvItP7xdQDu8re3+NfRfv4ZSYGYgv5XfRl2wELeb9LYdv3WJq2X37kh+Li4zgv2FYgWijg2mZJYEOojcqtyfYgIk7UcxfBto+o6Y6ejWdkdyz7i9rI3stTvut5gv476NqeVgv4l5Lu4jvVawHXFHULNtd9wHMbfEvZVWG4Ca55NrGcheXYnuiRkU9+QBJboUDet3xC2WZHfcjTFj4ubHqAan0XCtG6WMtnFTkmfEXYHxsmLmxGW4MebuuBEx18YNM6T6yz6743rDhBSD7QFju8copYmxasBpA2tZUUZP21pbrm2ibYAt3dbTFm+Ls3WxRds6BIQHhAW0CQgJCAoICLAGiAAeQAEdan0nM1LkF8AdrGGSyD8zwEgoPozLp/yuWOY1FsDpSvK218bxcVNHsnHe/Q4aN0f3np2aWMuCcIBaEkcyb/g4Gpcz0jsoZVytzTfFOzBlnNc26Zrc7YzdmodaL19Zy3D61TKfrFoeLa+qe4ixdsvXREvabfmavDyK6rhwRNSI8OHtBo/Ousgj33ymNP1EteC7eNeOm5rr3dolz5suGV+XvHHeu+Rddg/en89kZ+3BqzRIXu4ebTj7KXuKrNeGZ+Xljatl05Uc6exHyCFiflRyAbGkSznSA2INufWGXBL6Q66rJJALDKQkJZcUGKjkBJNy291ds7O2d+2qZCJ1cisZd6TeXOZAEmSSkpRMx2o6oGQOdKyWMt7hSiQmBiKxMUqEdaYYJRLDOiuR6U0iaabILY0ityhNGmuSiTFkQk/6ZUJPQiblP/1xjkxJYTuH5jlmyveA/MRsJ5DvXbWwKMpbPUfXtzvyzBeE5Pw5jiJJ7U5vXqIzy+tIzNK3D515keaZsnloYtZ2mpmdk7t9ZoYza8fQjKHZifasvJ1jJvUb2ELXLY26+k26yGCT5GD9pK4xAy/SPFA2j5G6BkpdA6WuMRljlC5SMT4pd3sAjczDtVPRnTw4CPGaHx2fN7JjWPlwFbxD46MWR+8V8g/2BeMWHoI3ulBANvXK7JUpm7CnZFMb+bJnNkUtHhofvZdtMZvCUN0ucSSleCrdlRSV7coy/nPjB1WeSulw45ni/nc/aMvGe1uW20M0zttj6jjvCNxzt9tsqM2XU/IO8dcFB2fjumlUpqJyiKzUtEZBWTdM1gUGmoIXrn+lSUfJXVDNn9vJMmKZh9x5mjd2XA5HKsgxb9V7cV2Sx4M7DxN0sxTm9o+hzCaDJzlfPzyVJmf6wWNSoxe6uP3uaPxBH6Qqy17qBHS2PEadRDJFEfm+Br6RtMHl+0a2S8r/DuFaE0Rb6EnmoidpH73MzpD8Zm8P7SJ548mi++kGuptW4BSbgZpbaAo+FtTfzTr5dlEabcQ5tpEOQvZqWkx7qSOL8n1LS2i59lf0Wk6hlECZNInKaA27yldJM+mEuIkG0lVUSuWs2pfru9V3p28zPUJ7tDd95ymYOpMDn4O+Hywf+45RL/S4h9bRCXZn4DOUAS3VkHyAKmi9NkswX6HvHCyIpyrYIGg8HWT7eQpGd9LXLIrdoI3CKA/7vL5XIRVDs6iI1tNe1p+N4fGWmb7xvoPUETquw6jraAftxqeWXqBPWYjljG+z7wx1op40FvPZRYfYfq3h/NKGEdLR8FJ3GoyWMnqR3qB3WSJ7iZdZQizplgzL9b4PqAP1oWmw9jH0/Bv7lS/GZ4n2uhjtG0lt4Jc7pLfpNTrFOrM0NpFN5915GX9Qq6AAaOyDTwG54O97MfpxRM1uHsIPaw+LbaLO2qXhpK8NViSZ7qMH6CUWipnqzM3+zD5kX/BRfDa/j3+u3S0eF+/b7Jj1tVRCa2gb/crC2SA2mV3DitgNbAW7g61jB9m77BueyXP4fH5aK9IWaC+IkfhMFW5xk+VmyyrrNw25Da82vNfwqy/ddzNNRjwshfX30IOY2R46TJ/gc4I+ZxYWzNrgI7/1ncb+hM9itoZtUt9B74KWd9nn7FucQL+wOo6DlVt5tPyWFZ9EXoEL5d38fn4Yn3f5P/hvWqSWoKVo/bVhWp5WBqtWaLfj84x2SnQWh4UPfk63rLU8ZNli2WZ5Wf4+zfZnHOnv1D98vsf54w3UsLJhbcOOhl2+UxSBNcRhgVeoYbDejs88rPdaRNzT9FcWAt91Zj3YcHYVPDObzWML2HXw5DK2nj2ibH+KPQ8vfcROw+ZQHqNsTuX9+Ug+EZ9ruZMvwN3rTr6Lf8jPaTYtWGurRWg9tDHaLM2pebRF2lrNq72jfaZ9rp3V6vHxiSARJxJEskgRY8RsUSkeFF+Lry0zLW9bvrIGWUusN1trrT/iEjPcNsk22TbLdpttt+2DgHz5LSo9Q882/1UHO6kt1bK1Z+hW3ld0whvLIcTzbCrQxnNEKt/CVvIb2S7e1XKddSgfyibQGbza381f5w/xs3yoNp6NY1NpnvybqvLH2kHIv/k9TLxC34vnMbdDGPk6awhbzE9bQ2gHU39vmr2m9RYp2tv0qXaC2cRGOiqCWCT7nj+mTUIUvCCGW3IpXrufntIWsBvpGZ5NFFQXsBpxPIFtRV7IYensX5oPt94JiKKB2hd0E83nH9P32Mcr6S+sQBTSrdSX3UBf06PYFd0tpdYe1gj2FneJGt6e7SIuHpd/n5l1ZZqlAy1js7T11tP8E6qkwyKIjmtPwPrD/CltvDhjmcKKsANupJtpgW8pLbLkivdZIWlsOiWJk8huN2jpIh50CbLKTOS03djde5EHMrXxqIlC5FyFuJiGDLEen3uRJwQiyIU9fjWy2CHaZc3htVRoacOQdYjE2w1TaIbvUVrnK6RS353UC/lghe8GjLiFvqLbaAtb3vAnKseb4yfY21dZRvPDltG+XryGf8Kn8rUt1xfeTmJR9Hd8nqLRNNzyHNWIj2gqjfCt9h1BdHdDhl1Hc3A//RKz/AEartD2U9+GCXy7b7RWjvmeoMm+x3xxLIiKfMU0kZ6nR2wWsttSTAXF/5fjbBPY6lY41gT17n0Jl3AJl3AJl3AJl3AJl3AJl3AJl3AJl3AJl3AJ/y+BM/ULF4v8U/02GrmLsy+ttlq+LqM9WcSXGgXZxJeMOgVYLV9y7XnehwLZOpZKUSlhZ4edHzYh7Odh488PoxHgw+rx6NM7vl18uyQ8GAmq17X99RnyD9nrYr/8Xf8mIiF/TxZM12REWC2xAQE2G2kiljMeFBgbTAG2Wt/+jJiw8H62HO1KPUgP5UGdQ0WgznT0nhUy9JqoFOicJZVOCDs7a/zPX6Yo5RLhg9OGhUkT+raLj4g3sUl0rX9QS6k/oi2z7H2yYcQTDaFPSks2Y9YJypKiPRQKpZe1j+gntNjAoA1B7wbxIAvnwQEBlgDdZrPOqg5loTzYMEIaGAFZWKOHMj10Umh+aHmoGJoXlTJrQdjZlFnSFbPOSktg2Yhhg2elKb+wlL7tYBiQiOfml/m5l18+b7XsPf8on3FuNN95fjwGXwv/9IBVFuqbEcI47LFQgC6YqOWPZbSxcc10hHXoTLkCStffZhkekPOWM1/7Mn/fsvfcP58kTg7f15bPLB9QG4qmJRn5nduyDmEdOkRHRkcLESY6BEcGR4vHI3e3eb2NFhkZFc31LhntJrafGJnROdeSG3h12LR2s9vPiJwdNb3z1dGrItfxsE6xmhYeGxwYkazbmK1zdRfWpW2yNKlTjGOmsTbjv5+A+YPQiO9HfI+Jz1pAs2bNWtA+jOLTRXhEBy4SE7rygWHUN53a9ePJiQnkYCvZgLfZ6G27GnbvO9ywd8ubrMtHR1n0om/vONTwET/AStgDLzc8cuxEw4Zn3mQzXmz4teEw68eid7Lguxq+Mr5nH61NIONfdyBqMP+eilzpIDbc5Dm1sRwn/78Cca1lv8mLZjIWirL8YPJWamONNXkbvWrtafIBlGy7weQDqSZ0s8kHiZeVZskH05w2qSYfQnPb3G7yodZd1jMm34Zmtjnb+Ncnl7SdQv5/i9fS9keT52QLzzR5jdLC001eNJOxUEj4WJO3Qt5u8jaaE15k8gHUHgtg8IGU3bGryQdxe9v3TD6Y+nR0mXwI9e243uRDtRnhB0y+DaV2PCj/1QyhwbaQjnWKV/8acGSw4q2yPjJa8TZVf5niAxQ/UPGB5hoZvLFGBm+skcEba2TwopmMsUYGb6yRwRtrZPDGGhm8sUYGb6yRwRtrZPDGGhm8sUYGb6yR5IOazTdYzWWM4kOa1bdRc79a8WFyLpGFim8PPjyyUvEdmslHyHFMvmOz+k6q7wrFRytdxphdmsnENeO7Kvl7FN9D8Q8rvpfit0s+oJn9Ac10hTSrD/HPJYcWUTk5aS7ZyQGq0+NADhUpfjyVUSngMaV0GoVSBXj5tKPepSR01BSjfyq4LFVv/98cKa3RMp2moqVY/Z0vQ8aNurGghr4+NBif3tTL5NJVbSZ6FINOQZ9C2OBRvaZgPDdQQQvxLFA2lKLNSSWNllRArw4pu6nJkHfBQzp6yP5yxFLqqbTIFrvS5DDHsqPG6FmiRpQzKIL1JWpEF1o8SrpI6ZJe95ga3GqGDtXXo9pL1SiSSpvKlA0ucy7lamxpkUNZ5VbaZIuUL1DUsL9SadOVhuZWudT4HrSXqnKVGrvI1O40ZcvUWIZuf32xGttjesSBkuGZ1nIejOlUXnGBGmM7zJpK5Wm5Vk1RUqbWpUJ5tFj1l5bK6Cgxe/k1OFT/haZWlzlT2WZ4s8kLcyEpRzNqm/zqMr1bZs7EpeQrValpVd0qYouVdRePCf/OcTfORbaVqPGaxqiAnvmmtXbT/w4V07oZ936fFSjdharW6F+FFpe5hlKmGGtvxEgZnoVoW2h62xihaS/b1VoZ0aErHzrM+bvUqhUrmXK1z4xoLFU9jZk0j25XY2TpaL/OXJkSZY2MTWPd3OZOLm60o0SVmqLX0yrfuFvNz2HqmKNGqFSeLmgRm05agHq/ZyvVn3Lyz3Cuim1dxcB1yrduFXcetRqFjasubTf2u9xLPRt3k9uMsqZ8ZLSWqBWx0/Wqv2G1HNehWpsizdBeoLxVrnbJosZZ+HXL/lWq3a48UWHqkHvI8KJH9fdb7B+9XMVQicqhfttSL8irQ1qsmsx3hSr+5eoOoemmPn+ulblyEJ46dcNIcg0q1H4w9lH3ZmONR1w3lZ5ScV5h7vsSNfr8xjX+7+Z8Y10KzUzoNPNbU54yRp2G80CnSaq/TslK33g8J0L3XBW5fo/J2HQrbxeZo6XSBMjl4PQYDYzCjCQ/EbWy/2g8r1L12aiZiqfcA2PgxWx8xqvaHAqlIIUcFbXui8S03lhvWGysXLm5tk174UL/GGdeGXxQoaKjSEn75+PP/P54mqNaF0G+slGnozGHGr6rVH2bcp/T3B0yQzXlayNPuMzc7DZzR6EaxdmYe6Vv80xtMossNHP2nMZTz9Dp+R3P+GOrqjELOs2d7WzcOxUqT3nMvDHXjPuL+cu/26XHnM1GacoWF+orMONLxvIclYENq+eYK1NqjnyxFbpMzaqlp4zMf2FUXKjZn0NltrSrG40dWotNb7vNXPXvdKeq2C9tls8XXbAWTvM203znGKeEXVlUrjwrzy2X2m9/vOa6GYulzXKoX6/c/QXK065mp1VFsxtXz0bpimZx23RH+H1PSetK1Pj+uCprMV6VWv/5ajWbZxN/Hm6SLIOskWcqlcfl+EWN8zHsah7dJWbmNvxv7KpyMz6aMnzLGPq9GTXFx1g19wtXzn/Hk2eb07wJGrMx7pUOtaqlrdagopW/m0aW8ytTmb/AzKsL1R2siprf4v549f3jGXvSad41Wp7I/vEuXEfDW003Y4ca88J97F8xeytfz/0vWdvk5Qs1tLxXtLTIad6WPTgh/SPIUyYTtb1Ino2DqB8NxHmo49kHpV543+gH9Cb5zjmNxpmSvdWfOO6Hj8EPpL6A7DWA+uPdREKOXqTuJOXQl4ZPlfqkqrO95Y53qMz3784JyWWp3VnVGBfGKegys620aYrK0MYZOsG8Z5WZN3i5P42TtEK1uNQKTMWz6dyQUSXfrOQ94b9md5qSl/96RxqeHpUh5FqlqbNntooS4z6R2ij5P6uhSt0BDFnn/4gWf1taq3hsHDtnUblzrt3h1B/Xc4qc+viy0jIPqvRRZRXlZRV2j6usVC8vdqTqWXaP/Q+E0uRg+tSy4kpZ49bHlqJfn8GDe/fCIz1Vzywu1qe4Cos8bn2K0+2sWOgsGFVW6nGWyEEqFuluOzqh3jVXL3C6XYWlPfXMCpe9WHdAyu5CY0lZhVMvqiyxl7rcHt1RZK+wOzzo4Pa4HG7dU2Qv1dG2SC+bq7ugpbzCWeB0ON3usgq3bi8t0O0Yv9JRpLvMoVyluqey1KlXuTxF6O5EbVmB7C35Yjt0oL8dxvjrPFXOUo/LCWkHmMqKRam6cknZQmeFHdPzVDjtnhI0yQ6OSkzRLZW5y+bCTGXC3MriYrDKVqgvKYMSV2lBpdujpur2LCp2NveEXBy31OKsKHGVKomKsvkY1g77HZVQVKosK3DZC8tke1WRCzMschaXwyNleqFroVMJqFW268Vwh17ihO9KXQ6I28vLnXBjqcMJJYa7XdJZuvM6TKbEWbxIx9zcWORiOUaJq1i512PGjdvU50CPOU690u0sMLzpXFApja10SP/rc8swZYyISXk8rtJCOfUKJ9bd4+4pl8kNl6k4QrHEXmi/3lWKoZ0eR0/Daehe4HKXF9sXSRWyd6mzyl1uL4dpECmAiR6XWw4sxcsrykrK1Gip/lgdYkxtirOwstheMWQ6+smoTU8dlK53G+9yVJTJNequpMbnKLJFz6nA2pfYK+bLGf9e5GMuhQhCJ+JNxRREp03VJ9k9erKeM16fOHduqjLMWex2VhVBLHXCxJyxo8eOyswZO3GCPnG0ftXYUdkTpmbrmWOmZGePz56QExoUGpRThKXwe1ouixwYk8OsPWoVGu3BzisrrLCXFy1SemTwSz/NWaQvKquUPR0yQmFdZWmBij7EBAJKxTViwoVohri9sMLplNGbquehW5EdoVM2R2499PS0MEZ6q0qGoBOL7ZSrU+F0eBAbc+H7JrvkspcVOpWICovGflhORPycSg+Ghpll2IXNJnSZ228Ugr/RFY2dZYTqC+3FlfY5iEq7G1HVvHeqPq1Uxfki/ywwJ3NxsCXsurvc6XDNdTkunLkOL5aqCJV97QUFLrnGiJwKlbh6yuoK5VuVEVoZVewqcckJQYmSqyqrmO82AlvFsKosq0LMVM4pdrmLpB6MZbi7BMEN+7FU5Yt0I+BND7VUpPwxdm7T5GTGW1DpdCs1yJUOZ0WpOYMK024l7C4qqywuQKwudDmrjBR3wfSlHFbSiaxR0JQWG+cIs1Qydnia1lhOzG5aPffiwyqTGzuYucIcCHrsniFSYNrUTL2X3m1Qv4Hd9YF9BvXq3a9378DAaeNQ2btPn3798BzYd6A+cED/wf0HhwYVeTzlQ9LSqqqqUkv8C+8oK2m+J5x6VoW9SvoCWxBGYaQpZXOwQycgZ5UhwfeUm7TC5XDZ9al2tTfcOLEGpf+bsdOKPCXFaSUe+X87TCtxz7bLPJEqK//DDlXOYtQ6/7iLLKWZflTSuAyVqddgu/rnxRapa9IiForDfB7K36qrgL99qrosyiuRvLQUaOu17doL2j5gj7ZXe6LZWHZ1MfCXT6mxnS10OVuMpsYTsaKPGCfGiMvxHAxpu3pFLDCvI0XMyzZqpK548kuYCnU9k2MQ/S8wuZeBZW5kc3RyZWFtCmVuZG9iago5IDAgb2JqCjw8IC9GaWx0ZXIgL0ZsYXRlRGVjb2RlIC9MZW5ndGggMjQ3ID4+CnN0cmVhbQp4nF2QTWvDMAyG7/4VOnaHYtddoYdg6DIKOeyDZfsBjq1khsU2jnPIv58/SgcT2PAgvZJe0bZ77qyJQN+DUz1GGI3VARe3BoUw4GQsOXDQRsUblV/N0hOaxP22RJw7OzrSNAD0I2WXGDbYXbQb8IHQt6AxGDvB7qvtE/er9z84o43AiBCgcUydXqR/lTMCLbJ9p1PexG2fNH8Vn5tH4IUPdRvlNC5eKgzSTkgalkJAc00hCFr9L3+qqmFU3zKU6mOqZowzkYmfCz2eKj1VOle6VmoLHXmlOuXWL8/Ld7mbUWsIyUc5XjGQVzcW7/f1zmdVfr87IHo2ZW5kc3RyZWFtCmVuZG9iagoxMCAwIG9iago8PCAvVHlwZSAvT2JqU3RtIC9MZW5ndGggNDU5IC9GaWx0ZXIgL0ZsYXRlRGVjb2RlIC9OIDYgL0ZpcnN0IDM3ID4+CnN0cmVhbQp4nHVRy27bMBC89yv2aB/MlyhRBAIDdlw3RuEkiJ3kUOTASKxKVBIFiQbqv+9Sjlr3UBAEAe7szOws58CAC0g48ARUClyC1sBTEByfDKRWn25ugD72vjwVtofZ4acz9HGzhUaJOSyXY/nWn9oAHOhXVw7wDTKkfYI3oMdzZ7HbVHaYsOs90HvfN6YGWhhsmv7NYLceaeiqd6beH4Fu7FDYtjRtiIVIjM4+mD+3hS9dWwHdlbYNLpwXd0APp/cwSkZhho9/bh0CLeix8cPQqPN/3dvd5nAegm127XcPEfTQl7aParNJbQ70yVZuCP0ZZqvSv9t5lO+62jaIQLXlcmQ6+i+7zd50f43iYK9YH13EEXvXBd/HuEeLf2bA5giJlsU/zukrRsHwqpRBPEIpkieCJZiMjIUsy4jWcYmxrIQgPFNawQWephnhqUjkpXrV/DalsorJB9AsJUIlUqIb091ZV/0IoHhKcsTzaUMBFoJzorlkGVqsTTWAvHhdr/0v9LPIMknSlKkcFomQRDGFeoKJnIzKnCWKcKaTPO42Nm5djVPnl0jix71p7NWOdsHUrli1VW1jlgfc1gtINKZziSxXcV1FjMP9BoAQz0xlbmRzdHJlYW0KZW5kb2JqCjEgMCBvYmoKPDwgL1R5cGUgL1hSZWYgL0xlbmd0aCAxNiAvRmlsdGVyIC9GbGF0ZURlY29kZSAvRGVjb2RlUGFybXMgPDwgL0NvbHVtbnMgNCAvUHJlZGljdG9yIDEyID4+IC9XIFsgMSAyIDEgXSAvU2l6ZSAyIC9JRCBbPGEyOGUxYTMyZjIzMjg4ZjI1YzRkZGRhODQ3NmQ2YjUxPjxhMjhlMWEzMmYyMzI4OGYyNWM0ZGRkYTg0NzZkNmI1MT5dID4+CnN0cmVhbQp4nGNiAAImRgsRBgAA/ABSCmVuZHN0cmVhbQplbmRvYmoKICAgICAgICAgICAgICAgCnN0YXJ0eHJlZgoyMTYKJSVFT0YK"
+            }
+          ]
+        },
+        "response": {
+          "status": 200,
+          "base64Body": "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",
+          "headers": {
+            "Content-Type": "application/octet-stream"
+          },
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "d496e24e-1590-4c38-abad-391c061336a3"
+      }
+    ]
+  },
+  "scc/yml/contract_reference_request.yml": {
+    "mappings": [
+      {
+        "id": "37713da3-39b6-4fca-9082-df789c21399e",
+        "request": {
+          "urlPath": "/api/v1/xxxx",
+          "method": "GET",
+          "headers": {
+            "Authorization": {
+              "equalTo": "[secret, secret2]"
+            }
+          },
+          "queryParameters": {
+            "foo": {
+              "equalTo": "bar2"
+            }
+          },
+          "bodyPatterns": [
+            {
+              "matchesJsonPath": "$[?(@.['foo'] == 'bar')]"
+            },
+            {
+              "matchesJsonPath": "$[?(@.['baz'] == 5)]"
+            }
+          ]
+        },
+        "response": {
+          "status": 200,
+          "body": "{\"url\":\"{{{ request.url }}}\",\"path\":\"{{{ request.path }}}\",\"pathIndex\":\"{{{ request.path.1 }}}\",\"param\":\"{{{ request.query.foo }}}\",\"paramIndex\":\"{{{ request.query.foo.1 }}}\",\"authorization\":\"{{{ request.headers.Authorization.0 }}}\",\"authorization2\":\"{{{ request.headers.Authorization.1 }}\",\"fullBody\":\"{{{ request.body }}}\",\"responseFoo\":\"{{{ jsonpath this '$.foo' }}}\",\"responseBaz\":\"{{{ jsonpath this '$.baz' }}}\",\"responseBaz2\":\"Bla bla {{{ jsonpath this '$.foo' }}} bla bla\"}",
+          "headers": {
+            "Authorization": "foo {{{ request.headers.Authorization.0 }}} bar"
+          },
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "37713da3-39b6-4fca-9082-df789c21399e"
+      }
+    ]
+  },
+  "scc/yml/contract_rest.yml": {
+    "mappings": [
+      null
+    ]
+  },
+  "scc/yml/contract_rest_named_xml.yml": {
+    "mappings": [
+      {
+        "id": "f1c3689a-7c05-4e20-83e8-aa498bcc8534",
+        "request": {
+          "urlPath": "/getymlResponse",
+          "method": "GET",
+          "headers": {
+            "Content-Type": {
+              "equalTo": "application/xml"
+            }
+          },
+          "bodyPatterns": [
+            {
+              "matchesXPath": {
+                "expression": "/ns1:customer/email/text()",
+                "equalTo": "customer@test.com"
+              }
+            },
+            {
+              "matchesXPath": {
+                "expression": "/ns1:customer/namespace::ns1",
+                "equalTo": "http://demo.com/testns"
+              }
+            }
+          ]
+        },
+        "response": {
+          "status": 200,
+          "body": "<ns1:customer xmlns:ns1=\"http://demo.com/testns\">\n  <email>customer@test.com</email>\n</ns1:customer>",
+          "headers": {
+            "Content-Type": "application/xml"
+          },
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "f1c3689a-7c05-4e20-83e8-aa498bcc8534"
+      }
+    ]
+  },
+  "scc/yml/contract_rest_with_path.yml": {
+    "mappings": [
+      null
+    ]
+  },
+  "scc/yml/contract_rest_xml.yml": {
+    "mappings": [
+      {
+        "id": "4b605dad-0391-4250-a53f-754e22269e75",
+        "request": {
+          "urlPath": "/getymlResponse",
+          "method": "GET",
+          "headers": {
+            "Content-Type": {
+              "equalTo": "application/xml"
+            }
+          },
+          "bodyPatterns": [
+            {
+              "matchesXPath": {
+                "expression": "/test/alpha/text()",
+                "equalTo": "abc"
+              }
+            },
+            {
+              "matchesXPath": {
+                "expression": "/test/list/elem/text()",
+                "equalTo": "abc"
+              }
+            },
+            {
+              "matchesXPath": {
+                "expression": "/test/list/elem[2]/text()",
+                "equalTo": "def"
+              }
+            },
+            {
+              "matchesXPath": {
+                "expression": "/test/list/elem[3]/text()",
+                "equalTo": "ghi"
+              }
+            },
+            {
+              "matchesXPath": {
+                "expression": "/test/number/text()",
+                "equalTo": "123"
+              }
+            },
+            {
+              "matchesXPath": {
+                "expression": "/test/aBoolean/text()",
+                "equalTo": "true"
+              }
+            },
+            {
+              "matchesXPath": {
+                "expression": "/test/date/text()",
+                "equalTo": "2017-01-01"
+              }
+            },
+            {
+              "matchesXPath": {
+                "expression": "/test/dateTime/text()",
+                "equalTo": "2017-01-01T01:23:45"
+              }
+            },
+            {
+              "matchesXPath": {
+                "expression": "/test/valueWithoutAMatcher/text()",
+                "equalTo": "foo"
+              }
+            },
+            {
+              "matchesXPath": {
+                "expression": "/test/valueWithTypeMatch/text()",
+                "equalTo": "string"
+              }
+            },
+            {
+              "matchesXPath": {
+                "expression": "/test/key/complex/text()",
+                "equalTo": "foo"
+              }
+            },
+            {
+              "matchesXPath": {
+                "expression": "/test/duck/@type",
+                "equalTo": "xtype"
+              }
+            },
+            {
+              "matchesXPath": {
+                "expression": "/test/duck/text()",
+                "matches": "[0-9]{10}"
+              }
+            },
+            {
+              "matchesXPath": {
+                "expression": "/test/duck/text()",
+                "equalTo": "123"
+              }
+            },
+            {
+              "matchesXPath": {
+                "expression": "/test/time/text()",
+                "matches": "(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])"
+              }
+            }
+          ]
+        },
+        "response": {
+          "status": 200,
+          "body": "<test>\n<duck type='xtype'>123</duck>\n<alpha>abc</alpha>\n<list>\n<elem>abc</elem>\n<elem>def</elem>\n<elem>ghi</elem>\n</list>\n<number>123</number>\n<aBoolean>true</aBoolean>\n<date>2017-01-01</date>\n<dateTime>2017-01-01T01:23:45</dateTime>\n<time>01:02:34</time>\n<valueWithoutAMatcher>foo</valueWithoutAMatcher>\n<valueWithTypeMatch>string</valueWithTypeMatch>\n<key><complex>foo</complex></key>\n</test>\n",
+          "headers": {
+            "Content-Type": "application/xml"
+          },
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "4b605dad-0391-4250-a53f-754e22269e75"
+      }
+    ]
+  },
+  "scc/yml/issue1038.yml": {
+    "mappings": [
+      {
+        "id": "1ac2353b-edfa-4950-918c-6aea134b1f02",
+        "request": {
+          "urlPath": "/users",
+          "method": "GET"
+        },
+        "response": {
+          "status": 200,
+          "body": "[{\"id\":1,\"name\":\"alice\",\"country\":\"US\"},{\"id\":2,\"name\":\"bob\",\"country\":\"日本\"}]",
+          "headers": {
+            "content-type": "application/json; charset=UTF-8"
+          },
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "1ac2353b-edfa-4950-918c-6aea134b1f02"
+      }
+    ]
+  },
+  "scc/yml/issue1052.yml": {
+    "mappings": [
+      {
+        "id": "b673d15f-8dda-46af-a8df-85883a769ff6",
+        "request": {
+          "urlPath": "/numbers",
+          "method": "GET",
+          "headers": {
+            "Content-Type": {
+              "equalTo": "application/json"
+            }
+          },
+          "queryParameters": {
+            "page": {
+              "equalTo": "0"
+            },
+            "size": {
+              "equalTo": "2"
+            }
+          }
+        },
+        "response": {
+          "status": 200,
+          "body": "[{\"number\":1541609556000},{\"number\":1541609316000}]",
+          "headers": {
+            "Content-Type": "application/json;charset=UTF-8"
+          },
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "b673d15f-8dda-46af-a8df-85883a769ff6"
+      }
+    ]
+  },
+  "scc/yml/multiple_contracts.yml": {
+    "mappings": [
+      {
+        "id": "13b958a7-4b6b-4661-98b6-43b699286250",
+        "request": {
+          "urlPath": "/users/1",
+          "method": "POST"
+        },
+        "response": {
+          "status": 200,
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "13b958a7-4b6b-4661-98b6-43b699286250"
+      },
+      {
+        "id": "66fe05ee-d474-48ec-a899-7448003a134d",
+        "request": {
+          "urlPath": "/users/2",
+          "method": "POST"
+        },
+        "response": {
+          "status": 200,
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "66fe05ee-d474-48ec-a899-7448003a134d"
+      },
+      {
+        "id": "7de9ec13-83fc-4b15-8f0d-7e7cb5a5dee8",
+        "request": {
+          "urlPath": "/users/3",
+          "method": "POST"
+        },
+        "response": {
+          "status": 200,
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "7de9ec13-83fc-4b15-8f0d-7e7cb5a5dee8"
+      }
+    ]
+  },
+  "scc/yml/scc_compat_contract.yml": {
+    "mappings": [
+      {
+        "id": "8b83f396-7db5-4687-a693-276cfeb09e54",
+        "request": {
+          "urlPath": "/check",
+          "method": "POST",
+          "headers": {
+            "Content-Type": {
+              "equalTo": "application/json"
+            }
+          },
+          "bodyPatterns": [
+            {
+              "matchesJsonPath": "$[?(@.age =~ /([0-9]+)/)]"
+            }
+          ]
+        },
+        "response": {
+          "status": 200,
+          "body": "OK",
+          "headers": {
+            "Content-Type": "text/plain"
+          },
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "8b83f396-7db5-4687-a693-276cfeb09e54"
+      }
+    ]
+  }
+}

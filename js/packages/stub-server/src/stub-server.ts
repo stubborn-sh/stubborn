@@ -135,7 +135,15 @@ export class StubServer {
       // ignore body parse errors
     }
 
-    const result = matchRequest(method, url, req.headersDistinct, body, this.contracts, rawBody);
+    const result = matchRequest(
+      method,
+      url,
+      req.headersDistinct,
+      body,
+      this.contracts,
+      rawBody,
+      bodyBytes,
+    );
 
     if (!result.matched || result.contract === null) {
       res.writeHead(404, { "Content-Type": "application/json" });

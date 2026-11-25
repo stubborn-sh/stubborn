@@ -16,10 +16,14 @@ export interface MatchResult {
  * Match an incoming HTTP request against a list of parsed contracts.
  * Returns the first matching contract, or null if none match.
  *
- * Contracts parsed from WireMock mappings are matched with WireMock's semantics; other contracts
- * (YAML) use the lenient contract rules (trailing slashes, header prefixes, regex-looking URLs).
+ * Contracts with a WireMock request pattern (WireMock mappings, and YAML contracts through the
+ * mapping the JVM generates for them) are matched with WireMock's semantics; others (built by
+ * hand) use the lenient contract rules (trailing slashes, header prefixes, regex-looking URLs).
+ * A contract that reports unsupported matchers never matches.
  *
  * @param rawBody - The raw request body string (needed for regex `matches` patterns).
+ * @param rawBodyBytes - The raw request body's bytes (for `binaryEqualTo`); defaults to
+ *   `rawBody` encoded as UTF-8.
  */
 export function matchRequest(
   method: string,
@@ -28,9 +32,10 @@ export function matchRequest(
   body: unknown,
   contracts: readonly ParsedContract[],
   rawBody?: string,
+  rawBodyBytes?: Uint8Array,
 ): MatchResult {
   for (const contract of contracts) {
-    if (matchesSingle(method, url, headers, body, rawBody, contract)) {
+    if (matchesSingle(method, url, headers, body, rawBody, rawBodyBytes, contract)) {
       return { matched: true, contract };
     }
   }
@@ -43,6 +48,7 @@ function matchesSingle(
   requestHeaders: RequestHeaders,
   body: unknown,
   rawBody: string | undefined,
+  rawBodyBytes: Uint8Array | undefined,
   contract: ParsedContract,
 ): boolean {
   // A stub with matchers that cannot be evaluated (or that the JVM would not generate) never
@@ -56,6 +62,7 @@ function matchesSingle(
       url,
       headers: requestHeaders,
       body: rawBody ?? (body === undefined ? "" : JSON.stringify(body)),
+      ...(rawBodyBytes !== undefined ? { bodyBytes: rawBodyBytes } : {}),
     });
   }
   const headers = singleValued(requestHeaders);

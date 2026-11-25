@@ -21,9 +21,9 @@ import {
  * `ignoreExtraElements`, `${json-unit.*}` placeholders), `matchesJsonPath` (string or
  * `{ expression, <matcher> }`), `matchesXPath` (string or `{ expression, <matcher> }`, with
  * `xPathNamespaces`) and `equalToXml` (+ `enablePlaceholders`, custom placeholder delimiters,
- * `ignoreOrderOfSameNode`).
+ * `ignoreOrderOfSameNode`), and `binaryEqualTo` for the body.
  *
- * Anything else (binary, date-time, multi-value and multipart patterns, `exemptedComparisons`,
+ * Anything else (date-time, multi-value and multipart patterns, `exemptedComparisons`,
  * custom matchers…) is reported by {@link compileRequestPattern} as unsupported, and a mapping that
  * uses it never matches: silently ignoring a matcher would serve the stub to requests WireMock
  * rejects.
@@ -38,6 +38,8 @@ export interface IncomingRequest {
   readonly headers: Readonly<Record<string, string | readonly string[] | undefined>>;
   /** Raw request body ("" when there is none). */
   readonly body: string;
+  /** The body's bytes, for `binaryEqualTo` (by default, `body` encoded as UTF-8). */
+  readonly bodyBytes?: Uint8Array;
 }
 
 /** A compiled WireMock request pattern. */
@@ -58,6 +60,7 @@ interface ParsedRequest {
   readonly headers: ReadonlyMap<string, readonly string[]>;
   readonly cookies: ReadonlyMap<string, readonly string[]>;
   readonly body: string;
+  readonly bytes: Uint8Array;
   json(): unknown;
   /** The body as XML: namespace-aware, or with namespaces stripped (WireMock's default). */
   xml(namespaceAware: boolean): XPathDocument | null;
@@ -308,6 +311,16 @@ function compileBodyMatcher(spec: unknown, where: string, unsupported: string[])
   if (isRecord(spec) && operator === "matchesJsonPath") {
     const matcher = compileJsonPathMatcher(spec, where, unsupported);
     return (r) => matcher(r.json());
+  }
+  if (isRecord(spec) && operator === "binaryEqualTo") {
+    // BinaryEqualToPattern: the body's bytes equal the base64-decoded value.
+    const value = spec["binaryEqualTo"];
+    if (typeof value !== "string") {
+      unsupported.push(`${where}.binaryEqualTo (expected a base64 string)`);
+      return () => false;
+    }
+    const expected = Buffer.from(value, "base64");
+    return (r) => Buffer.compare(r.bytes, expected) === 0;
   }
   const matcher = compileValueMatcher(spec, where, unsupported);
   // WireMock treats an empty body as absent: positive matchers fail, negative ones pass.
@@ -593,6 +606,7 @@ function parseRequest(request: IncomingRequest): ParsedRequest {
     headers,
     cookies,
     body: request.body,
+    bytes: request.bodyBytes ?? Buffer.from(request.body, "utf-8"),
     json(): unknown {
       if (!parsed) {
         json = parseJson(request.body);
