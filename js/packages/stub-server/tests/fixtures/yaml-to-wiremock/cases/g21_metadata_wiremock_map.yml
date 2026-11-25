@@ -1,0 +1,38 @@
+request:
+  method: POST
+  url: /meta-map
+  headers:
+    Content-Type: application/json
+  body:
+    a: 1
+response:
+  status: 201
+  headers:
+    Content-Type: application/json
+  body:
+    ok: true
+  fixedDelayMilliseconds: 100
+metadata:
+  other: ignored
+  wiremock:
+    unknownKey: dropped
+    stubMapping:
+      priority: 1
+      response:
+        status: 500
+        body: not merged
+        delayDistribution:
+          type: lognormal
+          median: 90
+          sigma: 0.1
+        transformers: []
+        transformerParameters:
+          a: 1
+          nested: {b: [1, 2.5]}
+      postServeActions:
+        webhook:
+          method: POST
+          url: http://localhost:1/callback
+      metadata:
+        team: payments
+        n: 3

@@ -1,0 +1,28 @@
+request:
+  method: GET
+  url: /one
+response:
+  status: 200
+  body: one
+---
+name: second contract
+request:
+  method: GET
+  url: /two
+response:
+  status: 201
+  body: two
+---
+label: msg
+input:
+  triggeredBy: trigger()
+outputMessage:
+  sentTo: topic
+  body:
+    a: b
+---
+request:
+  method: GET
+  url: /four
+response:
+  status: 204

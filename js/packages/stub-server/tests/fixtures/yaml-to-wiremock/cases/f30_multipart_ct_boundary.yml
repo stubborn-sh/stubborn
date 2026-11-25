@@ -1,0 +1,10 @@
+request:
+  method: POST
+  url: /mp2
+  headers:
+    content-type: multipart/form-data
+  multipart:
+    params:
+      p: v
+response:
+  status: 200

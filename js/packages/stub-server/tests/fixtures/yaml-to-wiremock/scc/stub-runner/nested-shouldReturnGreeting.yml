@@ -1,0 +1,8 @@
+description: "SCC-style stub nested in a contracts/ subfolder of the artifact"
+request:
+  method: GET
+  url: /greeting
+response:
+  status: 200
+  body:
+    message: "hello nested"

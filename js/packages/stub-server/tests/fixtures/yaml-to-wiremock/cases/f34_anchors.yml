@@ -1,0 +1,16 @@
+request:
+  method: POST
+  url: /anchor
+  headers: &h
+    Content-Type: application/json
+  body:
+    base: &b
+      x: 1
+    copy: *b
+    merged:
+      <<: *b
+      y: 2
+response:
+  status: 200
+  headers: *h
+  body: {done: yes}

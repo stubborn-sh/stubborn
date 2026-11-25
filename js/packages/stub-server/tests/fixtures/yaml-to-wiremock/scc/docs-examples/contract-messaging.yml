@@ -1,0 +1,18 @@
+label: triggerNewOrder
+input:
+  triggeredBy: triggerNewOrder()
+outputMessage:
+  sentTo: orders-out
+  body:
+    orderId: 123
+    status: CREATED
+    amount: 49.99
+  headers:
+    contentType: application/json
+  matchers:
+    body:
+      - path: $.orderId
+        type: by_type
+      - path: $.amount
+        type: by_regex
+        predefined: number

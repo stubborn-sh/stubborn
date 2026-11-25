@@ -1,0 +1,16 @@
+metadata:
+  wiremock:
+    stubMapping: >
+      {
+        "response": {
+          "fixedDelayMilliseconds": 2000,
+          "transformers": ["foo"]
+        },
+        "metadata": {"k": "v"}
+      }
+request:
+  method: GET
+  url: /meta
+response:
+  status: 200
+  body: m

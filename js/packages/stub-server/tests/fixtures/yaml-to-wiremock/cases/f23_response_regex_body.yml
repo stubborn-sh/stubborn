@@ -1,0 +1,10 @@
+request:
+  method: GET
+  url: /rr
+response:
+  status: 200
+  body: "abc123"
+  matchers:
+    body:
+      - type: by_regex
+        value: '[a-z]+[0-9]+'

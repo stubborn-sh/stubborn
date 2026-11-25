@@ -57,9 +57,7 @@ class YamlTimestamp {
 }
 
 function sexagesimal(text: string): number {
-  return text
-    .split(":")
-    .reduce((total, part) => total * 60 + Number(part), 0);
+  return text.split(":").reduce((total, part) => total * 60 + Number(part), 0);
 }
 
 const nullType = new yaml.Type("tag:yaml.org,2002:null", {

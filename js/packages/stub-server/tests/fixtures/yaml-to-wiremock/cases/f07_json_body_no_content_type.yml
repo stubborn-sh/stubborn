@@ -1,0 +1,12 @@
+request:
+  method: POST
+  url: /nocontenttype
+  body:
+    a: b
+    n: 2
+response:
+  status: 200
+  body:
+    - 1
+    - two
+    - k: v

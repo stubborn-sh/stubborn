@@ -1,0 +1,10 @@
+request:
+  method: POST
+  url: /mpb
+  multipart:
+    named:
+      - paramName: f
+        fileName: a
+        fileContentAsBytes: abc
+response:
+  status: 200

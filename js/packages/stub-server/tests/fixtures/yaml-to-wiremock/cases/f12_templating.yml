@@ -1,0 +1,23 @@
+request:
+  method: POST
+  url: /tpl
+  headers:
+    Content-Type: application/json
+  body:
+    id: 7
+    name: n
+    nested:
+      v: true
+response:
+  status: 200
+  headers:
+    Content-Type: application/json
+    X-Url: "{{{ request.url }}}"
+  body:
+    url: "{{{ request.url }}}"
+    id: "{{{jsonPath request.body '$.id'}}}"
+    name: "{{{jsonPath request.body '$.name'}}}"
+    v: "{{{jsonPath request.body '$.nested.v'}}}"
+    legacy: "{{{jsonpath this '$.id'}}}"
+    missing: "{{{jsonPath request.body '$.nope'}}}"
+    whole: "{{{escapejsonbody}}}"

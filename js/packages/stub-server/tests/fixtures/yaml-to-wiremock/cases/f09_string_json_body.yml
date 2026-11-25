@@ -1,0 +1,7 @@
+request:
+  method: POST
+  url: /strjson
+  body: '{"a": 1, "b": [1, 2], "c": {"d": "e"}}'
+response:
+  status: 200
+  body: '{"x": 1.50, "y": "z"}'

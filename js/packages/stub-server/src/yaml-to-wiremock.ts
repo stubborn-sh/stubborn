@@ -6,6 +6,7 @@ import {
   JSON_PARSING,
   MatchingStrategy,
   NamedProperty,
+  patternText,
   sideValues,
   stubSideValues,
   toClientValues,
@@ -80,7 +81,9 @@ export function yamlContractToWireMock(
  * Loads YAML text as the JVM's converter does (SnakeYAML, then Jackson): one entry per contract,
  * a document that is a list giving one per element. `null` documents are skipped.
  */
-export function loadYamlContracts(text: string): { readonly document: number; readonly contract: unknown }[] {
+export function loadYamlContracts(
+  text: string,
+): { readonly document: number; readonly contract: unknown }[] {
   const out: { document: number; contract: unknown }[] = [];
   loadYamlDocuments(text)
     .filter((d) => d !== null && d !== undefined)
@@ -298,7 +301,9 @@ class Reader {
       const n = Number(value.trim());
       if (n >= -(2 ** 31) && n < 2 ** 31) return n;
     }
-    throw new YamlConversionError(`${this.where}.${key} must be an integer, not ${javaToString(value)}`);
+    throw new YamlConversionError(
+      `${this.where}.${key} must be an integer, not ${javaToString(value)}`,
+    );
   }
 
   boolean(key: string): boolean {
@@ -306,7 +311,9 @@ class Reader {
     if (value === null) return false;
     if (typeof value === "boolean") return value;
     if (value === "true" || value === "false") return value === "true";
-    throw new YamlConversionError(`${this.where}.${key} must be a boolean, not ${javaToString(value)}`);
+    throw new YamlConversionError(
+      `${this.where}.${key} must be a boolean, not ${javaToString(value)}`,
+    );
   }
 
   enumValue(key: string, values: readonly string[]): string | null {
@@ -483,9 +490,7 @@ function readRequest(value: unknown): YamlRequest | null {
     params =
       raw === null
         ? null
-        : new Map(
-            [...raw].map(([k, v]) => [k, jacksonString(v, `request.multipart.params.${k}`)]),
-          );
+        : new Map([...raw].map(([k, v]) => [k, jacksonString(v, `request.multipart.params.${k}`)]));
   }
   return {
     method: r.string("method"),
@@ -595,7 +600,8 @@ function readContract(value: JMap): YamlContract {
     "matchers",
   ]);
   output?.mapField("headers");
-  if (output?.has("matchers") === true) readTestMatchers(output.raw("matchers"), "outputMessage.matchers");
+  if (output?.has("matchers") === true)
+    readTestMatchers(output.raw("matchers"), "outputMessage.matchers");
   return {
     request: readRequest(r.raw("request")),
     response: readResponse(r.raw("response")),
@@ -606,11 +612,267 @@ function readContract(value: JMap): YamlContract {
 }
 
 // =============================================================================================
+// DefaultWireMockStubPostProcessor: `metadata.wiremock.stubMapping` merged into the stub.
+// =============================================================================================
+
+/** The `Fault` enum. */
+const FAULT_NAMES = [
+  "EMPTY_RESPONSE",
+  "MALFORMED_RESPONSE_CHUNK",
+  "RANDOM_DATA_THEN_CLOSE",
+  "CONNECTION_RESET_BY_PEER",
+];
+
+/**
+ * `DefaultWireMockStubPostProcessor`, which the JVM applies when the contract's metadata has a
+ * `wiremock` entry whose `stubMapping` is a string (JSON) or a map: the stub's response takes the
+ * delay, fault, proxy and transformer settings of that stub mapping's response (and loses the
+ * stub-side `removeProxyRequestHeaders` default, written as `[]`), and its `postServeActions` and
+ * `metadata` are added. The JVM rejects an ignored contract with such metadata.
+ */
+function postProcessStubMapping(
+  mapping: WireMockMappingJson | undefined,
+  metadata: JMap | null,
+): WireMockMappingJson | undefined {
+  if (metadata === null || !metadata.has("wiremock")) return mapping;
+  const wiremock = metadata.get("wiremock");
+  if (wiremock !== null && !(wiremock instanceof Map)) {
+    throw new YamlConversionError("metadata.wiremock must be a mapping");
+  }
+  const stub = wiremock === null ? null : ((wiremock as JMap).get("stubMapping") ?? null);
+  if (stub === null)
+    throw new YamlConversionError("metadata.wiremock.stubMapping must not be null");
+  // WireMockMetaData.APPLICABLE_CLASSES: String, StubMapping, Map.
+  if (typeof stub !== "string" && !(stub instanceof Map)) return mapping;
+  if (mapping === undefined)
+    throw new YamlConversionError("Cannot post process a null stub mapping");
+
+  const text = typeof stub === "string" ? stub : jacksonWrite(stub);
+  const parsed = tryJacksonRead(text)?.value;
+  if (!(parsed instanceof Map)) {
+    throw new YamlConversionError(`metadata.wiremock.stubMapping is not a WireMock stub: ${text}`);
+  }
+  const fromMetadata = parsed as JMap;
+  // Unknown properties are ignored (WireMock's mapper does not fail on them); the request
+  // patterns are dropped by the merge, so only their shape is checked.
+  for (const key of ["request", "newRequest"]) {
+    const value = fromMetadata.get(key);
+    if (value !== undefined && value !== null && !(value instanceof Map)) {
+      throw new YamlConversionError(`metadata.wiremock.stubMapping.${key} must be an object`);
+    }
+  }
+  const metaResponse = fromMetadata.get("response") ?? null;
+  if (metaResponse !== null && !(metaResponse instanceof Map)) {
+    throw new YamlConversionError("metadata.wiremock.stubMapping.response must be an object");
+  }
+  // Without a response, StubMapping.getResponse() is ResponseDefinition.ok(), whose empty
+  // transformers replace the stub's.
+  const meta: JMap =
+    metaResponse === null
+      ? new Map<string, unknown>([
+          ["transformers", []],
+          ["transformerParameters", new Map()],
+        ])
+      : (metaResponse as JMap);
+  const original = mapping["response"] as Record<string, unknown>;
+  const pick = <T>(key: string, read: (value: unknown) => T): T | undefined => {
+    const value = meta.get(key);
+    if (value !== undefined && value !== null) return read(value);
+    return original[key] as T | undefined;
+  };
+  const where = (key: string): string => `metadata.wiremock.stubMapping.response.${key}`;
+
+  // ResponseDefinition's creator order, which Jackson writes it in.
+  const response: Record<string, unknown> = { status: original["status"] };
+  for (const key of ["body", "base64Body", "headers"]) {
+    if (original[key] !== undefined) response[key] = original[key];
+  }
+  response["removeProxyRequestHeaders"] = [];
+  const merged: [string, unknown][] = [
+    [
+      "fixedDelayMilliseconds",
+      pick("fixedDelayMilliseconds", (v) => wireMockInt(v, where("fixedDelayMilliseconds"))),
+    ],
+    [
+      "delayDistribution",
+      pick("delayDistribution", (v) => delayDistribution(v, where("delayDistribution"))),
+    ],
+    [
+      "chunkedDribbleDelay",
+      pick("chunkedDribbleDelay", (v) => chunkedDribbleDelay(v, where("chunkedDribbleDelay"))),
+    ],
+    // The ResponseDefinition constructor trims it.
+    [
+      "proxyBaseUrl",
+      pick("proxyBaseUrl", (v) => javaTrim(wireMockString(v, where("proxyBaseUrl")))),
+    ],
+    [
+      "proxyUrlPrefixToRemove",
+      pick("proxyUrlPrefixToRemove", (v) => wireMockString(v, where("proxyUrlPrefixToRemove"))),
+    ],
+    ["fault", pick("fault", (v) => fault(v, where("fault")))],
+    ["transformers", pick("transformers", (v) => transformersList(v, where("transformers")))],
+    [
+      "transformerParameters",
+      pick("transformerParameters", (v) => jsonMap(v, where("transformerParameters"))),
+    ],
+  ];
+  for (const [key, value] of merged) {
+    if (value === undefined || value === null) continue;
+    // @JsonInclude(NON_EMPTY) on the transformers and their parameters.
+    if (key === "transformers" && (value as unknown[]).length === 0) continue;
+    if (key === "transformerParameters" && Object.keys(value as object).length === 0) continue;
+    response[key] = value;
+  }
+
+  const out: WireMockMappingJson = { request: mapping["request"], response };
+  if (mapping["priority"] !== undefined) out["priority"] = mapping["priority"];
+  // Jackson writes StubMapping's `metadata` before its `postServeActions`.
+  const extra = fromMetadata.get("metadata");
+  if (extra !== undefined && extra !== null) {
+    out["metadata"] = jsonMap(extra, "metadata.wiremock.stubMapping.metadata");
+  }
+  const actions = fromMetadata.get("postServeActions");
+  if (actions !== undefined && actions !== null) {
+    const list = postServeActions(actions);
+    if (list !== undefined) out["postServeActions"] = list;
+  }
+  return out;
+}
+
+/** A Java value as plain JSON (numbers as JavaScript numbers, maps as objects). */
+function plainJson(value: unknown): unknown {
+  if (value instanceof JavaInt || value instanceof JavaDouble) return Number(value.value);
+  if (value instanceof Map) {
+    const out: Record<string, unknown> = {};
+    for (const [k, v] of value as Map<unknown, unknown>) out[javaToString(k)] = plainJson(v);
+    return out;
+  }
+  if (Array.isArray(value)) return value.map(plainJson);
+  return value;
+}
+
+function jsonMap(value: unknown, where: string): Record<string, unknown> {
+  if (!(value instanceof Map)) throw new YamlConversionError(`${where} must be an object`);
+  return plainJson(value) as Record<string, unknown>;
+}
+
+/** Jackson's coercion of a JSON scalar to an `int`/`Integer`. */
+function wireMockInt(value: unknown, where: string): number {
+  if (value instanceof JavaInt && value.type === "Integer") return Number(value.value);
+  if (value instanceof JavaDouble && Number.isFinite(value.value)) {
+    const truncated = Math.trunc(value.value);
+    if (Math.abs(truncated) < 2 ** 31) return truncated;
+  }
+  if (typeof value === "string" && /^[+-]?\d+$/.test(value.trim())) {
+    const n = Number(value.trim());
+    if (Math.abs(n) < 2 ** 31) return n;
+  }
+  throw new YamlConversionError(`${where} must be an integer: ${javaToString(value)}`);
+}
+
+function wireMockNumber(value: unknown, where: string): number {
+  if (value instanceof JavaInt || value instanceof JavaDouble) return Number(value.value);
+  if (typeof value === "string" && value.trim() !== "" && Number.isFinite(Number(value))) {
+    return Number(value);
+  }
+  throw new YamlConversionError(`${where} must be a number: ${javaToString(value)}`);
+}
+
+function wireMockString(value: unknown, where: string): string {
+  if (typeof value === "string") return value;
+  if (value instanceof JavaInt || value instanceof JavaDouble || typeof value === "boolean") {
+    return javaToString(value);
+  }
+  throw new YamlConversionError(`${where} must be a string`);
+}
+
+function fault(value: unknown, where: string): string {
+  if (typeof value === "string" && FAULT_NAMES.includes(value)) return value;
+  throw new YamlConversionError(
+    `${where}: "${javaToString(value)}" is not one of ${FAULT_NAMES.join(", ")}`,
+  );
+}
+
+function transformersList(value: unknown, where: string): string[] {
+  if (!Array.isArray(value)) throw new YamlConversionError(`${where} must be a list`);
+  return value.map((v, i) => wireMockString(v, `${where}[${i}]`));
+}
+
+/** `DelayDistribution`: `type` first, then the subtype's properties in declaration order. */
+function delayDistribution(value: unknown, where: string): Record<string, unknown> {
+  if (!(value instanceof Map)) throw new YamlConversionError(`${where} must be an object`);
+  const map = value as JMap;
+  const type = map.get("type");
+  const field = (key: string, read: (v: unknown, w: string) => number, optional = false) => {
+    const v = map.get(key);
+    if (v === undefined || v === null) {
+      if (optional) return {};
+      // A missing primitive is Jackson's default, 0.
+      return { [key]: 0 };
+    }
+    return { [key]: read(v, `${where}.${key}`) };
+  };
+  switch (type) {
+    case "lognormal":
+      return {
+        type,
+        ...field("median", wireMockNumber),
+        ...field("sigma", wireMockNumber),
+        ...field("maxValue", wireMockNumber, true),
+      };
+    case "uniform":
+      return { type, ...field("lower", wireMockInt), ...field("upper", wireMockInt) };
+    case "fixed":
+      return { type, ...field("milliseconds", wireMockNumber) };
+    default:
+      throw new YamlConversionError(
+        `${where}.type: "${javaToString(type)}" is not lognormal, uniform or fixed`,
+      );
+  }
+}
+
+function chunkedDribbleDelay(value: unknown, where: string): Record<string, unknown> {
+  if (!(value instanceof Map)) throw new YamlConversionError(`${where} must be an object`);
+  const out: Record<string, unknown> = {};
+  for (const key of ["numberOfChunks", "totalDuration"]) {
+    const v = (value as JMap).get(key);
+    if (v !== undefined && v !== null) out[key] = wireMockInt(v, `${where}.${key}`);
+  }
+  return out;
+}
+
+/**
+ * `StubMapping.setPostServeActions(Object)`: a map of name to parameters, or a list of
+ * `{name, parameters}`; anything else is dropped.
+ */
+function postServeActions(value: unknown): Record<string, unknown>[] | undefined {
+  const where = "metadata.wiremock.stubMapping.postServeActions";
+  const definition = (name: unknown, parameters: unknown): Record<string, unknown> => ({
+    ...(name !== null && name !== undefined ? { name: wireMockString(name, `${where}.name`) } : {}),
+    ...(parameters !== null && parameters !== undefined
+      ? { parameters: jsonMap(parameters, `${where}.parameters`) }
+      : {}),
+  });
+  if (value instanceof Map) {
+    return [...(value as JMap)].map(([name, parameters]) => definition(name, parameters));
+  }
+  if (Array.isArray(value)) {
+    return value.map((item) => {
+      if (!(item instanceof Map)) throw new YamlConversionError(`${where} must hold objects`);
+      return definition((item as JMap).get("name"), (item as JMap).get("parameters"));
+    });
+  }
+  return undefined;
+}
+
+// =============================================================================================
 // The contract DSL pieces the stub strategies read.
 // =============================================================================================
 
 /** `MatchingType` of a body matcher. */
-type MatchingType = "EQUALITY" | "TYPE" | "REGEX" | "DATE" | "TIME" | "TIMESTAMP" | "NULL" | "COMMAND";
+type MatchingType =
+  "EQUALITY" | "TYPE" | "REGEX" | "DATE" | "TIME" | "TIMESTAMP" | "NULL" | "COMMAND";
 
 interface BodyMatcher {
   readonly path: string;
@@ -665,12 +927,14 @@ class StubConverter {
     const responseDsl = this.dslResponse(res);
     const request = this.buildRequest(req, dsl);
     const response = this.buildResponse(res, responseDsl, dsl);
-    if (this.contract.ignored) return undefined;
-    return {
-      request,
-      response,
-      ...(this.contract.priority !== null ? { priority: this.contract.priority } : {}),
-    };
+    const mapping = this.contract.ignored
+      ? undefined
+      : {
+          request,
+          response,
+          ...(this.contract.priority !== null ? { priority: this.contract.priority } : {}),
+        };
+    return postProcessStubMapping(mapping, this.contract.metadata);
   }
 
   // ------------------------------------------------------------------------------------------
@@ -710,14 +974,23 @@ class StubConverter {
             for (const v of value) {
               const client = clientValue(v, matcher, key).client;
               if (client === null) throw new YamlConversionError(`Header ${key} has no value`);
-              headers.push(header(key, client));
+              addHeader(headers, header(key, client));
             }
           } else {
             const client = clientValue(value, matcher, key).client;
-            headers.push(header(key, new DslProperty(client, matcher.command !== null ? new ExecutionProperty(matcher.command) : value)));
+            addHeader(
+              headers,
+              header(
+                key,
+                new DslProperty(
+                  client,
+                  matcher.command !== null ? new ExecutionProperty(matcher.command) : value,
+                ),
+              ),
+            );
           }
         }
-        if (keyMatchers.length === 0) headers.push(header(key, value));
+        if (keyMatchers.length === 0) addHeader(headers, header(key, value));
       }
     }
 
@@ -768,7 +1041,8 @@ class StubConverter {
       equal_to_json: "EQUAL_TO_JSON",
       equal_to_xml: "EQUAL_TO_XML",
     };
-    if (matcher.type === "absent") return new DslProperty(new MatchingStrategy(true, "ABSENT"), null);
+    if (matcher.type === "absent")
+      return new DslProperty(new MatchingStrategy(true, "ABSENT"), null);
     const type = types[matcher.type];
     if (type === undefined) {
       throw new YamlConversionError(`The provided matching type [${matcher.type}] is unsupported`);
@@ -795,7 +1069,9 @@ class StubConverter {
       let value: unknown = paramValue;
       if (matcher !== null) {
         value =
-          matcher.regex !== null ? new JavaPattern(matcher.regex) : predefinedToPattern(matcher.predefined);
+          matcher.regex !== null
+            ? new JavaPattern(matcher.regex)
+            : predefinedToPattern(matcher.predefined);
       }
       entries.push([paramKey, new DslProperty(value, paramValue)]);
     }
@@ -888,7 +1164,7 @@ class StubConverter {
           notNull(res.matchers?.headers, "response.matchers.headers").find((h) => h.key === key) ??
           null;
         for (const v of Array.isArray(value) ? value : [value]) {
-          headers.push(header(key, new DslProperty(v, serverValue(v, matcher, key))));
+          addHeader(headers, header(key, new DslProperty(v, serverValue(v, matcher, key))));
         }
       }
     }
@@ -904,7 +1180,9 @@ class StubConverter {
         }
         body = new DslProperty(
           res.body,
-          whole.type === "by_regex" ? new JavaPattern(whole.value) : new ExecutionProperty(whole.value),
+          whole.type === "by_regex"
+            ? new JavaPattern(whole.value)
+            : new ExecutionProperty(whole.value),
         );
       } else body = new DslProperty(res.body);
     }
@@ -913,7 +1191,8 @@ class StubConverter {
       body = new DslProperty(this.fileAsBytes(res.bodyFromFileAsBytes));
     }
     for (const def of res.matchers?.body ?? []) {
-      if (def.type === null) throw new YamlConversionError("Body test matcher type must not be null");
+      if (def.type === null)
+        throw new YamlConversionError("Body test matcher type must not be null");
       bodyMatcher(def, true);
     }
     return { status: res.status, headers, body, delay: res.fixedDelayMilliseconds };
@@ -940,7 +1219,8 @@ class StubConverter {
     out["method"] = dsl.method;
 
     const headers: Record<string, unknown> = {};
-    for (const h of dsl.headers) headers[h.name] = this.headerPattern(h.name, h.client, contentType);
+    for (const h of dsl.headers)
+      headers[h.name] = this.headerPattern(h.name, h.client, contentType);
     if (Object.keys(headers).length > 0) out["headers"] = headers;
 
     const query = dsl.urlPath?.queryParameters ?? dsl.url?.queryParameters ?? null;
@@ -973,7 +1253,8 @@ class StubConverter {
           ? dsl.url.client
           : null;
     if (urlPath !== null) {
-      if (urlPath instanceof JavaPattern) return { urlPathPattern: stubSideString(urlPath.pattern) };
+      if (urlPath instanceof JavaPattern)
+        return { urlPathPattern: stubSideString(urlPath.pattern) };
       return { urlPath: stubSideString(javaToString(urlPath)) };
     }
     if (dsl.url === null) throw new YamlConversionError("URL is required!");
@@ -1032,7 +1313,9 @@ class StubConverter {
         }
       }
       for (const matcher of dsl.bodyMatchers) {
-        out.push(matchingJsonPath(jsonPathForMatcher(matcher, originalBody).replaceAll("\\\\", "\\")));
+        out.push(
+          matchingJsonPath(jsonPathForMatcher(matcher, originalBody).replaceAll("\\\\", "\\")),
+        );
       }
       return;
     }
@@ -1068,7 +1351,12 @@ class StubConverter {
         }
         const contentType = value.contentType.client ?? ".*";
         out.push({
-          matches: multipartFile(key, javaToString(name), javaToString(content), javaToString(contentType)),
+          matches: multipartFile(
+            key,
+            javaToString(name),
+            javaToString(content),
+            javaToString(contentType),
+          ),
         });
       } else {
         const v = sideValues(value, true, IDENTITY);
@@ -1184,6 +1472,54 @@ function header(name: string, value: unknown): Header {
   return { name, client: value, server: value };
 }
 
+/**
+ * `Headers.header`: the entries are a `LinkedHashSet`, so a header equal to one already there
+ * (same name, and `DslProperty.equals` sides) is dropped.
+ */
+function addHeader(headers: Header[], added: Header): void {
+  const duplicate = headers.some(
+    (h) =>
+      h.name === added.name &&
+      javaEquals(patternText(h.client), patternText(added.client)) &&
+      javaEquals(patternText(h.server), patternText(added.server)),
+  );
+  if (!duplicate) headers.push(added);
+}
+
+/** `Objects.equals` on the Java values a contract holds. */
+function javaEquals(a: unknown, b: unknown): boolean {
+  if (a === b) return true;
+  if (a === null || b === null || a === undefined || b === undefined) return false;
+  if (a instanceof JavaInt) return b instanceof JavaInt && a.type === b.type && a.value === b.value;
+  if (a instanceof JavaDouble) return b instanceof JavaDouble && Object.is(a.value, b.value);
+  if (a instanceof DslProperty) {
+    return (
+      b instanceof DslProperty &&
+      javaEquals(patternText(a.client), patternText(b.client)) &&
+      javaEquals(patternText(a.server), patternText(b.server))
+    );
+  }
+  if (a instanceof ExecutionProperty)
+    return b instanceof ExecutionProperty && a.command === b.command;
+  if (a instanceof MatchingStrategy) {
+    return b instanceof MatchingStrategy && a.type === b.type && javaEquals(a.value, b.value);
+  }
+  if (Array.isArray(a)) {
+    return (
+      Array.isArray(b) && a.length === b.length && a.every((item, i) => javaEquals(item, b[i]))
+    );
+  }
+  if (a instanceof Map) {
+    if (!(b instanceof Map) || a.size !== b.size) return false;
+    for (const [k, v] of a) {
+      if (!b.has(k) || !javaEquals(v, b.get(k))) return false;
+    }
+    return true;
+  }
+  // A Pattern (without DslProperty's text comparison) and a byte[] are equal only to themselves.
+  return false;
+}
+
 function queryParameter(name: string, value: unknown): QueryParameter {
   if (value === null || value === undefined) {
     throw new YamlConversionError(`Query parameter '${name}' has no value`);
@@ -1273,7 +1609,9 @@ function bodyMatcher(def: BodyMatcherDef, testSide: boolean): BodyMatcher | null
       type = "REGEX";
       value = def.predefined !== null ? predefinedToPattern(def.predefined).pattern : def.value;
       if (value === null) {
-        throw new YamlConversionError("Neither value nor predefined is set for by_regex stub matcher");
+        throw new YamlConversionError(
+          "Neither value nor predefined is set for by_regex stub matcher",
+        );
       }
       break;
     case "by_equality":
@@ -1285,7 +1623,8 @@ function bodyMatcher(def: BodyMatcherDef, testSide: boolean): BodyMatcher | null
     case "by_command":
       type = "COMMAND";
       value = def.value;
-      if (value === null) throw new YamlConversionError("Body test matcher value must not be null for by_command");
+      if (value === null)
+        throw new YamlConversionError("Body test matcher value must not be null for by_command");
       break;
     case "by_null":
       if (!testSide) return null;
@@ -1312,7 +1651,10 @@ function bodyMatcher(def: BodyMatcherDef, testSide: boolean): BodyMatcher | null
 // =============================================================================================
 
 function isTemplateText(content: string): boolean {
-  return (content.includes("{{") && content.includes("}}")) || (content.includes("{{{") && content.includes("}}}"));
+  return (
+    (content.includes("{{") && content.includes("}}")) ||
+    (content.includes("{{{") && content.includes("}}}"))
+  );
 }
 
 function contentTypeFromHeader(headers: readonly Header[], side: "client" | "server"): ContentType {
@@ -1348,7 +1690,10 @@ function contentTypeFromContent(value: unknown): ContentType {
   return "UNKNOWN";
 }
 
-function evaluateStubContentType(headers: readonly Header[], body: DslProperty | null): ContentType {
+function evaluateStubContentType(
+  headers: readonly Header[],
+  body: DslProperty | null,
+): ContentType {
   const client = body?.client ?? "";
   let contentType = contentTypeFromHeader(headers, "client");
   if (contentType === "UNKNOWN") contentType = contentTypeFromContent(client);
@@ -1372,7 +1717,8 @@ function clientBody(value: unknown, contentType: ContentType): unknown {
         .map(([k, v]) => unescapeEcmaScript(`${k}=${javaToString(v)}`))
         .join("&");
     }
-    if (Array.isArray(value)) return value.map((v) => unescapeEcmaScript(javaToString(v))).join("&");
+    if (Array.isArray(value))
+      return value.map((v) => unescapeEcmaScript(javaToString(v))).join("&");
   } else if (value instanceof FromFileProperty) {
     return value.bytes;
   }
@@ -1411,9 +1757,11 @@ function valuePattern(object: unknown, contentType: ContentType): Record<string,
       }
     }
   }
-  if (object === null || object === undefined) throw new YamlConversionError("A matcher needs a value");
+  if (object === null || object === undefined)
+    throw new YamlConversionError("A matcher needs a value");
   const body = clientBody(object, contentType);
-  if (body instanceof Uint8Array) throw new YamlConversionError("Binary values cannot be compared as text");
+  if (body instanceof Uint8Array)
+    throw new YamlConversionError("Binary values cannot be compared as text");
   return { equalTo: javaToString(body) };
 }
 
@@ -1439,7 +1787,12 @@ function multipartParam(name: string, value: string): string {
   return `.*--(.*)\r?\nContent-Disposition: form-data; name="${name}"\r?\n(Content-Type: .*\r?\n)?(Content-Transfer-Encoding: .*\r?\n)?(Content-Length: \\d+\r?\n)?\r?\n${value}\r?\n--.*`;
 }
 
-function multipartFile(name: string, fileName: string, content: string, contentType: string): string {
+function multipartFile(
+  name: string,
+  fileName: string,
+  content: string,
+  contentType: string,
+): string {
   return `.*--(.*)\r?\nContent-Disposition: form-data; name="${name}"; filename="${fileName}"\r?\n(Content-Type: ${contentType}\r?\n)?(Content-Transfer-Encoding: .*\r?\n)?(Content-Length: \\d+\r?\n)?\r?\n${content}\r?\n--.*`;
 }
 
@@ -1447,7 +1800,9 @@ function multipartFile(name: string, fileName: string, content: string, contentT
 function stubSideString(text: string): string {
   const value = stubSideValues(text);
   if (typeof value !== "string") {
-    throw new YamlConversionError(`The URL [${text}] reads as JSON, which the JVM cannot use as a URL`);
+    throw new YamlConversionError(
+      `The URL [${text}] reads as JSON, which the JVM cannot use as a URL`,
+    );
   }
   return value;
 }
@@ -1474,7 +1829,12 @@ function parseListBody(list: readonly unknown[]): string {
 }
 
 function containsJsonPathTemplateEntry(line: string): boolean {
-  return line.includes("{{jsonpath") || line.includes("{{jsonPath") || line.includes("{{{jsonpath") || line.includes("{{{jsonPath");
+  return (
+    line.includes("{{jsonpath") ||
+    line.includes("{{jsonPath") ||
+    line.includes("{{{jsonpath") ||
+    line.includes("{{{jsonPath")
+  );
 }
 
 const JSON_PATH_TEMPLATES = [
@@ -1545,7 +1905,9 @@ class JsonDocument {
     if (found !== undefined && found.locations.length === result.values.length) {
       const values = found.locations.map(({ parent, key }) => {
         const target = back.get(parent);
-        return target instanceof Map ? target.get(String(key)) : (target as unknown[])[key as number];
+        return target instanceof Map
+          ? target.get(String(key))
+          : (target as unknown[])[key as number];
       });
       if (result.definite) {
         if (values.length === 0) throw new Error(`No results for path: ${path}`);
@@ -1678,7 +2040,9 @@ function matchingJsonPath(path: string): Record<string, unknown> {
     evaluateJsonPath(null, path);
   } catch (err: unknown) {
     if (err instanceof JsonPathSyntaxError) {
-      throw new YamlConversionError(`Invalid JSONPath generated for the request body: ${err.message}`);
+      throw new YamlConversionError(
+        `Invalid JSONPath generated for the request body: ${err.message}`,
+      );
     }
   }
   return { matchesJsonPath: path };

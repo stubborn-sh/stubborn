@@ -1,0 +1,18 @@
+# Acceptance-test fixture contract for the stubborn-contract Docker image.
+#
+# Intentionally minimal: a single stateless HTTP GET so that the image's
+# hard-coded EXPLICIT test mode (see project/build.gradle -> contracts.testMode)
+# generates a real test that is trivially satisfiable by the tiny fixture app in
+# ../fixtures/app.py. Keeping the request/response surface small keeps the
+# generated RestAssured assertions (status + one JSON field + content type)
+# robust across image/plugin versions.
+description: "Acceptance: GET /health returns status UP"
+request:
+  method: GET
+  url: /health
+response:
+  status: 200
+  headers:
+    Content-Type: "application/json"
+  body:
+    status: "UP"

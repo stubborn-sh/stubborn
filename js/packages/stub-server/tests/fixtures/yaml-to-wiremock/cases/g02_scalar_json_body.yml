@@ -1,0 +1,9 @@
+request:
+  method: POST
+  url: /s
+  headers:
+    Content-Type: application/json
+  body: "123"
+response:
+  status: 200
+  body: '{"a":1} x'

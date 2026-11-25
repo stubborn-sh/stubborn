@@ -1,0 +1,9 @@
+priority: 3
+request:
+  method: GET
+  url: /slow
+response:
+  status: 200
+  fixedDelayMilliseconds: 800
+  async: true
+  body: slow

@@ -227,7 +227,11 @@ class Verifiable {
   }
 
   contains(value: unknown): Verifiable {
-    const v = Verifiable.finishedWith(this.delegate.jsonPath(), this.delegate.contains(value), this.methods);
+    const v = Verifiable.finishedWith(
+      this.delegate.jsonPath(),
+      this.delegate.contains(value),
+      this.methods,
+    );
     v.appendQuoted("contains", value);
     if (this.isAssertingAValueInArray()) v.methods.push(".value()");
     return v;
@@ -309,7 +313,9 @@ class Verifiable {
       ready.methods.push(".value()");
     } else {
       const text =
-        value instanceof JavaInt && value.type === "Long" ? `${value.toString()}L` : value.toString();
+        value instanceof JavaInt && value.type === "Long"
+          ? `${value.toString()}L`
+          : value.toString();
       ready.methods.push(`.isEqualTo(${text})`);
     }
     return ready;
@@ -327,13 +333,21 @@ class Verifiable {
   }
 
   isNull(): Verifiable {
-    const ready = Verifiable.finishedWith(this.delegate.jsonPath(), this.delegate.isNull(), this.methods);
+    const ready = Verifiable.finishedWith(
+      this.delegate.jsonPath(),
+      this.delegate.isNull(),
+      this.methods,
+    );
     ready.methods.push(".isNull()");
     return ready;
   }
 
   isEmpty(): Verifiable {
-    const ready = Verifiable.finishedWith(this.delegate.jsonPath(), this.delegate.isEmpty(), this.methods);
+    const ready = Verifiable.finishedWith(
+      this.delegate.jsonPath(),
+      this.delegate.isEmpty(),
+      this.methods,
+    );
     ready.methods.push(".isEmpty()");
     return ready;
   }
@@ -437,7 +451,12 @@ class Traverser {
     const arrayKey = this.arrayAsserter(key, list);
     for (const element of list) {
       const parsed = returnParsedObject(element);
-      if (parsed !== null && parsed !== undefined && !(parsed instanceof Map) && !Array.isArray(parsed)) {
+      if (
+        parsed !== null &&
+        parsed !== undefined &&
+        !(parsed instanceof Map) &&
+        !Array.isArray(parsed)
+      ) {
         this.processValue(valueToAsserter(key.arrayField(), parsed), parsed);
       } else {
         this.processValue(listElementAsserter(arrayKey, parsed), parsed);
@@ -519,7 +538,9 @@ export function stubSideJsonPaths(json: unknown): GeneratedJsonPath[] {
   const converted = sideValues(json, true);
   // ContentUtils.convertDslPropsToTemporaryRegexPatterns: plain values pass through (strings
   // holding JSON are parsed once more).
-  const withPatterns = transformValues(converted, (v) => (v instanceof JavaPattern ? `REGEXP>>${v.pattern}<<` : v));
+  const withPatterns = transformValues(converted, (v) =>
+    v instanceof JavaPattern ? `REGEXP>>${v.pattern}<<` : v,
+  );
   const root = new Verifiable(new Asserter("nameless", ["$"], ""), []);
   const seen = new Map<string, Verifiable>();
   new Traverser((v) => {

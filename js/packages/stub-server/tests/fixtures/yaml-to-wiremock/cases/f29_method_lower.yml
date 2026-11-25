@@ -1,0 +1,10 @@
+request:
+  method: post
+  urlPath: /lower
+  queryParameters:
+    a: '1'
+  body: plain
+response:
+  status: 202
+  headers:
+    Location: /x

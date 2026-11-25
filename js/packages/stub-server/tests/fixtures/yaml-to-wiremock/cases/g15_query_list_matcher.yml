@@ -1,0 +1,15 @@
+request:
+  method: GET
+  urlPath: /ql
+  queryParameters:
+    a: [1, 2]
+    m: {k: v}
+  cookies:
+    c: [x, y]
+  matchers:
+    queryParameters:
+      - key: a
+        type: matching
+        value: "[0-9]"
+response:
+  status: 200

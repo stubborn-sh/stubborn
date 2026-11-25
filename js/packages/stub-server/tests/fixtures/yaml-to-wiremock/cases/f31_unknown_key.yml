@@ -1,0 +1,6 @@
+request:
+  method: GET
+  url: /unk
+  bogus: 1
+response:
+  status: 200

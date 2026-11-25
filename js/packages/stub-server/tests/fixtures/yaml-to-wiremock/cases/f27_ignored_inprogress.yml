@@ -1,0 +1,13 @@
+inProgress: true
+request:
+  method: GET
+  url: /inprogress
+response:
+  status: 200
+---
+ignored: true
+request:
+  method: GET
+  url: /ignored
+response:
+  status: 200

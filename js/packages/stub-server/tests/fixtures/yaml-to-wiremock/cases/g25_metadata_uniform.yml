@@ -1,0 +1,15 @@
+request:
+  method: GET
+  url: /meta-uniform
+response:
+  status: 200
+  body: u
+metadata:
+  wiremock:
+    stubMapping:
+      response:
+        delayDistribution:
+          type: uniform
+          lower: 10
+          upper: 20
+        transformers: [response-template]

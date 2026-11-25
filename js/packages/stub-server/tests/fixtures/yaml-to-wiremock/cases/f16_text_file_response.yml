@@ -1,0 +1,8 @@
+request:
+  method: GET
+  url: /textfile
+response:
+  status: 200
+  headers:
+    Content-Type: text/plain
+  bodyFromFile: files/resp.txt

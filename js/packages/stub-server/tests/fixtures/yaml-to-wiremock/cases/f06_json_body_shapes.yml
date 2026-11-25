@@ -1,0 +1,41 @@
+request:
+  method: POST
+  url: /orders
+  headers:
+    Content-Type: application/json
+  body:
+    id: 1
+    price: 9.99
+    big: 1.0
+    neg: -5
+    flag: false
+    nothing: null
+    name: "O'Brien \"quoted\" back\\slash"
+    slash: "a/b"
+    tags: [a, b, c]
+    nums: [1, 2.5, 3]
+    empty: {}
+    emptyList: []
+    nested:
+      deep:
+        deeper: value
+      list:
+        - x: 1
+          y: [1, 2]
+        - x: 2
+    matrix:
+      - [1, 2]
+      - [3, 4]
+    objs:
+      - name: a
+        sub:
+          - k: v
+    mixed:
+      - str
+      - k: v
+response:
+  status: 201
+  headers:
+    Content-Type: application/json
+  body:
+    ok: true

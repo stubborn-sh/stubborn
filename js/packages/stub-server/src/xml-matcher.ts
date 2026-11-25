@@ -107,7 +107,7 @@ function parseOnce(source: string): ParseResult {
 export function parseXmlDocument(text: string): Document | null {
   const doc = parseDocument(text, "xpath");
   if (doc === null || doc.doctype !== null) return null;
-  for (let child = doc.firstChild; child !== null; ) {
+  for (let child = doc.firstChild; child !== null;) {
     const next = child.nextSibling;
     if (
       child.nodeType === TEXT_NODE ||

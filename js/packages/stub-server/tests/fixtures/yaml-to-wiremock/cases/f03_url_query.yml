@@ -1,0 +1,5 @@
+request:
+  method: GET
+  url: /search?q=a&b=1
+response:
+  status: 200

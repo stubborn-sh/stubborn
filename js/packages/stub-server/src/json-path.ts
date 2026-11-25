@@ -231,7 +231,8 @@ function locateSegment(
   switch (segment.kind) {
     case "members":
       if (isObject(node)) {
-        for (const name of segment.names) if (Object.hasOwn(node, name)) out.push({ parent: node, key: name });
+        for (const name of segment.names)
+          if (Object.hasOwn(node, name)) out.push({ parent: node, key: name });
       }
       return true;
     case "wildcard":

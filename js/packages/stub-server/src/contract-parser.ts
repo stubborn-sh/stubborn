@@ -257,7 +257,9 @@ const FILE_KEYS = ["bodyFromFile", "bodyFromFileAsBytes"] as const;
 function referencedFiles(source: Record<string, unknown>): [string, string][] {
   const out: [string, string][] = [];
   const field = (value: unknown, key: string): unknown =>
-    typeof value === "object" && value !== null ? (value as Record<string, unknown>)[key] : undefined;
+    typeof value === "object" && value !== null
+      ? (value as Record<string, unknown>)[key]
+      : undefined;
   for (const part of [source["request"], source["response"]]) {
     for (const key of FILE_KEYS) {
       const path = field(part, key);

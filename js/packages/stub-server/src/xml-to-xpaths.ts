@@ -195,7 +195,7 @@ function removeNode(node: Node | null): void {
 
 /** `Document.normalizeDocument()`: merges adjacent text nodes and drops empty ones. */
 function normalize(node: Node): void {
-  for (let child = node.firstChild; child !== null; ) {
+  for (let child = node.firstChild; child !== null;) {
     const next: Node | null = child.nextSibling;
     if (child.nodeType === TEXT_NODE) {
       if (next !== null && next.nodeType === TEXT_NODE) {
@@ -219,7 +219,11 @@ export function xPathString(doc: Document, path: string): string {
   if (root === null) return "";
   try {
     return String(
-      xpath.useNamespaces(namespaces(doc))(`string(${path})`, root as unknown as globalThis.Node, true),
+      xpath.useNamespaces(namespaces(doc))(
+        `string(${path})`,
+        root as unknown as globalThis.Node,
+        true,
+      ),
     );
   } catch (err: unknown) {
     throw new XmlConversionError(`Invalid XPath [${path}]: ${String(err)}`);

@@ -141,7 +141,8 @@ export function javaHashCode(value: unknown): number {
   if (Array.isArray(value)) return objectsHash(...(value as unknown[]));
   if (value instanceof Map) {
     let h = 0;
-    for (const [k, v] of value as Map<unknown, unknown>) h = (h + (javaHashCode(k) ^ javaHashCode(v))) | 0;
+    for (const [k, v] of value as Map<unknown, unknown>)
+      h = (h + (javaHashCode(k) ^ javaHashCode(v))) | 0;
     return h;
   }
   if (value instanceof Uint8Array) {

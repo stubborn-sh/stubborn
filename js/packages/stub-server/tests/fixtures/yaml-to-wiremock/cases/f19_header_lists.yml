@@ -1,0 +1,23 @@
+request:
+  method: GET
+  url: /hl
+  headers:
+    Accept:
+      - application/json
+      - text/plain
+    X-Num: 5
+    X-Bool: true
+    X-Rx:
+      - a1
+      - b2
+  matchers:
+    headers:
+      - key: X-Rx
+        regex: '[a-z][0-9]'
+response:
+  status: 200
+  headers:
+    X-Multi:
+      - one
+      - two
+    X-Num: 3

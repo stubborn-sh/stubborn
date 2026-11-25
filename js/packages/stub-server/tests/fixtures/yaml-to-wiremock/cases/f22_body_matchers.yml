@@ -1,0 +1,40 @@
+request:
+  method: POST
+  url: /bm
+  headers:
+    Content-Type: application/json
+  body:
+    id: 10
+    email: a@b.com
+    items:
+      - sku: A1
+        qty: 1
+      - sku: B2
+        qty: 2
+    meta:
+      created: "2020-01-01T10:00:00"
+      tags: [x, y]
+    flag: true
+  matchers:
+    body:
+      - path: $.id
+        type: by_regex
+        predefined: number
+      - path: $.email
+        type: by_regex
+        predefined: email
+      - path: $.items[*].sku
+        type: by_regex
+        value: '[A-Z][0-9]'
+      - path: $.meta.created
+        type: by_timestamp
+      - path: $.meta.tags
+        type: by_type
+        minOccurrence: 1
+      - path: $.flag
+        type: by_equality
+      - path: $.url
+        type: by_regex
+        value: 'http://x/y'
+response:
+  status: 200

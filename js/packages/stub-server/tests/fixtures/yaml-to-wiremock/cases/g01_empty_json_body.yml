@@ -1,0 +1,8 @@
+request:
+  method: POST
+  url: /e
+  headers:
+    Content-Type: application/json
+  body: {}
+response:
+  status: 200

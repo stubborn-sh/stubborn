@@ -1,0 +1,8 @@
+description: "SCC-style stub placed directly under contracts/<group>/<artifact>/"
+request:
+  method: GET
+  url: /greeting
+response:
+  status: 200
+  body:
+    message: "hello direct"

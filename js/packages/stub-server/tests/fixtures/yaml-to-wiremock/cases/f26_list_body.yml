@@ -1,0 +1,12 @@
+request:
+  method: POST
+  url: /list
+  headers:
+    Content-Type: application/json
+  body:
+    - 1
+    - 2
+    - a: b
+response:
+  status: 200
+  body: [x, y]

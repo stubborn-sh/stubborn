@@ -1,0 +1,10 @@
+description: "SCC 5.x style messaging contract"
+label: greeting_event
+input:
+  triggeredBy: sendGreeting()
+outputMessage:
+  sentTo: greetings
+  headers:
+    contentType: application/json
+  body:
+    message: "Hello from the SCC producer"
