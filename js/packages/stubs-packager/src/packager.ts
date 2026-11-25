@@ -1,8 +1,9 @@
 import { createWriteStream } from "node:fs";
-import { extname } from "node:path";
+import { join, posix } from "node:path";
 import archiver from "archiver";
 import { scanContracts } from "@stubborn-sh/publisher";
-import { contractToWireMock } from "./contract-to-wiremock.js";
+import { contractFileReader } from "@stubborn-sh/stub-server";
+import { convertContract } from "./contract-to-wiremock.js";
 
 /** Maven coordinates for the stubs JAR. */
 export interface MavenCoordinates {
@@ -30,10 +31,15 @@ export interface PackageOptions {
 export interface PackageResult {
   /** Path to the generated JAR file. */
   readonly outputPath: string;
-  /** Number of contracts packaged. */
+  /** Number of contract files packaged. */
   readonly contractCount: number;
-  /** Number of WireMock mappings generated. */
+  /**
+   * Number of WireMock mappings generated: one per HTTP contract of the YAML files (a file can
+   * hold several), none for messaging or ignored contracts.
+   */
   readonly mappingCount: number;
+  /** The contracts no mapping was generated for, and why. */
+  readonly skipped: readonly string[];
   /** Total file size in bytes. */
   readonly sizeBytes: number;
 }
@@ -45,8 +51,14 @@ export interface PackageResult {
  * ```
  * META-INF/{groupId}/{artifactId}/{version}/
  *   mappings/*.json       (WireMock mappings)
- *   contracts/*.yaml      (original YAML contracts)
+ *   contracts/*.yaml      (original YAML contracts, and the files they reference)
  * ```
+ *
+ * Each YAML file gives the WireMock mappings the JVM plugins generate for it (see
+ * `convertContract`): one per HTTP contract, named `<directory>_<contract name>.json` (the
+ * directory's `/` written `_`), with referenced files (`bodyFromFile`…) read relative to the
+ * contract and inlined. Messaging and ignored contracts get no mapping; other contract files
+ * (Groovy, JSON) are packaged without one. A contract the JVM would reject fails packaging.
  *
  * Java consumers can use this JAR with `@AutoConfigureStubRunner` or
  * the `fetchStubsJar()` / `loadLocalJar()` functions from the jest package.
@@ -57,6 +69,24 @@ export async function packageStubsJar(options: PackageOptions): Promise<PackageR
   if (contracts.length === 0) {
     throw new Error(`No contract files found in ${options.contractsDir}`);
   }
+
+  // Convert first, so that a contract the JVM would reject fails packaging before any output.
+  // Only YAML contracts are converted: the others are packaged as they are.
+  const conversions = contracts
+    .filter((contract) => isYaml(contract.contractName))
+    .map((contract) => ({
+      contract,
+      ...convertContract(contract, {
+        readFile: contractFileReader(join(options.contractsDir, contract.contractName)),
+      }),
+    }));
+  const mappingCount = conversions.reduce((n, c) => n + c.stubs.length, 0);
+  const skipped = [
+    ...conversions.flatMap((c) => c.skipped),
+    ...contracts
+      .filter((contract) => !isYaml(contract.contractName))
+      .map((contract) => `${contract.contractName}: not a YAML contract`),
+  ];
 
   const { groupId, artifactId, version } = options.coordinates;
   const basePath = `META-INF/${groupId}/${artifactId}/${version}`;
@@ -72,7 +102,8 @@ export async function packageStubsJar(options: PackageOptions): Promise<PackageR
       resolve({
         outputPath: options.outputPath,
         contractCount: contracts.length,
-        mappingCount: contracts.length,
+        mappingCount,
+        skipped,
         sizeBytes,
       });
     });
@@ -88,13 +119,26 @@ export async function packageStubsJar(options: PackageOptions): Promise<PackageR
       });
     }
 
-    // Convert each contract to WireMock JSON and add as mapping
-    for (const contract of contracts) {
-      const wireMockJson = contractToWireMock(contract);
-      const mappingName = toMappingFileName(sanitizeEntryName(contract.contractName));
-      archive.append(wireMockJson, {
-        name: `${basePath}/mappings/${mappingName}`,
-      });
+    // The files the YAML contracts reference, next to them as in the contracts directory.
+    for (const { contract, files } of conversions) {
+      for (const [path, content] of files) {
+        const entry = posix.normalize(posix.join(posix.dirname(contract.contractName), path));
+        if (entry.startsWith("../") || posix.isAbsolute(entry)) continue; // outside the directory
+        archive.append(Buffer.from(content), {
+          name: `${basePath}/contracts/${sanitizeEntryName(entry)}`,
+        });
+      }
+    }
+
+    // The WireMock mappings the JVM generates for the contracts.
+    for (const { contract, stubs } of conversions) {
+      const directory = posix.dirname(sanitizeEntryName(contract.contractName));
+      const prefix = directory === "." ? "" : `${directory.replace(/\//g, "_")}_`;
+      for (const stub of stubs) {
+        archive.append(stub.json, {
+          name: `${basePath}/mappings/${prefix}${stub.fileName}`,
+        });
+      }
     }
 
     // Add minimal MANIFEST.MF
@@ -116,8 +160,6 @@ function sanitizeEntryName(name: string): string {
     .join("/");
 }
 
-/** Convert a contract file name (e.g., "order/get.yaml") to a WireMock mapping name ("order_get.json"). */
-function toMappingFileName(contractName: string): string {
-  const withoutExt = contractName.slice(0, contractName.length - extname(contractName).length);
-  return withoutExt.replace(/[/\\]/g, "_") + ".json";
+function isYaml(contractName: string): boolean {
+  return /\.ya?ml$/i.test(contractName);
 }

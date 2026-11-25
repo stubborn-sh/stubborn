@@ -132,6 +132,8 @@ export interface ParsedContract {
    * stub-server serves; absent when the JVM generates none (see {@link unsupportedMatchers}).
    */
   readonly wireMockMapping?: WireMockMappingJson;
+  /** Set for an `ignored` YAML contract, which the JVM generates no stub for. */
+  readonly ignored?: true;
 }
 
 /** Options for {@link parseContracts}. */
@@ -346,11 +348,13 @@ function parseDocument(
 
   const unsupported = missing.map((m) => `file not found next to the contract (${m})`);
   let mapping: WireMockMappingJson | undefined;
+  let ignored = false;
   if (unsupported.length === 0) {
     try {
       if (javaContract instanceof Error) throw javaContract;
       mapping = yamlContractToWireMock(javaContract, { files });
       if (mapping === undefined) {
+        ignored = true;
         unsupported.push("ignored: the JVM generates no stub for an ignored contract");
       }
     } catch (err: unknown) {
@@ -362,7 +366,13 @@ function parseDocument(
 
   const base = { name, source, ...(files.size > 0 ? { files } : {}) };
   if (mapping === undefined) {
-    return { ...base, request, response, unsupportedMatchers: unsupported };
+    return {
+      ...base,
+      request,
+      response,
+      unsupportedMatchers: unsupported,
+      ...(ignored ? { ignored: true as const } : {}),
+    };
   }
 
   // Served like the WireMock mapping the JVM generates; the YAML's own fields stay for the
