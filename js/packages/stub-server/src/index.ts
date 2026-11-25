@@ -34,4 +34,11 @@ export type { RequestHeaders } from "./request-matcher.js";
 export { compileRequestPattern } from "./wiremock-request-matcher.js";
 export type { CompiledRequestPattern, IncomingRequest } from "./wiremock-request-matcher.js";
 export { javaRegex, javaFullMatchRegex } from "./java-regex.js";
+export {
+  yamlContractToWireMock,
+  loadYamlContracts,
+  toJavaValue,
+  YamlConversionError,
+} from "./yaml-to-wiremock.js";
+export type { WireMockMappingJson, YamlToWireMockOptions } from "./yaml-to-wiremock.js";
 export type { JavaRegexOptions } from "./java-regex.js";

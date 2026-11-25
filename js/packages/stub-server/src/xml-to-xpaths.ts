@@ -161,7 +161,8 @@ function namespaces(doc: Document): Record<string, string> {
   const visit = (node: Node): void => {
     for (const child of childNodes(node)) if (child.nodeType === ELEMENT_NODE) visit(child);
     for (const attr of attributes(node)) {
-      if (attr.prefix === "xmlns" && !(attr.localName in map)) map[attr.localName] = attr.value;
+      const local = attr.localName;
+      if (attr.prefix === "xmlns" && local !== null && !(local in map)) map[local] = attr.value;
     }
   };
   if (doc.documentElement !== null) visit(doc.documentElement);
@@ -176,10 +177,11 @@ export function removeMatchingXPaths(doc: Document, paths: readonly string[]): v
   for (const path of paths) {
     let nodes: unknown;
     try {
-      nodes = xpath.parse(path).select({ node: root as unknown as globalThis.Node, namespaces: ns });
+      nodes = xpath.useNamespaces(ns)(path, root as unknown as globalThis.Node);
     } catch (err: unknown) {
       throw new XmlConversionError(`Invalid XPath [${path}]: ${String(err)}`);
     }
+    if (!Array.isArray(nodes)) continue;
     for (const node of nodes as Node[]) removeNode(node);
   }
   normalize(doc);
@@ -216,9 +218,9 @@ export function xPathString(doc: Document, path: string): string {
   const root = doc.documentElement;
   if (root === null) return "";
   try {
-    return xpath
-      .parse(path)
-      .evaluateString({ node: root as unknown as globalThis.Node, namespaces: namespaces(doc) });
+    return String(
+      xpath.useNamespaces(namespaces(doc))(`string(${path})`, root as unknown as globalThis.Node, true),
+    );
   } catch (err: unknown) {
     throw new XmlConversionError(`Invalid XPath [${path}]: ${String(err)}`);
   }

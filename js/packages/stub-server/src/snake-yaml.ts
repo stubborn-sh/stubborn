@@ -12,7 +12,31 @@ import { JavaDouble, JavaInt } from "./java-values.js";
  * through a JavaScript object, which iterates those keys first.
  */
 export function loadYamlDocuments(text: string): unknown[] {
-  return yaml.loadAll(text, undefined, { schema: SNAKE_SCHEMA, json: true }).map(toJava);
+  // js-yaml ends a block scalar that runs to the end of the input with a line break even when
+  // the input has none; SnakeYAML (clip chomping) does not add one.
+  const last = text.charAt(text.length - 1);
+  const atEnd = last !== "" && !"\n\r\"'".includes(last);
+  return yaml
+    .loadAll(text, undefined, {
+      schema: SNAKE_SCHEMA,
+      json: true,
+      ...(atEnd
+        ? {
+            listener(this: yaml.State, event: yaml.EventType, state: yaml.State) {
+              const s = state as unknown as { result: unknown; position: number; length: number };
+              if (
+                event === "close" &&
+                typeof s.result === "string" &&
+                s.position >= s.length &&
+                s.result.endsWith("\n")
+              ) {
+                s.result = s.result.slice(0, -1);
+              }
+            },
+          }
+        : {}),
+    })
+    .map(toJava);
 }
 
 const BOOL = /^(?:yes|Yes|YES|no|No|NO|true|True|TRUE|false|False|FALSE|on|On|ON|off|Off|OFF)$/;
@@ -116,9 +140,11 @@ const timestampType = new yaml.Type("tag:yaml.org,2002:timestamp", {
   },
 });
 
+const TYPES = (yaml as unknown as { types: Record<string, yaml.Type> }).types;
+
 const SNAKE_SCHEMA = yaml.FAILSAFE_SCHEMA.extend({
-  implicit: [nullType, boolType, intType, floatType, timestampType, yaml.types.merge],
-  explicit: [yaml.types.binary, yaml.types.omap, yaml.types.pairs, yaml.types.set],
+  implicit: [nullType, boolType, intType, floatType, timestampType, TYPES["merge"] as yaml.Type],
+  explicit: ["binary", "omap", "pairs", "set"].map((t) => TYPES[t] as yaml.Type),
 });
 
 function toJava(value: unknown): unknown {

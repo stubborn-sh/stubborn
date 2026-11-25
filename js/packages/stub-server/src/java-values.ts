@@ -82,7 +82,8 @@ export function bigDecimalPlain(text: string): string {
     const padded = unscaled.padStart(scale + 1, "0");
     plain = `${padded.slice(0, -scale)}.${padded.slice(-scale)}`;
   }
-  return `${sign === "-" ? "-" : ""}${plain}`;
+  // A BigDecimal has no negative zero.
+  return `${sign === "-" && /[1-9]/.test(unscaled) ? "-" : ""}${plain}`;
 }
 
 /** A `java.util.regex.Pattern` (its `toString()` is the pattern). */
