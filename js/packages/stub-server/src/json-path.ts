@@ -192,6 +192,86 @@ export function readJsonPath(
   return [...result.values];
 }
 
+/** Where a value selected by a path lives: its container and the key or index in it. */
+export interface JsonPathLocation {
+  readonly parent: Record<string, unknown> | unknown[];
+  readonly key: string | number;
+}
+
+/**
+ * The locations of the values `expression` selects in `root` (for Jayway's `delete`), or
+ * `undefined` when the path selects something without a container (the root, a filtered object
+ * itself, a function result). Throws {@link JsonPathSyntaxError} if the expression is invalid.
+ */
+export function jsonPathLocations(
+  root: unknown,
+  expression: string,
+): { readonly definite: boolean; readonly locations: readonly JsonPathLocation[] } | undefined {
+  const path = compile(expression);
+  const last = path.segments[path.segments.length - 1];
+  if (last === undefined || path.fn !== undefined) return undefined;
+  const parents = evaluatePath(
+    { segments: path.segments.slice(0, -1), fn: undefined, definite: path.definite },
+    root,
+    root,
+  );
+  const locations: JsonPathLocation[] = [];
+  for (const parent of parents) {
+    if (!locateSegment(last, parent, root, locations)) return undefined;
+  }
+  return { definite: path.definite, locations };
+}
+
+function locateSegment(
+  segment: Segment,
+  node: unknown,
+  root: unknown,
+  out: JsonPathLocation[],
+): boolean {
+  switch (segment.kind) {
+    case "members":
+      if (isObject(node)) {
+        for (const name of segment.names) if (Object.hasOwn(node, name)) out.push({ parent: node, key: name });
+      }
+      return true;
+    case "wildcard":
+      if (Array.isArray(node)) node.forEach((_, i) => out.push({ parent: node, key: i }));
+      else if (isObject(node)) for (const key of Object.keys(node)) out.push({ parent: node, key });
+      return true;
+    case "indexes":
+      if (Array.isArray(node)) {
+        for (const index of segment.indexes) {
+          const resolved = index < 0 ? node.length + index : index;
+          if (resolved >= 0 && resolved < node.length) out.push({ parent: node, key: resolved });
+        }
+      }
+      return true;
+    case "slice":
+      if (Array.isArray(node)) {
+        const start = segment.start ?? 0;
+        const end = segment.end ?? node.length;
+        const from = start < 0 ? Math.max(0, node.length + start) : start;
+        const to = end < 0 ? node.length + end : Math.min(end, node.length);
+        for (let i = from; i < to; i++) out.push({ parent: node, key: i });
+      }
+      return true;
+    case "filter":
+      if (Array.isArray(node)) {
+        node.forEach((element, i) => {
+          if (testPredicate(segment.predicate, element, root)) out.push({ parent: node, key: i });
+        });
+        return true;
+      }
+      return !(isObject(node) && testPredicate(segment.predicate, node, root));
+    case "scan":
+      if (segment.then.kind === "filter") return false;
+      for (const descendant of descendantsOrSelf(node)) {
+        if (!locateSegment(segment.then, descendant, root, out)) return false;
+      }
+      return true;
+  }
+}
+
 // ---------------------------------------------------------------------------------------------
 // Evaluation
 // ---------------------------------------------------------------------------------------------

@@ -100,6 +100,38 @@ function parseOnce(source: string): ParseResult {
 }
 
 /**
+ * A namespace-aware parse with Xerces' well-formedness rules and a DOCTYPE refused (as the JVM's
+ * contract converter configures its parser), or `null`. Like a Xerces DOM, the result has no XML
+ * declaration node and no text outside the root element.
+ */
+export function parseXmlDocument(text: string): Document | null {
+  const doc = parseDocument(text, "xpath");
+  if (doc === null || doc.doctype !== null) return null;
+  for (let child = doc.firstChild; child !== null; ) {
+    const next = child.nextSibling;
+    if (
+      child.nodeType === TEXT_NODE ||
+      (child.nodeType === PROCESSING_INSTRUCTION_NODE && child.nodeName.toLowerCase() === "xml")
+    ) {
+      doc.removeChild(child);
+    }
+    child = next;
+  }
+  const restore = (node: Node): void => {
+    for (let child = node.firstChild; child !== null; child = child.nextSibling) {
+      if (child.nodeType === CDATA_SECTION_NODE && child.nodeValue === EMPTY_CDATA) {
+        for (const key of ["data", "nodeValue", "textContent"]) {
+          Object.defineProperty(child, key, { value: "", configurable: true, writable: true });
+        }
+      }
+      restore(child);
+    }
+  };
+  restore(doc);
+  return doc;
+}
+
+/**
  * Parse `text` as WireMock's Xerces would; `null` for anything that is not a well-formed document.
  * With `allowUnboundPrefixes` (WireMock's namespace-unaware parse, used for XPath without
  * `xPathNamespaces`) prefixes used without a declaration are accepted.
