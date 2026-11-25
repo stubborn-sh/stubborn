@@ -2,7 +2,7 @@
   "cases/f01_query_types.yml": {
     "mappings": [
       {
-        "id": "afeb1180-e562-482c-b89e-c10898e65d2b",
+        "id": "577ba6b0-a638-495d-94bf-a01579ba8db9",
         "request": {
           "urlPath": "/items",
           "method": "GET",
@@ -50,14 +50,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "afeb1180-e562-482c-b89e-c10898e65d2b"
+        "uuid": "577ba6b0-a638-495d-94bf-a01579ba8db9"
       }
     ]
   },
   "cases/f02_url_literal.yml": {
     "mappings": [
       {
-        "id": "8bef4e44-acc4-4154-a7cb-d2be28969caf",
+        "id": "d3ada6d2-9ef2-4116-bb62-76f8bd9fbab5",
         "request": {
           "urlPath": "/files/a+b",
           "method": "GET"
@@ -70,14 +70,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "8bef4e44-acc4-4154-a7cb-d2be28969caf"
+        "uuid": "d3ada6d2-9ef2-4116-bb62-76f8bd9fbab5"
       }
     ]
   },
   "cases/f03_url_query.yml": {
     "mappings": [
       {
-        "id": "e57fa9dd-c7a2-44aa-87a9-318f14542ef2",
+        "id": "439dc022-fa8b-4121-b92f-90da462d58c7",
         "request": {
           "urlPath": "/search?q=a&b=1",
           "method": "GET"
@@ -89,14 +89,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "e57fa9dd-c7a2-44aa-87a9-318f14542ef2"
+        "uuid": "439dc022-fa8b-4121-b92f-90da462d58c7"
       }
     ]
   },
   "cases/f04_url_and_query_matchers.yml": {
     "mappings": [
       {
-        "id": "38142a6f-284f-4ecc-8a68-e6efe3c35b09",
+        "id": "b49e5157-34f9-455d-8766-6a8d0567e825",
         "request": {
           "urlPathPattern": "/users/[0-9]+",
           "method": "GET",
@@ -139,14 +139,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "38142a6f-284f-4ecc-8a68-e6efe3c35b09"
+        "uuid": "b49e5157-34f9-455d-8766-6a8d0567e825"
       }
     ]
   },
   "cases/f05_predefined.yml": {
     "mappings": [
       {
-        "id": "7469aaf1-6c0b-4b83-9e39-d2e5d3a15625",
+        "id": "31c1f27c-9f8a-411b-b322-6266967b45de",
         "request": {
           "urlPath": "/p",
           "method": "POST",
@@ -213,14 +213,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "7469aaf1-6c0b-4b83-9e39-d2e5d3a15625"
+        "uuid": "31c1f27c-9f8a-411b-b322-6266967b45de"
       }
     ]
   },
   "cases/f06_json_body_shapes.yml": {
     "mappings": [
       {
-        "id": "3b954644-cba9-4c03-b61a-75d123107655",
+        "id": "0494330e-cac8-40f1-af8b-423977b645e8",
         "request": {
           "urlPath": "/orders",
           "method": "POST",
@@ -324,14 +324,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "3b954644-cba9-4c03-b61a-75d123107655"
+        "uuid": "0494330e-cac8-40f1-af8b-423977b645e8"
       }
     ]
   },
   "cases/f07_json_body_no_content_type.yml": {
     "mappings": [
       {
-        "id": "6533cd1f-f350-47ad-9441-7118a20cee7e",
+        "id": "1f814852-c123-4220-bfe0-20b7b22ecf89",
         "request": {
           "urlPath": "/nocontenttype",
           "method": "POST",
@@ -352,14 +352,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "6533cd1f-f350-47ad-9441-7118a20cee7e"
+        "uuid": "1f814852-c123-4220-bfe0-20b7b22ecf89"
       }
     ]
   },
   "cases/f08_text_body.yml": {
     "mappings": [
       {
-        "id": "405ef239-5ec2-4364-8ac6-899cda95753a",
+        "id": "b000aeb1-b609-45f6-a33f-f68823ae62ea",
         "request": {
           "urlPath": "/text",
           "method": "POST",
@@ -385,14 +385,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "405ef239-5ec2-4364-8ac6-899cda95753a"
+        "uuid": "b000aeb1-b609-45f6-a33f-f68823ae62ea"
       }
     ]
   },
   "cases/f09_string_json_body.yml": {
     "mappings": [
       {
-        "id": "358df6e3-3fd6-4ef5-8007-2dcf5355d33b",
+        "id": "66873c9e-403e-4258-88a5-a2fc5f0d9c7b",
         "request": {
           "urlPath": "/strjson",
           "method": "POST",
@@ -419,14 +419,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "358df6e3-3fd6-4ef5-8007-2dcf5355d33b"
+        "uuid": "66873c9e-403e-4258-88a5-a2fc5f0d9c7b"
       }
     ]
   },
   "cases/f10_multi_doc.yml": {
     "mappings": [
       {
-        "id": "698e9ad7-5fb9-4ea2-894b-d50ed6e655bc",
+        "id": "d5c4571d-3039-4b55-8042-dd59d191c566",
         "request": {
           "urlPath": "/one",
           "method": "GET"
@@ -439,10 +439,10 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "698e9ad7-5fb9-4ea2-894b-d50ed6e655bc"
+        "uuid": "d5c4571d-3039-4b55-8042-dd59d191c566"
       },
       {
-        "id": "78996a06-74cd-43de-9052-970ff6d37a08",
+        "id": "9c41e49e-aa9a-41ae-8c6f-321c131517f4",
         "request": {
           "urlPath": "/two",
           "method": "GET"
@@ -455,10 +455,10 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "78996a06-74cd-43de-9052-970ff6d37a08"
+        "uuid": "9c41e49e-aa9a-41ae-8c6f-321c131517f4"
       },
       {
-        "id": "a28de285-8806-4ecd-bd8a-26dc6bd774ed",
+        "id": "6ba7a1e4-929e-4529-ab30-23610123be28",
         "request": {
           "urlPath": "/four",
           "method": "GET"
@@ -470,14 +470,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "a28de285-8806-4ecd-bd8a-26dc6bd774ed"
+        "uuid": "6ba7a1e4-929e-4529-ab30-23610123be28"
       }
     ]
   },
   "cases/f11_list_doc.yml": {
     "mappings": [
       {
-        "id": "fb093714-16c6-4463-a803-dae616d78d73",
+        "id": "00e30696-e37c-477e-b888-d4611fc8c0e5",
         "request": {
           "urlPath": "/l1",
           "method": "GET"
@@ -489,10 +489,10 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "fb093714-16c6-4463-a803-dae616d78d73"
+        "uuid": "00e30696-e37c-477e-b888-d4611fc8c0e5"
       },
       {
-        "id": "9dcc7f03-a7ba-4864-8636-1a02d71506c5",
+        "id": "7e560039-ef3d-4c1c-a038-6b58ea9c4f56",
         "request": {
           "urlPath": "/l2",
           "method": "DELETE"
@@ -504,14 +504,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "9dcc7f03-a7ba-4864-8636-1a02d71506c5"
+        "uuid": "7e560039-ef3d-4c1c-a038-6b58ea9c4f56"
       }
     ]
   },
   "cases/f12_templating.yml": {
     "mappings": [
       {
-        "id": "d3637356-3dcf-4b47-a078-bc393a9fc307",
+        "id": "1b3b5460-bb2b-42cc-9857-b12105211707",
         "request": {
           "urlPath": "/tpl",
           "method": "POST",
@@ -544,14 +544,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "d3637356-3dcf-4b47-a078-bc393a9fc307"
+        "uuid": "1b3b5460-bb2b-42cc-9857-b12105211707"
       }
     ]
   },
   "cases/f13_priority_delay.yml": {
     "mappings": [
       {
-        "id": "61b5f7d7-f3ec-46b4-ae62-fad90557a3f7",
+        "id": "5d4340b6-c95c-4185-99e1-5f92e0c13c93",
         "request": {
           "urlPath": "/slow",
           "method": "GET"
@@ -565,7 +565,7 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "61b5f7d7-f3ec-46b4-ae62-fad90557a3f7",
+        "uuid": "5d4340b6-c95c-4185-99e1-5f92e0c13c93",
         "priority": 3
       }
     ]
@@ -573,7 +573,7 @@
   "cases/f14_body_from_file.yml": {
     "mappings": [
       {
-        "id": "afd47a80-3b18-4c90-ac2f-ef6c3fe4d663",
+        "id": "9383b82d-581f-4a49-af2a-a7e2dba3a152",
         "request": {
           "urlPath": "/file",
           "method": "POST",
@@ -602,14 +602,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "afd47a80-3b18-4c90-ac2f-ef6c3fe4d663"
+        "uuid": "9383b82d-581f-4a49-af2a-a7e2dba3a152"
       }
     ]
   },
   "cases/f15_body_from_file_bytes.yml": {
     "mappings": [
       {
-        "id": "dbaa6e46-13ba-4133-a3b0-534796c69960",
+        "id": "456cdd4c-48da-41d8-9643-f68757460446",
         "request": {
           "urlPath": "/bytes",
           "method": "PUT",
@@ -627,14 +627,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "dbaa6e46-13ba-4133-a3b0-534796c69960"
+        "uuid": "456cdd4c-48da-41d8-9643-f68757460446"
       }
     ]
   },
   "cases/f16_text_file_response.yml": {
     "mappings": [
       {
-        "id": "6cc72e9e-9dcc-42b6-a85f-523173977aab",
+        "id": "56f82933-08f0-4375-aba0-519d1e144d1c",
         "request": {
           "urlPath": "/textfile",
           "method": "GET"
@@ -650,14 +650,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "6cc72e9e-9dcc-42b6-a85f-523173977aab"
+        "uuid": "56f82933-08f0-4375-aba0-519d1e144d1c"
       }
     ]
   },
   "cases/f17_cookies.yml": {
     "mappings": [
       {
-        "id": "7b80f2c2-6987-4c3e-b0aa-d1e5a1ad1219",
+        "id": "6e60dcf6-09a5-4775-b866-c4ad86f0b559",
         "request": {
           "urlPath": "/c",
           "method": "GET",
@@ -683,14 +683,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "7b80f2c2-6987-4c3e-b0aa-d1e5a1ad1219"
+        "uuid": "6e60dcf6-09a5-4775-b866-c4ad86f0b559"
       }
     ]
   },
   "cases/f18_multipart.yml": {
     "mappings": [
       {
-        "id": "6ae93eb3-39ee-4d06-8349-c6d11923226c",
+        "id": "e8a31ee5-405e-4b40-ab52-adff6dcbbc51",
         "request": {
           "urlPath": "/upload",
           "method": "POST",
@@ -721,14 +721,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "6ae93eb3-39ee-4d06-8349-c6d11923226c"
+        "uuid": "e8a31ee5-405e-4b40-ab52-adff6dcbbc51"
       }
     ]
   },
   "cases/f19_header_lists.yml": {
     "mappings": [
       {
-        "id": "ad129437-20e4-421a-834c-d13b189b6896",
+        "id": "768fc9e8-7df4-46c8-8c53-a6c6a0620a77",
         "request": {
           "urlPath": "/hl",
           "method": "GET",
@@ -761,14 +761,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "ad129437-20e4-421a-834c-d13b189b6896"
+        "uuid": "768fc9e8-7df4-46c8-8c53-a6c6a0620a77"
       }
     ]
   },
   "cases/f20_form_body.yml": {
     "mappings": [
       {
-        "id": "6566f649-0035-4998-be38-b2c53f648325",
+        "id": "d35fabfe-f8c3-44b2-9778-642495b9d704",
         "request": {
           "urlPath": "/form",
           "method": "POST",
@@ -790,14 +790,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "6566f649-0035-4998-be38-b2c53f648325"
+        "uuid": "d35fabfe-f8c3-44b2-9778-642495b9d704"
       }
     ]
   },
   "cases/f21_xml_body.yml": {
     "mappings": [
       {
-        "id": "90e26706-40cd-4d18-a2ab-01f90bffdea5",
+        "id": "d6332081-a55f-4f56-b983-80757edd5ab7",
         "request": {
           "urlPath": "/xml",
           "method": "POST",
@@ -856,14 +856,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "90e26706-40cd-4d18-a2ab-01f90bffdea5"
+        "uuid": "d6332081-a55f-4f56-b983-80757edd5ab7"
       }
     ]
   },
   "cases/f22_body_matchers.yml": {
     "mappings": [
       {
-        "id": "d9cec86d-b097-4ee8-9fb2-70705d2fe407",
+        "id": "9bdf7b6d-4c25-40f3-b3dd-ee040df2226a",
         "request": {
           "urlPath": "/bm",
           "method": "POST",
@@ -909,14 +909,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "d9cec86d-b097-4ee8-9fb2-70705d2fe407"
+        "uuid": "9bdf7b6d-4c25-40f3-b3dd-ee040df2226a"
       }
     ]
   },
   "cases/f23_response_regex_body.yml": {
     "mappings": [
       {
-        "id": "55e73658-7795-4372-a17f-1c9a47ee333a",
+        "id": "083f2cbf-ff62-4f4f-8592-a0e06f4e40e6",
         "request": {
           "urlPath": "/rr",
           "method": "GET"
@@ -929,14 +929,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "55e73658-7795-4372-a17f-1c9a47ee333a"
+        "uuid": "083f2cbf-ff62-4f4f-8592-a0e06f4e40e6"
       }
     ]
   },
   "cases/f24_scalars_body.yml": {
     "mappings": [
       {
-        "id": "23bf547e-4dab-4d25-a9ca-6c202b5ba3b4",
+        "id": "60963002-01ce-4f39-b459-31fd66fc7884",
         "request": {
           "urlPath": "/num",
           "method": "POST",
@@ -954,14 +954,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "23bf547e-4dab-4d25-a9ca-6c202b5ba3b4"
+        "uuid": "60963002-01ce-4f39-b459-31fd66fc7884"
       }
     ]
   },
   "cases/f25_bool_body.yml": {
     "mappings": [
       {
-        "id": "c5074520-4a86-41c3-a055-a1c4d31d3d1b",
+        "id": "49c0a702-8025-42ef-a216-045837ebd682",
         "request": {
           "urlPath": "/bool",
           "method": "POST",
@@ -979,14 +979,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "c5074520-4a86-41c3-a055-a1c4d31d3d1b"
+        "uuid": "49c0a702-8025-42ef-a216-045837ebd682"
       }
     ]
   },
   "cases/f26_list_body.yml": {
     "mappings": [
       {
-        "id": "07ba738e-bfd9-48a4-b1c8-4cc2add6eea1",
+        "id": "1d550bde-b0c8-4759-a3d8-13d4d07ee060",
         "request": {
           "urlPath": "/list",
           "method": "POST",
@@ -1015,14 +1015,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "07ba738e-bfd9-48a4-b1c8-4cc2add6eea1"
+        "uuid": "1d550bde-b0c8-4759-a3d8-13d4d07ee060"
       }
     ]
   },
   "cases/f27_ignored_inprogress.yml": {
     "mappings": [
       {
-        "id": "07f7132d-d6e8-422b-94bf-e282a479f864",
+        "id": "dde88739-686b-48c6-975f-15cab34ab5f0",
         "request": {
           "urlPath": "/inprogress",
           "method": "GET"
@@ -1034,7 +1034,7 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "07f7132d-d6e8-422b-94bf-e282a479f864"
+        "uuid": "dde88739-686b-48c6-975f-15cab34ab5f0"
       },
       null
     ]
@@ -1042,7 +1042,7 @@
   "cases/f28_metadata_wiremock.yml": {
     "mappings": [
       {
-        "id": "3a61caf2-8c6e-4c03-9c1c-30e466344007",
+        "id": "7c827b60-5709-4fbc-9a46-45958d99fde5",
         "request": {
           "urlPath": "/meta",
           "method": "GET"
@@ -1056,7 +1056,7 @@
             "foo"
           ]
         },
-        "uuid": "3a61caf2-8c6e-4c03-9c1c-30e466344007",
+        "uuid": "7c827b60-5709-4fbc-9a46-45958d99fde5",
         "metadata": {
           "k": "v"
         }
@@ -1066,7 +1066,7 @@
   "cases/f29_method_lower.yml": {
     "mappings": [
       {
-        "id": "845c117d-ff9a-4b5a-ac03-08020e490977",
+        "id": "705c7fc9-9fbc-4074-a687-905da6843ea2",
         "request": {
           "urlPath": "/lower",
           "method": "post",
@@ -1091,14 +1091,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "845c117d-ff9a-4b5a-ac03-08020e490977"
+        "uuid": "705c7fc9-9fbc-4074-a687-905da6843ea2"
       }
     ]
   },
   "cases/f30_multipart_ct_boundary.yml": {
     "mappings": [
       {
-        "id": "ffeca341-04b6-495f-94c9-096099ba3565",
+        "id": "b5029ae0-23a5-4b09-b91e-bb0c4329c229",
         "request": {
           "urlPath": "/mp2",
           "method": "POST",
@@ -1120,7 +1120,7 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "ffeca341-04b6-495f-94c9-096099ba3565"
+        "uuid": "b5029ae0-23a5-4b09-b91e-bb0c4329c229"
       }
     ]
   },
@@ -1130,7 +1130,7 @@
   "cases/f32_regex_url_urlpath_query.yml": {
     "mappings": [
       {
-        "id": "08a3bd62-d13a-411b-8c66-72ff766b5f27",
+        "id": "7fb431dc-dea1-4569-8d1c-3428db971d84",
         "request": {
           "urlPathPattern": "[\\S\\s]+",
           "method": "GET",
@@ -1147,14 +1147,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "08a3bd62-d13a-411b-8c66-72ff766b5f27"
+        "uuid": "7fb431dc-dea1-4569-8d1c-3428db971d84"
       }
     ]
   },
   "cases/f33_body_strings_escape.yml": {
     "mappings": [
       {
-        "id": "991c9c13-58b0-4c4a-aae7-32f034373c22",
+        "id": "5d20f8ba-da46-492b-b56d-24f845dc1c23",
         "request": {
           "urlPath": "/esc",
           "method": "PUT",
@@ -1184,14 +1184,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "991c9c13-58b0-4c4a-aae7-32f034373c22"
+        "uuid": "5d20f8ba-da46-492b-b56d-24f845dc1c23"
       }
     ]
   },
   "cases/f34_anchors.yml": {
     "mappings": [
       {
-        "id": "1618a168-db45-46be-b966-d94b7568c1c9",
+        "id": "b3ea7ffb-1c12-4022-a576-08aa8cf1eb56",
         "request": {
           "urlPath": "/anchor",
           "method": "POST",
@@ -1226,14 +1226,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "1618a168-db45-46be-b966-d94b7568c1c9"
+        "uuid": "b3ea7ffb-1c12-4022-a576-08aa8cf1eb56"
       }
     ]
   },
   "cases/g01_empty_json_body.yml": {
     "mappings": [
       {
-        "id": "1b565aff-052c-4616-8e82-0b717e12b79a",
+        "id": "2e561be4-874f-47f6-bff9-53c3a183f5dd",
         "request": {
           "urlPath": "/e",
           "method": "POST",
@@ -1257,14 +1257,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "1b565aff-052c-4616-8e82-0b717e12b79a"
+        "uuid": "2e561be4-874f-47f6-bff9-53c3a183f5dd"
       }
     ]
   },
   "cases/g02_scalar_json_body.yml": {
     "mappings": [
       {
-        "id": "b8ac669a-c885-4d95-9eef-c1cd23672450",
+        "id": "9440edbc-0899-4137-8640-7f2c1eac0c9a",
         "request": {
           "urlPath": "/s",
           "method": "POST",
@@ -1289,14 +1289,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "b8ac669a-c885-4d95-9eef-c1cd23672450"
+        "uuid": "9440edbc-0899-4137-8640-7f2c1eac0c9a"
       }
     ]
   },
   "cases/g03_spaced_equal_json.yml": {
     "mappings": [
       {
-        "id": "6cbab4ca-8ed5-480a-82a1-2de67d683fa0",
+        "id": "20f53d01-348b-4c5c-beb7-56949df128ec",
         "request": {
           "urlPath": "/q",
           "method": "GET",
@@ -1314,14 +1314,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "6cbab4ca-8ed5-480a-82a1-2de67d683fa0"
+        "uuid": "20f53d01-348b-4c5c-beb7-56949df128ec"
       }
     ]
   },
   "cases/g04_null_query_params.yml": {
     "mappings": [
       {
-        "id": "df35c38f-0f03-49e6-9e74-81fb38564e12",
+        "id": "c7fa0e17-e8de-4c13-99ee-96c1d6a581e7",
         "request": {
           "url": "/nq?x=1",
           "method": "GET"
@@ -1333,14 +1333,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "df35c38f-0f03-49e6-9e74-81fb38564e12"
+        "uuid": "c7fa0e17-e8de-4c13-99ee-96c1d6a581e7"
       }
     ]
   },
   "cases/g05_url_regex.yml": {
     "mappings": [
       {
-        "id": "20f1675f-09a8-4c42-b2b9-76c0eaeff59d",
+        "id": "b7c51626-734b-4e4c-a890-7711d0afe90a",
         "request": {
           "urlPathPattern": "/u/[0-9]",
           "method": "GET"
@@ -1352,14 +1352,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "20f1675f-09a8-4c42-b2b9-76c0eaeff59d"
+        "uuid": "b7c51626-734b-4e4c-a890-7711d0afe90a"
       }
     ]
   },
   "cases/g06_dup_header_matchers.yml": {
     "mappings": [
       {
-        "id": "92bdd002-ea98-4b23-896c-6ec764db8101",
+        "id": "4d43204e-b361-4722-800e-b4b969f68d44",
         "request": {
           "urlPath": "/dh",
           "method": "GET",
@@ -1384,14 +1384,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "92bdd002-ea98-4b23-896c-6ec764db8101"
+        "uuid": "4d43204e-b361-4722-800e-b4b969f68d44"
       }
     ]
   },
   "cases/g07_response_numbers.yml": {
     "mappings": [
       {
-        "id": "2abeaee1-8b69-4111-9f06-fb0cecf130f8",
+        "id": "177787ae-c1ca-4f72-913a-9ad95c081a3d",
         "request": {
           "urlPath": "/rn",
           "method": "POST",
@@ -1415,14 +1415,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "2abeaee1-8b69-4111-9f06-fb0cecf130f8"
+        "uuid": "177787ae-c1ca-4f72-913a-9ad95c081a3d"
       }
     ]
   },
   "cases/g08_text_with_map.yml": {
     "mappings": [
       {
-        "id": "8082d4f8-29f0-43c4-baf8-e58a900f2bd7",
+        "id": "0c373d47-c379-4fc0-ac20-f5074e8ff955",
         "request": {
           "urlPath": "/tm",
           "method": "POST",
@@ -1445,7 +1445,7 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "8082d4f8-29f0-43c4-baf8-e58a900f2bd7"
+        "uuid": "0c373d47-c379-4fc0-ac20-f5074e8ff955"
       }
     ]
   },
@@ -1458,7 +1458,7 @@
   "cases/g11_xml_ns.yml": {
     "mappings": [
       {
-        "id": "8c91ae32-6d9e-4d8f-825d-4dcfa9863be3",
+        "id": "bb4a59a4-6ac6-4abd-be7c-223765d093f8",
         "request": {
           "urlPath": "/ns",
           "method": "POST",
@@ -1513,14 +1513,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "8c91ae32-6d9e-4d8f-825d-4dcfa9863be3"
+        "uuid": "bb4a59a4-6ac6-4abd-be7c-223765d093f8"
       }
     ]
   },
   "cases/g12_form_list.yml": {
     "mappings": [
       {
-        "id": "8be1589d-28e8-4f3e-a092-d3185b58be7f",
+        "id": "ddae178d-79d1-4436-b9a4-e24d419069a1",
         "request": {
           "urlPath": "/fl",
           "method": "POST",
@@ -1542,14 +1542,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "8be1589d-28e8-4f3e-a092-d3185b58be7f"
+        "uuid": "ddae178d-79d1-4436-b9a4-e24d419069a1"
       }
     ]
   },
   "cases/g13_empty_body.yml": {
     "mappings": [
       {
-        "id": "3d293a90-5299-4870-994b-ec48447fe91a",
+        "id": "d83a94a5-ec42-4365-83b3-1623a781a924",
         "request": {
           "urlPath": "/eb",
           "method": "POST",
@@ -1567,7 +1567,7 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "3d293a90-5299-4870-994b-ec48447fe91a"
+        "uuid": "d83a94a5-ec42-4365-83b3-1623a781a924"
       }
     ]
   },
@@ -1577,7 +1577,7 @@
   "cases/g15_query_list_matcher.yml": {
     "mappings": [
       {
-        "id": "55299940-9883-43cc-8b3d-09b7035cca5d",
+        "id": "b9790931-f6db-4e58-8951-42743851e70a",
         "request": {
           "urlPath": "/ql",
           "method": "GET",
@@ -1602,14 +1602,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "55299940-9883-43cc-8b3d-09b7035cca5d"
+        "uuid": "b9790931-f6db-4e58-8951-42743851e70a"
       }
     ]
   },
   "cases/g16_json_body_string_values.yml": {
     "mappings": [
       {
-        "id": "95b0d9af-3f02-4720-ad54-5e2857786dfd",
+        "id": "6de33c7f-3704-4f9d-b3b2-40ed17470da8",
         "request": {
           "urlPath": "/jsv",
           "method": "POST",
@@ -1649,14 +1649,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "95b0d9af-3f02-4720-ad54-5e2857786dfd"
+        "uuid": "6de33c7f-3704-4f9d-b3b2-40ed17470da8"
       }
     ]
   },
   "cases/g17_response_stream.yml": {
     "mappings": [
       {
-        "id": "e309baec-e9fa-42a2-acf9-d19238783592",
+        "id": "1b71c2c6-83b9-4942-bcfc-c828bbc65837",
         "request": {
           "urlPath": "/st",
           "method": "GET"
@@ -1672,7 +1672,7 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "e309baec-e9fa-42a2-acf9-d19238783592"
+        "uuid": "1b71c2c6-83b9-4942-bcfc-c828bbc65837"
       }
     ]
   },
@@ -1685,7 +1685,7 @@
   "cases/g20_header_template_ct.yml": {
     "mappings": [
       {
-        "id": "c46253cc-8838-43cc-9d74-038222ca2232",
+        "id": "380837a9-c930-46be-9ad3-51c70f79764b",
         "request": {
           "urlPath": "/htc",
           "method": "POST",
@@ -1707,14 +1707,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "c46253cc-8838-43cc-9d74-038222ca2232"
+        "uuid": "380837a9-c930-46be-9ad3-51c70f79764b"
       }
     ]
   },
   "cases/g21_metadata_wiremock_map.yml": {
     "mappings": [
       {
-        "id": "3d0c233e-822e-4dc2-a95a-44ce8740ad79",
+        "id": "bac0dd01-ec25-4e81-8bfd-7fa89736c509",
         "request": {
           "urlPath": "/meta-map",
           "method": "POST",
@@ -1752,7 +1752,7 @@
             }
           }
         },
-        "uuid": "3d0c233e-822e-4dc2-a95a-44ce8740ad79",
+        "uuid": "bac0dd01-ec25-4e81-8bfd-7fa89736c509",
         "metadata": {
           "team": "payments",
           "n": 3
@@ -1772,7 +1772,7 @@
   "cases/g22_metadata_string_list.yml": {
     "mappings": [
       {
-        "id": "63920719-3144-42d2-8d93-7951a233a6f9",
+        "id": "eed71915-c2aa-46f5-920c-94e5ee50ab5f",
         "request": {
           "urlPath": "/meta-string",
           "method": "GET"
@@ -1789,14 +1789,13 @@
             "numberOfChunks": 5,
             "totalDuration": 1000
           },
-          "proxyBaseUrl": "http://example.invalid",
           "fault": "EMPTY_RESPONSE",
           "transformers": [
             "response-template",
             "stubborn-contract"
           ]
         },
-        "uuid": "63920719-3144-42d2-8d93-7951a233a6f9",
+        "uuid": "eed71915-c2aa-46f5-920c-94e5ee50ab5f",
         "priority": 2,
         "metadata": {
           "m": [
@@ -1818,7 +1817,7 @@
   "cases/g23_metadata_no_response.yml": {
     "mappings": [
       {
-        "id": "14415f2a-956d-4e12-89ba-e686ed803e89",
+        "id": "10159e6f-850f-422b-b612-7f829b44b123",
         "request": {
           "urlPath": "/meta-no-response",
           "method": "GET"
@@ -1827,7 +1826,7 @@
           "status": 200,
           "removeProxyRequestHeaders": []
         },
-        "uuid": "14415f2a-956d-4e12-89ba-e686ed803e89",
+        "uuid": "10159e6f-850f-422b-b612-7f829b44b123",
         "metadata": {
           "k": "v"
         }
@@ -1837,7 +1836,7 @@
   "cases/g24_metadata_not_applicable.yml": {
     "mappings": [
       {
-        "id": "907ec33c-c2a9-45dd-afcc-8b3a1785db08",
+        "id": "3ebfbf64-3aa6-4376-be80-8bb7dc276819",
         "request": {
           "urlPath": "/meta-list",
           "method": "GET"
@@ -1850,14 +1849,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "907ec33c-c2a9-45dd-afcc-8b3a1785db08"
+        "uuid": "3ebfbf64-3aa6-4376-be80-8bb7dc276819"
       }
     ]
   },
   "cases/g25_metadata_uniform.yml": {
     "mappings": [
       {
-        "id": "eccc1ca2-c025-4915-a8bc-ae90cd4ff0dd",
+        "id": "7b5e0eb9-e9a3-4467-b462-aeaf9038fdf4",
         "request": {
           "urlPath": "/meta-uniform",
           "method": "GET"
@@ -1875,14 +1874,14 @@
             "response-template"
           ]
         },
-        "uuid": "eccc1ca2-c025-4915-a8bc-ae90cd4ff0dd"
+        "uuid": "7b5e0eb9-e9a3-4467-b462-aeaf9038fdf4"
       }
     ]
   },
   "cases/g26_dup_header_values.yml": {
     "mappings": [
       {
-        "id": "27cb8ef9-81b8-4110-86f4-e30902785077",
+        "id": "9632c5bb-6934-4863-99a2-dfa1ae41b030",
         "request": {
           "urlPath": "/dup",
           "method": "GET",
@@ -1913,14 +1912,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "27cb8ef9-81b8-4110-86f4-e30902785077"
+        "uuid": "9632c5bb-6934-4863-99a2-dfa1ae41b030"
       }
     ]
   },
   "cases/g27_metadata_request.yml": {
     "mappings": [
       {
-        "id": "acff8674-dabf-4302-a5e1-482cba83e013",
+        "id": "7cf26332-56fc-4e28-b20e-9a5bda733398",
         "request": {
           "urlPath": "/meta-request",
           "method": "GET"
@@ -1934,17 +1933,40 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "acff8674-dabf-4302-a5e1-482cba83e013"
+        "uuid": "7cf26332-56fc-4e28-b20e-9a5bda733398"
       }
     ]
   },
   "cases/g28_metadata_null_stub.yml": {
     "error": "java.lang.NullPointerException: null"
   },
+  "cases/g29_metadata_proxy.yml": {
+    "mappings": [
+      {
+        "id": "b42ce4b5-6f34-4428-87ba-9df53ee2da05",
+        "request": {
+          "urlPath": "/meta-proxy",
+          "method": "GET"
+        },
+        "response": {
+          "status": 200,
+          "removeProxyRequestHeaders": [],
+          "proxyBaseUrl": "http://example.invalid",
+          "proxyUrlPrefixToRemove": "/meta",
+          "fault": "CONNECTION_RESET_BY_PEER",
+          "transformers": [
+            "response-template",
+            "stubborn-contract"
+          ]
+        },
+        "uuid": "b42ce4b5-6f34-4428-87ba-9df53ee2da05"
+      }
+    ]
+  },
   "cases/w1/body_regex_whole.yml": {
     "mappings": [
       {
-        "id": "6d1a132f-4a61-4243-be90-0d23713232dc",
+        "id": "189872fc-dc54-48b2-af07-2b1a5d8844e1",
         "request": {
           "urlPath": "/w",
           "method": "GET"
@@ -1957,14 +1979,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "6d1a132f-4a61-4243-be90-0d23713232dc"
+        "uuid": "189872fc-dc54-48b2-af07-2b1a5d8844e1"
       }
     ]
   },
   "cases/w1/bool_num_body.yml": {
     "mappings": [
       {
-        "id": "7afdfdca-3b9d-46d3-898a-9d2de9128d83",
+        "id": "579e7b24-5658-4584-b231-1f8cb2f7cecf",
         "request": {
           "urlPath": "/b",
           "method": "POST",
@@ -1989,14 +2011,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "7afdfdca-3b9d-46d3-898a-9d2de9128d83"
+        "uuid": "579e7b24-5658-4584-b231-1f8cb2f7cecf"
       }
     ]
   },
   "cases/w1/cookies_predef.yml": {
     "mappings": [
       {
-        "id": "df5c682a-1682-4223-a1e7-51d8cfb5c443",
+        "id": "baff39fe-37a1-4d06-9a12-be9c30e107c1",
         "request": {
           "urlPath": "/c",
           "method": "GET",
@@ -2019,14 +2041,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "df5c682a-1682-4223-a1e7-51d8cfb5c443"
+        "uuid": "baff39fe-37a1-4d06-9a12-be9c30e107c1"
       }
     ]
   },
   "cases/w1/delay_priority_template.yml": {
     "mappings": [
       {
-        "id": "900fcb1a-0537-4204-86fe-4181845fcc3b",
+        "id": "11eb81bf-2ba3-4a2d-b258-c4c74c170985",
         "request": {
           "urlPath": "/tpl",
           "method": "POST",
@@ -2052,7 +2074,7 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "900fcb1a-0537-4204-86fe-4181845fcc3b",
+        "uuid": "11eb81bf-2ba3-4a2d-b258-c4c74c170985",
         "priority": 3
       }
     ]
@@ -2060,7 +2082,7 @@
   "cases/w1/empty_bodies.yml": {
     "mappings": [
       {
-        "id": "ec5b490d-7314-4b76-8dfa-afd5a3359b15",
+        "id": "3036f957-2886-452e-b3b2-40dc1435f175",
         "request": {
           "urlPath": "/t",
           "method": "POST",
@@ -2080,14 +2102,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "ec5b490d-7314-4b76-8dfa-afd5a3359b15"
+        "uuid": "3036f957-2886-452e-b3b2-40dc1435f175"
       }
     ]
   },
   "cases/w1/empty_map_body.yml": {
     "mappings": [
       {
-        "id": "99f1fe86-9179-4dec-9c6a-c504b5ab0d9a",
+        "id": "91c9aa49-b5f1-4785-b146-c685dc61869b",
         "request": {
           "urlPath": "/t",
           "method": "POST",
@@ -2107,14 +2129,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "99f1fe86-9179-4dec-9c6a-c504b5ab0d9a"
+        "uuid": "91c9aa49-b5f1-4785-b146-c685dc61869b"
       }
     ]
   },
   "cases/w1/form.yml": {
     "mappings": [
       {
-        "id": "44978457-29e0-4632-9fb9-8ebdb3e723cc",
+        "id": "251c64fd-bbef-491f-87b1-7cb90440d82c",
         "request": {
           "urlPath": "/form",
           "method": "POST",
@@ -2136,14 +2158,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "44978457-29e0-4632-9fb9-8ebdb3e723cc"
+        "uuid": "251c64fd-bbef-491f-87b1-7cb90440d82c"
       }
     ]
   },
   "cases/w1/form_list.yml": {
     "mappings": [
       {
-        "id": "5bdb590a-7e15-4852-8251-0efe7c4e25ee",
+        "id": "8cebbe6d-005f-4c49-8820-9c7a87716be6",
         "request": {
           "urlPath": "/form",
           "method": "POST",
@@ -2165,14 +2187,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "5bdb590a-7e15-4852-8251-0efe7c4e25ee"
+        "uuid": "8cebbe6d-005f-4c49-8820-9c7a87716be6"
       }
     ]
   },
   "cases/w1/header_regex_ct.yml": {
     "mappings": [
       {
-        "id": "827328c1-b638-4c1d-a374-72664d0471db",
+        "id": "9878b8bb-fd64-4b06-a52d-8c66c0235ea5",
         "request": {
           "urlPath": "/h",
           "method": "POST",
@@ -2201,14 +2223,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "827328c1-b638-4c1d-a374-72664d0471db"
+        "uuid": "9878b8bb-fd64-4b06-a52d-8c66c0235ea5"
       }
     ]
   },
   "cases/w1/json_string_body.yml": {
     "mappings": [
       {
-        "id": "f7620ec8-70bc-46d0-8e76-ecd53c993438",
+        "id": "3643012a-66de-4991-8472-bd6f891d9d39",
         "request": {
           "urlPath": "/t",
           "method": "POST",
@@ -2235,14 +2257,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "f7620ec8-70bc-46d0-8e76-ecd53c993438"
+        "uuid": "3643012a-66de-4991-8472-bd6f891d9d39"
       }
     ]
   },
   "cases/w1/literal_url.yml": {
     "mappings": [
       {
-        "id": "746c3de2-a90a-4c65-8d9f-5b7bc30cffd5",
+        "id": "1f464635-fa68-4647-990e-fa0660c9471a",
         "request": {
           "urlPath": "/files/a+b",
           "method": "GET"
@@ -2254,14 +2276,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "746c3de2-a90a-4c65-8d9f-5b7bc30cffd5"
+        "uuid": "1f464635-fa68-4647-990e-fa0660c9471a"
       }
     ]
   },
   "cases/w1/nested_arrays.yml": {
     "mappings": [
       {
-        "id": "71a1c8fa-b80a-47fc-ab3c-7a3f9ab7f418",
+        "id": "08868d2f-1f3c-411b-83b0-e472c668a6e9",
         "request": {
           "urlPath": "/n",
           "method": "POST",
@@ -2308,14 +2330,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "71a1c8fa-b80a-47fc-ab3c-7a3f9ab7f418"
+        "uuid": "08868d2f-1f3c-411b-83b0-e472c668a6e9"
       }
     ]
   },
   "cases/w1/query_absent.yml": {
     "mappings": [
       {
-        "id": "04fe30cc-b2c0-4c64-b2d6-155ac6e3772c",
+        "id": "b5976474-cf30-4eca-925a-27723f5446fa",
         "request": {
           "urlPath": "/q",
           "method": "GET",
@@ -2341,14 +2363,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "04fe30cc-b2c0-4c64-b2d6-155ac6e3772c"
+        "uuid": "b5976474-cf30-4eca-925a-27723f5446fa"
       }
     ]
   },
   "cases/w1/resp_list_body.yml": {
     "mappings": [
       {
-        "id": "b8b4f167-fcf7-4246-9958-c7433f0b363c",
+        "id": "a8e881a4-904a-4943-963e-181f0b8fb899",
         "request": {
           "urlPath": "/l",
           "method": "GET"
@@ -2361,14 +2383,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "b8b4f167-fcf7-4246-9958-c7433f0b363c"
+        "uuid": "a8e881a4-904a-4943-963e-181f0b8fb899"
       }
     ]
   },
   "cases/w1/root_array_body.yml": {
     "mappings": [
       {
-        "id": "3070e9bc-4857-43c7-8ce4-ee992176d8b1",
+        "id": "9f8f6b44-4aef-4509-8efd-40fed44bd5a5",
         "request": {
           "urlPath": "/r",
           "method": "POST",
@@ -2388,14 +2410,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "3070e9bc-4857-43c7-8ce4-ee992176d8b1"
+        "uuid": "9f8f6b44-4aef-4509-8efd-40fed44bd5a5"
       }
     ]
   },
   "cases/w1/root_prim_array.yml": {
     "mappings": [
       {
-        "id": "4cefc63d-b213-45dc-a12b-84a9f68fcea3",
+        "id": "4e255822-21c7-45d9-8e7c-c3304b4205db",
         "request": {
           "urlPath": "/r",
           "method": "POST",
@@ -2418,14 +2440,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "4cefc63d-b213-45dc-a12b-84a9f68fcea3"
+        "uuid": "4e255822-21c7-45d9-8e7c-c3304b4205db"
       }
     ]
   },
   "cases/w1/text_body.yml": {
     "mappings": [
       {
-        "id": "dc00d43b-6fcd-4909-81be-67dd99a71888",
+        "id": "3cbef4e2-6c2a-4dd0-9189-2000ac521d20",
         "request": {
           "urlPath": "/t",
           "method": "POST",
@@ -2443,7 +2465,7 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "dc00d43b-6fcd-4909-81be-67dd99a71888"
+        "uuid": "3cbef4e2-6c2a-4dd0-9189-2000ac521d20"
       }
     ]
   },
@@ -2453,7 +2475,7 @@
   "cases/w1/url_command.yml": {
     "mappings": [
       {
-        "id": "ec218b95-4869-4cb7-ac66-da28b5949f04",
+        "id": "24d029cc-e130-49bb-bd4b-58ab5c4441b4",
         "request": {
           "urlPath": "/x/123",
           "method": "GET"
@@ -2465,14 +2487,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "ec218b95-4869-4cb7-ac66-da28b5949f04"
+        "uuid": "24d029cc-e130-49bb-bd4b-58ab5c4441b4"
       }
     ]
   },
   "cases/w1/url_only.yml": {
     "mappings": [
       {
-        "id": "21fdee4c-8f76-461a-a4e2-0614938c8cfd",
+        "id": "c0b1e1b2-8a4b-4eba-a1cd-2a6a1818bb28",
         "request": {
           "urlPath": "/foo",
           "method": "get"
@@ -2484,14 +2506,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "21fdee4c-8f76-461a-a4e2-0614938c8cfd"
+        "uuid": "c0b1e1b2-8a4b-4eba-a1cd-2a6a1818bb28"
       }
     ]
   },
   "cases/w1/url_predefined.yml": {
     "mappings": [
       {
-        "id": "a723fc03-c256-4cb1-b378-7f46786fb9e5",
+        "id": "ae314d9d-9374-45b8-bd0e-6928b08d3039",
         "request": {
           "urlPathPattern": "-?(\\d*\\.\\d+|\\d+)",
           "method": "GET"
@@ -2503,14 +2525,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "a723fc03-c256-4cb1-b378-7f46786fb9e5"
+        "uuid": "ae314d9d-9374-45b8-bd0e-6928b08d3039"
       }
     ]
   },
   "cases/w1/url_query_null.yml": {
     "mappings": [
       {
-        "id": "1e69fd04-5a6a-4d53-a187-651dbf269151",
+        "id": "5e35149f-2401-43c6-a74b-ee39620e470a",
         "request": {
           "url": "/foo",
           "method": "GET"
@@ -2522,14 +2544,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "1e69fd04-5a6a-4d53-a187-651dbf269151"
+        "uuid": "5e35149f-2401-43c6-a74b-ee39620e470a"
       }
     ]
   },
   "cases/w1/url_regex_with_query.yml": {
     "mappings": [
       {
-        "id": "452e7706-50ab-4cbf-8445-cda69aed92a8",
+        "id": "fb0e44e1-c69e-484f-a8b6-cac441252024",
         "request": {
           "urlPathPattern": "/x/[0-9]+",
           "method": "GET",
@@ -2546,14 +2568,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "452e7706-50ab-4cbf-8445-cda69aed92a8"
+        "uuid": "fb0e44e1-c69e-484f-a8b6-cac441252024"
       }
     ]
   },
   "cases/w1/url_with_query_in_url.yml": {
     "mappings": [
       {
-        "id": "80162018-a071-4633-abbb-9a1b9099cb62",
+        "id": "9ed27820-a10a-4a84-ac3f-32965667625f",
         "request": {
           "urlPath": "/foo?a=b",
           "method": "GET"
@@ -2565,14 +2587,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "80162018-a071-4633-abbb-9a1b9099cb62"
+        "uuid": "9ed27820-a10a-4a84-ac3f-32965667625f"
       }
     ]
   },
   "cases/w1/urlpath_regex.yml": {
     "mappings": [
       {
-        "id": "3b5a8f38-db37-487e-8e8b-3b48b776febb",
+        "id": "1b778643-5389-45da-ad20-9b08f46eeef5",
         "request": {
           "urlPathPattern": "/p/[0-9]+",
           "method": "GET"
@@ -2584,14 +2606,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "3b5a8f38-db37-487e-8e8b-3b48b776febb"
+        "uuid": "1b778643-5389-45da-ad20-9b08f46eeef5"
       }
     ]
   },
   "cases/w1/values.yml": {
     "mappings": [
       {
-        "id": "b2051d11-960a-4b94-97ff-d4c5003bb3cf",
+        "id": "460e1df8-918e-4c94-8585-e4f0317044f2",
         "request": {
           "urlPath": "/v",
           "method": "GET",
@@ -2641,14 +2663,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "b2051d11-960a-4b94-97ff-d4c5003bb3cf"
+        "uuid": "460e1df8-918e-4c94-8585-e4f0317044f2"
       }
     ]
   },
   "cases/w1/yaml11.yml": {
     "mappings": [
       {
-        "id": "ed25637c-d96a-4065-9aeb-d687fe2ceb5d",
+        "id": "e81090d1-28ff-47fa-baf8-00fdaee463fb",
         "request": {
           "urlPath": "/y",
           "method": "POST",
@@ -2696,14 +2718,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "ed25637c-d96a-4065-9aeb-d687fe2ceb5d"
+        "uuid": "e81090d1-28ff-47fa-baf8-00fdaee463fb"
       }
     ]
   },
   "cases/w2/backslashes.yml": {
     "mappings": [
       {
-        "id": "51d61636-5d24-4e0d-b2a3-8b8e0668f99e",
+        "id": "47db7df9-89e1-42fe-be0c-5239e71aa3ad",
         "request": {
           "urlPath": "/bs",
           "method": "POST",
@@ -2733,7 +2755,7 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "51d61636-5d24-4e0d-b2a3-8b8e0668f99e"
+        "uuid": "47db7df9-89e1-42fe-be0c-5239e71aa3ad"
       }
     ]
   },
@@ -2743,7 +2765,7 @@
   "cases/w2/defined_ct.yml": {
     "mappings": [
       {
-        "id": "3bdff4ea-b58e-4e7f-8215-d4507d504372",
+        "id": "6463fdde-464e-48e0-a179-18de3dfc885c",
         "request": {
           "urlPath": "/pdf",
           "method": "POST",
@@ -2765,14 +2787,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "3bdff4ea-b58e-4e7f-8215-d4507d504372"
+        "uuid": "6463fdde-464e-48e0-a179-18de3dfc885c"
       }
     ]
   },
   "cases/w2/empty_strings.yml": {
     "mappings": [
       {
-        "id": "40c556a7-5151-4c32-98e1-ef21565efcd9",
+        "id": "d9148c34-d6f7-4bdc-9155-737cce392d7b",
         "request": {
           "urlPath": "/es",
           "method": "POST",
@@ -2793,14 +2815,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "40c556a7-5151-4c32-98e1-ef21565efcd9"
+        "uuid": "d9148c34-d6f7-4bdc-9155-737cce392d7b"
       }
     ]
   },
   "cases/w2/file_bytes.yml": {
     "mappings": [
       {
-        "id": "2e4df13d-7190-4a5a-8511-829455fea2b5",
+        "id": "b620f116-1522-40d2-b634-203e4ea88394",
         "request": {
           "urlPath": "/bin",
           "method": "POST",
@@ -2826,14 +2848,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "2e4df13d-7190-4a5a-8511-829455fea2b5"
+        "uuid": "b620f116-1522-40d2-b634-203e4ea88394"
       }
     ]
   },
   "cases/w2/file_bytes_json.yml": {
     "mappings": [
       {
-        "id": "3fef497b-ad5c-4280-9f7e-c1f8e744f5e0",
+        "id": "be21ec37-b99b-48ae-80bc-1961a10353bd",
         "request": {
           "urlPath": "/bin",
           "method": "POST",
@@ -2853,14 +2875,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "3fef497b-ad5c-4280-9f7e-c1f8e744f5e0"
+        "uuid": "be21ec37-b99b-48ae-80bc-1961a10353bd"
       }
     ]
   },
   "cases/w2/file_json_req_res.yml": {
     "mappings": [
       {
-        "id": "22a4469b-7209-4ac5-b6b4-8582ff20188c",
+        "id": "1c9582ac-9274-455d-92fa-97c4717360ce",
         "request": {
           "urlPath": "/files/1",
           "method": "POST",
@@ -2892,7 +2914,7 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "22a4469b-7209-4ac5-b6b4-8582ff20188c"
+        "uuid": "1c9582ac-9274-455d-92fa-97c4717360ce"
       }
     ]
   },
@@ -2902,7 +2924,7 @@
   "cases/w2/file_text.yml": {
     "mappings": [
       {
-        "id": "23b5d9d9-6e7b-4ccf-9b53-290519206cb6",
+        "id": "0f100b8d-3b2a-4efb-9720-0c94bce3a167",
         "request": {
           "urlPath": "/t",
           "method": "POST",
@@ -2920,14 +2942,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "23b5d9d9-6e7b-4ccf-9b53-290519206cb6"
+        "uuid": "0f100b8d-3b2a-4efb-9720-0c94bce3a167"
       }
     ]
   },
   "cases/w2/header_list_matcher.yml": {
     "mappings": [
       {
-        "id": "34b56b28-4b1c-49a5-b779-ebd7132afdc0",
+        "id": "35d656f0-16c2-4564-b834-397f9da1f9c2",
         "request": {
           "urlPath": "/hl",
           "method": "GET",
@@ -2957,7 +2979,7 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "34b56b28-4b1c-49a5-b779-ebd7132afdc0"
+        "uuid": "35d656f0-16c2-4564-b834-397f9da1f9c2"
       }
     ]
   },
@@ -2969,7 +2991,7 @@
   "cases/w2/json_array_of_arrays_objs.yml": {
     "mappings": [
       {
-        "id": "de1b0422-3a0a-4ce4-bd86-397a011310ae",
+        "id": "6cfa9a0a-4b43-4f65-86e7-ac08d36c501f",
         "request": {
           "urlPath": "/ao",
           "method": "POST",
@@ -3001,14 +3023,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "de1b0422-3a0a-4ce4-bd86-397a011310ae"
+        "uuid": "6cfa9a0a-4b43-4f65-86e7-ac08d36c501f"
       }
     ]
   },
   "cases/w2/list_doc.yml": {
     "mappings": [
       {
-        "id": "e68e5853-654a-430f-9d3b-90fb6cfaf327",
+        "id": "3e1f4472-6f7f-4123-9bbb-798de05e477c",
         "request": {
           "urlPath": "/a",
           "method": "GET"
@@ -3020,10 +3042,10 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "e68e5853-654a-430f-9d3b-90fb6cfaf327"
+        "uuid": "3e1f4472-6f7f-4123-9bbb-798de05e477c"
       },
       {
-        "id": "5e9d51b0-f133-4b8d-a310-e4cb908c1b00",
+        "id": "bb1f0a5f-fabc-4f61-abcb-fbd99b684855",
         "request": {
           "urlPath": "/b",
           "method": "GET"
@@ -3036,14 +3058,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "5e9d51b0-f133-4b8d-a310-e4cb908c1b00"
+        "uuid": "bb1f0a5f-fabc-4f61-abcb-fbd99b684855"
       }
     ]
   },
   "cases/w2/matcher_cleanup.yml": {
     "mappings": [
       {
-        "id": "cf4583de-447c-45de-a53f-603e607a0093",
+        "id": "c5245d54-fa88-42fa-bfcb-73c54d38938d",
         "request": {
           "urlPath": "/mc",
           "method": "POST",
@@ -3078,7 +3100,7 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "cf4583de-447c-45de-a53f-603e607a0093"
+        "uuid": "c5245d54-fa88-42fa-bfcb-73c54d38938d"
       }
     ]
   },
@@ -3094,7 +3116,7 @@
   "cases/w2/metadata_verifier.yml": {
     "mappings": [
       {
-        "id": "4793ebb8-b76e-435f-8b39-2809458e2c28",
+        "id": "47335342-de50-4509-9366-7c1f5eadc068",
         "request": {
           "urlPath": "/md",
           "method": "GET",
@@ -3113,14 +3135,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "4793ebb8-b76e-435f-8b39-2809458e2c28"
+        "uuid": "47335342-de50-4509-9366-7c1f5eadc068"
       }
     ]
   },
   "cases/w2/multi_docs.yml": {
     "mappings": [
       {
-        "id": "e6b7cefc-459e-40e2-964c-a4b94311a05f",
+        "id": "0dc18ae0-2ba6-411f-8fae-f4d5fb725bc0",
         "request": {
           "urlPath": "/one",
           "method": "GET"
@@ -3132,10 +3154,10 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "e6b7cefc-459e-40e2-964c-a4b94311a05f"
+        "uuid": "0dc18ae0-2ba6-411f-8fae-f4d5fb725bc0"
       },
       {
-        "id": "84074bc9-e174-48d4-a1ff-dbfea4ab3a0e",
+        "id": "61748c1e-b6fa-46db-816a-907e90965caf",
         "request": {
           "urlPath": "/two",
           "method": "GET"
@@ -3147,7 +3169,7 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "84074bc9-e174-48d4-a1ff-dbfea4ab3a0e"
+        "uuid": "61748c1e-b6fa-46db-816a-907e90965caf"
       }
     ]
   },
@@ -3157,7 +3179,7 @@
   "cases/w2/only_size_assert.yml": {
     "mappings": [
       {
-        "id": "0878da93-d9b3-4125-974a-8196998d48a0",
+        "id": "7c77ea49-ae6f-4f4a-9160-a351e23d69f7",
         "request": {
           "urlPath": "/os",
           "method": "POST",
@@ -3176,14 +3198,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "0878da93-d9b3-4125-974a-8196998d48a0"
+        "uuid": "7c77ea49-ae6f-4f4a-9160-a351e23d69f7"
       }
     ]
   },
   "cases/w2/regex_url_with_qp.yml": {
     "mappings": [
       {
-        "id": "ca41b1ce-01d4-48da-91f0-01959cab234a",
+        "id": "92742a31-bd6b-4b5b-9c0c-c14f28869183",
         "request": {
           "urlPathPattern": "/us.rs",
           "method": "GET",
@@ -3204,14 +3226,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "ca41b1ce-01d4-48da-91f0-01959cab234a"
+        "uuid": "92742a31-bd6b-4b5b-9c0c-c14f28869183"
       }
     ]
   },
   "cases/w2/resp_header_matchers.yml": {
     "mappings": [
       {
-        "id": "62713da8-4859-40a9-9832-bee555da58c8",
+        "id": "b8819d47-6ee4-4198-8692-3f4395486327",
         "request": {
           "urlPath": "/rh",
           "method": "GET"
@@ -3229,14 +3251,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "62713da8-4859-40a9-9832-bee555da58c8"
+        "uuid": "b8819d47-6ee4-4198-8692-3f4395486327"
       }
     ]
   },
   "cases/w2/resp_list_nested.yml": {
     "mappings": [
       {
-        "id": "9988f9ed-0e64-4864-8d70-a0227fa7c4a9",
+        "id": "928ad6c2-5b42-4d77-84ab-30b7b9a2edd9",
         "request": {
           "urlPath": "/ln",
           "method": "GET"
@@ -3249,14 +3271,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "9988f9ed-0e64-4864-8d70-a0227fa7c4a9"
+        "uuid": "928ad6c2-5b42-4d77-84ab-30b7b9a2edd9"
       }
     ]
   },
   "cases/w2/resp_stream.yml": {
     "mappings": [
       {
-        "id": "e9fe9036-c2e8-4dcb-ba40-b47067090d52",
+        "id": "6ca10956-f638-45ae-94b9-89d4066d3621",
         "request": {
           "urlPath": "/stream",
           "method": "GET"
@@ -3272,7 +3294,7 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "e9fe9036-c2e8-4dcb-ba40-b47067090d52"
+        "uuid": "6ca10956-f638-45ae-94b9-89d4066d3621"
       }
     ]
   },
@@ -3282,7 +3304,7 @@
   "cases/w2/status_string.yml": {
     "mappings": [
       {
-        "id": "f293d5b0-dca0-4ca5-a9e3-a53c57a631a3",
+        "id": "27780a47-29f0-4f53-956c-2606c1c7a226",
         "request": {
           "urlPath": "/ss",
           "method": "GET"
@@ -3295,7 +3317,7 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "f293d5b0-dca0-4ca5-a9e3-a53c57a631a3",
+        "uuid": "27780a47-29f0-4f53-956c-2606c1c7a226",
         "priority": 4
       }
     ]
@@ -3303,7 +3325,7 @@
   "cases/w2/template_strings.yml": {
     "mappings": [
       {
-        "id": "620975a9-397e-413c-a8f2-65aee43a64c9",
+        "id": "31ab7913-351c-4444-848e-0ecc4f2e575e",
         "request": {
           "urlPath": "/ts",
           "method": "POST",
@@ -3341,14 +3363,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "620975a9-397e-413c-a8f2-65aee43a64c9"
+        "uuid": "31ab7913-351c-4444-848e-0ecc4f2e575e"
       }
     ]
   },
   "cases/w2/text_ct_map.yml": {
     "mappings": [
       {
-        "id": "126d2cd1-f2b8-4b1a-b031-a9725ec86a7f",
+        "id": "b564dc03-c845-4397-af0e-e0de5460e34e",
         "request": {
           "urlPath": "/text",
           "method": "POST",
@@ -3370,7 +3392,7 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "126d2cd1-f2b8-4b1a-b031-a9725ec86a7f"
+        "uuid": "b564dc03-c845-4397-af0e-e0de5460e34e"
       }
     ]
   },
@@ -3380,7 +3402,7 @@
   "cases/w2/xml_matchers.yml": {
     "mappings": [
       {
-        "id": "b8254938-1db5-4427-8af7-416ff86cea94",
+        "id": "d2341fc1-0995-4214-bb94-6544ce4a8866",
         "request": {
           "urlPath": "/xml",
           "method": "POST",
@@ -3429,14 +3451,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "b8254938-1db5-4427-8af7-416ff86cea94"
+        "uuid": "d2341fc1-0995-4214-bb94-6544ce4a8866"
       }
     ]
   },
   "cases/w2/xml_no_ct.yml": {
     "mappings": [
       {
-        "id": "0f3da051-e170-40be-b7f4-940cfe6a19c4",
+        "id": "65b8de35-65b4-450e-b697-7679187c73d3",
         "request": {
           "urlPath": "/xml",
           "method": "POST",
@@ -3469,7 +3491,7 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "0f3da051-e170-40be-b7f4-940cfe6a19c4"
+        "uuid": "65b8de35-65b4-450e-b697-7679187c73d3"
       }
     ]
   },
@@ -3485,7 +3507,7 @@
   "scc/docker/health.yml": {
     "mappings": [
       {
-        "id": "629e899b-4adf-48bd-9ae4-d723c04dda85",
+        "id": "ec7965d1-ae1e-4db4-a79f-957960e33d4a",
         "request": {
           "urlPath": "/health",
           "method": "GET"
@@ -3501,7 +3523,7 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "629e899b-4adf-48bd-9ae4-d723c04dda85"
+        "uuid": "ec7965d1-ae1e-4db4-a79f-957960e33d4a"
       }
     ]
   },
@@ -3517,7 +3539,7 @@
   "scc/mixed/contract.yml": {
     "mappings": [
       {
-        "id": "d85b10a7-6bcf-4bda-a977-b255aa225b87",
+        "id": "6fab2a8b-9de5-4eb8-ae3c-201dda0a4314",
         "request": {
           "urlPath": "/foo",
           "method": "PUT",
@@ -3543,7 +3565,7 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "d85b10a7-6bcf-4bda-a977-b255aa225b87"
+        "uuid": "6fab2a8b-9de5-4eb8-ae3c-201dda0a4314"
       }
     ]
   },
@@ -3558,7 +3580,7 @@
   "scc/stub-runner/direct-shouldReturnGreeting.yml": {
     "mappings": [
       {
-        "id": "35b584fc-9edd-413e-b0cc-1b197a3e80aa",
+        "id": "bcd19298-48bd-4d09-84b6-423d6c94c338",
         "request": {
           "urlPath": "/greeting",
           "method": "GET"
@@ -3571,7 +3593,7 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "35b584fc-9edd-413e-b0cc-1b197a3e80aa"
+        "uuid": "bcd19298-48bd-4d09-84b6-423d6c94c338"
       }
     ]
   },
@@ -3581,7 +3603,7 @@
   "scc/stub-runner/metainf-shouldReturnGreeting.yml": {
     "mappings": [
       {
-        "id": "be8df31b-de12-4ae5-8dfd-9eca3d05b4ed",
+        "id": "27a27c08-38ac-4b1e-a9bc-00947e1cd7d7",
         "request": {
           "urlPath": "/greeting",
           "method": "GET"
@@ -3594,14 +3616,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "be8df31b-de12-4ae5-8dfd-9eca3d05b4ed"
+        "uuid": "27a27c08-38ac-4b1e-a9bc-00947e1cd7d7"
       }
     ]
   },
   "scc/stub-runner/nested-shouldReturnGreeting.yml": {
     "mappings": [
       {
-        "id": "0769d957-9520-429e-9780-be4ac2a8d256",
+        "id": "93cdba98-8b03-46a9-bc32-ba2de2fdfcd0",
         "request": {
           "urlPath": "/greeting",
           "method": "GET"
@@ -3614,7 +3636,7 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "0769d957-9520-429e-9780-be4ac2a8d256"
+        "uuid": "93cdba98-8b03-46a9-bc32-ba2de2fdfcd0"
       }
     ]
   },
@@ -3637,7 +3659,7 @@
   "scc/yml/contract_from_file.yml": {
     "mappings": [
       {
-        "id": "0f4d9f4d-5c1a-45c8-84d3-15f075a3db14",
+        "id": "ac8f28dc-8a2a-4db6-9672-b0624209e253",
         "request": {
           "urlPath": "/foo",
           "method": "GET",
@@ -3655,14 +3677,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "0f4d9f4d-5c1a-45c8-84d3-15f075a3db14"
+        "uuid": "ac8f28dc-8a2a-4db6-9672-b0624209e253"
       }
     ]
   },
   "scc/yml/contract_matchers.yml": {
     "mappings": [
       {
-        "id": "64703412-236e-4a85-9f17-faf84d7ca6d9",
+        "id": "971faf28-bf3e-4fa9-86de-041ca5538dec",
         "request": {
           "urlPathPattern": "/get/[0-9]",
           "method": "GET",
@@ -3767,14 +3789,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "64703412-236e-4a85-9f17-faf84d7ca6d9"
+        "uuid": "971faf28-bf3e-4fa9-86de-041ca5538dec"
       }
     ]
   },
   "scc/yml/contract_matchers_url.yml": {
     "mappings": [
       {
-        "id": "6f022971-553f-47d4-be21-4ce48a1eb561",
+        "id": "57d10ac9-6751-408c-abdb-5559909d21ab",
         "request": {
           "urlPathPattern": "/get/[0-9]",
           "method": "GET"
@@ -3786,7 +3808,7 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "6f022971-553f-47d4-be21-4ce48a1eb561"
+        "uuid": "57d10ac9-6751-408c-abdb-5559909d21ab"
       }
     ]
   },
@@ -3811,7 +3833,7 @@
   "scc/yml/contract_multipart.yml": {
     "mappings": [
       {
-        "id": "450e96bd-3123-4406-9ce0-8e01dcd7314f",
+        "id": "aca417f2-a02c-4712-8bda-af42b27cbc75",
         "request": {
           "urlPath": "/multipart",
           "method": "PUT",
@@ -3839,14 +3861,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "450e96bd-3123-4406-9ce0-8e01dcd7314f"
+        "uuid": "aca417f2-a02c-4712-8bda-af42b27cbc75"
       }
     ]
   },
   "scc/yml/contract_pdf.yml": {
     "mappings": [
       {
-        "id": "de2fdcd1-0b99-4195-b2dd-ed2e8c6fc144",
+        "id": "f6366f9b-0848-46b1-9b48-44506cdb281a",
         "request": {
           "urlPath": "/1",
           "method": "PUT",
@@ -3872,14 +3894,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "de2fdcd1-0b99-4195-b2dd-ed2e8c6fc144"
+        "uuid": "f6366f9b-0848-46b1-9b48-44506cdb281a"
       }
     ]
   },
   "scc/yml/contract_reference_request.yml": {
     "mappings": [
       {
-        "id": "f0efa367-6936-42ae-b547-460cefd3cd11",
+        "id": "6215eb65-bb29-46f4-b6a2-1f08baad2b1a",
         "request": {
           "urlPath": "/api/v1/xxxx",
           "method": "GET",
@@ -3913,7 +3935,7 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "f0efa367-6936-42ae-b547-460cefd3cd11"
+        "uuid": "6215eb65-bb29-46f4-b6a2-1f08baad2b1a"
       }
     ]
   },
@@ -3925,7 +3947,7 @@
   "scc/yml/contract_rest_named_xml.yml": {
     "mappings": [
       {
-        "id": "c162b6b7-480f-47a9-964e-40fbbb5ac154",
+        "id": "7fd70b5e-ba86-48a4-b87a-6173ae2e4fba",
         "request": {
           "urlPath": "/getymlResponse",
           "method": "GET",
@@ -3960,7 +3982,7 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "c162b6b7-480f-47a9-964e-40fbbb5ac154"
+        "uuid": "7fd70b5e-ba86-48a4-b87a-6173ae2e4fba"
       }
     ]
   },
@@ -3972,7 +3994,7 @@
   "scc/yml/contract_rest_xml.yml": {
     "mappings": [
       {
-        "id": "89b1a1a4-29ab-449c-92e2-ba81fc87a3e4",
+        "id": "76bb0c0c-a67d-4711-803a-833d8cbdfef3",
         "request": {
           "urlPath": "/getymlResponse",
           "method": "GET",
@@ -4085,14 +4107,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "89b1a1a4-29ab-449c-92e2-ba81fc87a3e4"
+        "uuid": "76bb0c0c-a67d-4711-803a-833d8cbdfef3"
       }
     ]
   },
   "scc/yml/issue1038.yml": {
     "mappings": [
       {
-        "id": "d9cb2232-85e7-41d4-a8dd-1eade86986c1",
+        "id": "eb69aede-cb15-4b11-940c-6ed5d27df49a",
         "request": {
           "urlPath": "/users",
           "method": "GET"
@@ -4108,14 +4130,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "d9cb2232-85e7-41d4-a8dd-1eade86986c1"
+        "uuid": "eb69aede-cb15-4b11-940c-6ed5d27df49a"
       }
     ]
   },
   "scc/yml/issue1052.yml": {
     "mappings": [
       {
-        "id": "ff4a1f02-7274-4ec3-a25f-ddb4d13afe64",
+        "id": "8a565f95-adbb-4c52-bd47-d238e75bad51",
         "request": {
           "urlPath": "/numbers",
           "method": "GET",
@@ -4144,14 +4166,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "ff4a1f02-7274-4ec3-a25f-ddb4d13afe64"
+        "uuid": "8a565f95-adbb-4c52-bd47-d238e75bad51"
       }
     ]
   },
   "scc/yml/multiple_contracts.yml": {
     "mappings": [
       {
-        "id": "a7d283ff-fb85-4f1e-986e-cf7f28194e2c",
+        "id": "fb1bb9a7-2503-4aea-bdd6-411d993191a1",
         "request": {
           "urlPath": "/users/1",
           "method": "POST"
@@ -4163,10 +4185,10 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "a7d283ff-fb85-4f1e-986e-cf7f28194e2c"
+        "uuid": "fb1bb9a7-2503-4aea-bdd6-411d993191a1"
       },
       {
-        "id": "78f8e3df-ba82-48b0-a593-98fbdb37084b",
+        "id": "aec851a4-92d0-4eb6-81ee-5de7a587a88d",
         "request": {
           "urlPath": "/users/2",
           "method": "POST"
@@ -4178,10 +4200,10 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "78f8e3df-ba82-48b0-a593-98fbdb37084b"
+        "uuid": "aec851a4-92d0-4eb6-81ee-5de7a587a88d"
       },
       {
-        "id": "4e63fdba-0de2-46cf-a181-fe21bac8095b",
+        "id": "faa013ae-98f8-4ff1-89ea-d4dbb40717a8",
         "request": {
           "urlPath": "/users/3",
           "method": "POST"
@@ -4193,14 +4215,14 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "4e63fdba-0de2-46cf-a181-fe21bac8095b"
+        "uuid": "faa013ae-98f8-4ff1-89ea-d4dbb40717a8"
       }
     ]
   },
   "scc/yml/scc_compat_contract.yml": {
     "mappings": [
       {
-        "id": "344d25f8-c2aa-4f49-b9fa-49546174fb8f",
+        "id": "629f5207-a0fd-49b3-9fe4-710f9ee56c5f",
         "request": {
           "urlPath": "/check",
           "method": "POST",
@@ -4226,7 +4248,7 @@
             "stubborn-contract"
           ]
         },
-        "uuid": "344d25f8-c2aa-4f49-b9fa-49546174fb8f"
+        "uuid": "629f5207-a0fd-49b3-9fe4-710f9ee56c5f"
       }
     ]
   }

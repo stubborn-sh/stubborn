@@ -1,4 +1,4 @@
-import { readJsonPath } from "./json-path.js";
+import { parseJaywayDocument, readJsonPath } from "./json-path.js";
 
 /**
  * WireMock response templating (`"transformers": ["response-template"]`), limited to the
@@ -9,7 +9,8 @@ import { readJsonPath } from "./json-path.js";
  *   - `request.url`, `request.path`, `request.path.[n]`, `request.pathSegments.[n]`,
  *     `request.query.<name>[.[n]]`, `request.headers.<name>[.[n]]` (case-insensitive),
  *     `request.cookies.<name>[.[n]]`, `request.method`, `request.body`
- *   - `jsonPath request.body '<path>'` (also the legacy lowercase `jsonpath`)
+ *   - `jsonPath request.body '<path>'` (also the lowercase `jsonpath`), and the Stubborn Contract
+ *     helper's legacy `jsonpath this '<path>'`
  *   - `escapejsonbody` (the Stubborn Contract helper: the request body, JSON-escaped)
  *
  * Anything else (block helpers, partials, other helpers, unknown `request` fields) throws a
@@ -235,6 +236,11 @@ function evaluate(mustache: Mustache, model: RequestModel): string {
         `${mustache.source}: jsonPath takes exactly two arguments, e.g. {{jsonPath request.body '$.id'}}`,
       );
     }
+    if (head.text === "jsonpath" && context.kind === "id" && context.text === "this") {
+      const expression =
+        path.kind === "string" ? path.text : renderValue(model.lookup(path.text, mustache));
+      return renderLegacyJsonPath(model.body, expression, mustache);
+    }
     const json =
       context.kind === "string" ? context.text : renderValue(model.lookup(context.text, mustache));
     const expression =
@@ -263,16 +269,13 @@ function isRequestPath(text: string): boolean {
 }
 
 function renderJsonPathResult(json: string, expression: string, mustache: Mustache): string {
-  let document: unknown;
-  try {
-    document = JSON.parse(json);
-  } catch {
-    // WireMock renders nothing when the context is not JSON (e.g. an empty or text body).
-    return "";
-  }
+  // Read leniently (trailing text after the object is ignored, as Jackson's reader does).
+  const parsed = parseJaywayDocument(json);
+  // WireMock renders nothing when the context is not JSON (e.g. an empty or text body).
+  if (parsed === undefined) return "";
   let value: unknown;
   try {
-    value = readJsonPath(document, expression, { leafToNull: true });
+    value = readJsonPath(parsed.value, expression, { leafToNull: true });
   } catch (err: unknown) {
     throw new ResponseTemplateError(
       `${mustache.source}: ${err instanceof Error ? err.message : String(err)}`,
@@ -281,6 +284,31 @@ function renderJsonPathResult(json: string, expression: string, mustache: Mustac
   if (value === undefined || value === null) return "";
   if (Array.isArray(value)) return JSON.stringify(value);
   if (typeof value === "object") return prettyJson(value, 0);
+  return scalarText(value);
+}
+
+/**
+ * The Stubborn Contract helper's legacy form, `{{{jsonpath this '<path>'}}}`
+ * (`HandlebarsJsonPathHelper` given the template model): Jayway reads the path from the request
+ * body. A body that is not JSON, or a path that selects nothing, fails the template (WireMock
+ * answers 500); `null` renders empty, objects and lists as json-smart writes them.
+ */
+function renderLegacyJsonPath(body: string, expression: string, mustache: Mustache): string {
+  const fail = (reason: string): never => {
+    throw new ResponseTemplateError(`${mustache.source}: ${reason}`);
+  };
+  const parsed = parseJaywayDocument(body);
+  if (parsed === undefined) return fail("the request body is not JSON");
+  let value: unknown;
+  try {
+    value = readJsonPath(parsed.value, expression);
+  } catch (err: unknown) {
+    return fail(err instanceof Error ? err.message : String(err));
+  }
+  if (value === undefined) return fail(`no results for path ${expression}`);
+  if (value === null) return "";
+  // json-smart's JSONObject/JSONArray toString(): compact, with "/" escaped.
+  if (typeof value === "object") return JSON.stringify(value).replaceAll("/", "\\/");
   return scalarText(value);
 }
 

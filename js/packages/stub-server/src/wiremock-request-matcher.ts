@@ -1,6 +1,11 @@
 import { isDeepStrictEqual } from "node:util";
 import { javaFullMatchRegex } from "./java-regex.js";
-import { evaluateJsonPath, matchesJsonPath, unsupportedJsonPathParts } from "./json-path.js";
+import {
+  evaluateJsonPath,
+  matchesJsonPath,
+  parseJaywayDocument,
+  unsupportedJsonPathParts,
+} from "./json-path.js";
 import {
   checkXPath,
   compileXmlEquality,
@@ -290,7 +295,7 @@ function compileValueMatcher(spec: unknown, where: string, unsupported: string[]
     }
     case "matchesJsonPath": {
       const matcher = compileJsonPathMatcher(spec, where, unsupported);
-      return present((v) => matcher(parseJson(v)));
+      return present((v) => matcher(parseJsonPathDocument(v)));
     }
     default:
       break;
@@ -609,7 +614,7 @@ function parseRequest(request: IncomingRequest): ParsedRequest {
     bytes: request.bodyBytes ?? Buffer.from(request.body, "utf-8"),
     json(): unknown {
       if (!parsed) {
-        json = parseJson(request.body);
+        json = parseJsonPathDocument(request.body);
         parsed = true;
       }
       return json;
@@ -638,6 +643,13 @@ function parseJson(text: string | undefined): unknown {
   } catch {
     return NOT_JSON;
   }
+}
+
+/** The document `matchesJsonPath` reads (see {@link parseJaywayDocument}). */
+function parseJsonPathDocument(text: string | undefined): unknown {
+  if (text === undefined) return NOT_JSON;
+  const parsed = parseJaywayDocument(text);
+  return parsed === undefined ? NOT_JSON : parsed.value;
 }
 
 function parseExpectedJson(operand: unknown): unknown {

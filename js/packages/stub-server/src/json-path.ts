@@ -192,6 +192,45 @@ export function readJsonPath(
   return [...result.values];
 }
 
+/**
+ * A JSON document as Jayway's `JsonPath.parse` reads it (json-smart in permissive mode, as
+ * WireMock's `matchesJsonPath` and the `jsonpath` template helpers use it), or `undefined` when
+ * it cannot. Of permissive mode's leniencies, the one reproduced is that parsing stops after a
+ * complete top-level object or array (`{"a":1}x` reads as `{"a":1}`); the others (unquoted or
+ * single-quoted strings, trailing commas...) are not, so such text is read as not JSON.
+ */
+export function parseJaywayDocument(text: string): { readonly value: unknown } | undefined {
+  const strict = (source: string): { readonly value: unknown } | undefined => {
+    try {
+      return { value: JSON.parse(source) as unknown };
+    } catch {
+      return undefined;
+    }
+  };
+  if (text.trim() === "") return undefined;
+  const parsed = strict(text);
+  if (parsed !== undefined) return parsed;
+  const start = text.search(/\S/);
+  const open = text.charAt(start);
+  if (open !== "{" && open !== "[") return undefined;
+  // The end of the first top-level value: brackets balanced outside strings.
+  let depth = 0;
+  let inString = false;
+  for (let i = start; i < text.length; i++) {
+    const c = text.charAt(i);
+    if (inString) {
+      if (c === "\\") i++;
+      else if (c === '"') inString = false;
+    } else if (c === '"') inString = true;
+    else if (c === "{" || c === "[") depth++;
+    else if (c === "}" || c === "]") {
+      depth--;
+      if (depth === 0) return strict(text.slice(start, i + 1));
+    }
+  }
+  return undefined;
+}
+
 /** Where a value selected by a path lives: its container and the key or index in it. */
 export interface JsonPathLocation {
   readonly parent: Record<string, unknown> | unknown[];

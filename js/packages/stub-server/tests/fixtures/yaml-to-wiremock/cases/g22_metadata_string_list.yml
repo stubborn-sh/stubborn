@@ -13,7 +13,6 @@ metadata:
       {
         "response": {
           "chunkedDribbleDelay": {"numberOfChunks": 5, "totalDuration": 1000},
-          "proxyBaseUrl": " http://example.invalid ",
           "fixedDelayMilliseconds": "250",
           "fault": "EMPTY_RESPONSE"
         },
